@@ -1,0 +1,61 @@
+name: restaurant_kot
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  google_fonts: ^4.0.4
+  intl: ^0.19.0
+  flutter_bloc: ^8.1.3
+  freezed_annotation: ^2.2.0
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.2
+  fluttertoast: ^8.2.4
+  shimmer: ^3.0.0
+  http: ^1.2.1
+  sunmi_printer_plus: ^2.1.2
+  flutter_esc_pos_utils: ^1.0.1
+  # connectivity_plus: ^6.0.3
+  flutter_screenutil: ^5.9.3
+  bloc: ^8.1.4
+  mssql_connection: ^1.1.3
+
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  freezed: ^2.3.5
+  build_runner: ^2.4.9
+
+flutter:
+
+  uses-material-design: true
+
+  # Custom Fonts
+  fonts:
+    - family: Montserrat  # Name your font family
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf  # Path to the regular font
+        - asset: assets/fonts/Montserrat-Bold.ttf     # Path to the bold font
+          weight: 600  # Weight for bold font
+        - asset: assets/fonts/Montserrat-Italic.ttf   # Path to the italic font
+          style: italic  # Style for italic font
+
+  # Assets
+  assets:
+    - assets/fonts/
+    - assets/img/table/
+    - assets/img/loginpage/
+    - assets/img/logo/
+
+
+
