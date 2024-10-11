@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'dart:async';
-
+import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,64 +13,73 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
-    
-    // Navigate to HomeScreen after 3 seconds
-    Timer(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const ScreenLogin()),
-      );
+    _checkLoginStatus(); // Call the function to check login status
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isLoggedIn = prefs.getBool('login') ?? false; // Default to false if not set
+
+    // Navigate to the appropriate screen after 3 seconds
+    Timer(const Duration(seconds: 3), () {
+      if (isLoggedIn) {
+        // If the user is logged in, navigate to the home screen
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        // If the user is not logged in, navigate to the login screen
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) =>  ScreenLogin()),
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),  // Splash screen background color
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Splash screen background color
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-           
-               SizedBox(height: MediaQuery.of(context).size.height * .2,),
-
-          Center(
-            child: SizedBox(
-              // width: MediaQuery.of(context).size.height * .3,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 80,left: 60),
-                child: Image.asset(
-                  'assets/img/logo/splashlogo.png',
-                  fit: BoxFit.cover,
+            SizedBox(height: MediaQuery.of(context).size.height * .2),
+            Center(
+              child: SizedBox(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 80, left: 60),
+                  child: Image.asset(
+                    'assets/img/logo/splashlogo.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-          ),        
-        SizedBox(height: MediaQuery.of(context).size.height * .2,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: SizedBox(
-              // width: MediaQuery.of(context).size.width * .7,
-              child: LinearProgressIndicator(
-                borderRadius: BorderRadius.circular(30),
-                backgroundColor: Colors.black12,
-                color: mainclr,
+            SizedBox(height: MediaQuery.of(context).size.height * .2),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: SizedBox(
+                child: LinearProgressIndicator(
+                  borderRadius: BorderRadius.circular(30),
+                  backgroundColor: Colors.black12,
+                  color: mainclr,
+                ),
               ),
             ),
-          ),SizedBox(height: MediaQuery.of(context).size.height * .03,),
-
+            SizedBox(height: MediaQuery.of(context).size.height * .03),
             const Text(
-            'Restaurant KOT Manager',
-            style: TextStyle(color: mainclr, fontSize: 18,fontWeight: FontWeight.bold),
-          ),
-         SizedBox(height: 5,),
-          const Text(
-            'Powered by Eye2EyeTech',
-            style: TextStyle(color: mainclr, fontSize: 16),
-          )
+              'Restaurant KOT Manager',
+              style: TextStyle(color: mainclr, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 5),
+            const Text(
+              'Powered by Eye2EyeTech',
+              style: TextStyle(color: mainclr, fontSize: 16),
+            ),
           ],
         ),
       ),

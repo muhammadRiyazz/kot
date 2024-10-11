@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:restaurant_kot/application/providers/providers.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/core/conn.dart';
 import 'presendation/screen splash/screen_splash.dart';
 
 void main() {
@@ -29,7 +30,8 @@ class _MyAppState extends State<MyApp> {
       GlobalKey<ScaffoldMessengerState>();
   @override
   void initState() {
-    super.initState();
+    super.initState();   MSSQLConnectionManager().reconnect();
+
     // initConnectivity();
   //   _connectivitySubscription =
   //       connectivity.onConnectivityChanged.listen(_updateConnectionStatus);

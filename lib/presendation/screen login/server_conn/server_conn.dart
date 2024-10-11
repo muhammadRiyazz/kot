@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/server%20conn/server_conn_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
+import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
 
 class ServerConnectionPage extends StatefulWidget {
   const ServerConnectionPage({Key? key}) : super(key: key);
@@ -219,12 +220,7 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
                         if (state.isLoading) {
                           return const Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
-                            child: LinearProgressIndicator(
-                              minHeight: 5,
-                              backgroundColor: Colors.transparent,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(mainclr),
-                            ),
+                            child:  Loading(),
                           );
                         }
 

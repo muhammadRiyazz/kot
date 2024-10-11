@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/presendation/screen%20login/login.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -86,7 +89,15 @@ class AppDrawer extends StatelessWidget {
                     ),
                     TextButton(
                       child: Text('Logout'),
-                      onPressed: () {},
+                      onPressed: () {
+
+                        // Dispatch logout event
+              context.read<LoginBloc>().add(const LoginEvent.logout());
+              // Navigate to Login Screen after logout
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) =>  ScreenLogin()),
+              );
+                      },
                     ),
                   ],
                 ),

@@ -4,6 +4,7 @@ import 'package:restaurant_kot/application/server%20conn/server_conn_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/presendation/screen%20login/server_conn/server_conn.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
+import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
 
 class PasscodePage extends StatelessWidget {
   PasscodePage({super.key});
@@ -131,11 +132,7 @@ class PasscodePage extends StatelessWidget {
                         },
                         builder: (context, state) {
                           return state.isLoading
-                              ? const LinearProgressIndicator(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
-                                  color: mainclr,
-                                )
+                              ? Loading()
                               : MainButton(
                                   label: 'Next',
                                   onpress: () {
@@ -162,3 +159,4 @@ class PasscodePage extends StatelessWidget {
     );
   }
 }
+
