@@ -1,16 +1,20 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
 import 'package:restaurant_kot/presendation/screen%20orders%20from%20table/order_list_table.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
 
 class Tablespart extends StatelessWidget {
   Tablespart({super.key});
 
-  final List<String> options = ['Option 1', 'Option 2', 'Option 3'];
-
   @override
   Widget build(BuildContext context) {
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   BlocProvider.of<TablesBloc>(context).add(TablesEvent.taledata());
+    // });
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -34,191 +38,240 @@ class Tablespart extends StatelessWidget {
       backgroundColor: mainclr,
       color: mainclrbg,
       onRefresh: () async {
-        log('message');
+        BlocProvider.of<TablesBloc>(context).add(TablesEvent.taledata());
       },
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            // ListView with ExpansionTile
-            ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromARGB(255, 206, 206, 206)
-                            .withOpacity(0.3), // Shadow color
-                        spreadRadius: 1, // How much the shadow spreads
-                        blurRadius: 7, // Softness of the shadow
-                        offset:
-                            const Offset(0, 4), // Position of the shadow (x, y)
-                      ),
-                    ],
-                  ),
-                  child: ExpansionTile(
-                    collapsedBackgroundColor: boxbgwhite,
-                    backgroundColor: boxbgwhite,
-                    leading:
-                        const Icon(Icons.line_weight_sharp, color: mainclr),
-                    title: const Text('Choose Floor'),
-                    children: options.map((option) {
-                      return Container(
-                        decoration: const BoxDecoration(color: Colors.white),
-                        child: ListTile(
-                          title: Text(option),
-                          onTap: () {},
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
-            // GridView.builder with dynamic columns
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: childAspectRatio,
-                crossAxisCount: crossAxisCount, // Dynamic number of columns
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-              ),
-              itemCount: 12,
-              itemBuilder: (context, index) {
-                return Card(
-                  margin: const EdgeInsets.all(3),
-                  elevation: 8,
-                  borderOnForeground: true,
-                  shadowColor: const Color.fromARGB(255, 241, 241, 241),
-                  child: InkWell(
-                    onTap: () {
-                      if (index == 0) {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return ProductChoosingPage();
-                          },
-                        ));
-                      } else {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return ScreenOrdersList();
-                          },
-                        ));
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(boxPadding),
-                      decoration: BoxDecoration(
-                        color: boxbgwhite,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: BlocBuilder<TablesBloc, TablesState>(
+        builder: (context, state) {
+          return state.isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // ListView with ExpansionTile
+                      ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Text(
-                              'Table 0$index',
-                              style: TextStyle(
-                                  color: mainclr,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: textSize),
-                            ),
-                          ),
-                          const Divider(height: 0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Center(
-                                  child: Container(
-                                    width: boxImageSize + 8,
-                                    height: boxImageSize,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          index == 0 || index == 1 || index == 2
-                                              ? mainclr
-                                              : Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: mainclr),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5, horizontal: 6),
-                                      child: Image.asset(
-                                        index == 0 || index == 1 || index == 2
-                                            ? 'assets/img/table/tableicon.png'
-                                            : 'assets/img/table/emptytable.png',
-                                        fit: BoxFit.contain,
-                                        color: index == 0 ||
-                                                index == 1 ||
-                                                index == 2
-                                            ? Colors.white
-                                            : null,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '5 Orders',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: textSize -
-                                            1, // slightly smaller for order info
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    '10 : 30 Am',
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize:
-                                            textSize - 4, // smaller for time
-                                        fontWeight: FontWeight.w400),
+                          Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        const Color.fromARGB(255, 206, 206, 206)
+                                            .withOpacity(0.3), // Shadow color
+                                    spreadRadius:
+                                        1, // How much the shadow spreads
+                                    blurRadius: 7, // Softness of the shadow
+                                    offset: const Offset(
+                                        0, 4), // Position of the shadow (x, y)
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Amount',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: textSize - 3,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              Text(
-                                '₹ 2500',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: textSize - 2,
-                                    fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          )
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: DropdownButton<String>(
+                                  // Set the dropdown button's value to the selected floor
+                                  value: state.selectedFloor,
+                                  hint: Text(
+                                    'Choose Floor',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                      color: const Color.fromARGB(255, 0, 0, 0),
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                  items: state.floors.map((String floor) {
+                                    return DropdownMenuItem<String>(
+                                      value: floor,
+                                      child: Text(
+                                        floor,
+                                        style: const TextStyle(
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                          fontFamily: 'Montserrat',
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    if (newValue != null) {
+                                      log('Selected floor: $newValue');
+                                      context
+                                          .read<TablesBloc>()
+                                          .add(ChooseFloor(floor: newValue));
+                                    }
+                                  },
+                                  // Customize the dropdown appearance
+                                  underline: SizedBox(), // Remove the underline
+                                  isExpanded:
+                                      true, // Make the dropdown expand to fill the width
+                                  style: TextStyle(color: mainclr),
+                                ),
+                              )),
                         ],
                       ),
-                    ),
+                      // GridView.builder with dynamic columns
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: childAspectRatio,
+                          crossAxisCount:
+                              crossAxisCount, // Dynamic number of columns
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
+                        ),
+                        itemCount: state.tables.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            margin: const EdgeInsets.all(3),
+                            elevation: 8,
+                            borderOnForeground: true,
+                            shadowColor:
+                                const Color.fromARGB(255, 241, 241, 241),
+                            child: InkWell(
+                              onTap: () {
+                                if (state.tables[index].isEmpty) {
+                                  Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) {
+                                      return ProductChoosingPage();
+                                    },
+                                  ));
+                                } else {
+                                  Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) {
+                                      return ScreenOrdersList();
+                                    },
+                                  ));
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(boxPadding),
+                                decoration: BoxDecoration(
+                                  color: boxbgwhite,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        state.tables[index].tableName,
+                                        style: TextStyle(
+                                            color: mainclr,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: textSize),
+                                      ),
+                                    ),
+                                    const Divider(height: 0),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Center(
+                                            child: Container(
+                                              width: boxImageSize + 8,
+                                              height: boxImageSize,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    state.tables[index].isEmpty
+                                                        ? Colors.white
+                                                        : mainclr,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                border:
+                                                    Border.all(color: mainclr),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 5,
+                                                        horizontal: 6),
+                                                child: Image.asset(
+                                                  state.tables[index].isEmpty
+                                                      ? 'assets/img/table/emptytable.png'
+                                                      : 'assets/img/table/tableicon.png',
+                                                  fit: BoxFit.contain,
+                                                  color: state
+                                                          .tables[index].isEmpty
+                                                      ? null
+                                                      : Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${state.tables[index].orderCount} Orders',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: textSize -
+                                                      1, // slightly smaller for order info
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Text(
+                                              state.tables[index].isEmpty
+                                                  ? '--:--'
+                                                  : time(state.tables[index]
+                                                      .firstOrderTime!),
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: textSize -
+                                                      4, // smaller for time
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Amount',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: textSize - 3,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                        Text(
+                                          '₹ ${state.tables[index].totalOrderPrice}',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: textSize - 2,
+                                              fontWeight: FontWeight.w500),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 );
-              },
-            ),
-          ],
-        ),
+        },
       ),
     );
   }

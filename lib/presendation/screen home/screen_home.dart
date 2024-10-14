@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/presendation/screen%20home/Drawr.dart';
 import 'package:restaurant_kot/presendation/screen%20home/finished_orders.dart';
@@ -11,6 +13,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<TablesBloc>(context).add(TablesEvent.taledata());
+    });
     return DefaultTabController(
       length: 3, // Number of tabs
       child: Scaffold(
@@ -32,7 +37,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 12, right: 12, left: 12),
+          padding: const EdgeInsets.only(top: 12, right: 5, left: 5),
           child: Column(
             children: [
               // Custom styled TabBar with background, border, and selected tab color
