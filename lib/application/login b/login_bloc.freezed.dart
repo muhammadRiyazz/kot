@@ -339,6 +339,7 @@ mixin _$LoginState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get errorMsg => throw _privateConstructorUsedError;
   bool get loged => throw _privateConstructorUsedError;
+  bool? get uservalid => throw _privateConstructorUsedError;
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.
@@ -353,7 +354,7 @@ abstract class $LoginStateCopyWith<$Res> {
           LoginState value, $Res Function(LoginState) then) =
       _$LoginStateCopyWithImpl<$Res, LoginState>;
   @useResult
-  $Res call({bool isLoading, String? errorMsg, bool loged});
+  $Res call({bool isLoading, String? errorMsg, bool loged, bool? uservalid});
 }
 
 /// @nodoc
@@ -374,6 +375,7 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
     Object? isLoading = null,
     Object? errorMsg = freezed,
     Object? loged = null,
+    Object? uservalid = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -388,6 +390,10 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
           ? _value.loged
           : loged // ignore: cast_nullable_to_non_nullable
               as bool,
+      uservalid: freezed == uservalid
+          ? _value.uservalid
+          : uservalid // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -400,7 +406,7 @@ abstract class _$$LoginStateImplCopyWith<$Res>
       __$$LoginStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, String? errorMsg, bool loged});
+  $Res call({bool isLoading, String? errorMsg, bool loged, bool? uservalid});
 }
 
 /// @nodoc
@@ -419,6 +425,7 @@ class __$$LoginStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? errorMsg = freezed,
     Object? loged = null,
+    Object? uservalid = freezed,
   }) {
     return _then(_$LoginStateImpl(
       isLoading: null == isLoading
@@ -433,6 +440,10 @@ class __$$LoginStateImplCopyWithImpl<$Res>
           ? _value.loged
           : loged // ignore: cast_nullable_to_non_nullable
               as bool,
+      uservalid: freezed == uservalid
+          ? _value.uservalid
+          : uservalid // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -441,7 +452,10 @@ class __$$LoginStateImplCopyWithImpl<$Res>
 
 class _$LoginStateImpl implements _LoginState {
   _$LoginStateImpl(
-      {required this.isLoading, this.errorMsg, required this.loged});
+      {required this.isLoading,
+      this.errorMsg,
+      required this.loged,
+      this.uservalid});
 
   @override
   final bool isLoading;
@@ -449,10 +463,12 @@ class _$LoginStateImpl implements _LoginState {
   final String? errorMsg;
   @override
   final bool loged;
+  @override
+  final bool? uservalid;
 
   @override
   String toString() {
-    return 'LoginState(isLoading: $isLoading, errorMsg: $errorMsg, loged: $loged)';
+    return 'LoginState(isLoading: $isLoading, errorMsg: $errorMsg, loged: $loged, uservalid: $uservalid)';
   }
 
   @override
@@ -464,11 +480,14 @@ class _$LoginStateImpl implements _LoginState {
                 other.isLoading == isLoading) &&
             (identical(other.errorMsg, errorMsg) ||
                 other.errorMsg == errorMsg) &&
-            (identical(other.loged, loged) || other.loged == loged));
+            (identical(other.loged, loged) || other.loged == loged) &&
+            (identical(other.uservalid, uservalid) ||
+                other.uservalid == uservalid));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading, errorMsg, loged);
+  int get hashCode =>
+      Object.hash(runtimeType, isLoading, errorMsg, loged, uservalid);
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.
@@ -483,7 +502,8 @@ abstract class _LoginState implements LoginState {
   factory _LoginState(
       {required final bool isLoading,
       final String? errorMsg,
-      required final bool loged}) = _$LoginStateImpl;
+      required final bool loged,
+      final bool? uservalid}) = _$LoginStateImpl;
 
   @override
   bool get isLoading;
@@ -491,6 +511,8 @@ abstract class _LoginState implements LoginState {
   String? get errorMsg;
   @override
   bool get loged;
+  @override
+  bool? get uservalid;
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.

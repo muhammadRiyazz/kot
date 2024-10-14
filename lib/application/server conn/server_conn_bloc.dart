@@ -62,6 +62,15 @@ class ServerConnBloc extends Bloc<ServerConnEvent, ServerConnState> {
       MssqlConnection mssqlConnection = MssqlConnection.getInstance();
 
       try {
+        Map<String, dynamic> jsonData = {
+          "ip": event.ip,
+          "port": event.port,
+          "databaseName": event.databaseName,
+          "username": event.username,
+          "password": event.password,
+          "timeoutInSeconds": 15,
+        };
+        log(jsonData.toString());
         bool isConnected = await mssqlConnection.connect(
           ip: event.ip,
           port: event.port,

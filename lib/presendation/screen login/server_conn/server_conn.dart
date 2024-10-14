@@ -30,7 +30,7 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
     _databaseController = TextEditingController();
     _usernameController = TextEditingController();
     _passwordController = TextEditingController();
-    _portController = TextEditingController(text: '1433'); // Default SQL port
+    _portController = TextEditingController(); // Default SQL port
   }
 
   @override

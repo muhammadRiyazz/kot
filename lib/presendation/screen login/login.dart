@@ -54,13 +54,13 @@ class ScreenLogin extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: padding),
             child: ListView(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 200,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: padding),
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(18.0),

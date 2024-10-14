@@ -6,9 +6,13 @@ class LoginState with _$LoginState {
     required bool isLoading,
     String? errorMsg,
     required bool loged,
-
+    bool? uservalid,
   }) = _LoginState;
   factory LoginState.initial() {
-    return LoginState(isLoading: false, errorMsg: null,loged: false);
+    return LoginState(
+      isLoading: false,
+      errorMsg: null,uservalid: true,
+      loged: false,
+    );
   }
 }
