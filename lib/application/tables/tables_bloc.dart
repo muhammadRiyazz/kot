@@ -45,7 +45,7 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         String ordersquery =
             "SELECT Id, OrderNumber, EntryDate, UserName, CustomerId, CustomerName, TableName, FloorNumber, TaxableAmount, Discount, TotalAmount, StartDateTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, paidornot, UserID "
             "FROM dbo.OrderMainDetails "
-            "WHERE EntryDate = '2024-09-09 00:00:00.000'  ";
+            "WHERE EntryDate = '2024-09-10 00:00:00.000'";
         // AND ActiveInnactive = 'Active'
         String? ordersresult = await connection.getData(ordersquery);
         // log(ordersresult);

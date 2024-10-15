@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
@@ -154,9 +155,12 @@ class Tablespart extends StatelessWidget {
                                     },
                                   ));
                                 } else {
+
+                                              BlocProvider.of<OrdersBloc>(context).add(OrdersEvent.tableOrders(tableNo: state.tables[index].tableName));
+
                                   Navigator.push(context, MaterialPageRoute(
                                     builder: (context) {
-                                      return ScreenOrdersList();
+                                      return  ScreenOrdersList(table:state.tables[index] ,);
                                     },
                                   ));
                                 }

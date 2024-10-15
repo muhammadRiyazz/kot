@@ -7,21 +7,7 @@ import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
-import '../screen order details/screen_order_detail.dart';
 
-class Order {
-  final String id;
-  final String time;
-  final int itemCount;
-  final double totalPrice;
-
-  Order({
-    required this.id,
-    required this.time,
-    required this.itemCount,
-    required this.totalPrice,
-  });
-}
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -31,13 +17,7 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-  // List<Order> orders = [
-  //   Order(id: '001', time: '10:30 AM', itemCount: 3, totalPrice: 150.0),
-  //   Order(id: '002', time: '11:00 AM', itemCount: 2, totalPrice: 100.0),
-  //   Order(id: '003', time: '11:30 AM', itemCount: 5, totalPrice: 250.0),
-  //   Order(id: '004', time: '12:00 PM', itemCount: 4, totalPrice: 200.0),
-  //   // Add more sample orders here
-  // ];
+ 
 
   List<bool> isSelected = [];
   bool isMultiSelectMode = false;
@@ -277,7 +257,11 @@ class _OrderPageState extends State<OrderPage> {
                                                       10.0),
                                                   child: Text(
                                                     state.orders[index]
-                                                        .tableName,
+                                                                .tableName ==
+                                                            ''
+                                                        ? '- -'
+                                                        : state.orders[index]
+                                                            .tableName,
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:
@@ -362,7 +346,7 @@ class _OrderPageState extends State<OrderPage> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                'Items: ${state.orders[index].items.length}',
+                                                '',
                                                 style: TextStyle(
                                                   fontSize: textSize,
                                                 ),
@@ -377,11 +361,9 @@ class _OrderPageState extends State<OrderPage> {
                                                   ),
                                                   SizedBox(width: 6),
                                                   Text(
-                                                    time(DateFormat(
-                                                            "dd/MM/yyyy HH:mm:ss")
-                                                        .parse(state
-                                                            .orders[index]
-                                                            .startDateTime)),
+                                                    time(DateTime.parse(state
+                                                        .orders[index]
+                                                        .startDateTime)),
                                                     style: TextStyle(
                                                       fontSize: textSize - 3,
                                                       color:
@@ -389,6 +371,19 @@ class _OrderPageState extends State<OrderPage> {
                                                               255, 0, 0, 0),
                                                     ),
                                                   ),
+                                                  // Text(
+                                                  //   time(DateFormat(
+                                                  //           "dd/MM/yyyy HH:mm:ss")
+                                                  //       .parse(state
+                                                  //           .orders[index]
+                                                  //           .startDateTime)),
+                                                  //   style: TextStyle(
+                                                  //     fontSize: textSize - 3,
+                                                  //     color:
+                                                  //         const Color.fromARGB(
+                                                  //             255, 0, 0, 0),
+                                                  //   ),
+                                                  // ),
                                                 ],
                                               )
                                             ],

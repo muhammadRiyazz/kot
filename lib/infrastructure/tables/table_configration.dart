@@ -34,7 +34,7 @@ List<TableModel> tabeledata(String tablesJson, String ordersJson) {
     double totalOrderPrice = tableOrders.fold(
         0.0,
         (sum, order) =>
-            sum + (order['TotalAmount'] != null ? order['TotalAmount'] : 0.0));
+            sum + (order['TotalAmount'] ?? 0.0));
 
     // If no orders exist, set default values
     if (isEmpty) {
