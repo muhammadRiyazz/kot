@@ -14,7 +14,7 @@ part 'tables_bloc.freezed.dart';
 
 class TablesBloc extends Bloc<TablesEvent, TablesState> {
   TablesBloc() : super(TablesState.initial()) {
-     List<TableModel> tableModels = [];
+    List<TableModel> tableModels = [];
     on<TableData>((event, emit) async {
       emit(state.copyWith(isLoading: true, selectedFloor: null));
 
@@ -26,7 +26,7 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         String query =
             "SELECT TableNumber, TableType, FloorMumber FROM dbo.TableConfiguration";
         String? totaltableresult = await connection.getData(query);
-        log(totaltableresult);
+        // log(totaltableresult);
 
         // Check if the table result is empty
         if (totaltableresult.isEmpty) {
@@ -45,9 +45,10 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         String ordersquery =
             "SELECT Id, OrderNumber, EntryDate, UserName, CustomerId, CustomerName, TableName, FloorNumber, TaxableAmount, Discount, TotalAmount, StartDateTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, paidornot, UserID "
             "FROM dbo.OrderMainDetails "
-            "WHERE EntryDate = '2024-09-02 00:00:00.000'";
+            "WHERE EntryDate = '2024-09-09 00:00:00.000'  ";
+        // AND ActiveInnactive = 'Active'
         String? ordersresult = await connection.getData(ordersquery);
-        log(ordersresult);
+        // log(ordersresult);
 
         // Check if the orders result is empty
         if (ordersresult.isEmpty) {
@@ -55,8 +56,7 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         }
 
         // Parsing and converting the data to TableModel
-       tableModels =
-            tabeledata(totaltableresult, ordersresult);
+        tableModels = tabeledata(totaltableresult, ordersresult);
 
         // Emit state with tableModels data
         emit(state.copyWith(

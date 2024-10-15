@@ -9,7 +9,8 @@ factory TablesState({
  required List<TableModel> tables, 
   }) = _TablesState;
   factory TablesState.initial() {
-    return TablesState(tables: [],
+    return TablesState(
+      tables: [],
       isLoading: false,
      floors: [],
      selectedFloor:  null

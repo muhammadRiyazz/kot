@@ -98,8 +98,7 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                   tileColor: const Color.fromARGB(0, 255, 255, 255),
                   title: const Text(
                     'Table No: TB 001',
-                    style: TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                   ),
                   trailing: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -118,9 +117,11 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                         ));
                       },
                       child: const Text(
-                        'Add Order',
+                        'Add New Order',
                         style: TextStyle(
-                            color: mainclr, fontWeight: FontWeight.bold),
+                            fontSize: 10,
+                            color: mainclr,
+                            fontWeight: FontWeight.bold),
                       )),
                   subtitle: const Text('Orders: 5, Total: ₹ 1000/-'),
                   // leading: Container(
@@ -155,7 +156,7 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                   'Orders',
                   style: TextStyle(fontSize: 20),
                 ),
-               // if (isMultiSelectMode)
+                // if (isMultiSelectMode)
                 //   IconButton(
                 //     icon: Icon(Icons.close),
                 //     onPressed: () {
@@ -180,9 +181,11 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                 },
                 itemCount: 4,
                 itemBuilder: (context, index) {
-                  return Card(margin: EdgeInsets.all(3),
-                    
-                    elevation: 2,borderOnForeground: true,shadowColor: const Color.fromARGB(255, 255, 255, 255),
+                  return Card(
+                    margin: EdgeInsets.all(3),
+                    elevation: 2,
+                    borderOnForeground: true,
+                    shadowColor: const Color.fromARGB(255, 255, 255, 255),
                     child: InkWell(
                       onTap: () => _onTap(index),
                       // onLongPress: () => _onLongPress(index),
@@ -211,19 +214,28 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                                       ),
                                       Expanded(
                                         child: ListTile(
-                                          contentPadding: const EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 10),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  vertical: 10, horizontal: 10),
                                           splashColor: const Color.fromARGB(
                                               0, 255, 255, 255),
                                           tileColor: const Color.fromARGB(
                                               0, 255, 255, 255),
                                           onTap: () => _onTap(index),
                                           leading: Container(
-                                                    decoration: BoxDecoration(color: mainclr,borderRadius: BorderRadius.circular(10)),
-                                                    child: const Padding(
-                                                      padding: EdgeInsets.all(10.0),
-                                                      child: Icon(Icons.restaurant,color: Color.fromARGB(255, 255, 255, 255),),
-                                                    )),
+                                              decoration: BoxDecoration(
+                                                  color: mainclr,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Icon(
+                                                  Icons.restaurant,
+                                                  color: Color.fromARGB(
+                                                      255, 255, 255, 255),
+                                                ),
+                                              )),
                                           //  isMultiSelectMode
                                           //     ? Checkbox(
                                           //         activeColor: mainclr,
@@ -237,7 +249,8 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                                           //     : null,
                                           title: Text(
                                             'Order ID: ${orders[index].id}',
-                                            style: const TextStyle(fontSize: 17),
+                                            style:
+                                                const TextStyle(fontSize: 17),
                                           ),
                                           subtitle: Text(
                                               'Items: ${orders[index].itemCount}, Total: ₹${orders[index].totalPrice}'),

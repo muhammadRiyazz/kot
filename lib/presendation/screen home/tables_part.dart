@@ -54,64 +54,75 @@ class Tablespart extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
-                          Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color:
-                                        const Color.fromARGB(255, 206, 206, 206)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color.fromARGB(
+                                                255, 206, 206, 206)
                                             .withOpacity(0.3), // Shadow color
-                                    spreadRadius:
-                                        1, // How much the shadow spreads
-                                    blurRadius: 7, // Softness of the shadow
-                                    offset: const Offset(
-                                        0, 4), // Position of the shadow (x, y)
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: DropdownButton<String>(
-                                  // Set the dropdown button's value to the selected floor
-                                  value: state.selectedFloor,
-                                  hint: Text(
-                                    'Choose Floor',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                      color: const Color.fromARGB(255, 0, 0, 0),
-                                      fontFamily: 'Montserrat',
-                                    ),
-                                  ),
-                                  items: state.floors.map((String floor) {
-                                    return DropdownMenuItem<String>(
-                                      value: floor,
-                                      child: Text(
-                                        floor,
-                                        style: const TextStyle(
-                                          color: Color.fromARGB(255, 0, 0, 0),
-                                          fontFamily: 'Montserrat',
-                                        ),
+                                        spreadRadius:
+                                            1, // How much the shadow spreads
+                                        blurRadius: 7, // Softness of the shadow
+                                        offset: const Offset(0,
+                                            4), // Position of the shadow (x, y)
                                       ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    if (newValue != null) {
-                                      log('Selected floor: $newValue');
-                                      context
-                                          .read<TablesBloc>()
-                                          .add(ChooseFloor(floor: newValue));
-                                    }
-                                  },
-                                  // Customize the dropdown appearance
-                                  underline: SizedBox(), // Remove the underline
-                                  isExpanded:
-                                      true, // Make the dropdown expand to fill the width
-                                  style: TextStyle(color: mainclr),
-                                ),
-                              )),
+                                    ],
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: DropdownButton<String>(
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: mainclr,
+                                      size: 30,
+                                    ),
+                                    // Set the dropdown button's value to the selected floor
+                                    value: state.selectedFloor,
+                                    hint: const Text(
+                                      'Choose Floor',
+                                      style: TextStyle(
+                                        color: mainclr,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                    items: state.floors.map((String floor) {
+                                      return DropdownMenuItem<String>(
+                                        value: floor,
+                                        child: Text(
+                                          floor,
+                                          style: const TextStyle(
+                                            color: mainclr,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Montserrat',
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      if (newValue != null) {
+                                        log('Selected floor: $newValue');
+                                        context
+                                            .read<TablesBloc>()
+                                            .add(ChooseFloor(floor: newValue));
+                                      }
+                                    },
+                                    // Customize the dropdown appearance
+                                    underline:
+                                        SizedBox(), // Remove the underline
+                                    isExpanded:
+                                        true, // Make the dropdown expand to fill the width
+                                    style: TextStyle(color: mainclr),
+                                  ),
+                                )),
+                          ),
                         ],
                       ),
                       // GridView.builder with dynamic columns

@@ -80,9 +80,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  void _printKOT() {
-
-  }
+  void _printKOT() {}
 
   void _printBill() {
     // Logic to navigate to the bill page
@@ -143,9 +141,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                         ));
                       },
                       child: Text(
-                        'Add Item',
+                        'Add New Item',
                         style: TextStyle(
-                            color: mainclr, fontWeight: FontWeight.bold),
+                            fontSize: 12,
+                            color: mainclr,
+                            fontWeight: FontWeight.bold),
                       )),
                   subtitle: Text('Items: 5, Total: ₹ 1000/-'),
                   leading: Container(
@@ -271,9 +271,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 itemCount: _items.length,
                 itemBuilder: (context, index) {
                   final item = _items[index];
-                  return Card(margin: EdgeInsets.all(3),
-                    
-                    elevation: 3,borderOnForeground: true,shadowColor: const Color.fromARGB(255, 255, 255, 255),
+                  return Card(
+                    margin: EdgeInsets.all(3),
+                    elevation: 3,
+                    borderOnForeground: true,
+                    shadowColor: const Color.fromARGB(255, 255, 255, 255),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -391,7 +393,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 },
                 child: Text(
                   'Print Bill',
-                  style: TextStyle(fontWeight: FontWeight.bold,color: mainclr),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: mainclr),
                 )),
           ),
           // // Print KOT Button
