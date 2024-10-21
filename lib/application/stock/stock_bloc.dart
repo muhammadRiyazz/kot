@@ -110,7 +110,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         //         OFFSET 0 ROWS
         //         FETCH NEXT 40 ROWS ONLY
         String? stockQueryresult = await connection.getData(stockQuery);
-        log(stockQueryresult);
+        // log(stockQueryresult);
         List<dynamic> jsonResponse = jsonDecode(stockQueryresult);
 
         // Map the JSON to a list of Product objects
@@ -156,7 +156,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
          """;
 
         String? categoryQueryresult = await connection.getData(categoryQuery);
-        log(categoryQueryresult);
+        // log(categoryQueryresult);
         List<dynamic> jsonResponse = jsonDecode(categoryQueryresult);
 
         // Map the JSON to a list of Product objects

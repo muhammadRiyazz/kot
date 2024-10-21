@@ -29,7 +29,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
             "FROM [Restaurant].[dbo].[OrderItemDetailsDetails] "
             "WHERE [EntryDate] = 'Sep 10 2024 12:00AM' AND [OrderNumber] = '${event.orderNo}'  ";
         String? ordersitemresult = await connection.getData(ordersitemQuery);
-        log(ordersitemresult);
+        // log(ordersitemresult);
         List<dynamic> ordersitemresultjson = jsonDecode(ordersitemresult);
 
         // // Map the JSON to a list of Order objects

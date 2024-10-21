@@ -4,6 +4,8 @@ import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
 
+import '../../core/printer/network_printer.dart';
+
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,11 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Option 1'),
-            onTap: () {
+            onTap: ()async {
+
+final List<int> test = await NetworkPrinter().testTicket();
+            NetworkPrinter().printTicket(test);
               // Handle navigation to Settings
-              Navigator.pop(context);
               // Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
             },
           ),

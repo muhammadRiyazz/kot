@@ -6,6 +6,7 @@ import 'package:restaurant_kot/presendation/screen%20login/server_conn/server_co
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
 
+// ignore: must_be_immutable
 class PasscodePage extends StatelessWidget {
   PasscodePage({super.key});
   TextEditingController passcodeController = TextEditingController();
