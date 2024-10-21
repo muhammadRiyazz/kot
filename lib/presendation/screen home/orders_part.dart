@@ -2,12 +2,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
+import 'package:restaurant_kot/presendation/screen%20order%20details/screen_order_detail.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
-
-
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -17,8 +17,6 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
- 
-
   List<bool> isSelected = [];
   bool isMultiSelectMode = false;
 
@@ -28,67 +26,67 @@ class _OrderPageState extends State<OrderPage> {
     // isSelected = List<bool>.filled(orders.length, false);
   }
 
-  void _onLongPress(int index) {
-    setState(() {
-      isMultiSelectMode = true;
-      isSelected[index] = !isSelected[index];
-    });
-  }
+  // void _onLongPress(int index) {
+  //   setState(() {
+  //     isMultiSelectMode = true;
+  //     isSelected[index] = !isSelected[index];
+  //   });
+  // }
 
-  void _onTap(int index) {
-    if (isMultiSelectMode) {
-      setState(() {
-        isSelected[index] = !isSelected[index];
-        if (!isSelected.contains(true)) {
-          isMultiSelectMode = false;
-        }
-      });
-    } else {
-      // Navigate to order details page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => OrderDetailsPage(
-      //       order: Orderr(
-      //         id: orders[index].id,
-      //         time: orders[index].time,
-      //         items: [
-      //           OrderItem(
-      //             name: 'Biriyani',
-      //             image:
-      //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      //             quantity: 5,
-      //           ),
-      //           OrderItem(
-      //             name: 'Chicken Periperi Mandhi',
-      //             image:
-      //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      //             quantity: 5,
-      //           ),
-      //           OrderItem(
-      //             name: 'Chicken Biriyani',
-      //             image:
-      //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      //             quantity: 5,
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // );
-    }
-  }
+  // void _onTap(int index) {
+  //   if (isMultiSelectMode) {
+  //     setState(() {
+  //       isSelected[index] = !isSelected[index];
+  //       if (!isSelected.contains(true)) {
+  //         isMultiSelectMode = false;
+  //       }
+  //     });
+  //   } else {
+  // Navigate to order details page
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(
+  //     builder: (context) => OrderDetailsPage(
+  //       order: Orderr(
+  //         id: orders[index].id,
+  //         time: orders[index].time,
+  //         items: [
+  //           OrderItem(
+  //             name: 'Biriyani',
+  //             image:
+  //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
+  //             quantity: 5,
+  //           ),
+  //           OrderItem(
+  //             name: 'Chicken Periperi Mandhi',
+  //             image:
+  //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
+  //             quantity: 5,
+  //           ),
+  //           OrderItem(
+  //             name: 'Chicken Biriyani',
+  //             image:
+  //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
+  //             quantity: 5,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   ),
+  // );
+  //   }
+  // }
 
-  void mergeOrders() {
-    // final selectedOrders = orders
-    //     .asMap()
-    //     .entries
-    //     .where((entry) => isSelected[entry.key])
-    //     .map((entry) => entry.value)
-    //     .toList();
-    // log('Merging Orders: ${selectedOrders.map((o) => o.id).join(', ')}');
-    // Implement your merge logic here
-  }
+  // void mergeOrders() {
+  // final selectedOrders = orders
+  //     .asMap()
+  //     .entries
+  //     .where((entry) => isSelected[entry.key])
+  //     .map((entry) => entry.value)
+  //     .toList();
+  // log('Merging Orders: ${selectedOrders.map((o) => o.id).join(', ')}');
+  // Implement your merge logic here
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +129,7 @@ class _OrderPageState extends State<OrderPage> {
           'Running Orders',
           style: TextStyle(fontSize: 19),
         ),
-        actions: [
+        actions: const [
           // if (isMultiSelectMode)
           //   IconButton(
           //     icon: const Icon(Icons.close),
@@ -181,8 +179,20 @@ class _OrderPageState extends State<OrderPage> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: InkWell(
-                                    onTap: () => _onTap(index),
-                                    onLongPress: () => _onLongPress(index),
+                                    onTap: () {
+                                      BlocProvider.of<OrderDetailsBloc>(context)
+                                          .add(OrderDetailsEvent.orderItems(
+                                              orderNo: state
+                                                  .orders[index].orderNumber));
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return OrderDetailsPage(
+                                            order: state.orders[index],
+                                          );
+                                        },
+                                      ));
+                                    },
+                                    // onLongPress: () => _onLongPress(index),
                                     child: Container(
                                       padding: EdgeInsets.all(boxPadding + 5),
                                       decoration: BoxDecoration(
@@ -404,7 +414,7 @@ class _OrderPageState extends State<OrderPage> {
                               child: MainButton(
                                 label: 'Merge & Print',
                                 onpress: () {
-                                  mergeOrders();
+                                  // mergeOrders();
                                 },
                               ),
                             ),

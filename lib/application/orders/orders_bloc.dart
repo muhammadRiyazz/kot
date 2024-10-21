@@ -5,7 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
-import 'package:restaurant_kot/infrastructure/orders/orders_configration.dart';
 
 import '../../domain/orders/order_model.dart';
 

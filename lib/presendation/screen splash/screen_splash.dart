@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/orders/orders_bloc.dart';
+import 'package:restaurant_kot/application/stock/stock_bloc.dart';
+import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
@@ -41,6 +45,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+
+
+      BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+            BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
+             BlocProvider.of<StockBloc>(context)
+              .add(const StockEvent.fetchStocks());
+      BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchCategory());
+
+    });
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Splash screen background color
       body: Center(

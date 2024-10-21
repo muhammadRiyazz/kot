@@ -26,6 +26,8 @@ dependencies:
   flutter_screenutil: ^5.9.3
   bloc: ^8.1.4
   mssql_connection: ^1.1.3
+  infinite_scroll_pagination: ^4.0.0
+
 
   
 
@@ -56,6 +58,8 @@ flutter:
     - assets/img/table/
     - assets/img/loginpage/
     - assets/img/logo/
+    - assets/img/no data/
+
 
 
 

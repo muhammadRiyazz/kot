@@ -12,6 +12,7 @@ class OrderItem {
   final String itemName;
   final double salePrice;
   final int qty;
+  final int changedQty; // Change to final for immutability
   final double totalSalePrice;
   final double gst;
   final double gstAmount;
@@ -25,6 +26,7 @@ class OrderItem {
 
   OrderItem({
     required this.id,
+    required this.changedQty,
     required this.orderNumber,
     required this.entryDate,
     required this.userName,
@@ -51,6 +53,7 @@ class OrderItem {
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
+      changedQty: 0, // Default value for changedQty
       id: json['Id'],
       orderNumber: json['OrderNumber'],
       entryDate: json['EntryDate'].toString(),
@@ -74,6 +77,38 @@ class OrderItem {
       billNumber: json['BillNumber'] ?? '',
       unitPriceTaxNotAffect: json['unitPricetaxnotaffect'],
       userId: json['UserID'] ?? '',
+    );
+  }
+
+  OrderItem copyWith({
+    int? changedQty, 
+    // Add other fields if needed...
+  }) {
+    return OrderItem(
+      id: id,
+      changedQty: changedQty ?? this.changedQty, // Update changedQty
+      orderNumber: orderNumber,
+      entryDate: entryDate,
+      userName: userName,
+      customerId: customerId,
+      customerName: customerName,
+      tableName: tableName,
+      floorNumber: floorNumber,
+      startDateTime: startDateTime,
+      itemCode: itemCode,
+      itemName: itemName,
+      salePrice: salePrice,
+      qty: qty,
+      totalSalePrice: totalSalePrice,
+      gst: gst,
+      gstAmount: gstAmount,
+      inclusiveSalePrice: inclusiveSalePrice,
+      activeInactive: activeInactive,
+      kotNo: kotNo,
+      deliveryQuantity: deliveryQuantity,
+      billNumber: billNumber,
+      unitPriceTaxNotAffect: unitPriceTaxNotAffect,
+      userId: userId,
     );
   }
 }

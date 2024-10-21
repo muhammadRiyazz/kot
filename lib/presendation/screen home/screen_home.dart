@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
+import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/presendation/screen%20home/Drawr.dart';
@@ -15,8 +16,13 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<TablesBloc>(context).add(TablesEvent.taledata());
-            BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
+
+
+
+      // BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+      //       BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
+            //  BlocProvider.of<StockBloc>(context)
+            //   .add(const StockEvent.fetchStocks());
 
     });
     return DefaultTabController(
@@ -68,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                         borderRadius:
                             BorderRadius.circular(15.0), // Rounded corners
                       ),
-                      unselectedLabelStyle: TextStyle(
+                      unselectedLabelStyle: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontFamily:
                             'Montserrat', // Apply Montserrat font globally

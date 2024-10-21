@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/items%20To%20Kot/items_to_kot_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
@@ -7,6 +10,7 @@ import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart
 import 'package:restaurant_kot/presendation/screen%20bill%20preview/screen_bill.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/table_view.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
+import 'package:restaurant_kot/presendation/screen%20product%20selection/selected_product.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
 class OrderDetailsPage extends StatelessWidget {
@@ -74,14 +78,17 @@ class OrderDetailsPage extends StatelessWidget {
           )
         ],
       ),
-      body: RefreshIndicator(    backgroundColor: mainclr,
-      color: mainclrbg,
+      body: RefreshIndicator(
+        backgroundColor: mainclr,
+        color: mainclrbg,
         onRefresh: () async {
           BlocProvider.of<OrderDetailsBloc>(context)
               .add(OrderDetailsEvent.orderItems(orderNo: order.orderNumber));
         },
         child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
           builder: (context, state) {
+            log('building');
+            // log(state.orderitems[0].changedQty.toString());
             return state.isLoading
                 ? Center(
                     child: CircularProgressIndicator(),
@@ -121,6 +128,12 @@ class OrderDetailsPage extends StatelessWidget {
                                           ),
                                         ),
                                         onPressed: () {
+                                          BlocProvider.of<ItemsToKotBloc>(
+                                                  context)
+                                              .add(ItemsToKotEvent
+                                                  .itemsFromOrder(
+                                                      items: state.toAddItems));
+
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                             builder: (context) {
@@ -281,31 +294,42 @@ class OrderDetailsPage extends StatelessWidget {
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 8,
                                                 ),
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      state.orderitems[index]
-                                                          .itemName,
-                                                      style: const TextStyle(
+                                                    SizedBox(
+                                                      // color: Colors.amber,
+                                                      // height: 28,
+                                                      width: 143,
+                                                      child: Text(
+                                                        state.orderitems[index]
+                                                            .itemName,
+                                                        style: const TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
-                                                              FontWeight.w600),
+                                                              FontWeight.w600,
+                                                        ),
+                                                        maxLines:
+                                                            2, // Allows the text to span 2 lines
+                                                        overflow: TextOverflow
+                                                            .ellipsis, // Adds ellipsis if the text exceeds 2 lines
+                                                      ),
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 3,
                                                     ),
-                                                    Text('Amount : ₹ 150/-',
+                                                    const Text(
+                                                        'Amount : ₹ 150/-',
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                         )),
                                                   ],
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.end,
@@ -317,8 +341,8 @@ class OrderDetailsPage extends StatelessWidget {
                                                         IconButton(
                                                           icon: Container(
                                                               decoration: BoxDecoration(
-                                                                  color: index ==
-                                                                          1
+                                                                  color: state.orderitems[index].changedQty <
+                                                                          0
                                                                       ? Colors
                                                                           .red
                                                                       : mainclr,
@@ -339,22 +363,36 @@ class OrderDetailsPage extends StatelessWidget {
                                                                 ),
                                                               )),
                                                           onPressed: () {
-                                                            // _changeQuantity(item, -1);
+                                                            BlocProvider.of<
+                                                                        OrderDetailsBloc>(
+                                                                    context)
+                                                                .add(OrderDetailsEvent.cancelQty(
+                                                                    currentItem:
+                                                                        state.orderitems[
+                                                                            index]));
                                                           },
                                                         ),
-                                                        index != 1
-                                                            ? const Text(
-                                                                '2',
-                                                                style: TextStyle(
-                                                                    color:
-                                                                        mainclr,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        17),
-                                                              )
-                                                            : const SizedBox(),
+                                                        Text(
+                                                          state
+                                                                      .orderitems[
+                                                                          index]
+                                                                      .changedQty ==
+                                                                  0
+                                                              ? ''
+                                                              : state
+                                                                  .orderitems[
+                                                                      index]
+                                                                  .changedQty
+                                                                  .toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                                  color:
+                                                                      mainclr,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 15),
+                                                        ),
                                                         IconButton(
                                                           icon: Container(
                                                               decoration: BoxDecoration(
@@ -377,6 +415,13 @@ class OrderDetailsPage extends StatelessWidget {
                                                                 ),
                                                               )),
                                                           onPressed: () {
+                                                            BlocProvider.of<OrderDetailsBloc>(
+                                                                    context)
+                                                                .add(OrderDetailsEvent.addQty(
+                                                                    currentItem:
+                                                                        state.orderitems[
+                                                                            index]));
+
                                                             // _changeQuantity(item, 1);
                                                           },
                                                         ),
@@ -428,108 +473,7 @@ class OrderDetailsPage extends StatelessWidget {
                                                   ],
                                                 ),
                                               ],
-                                            )
-
-                                            // ListTile(
-                                            //   contentPadding: EdgeInsets.only(
-                                            //       top: 10,
-                                            //       bottom: 10,
-                                            //       left: 10,
-                                            //       right: 4),
-                                            //   leading: Container(
-                                            //     height: 100,
-                                            //     width: 60,
-                                            //     decoration: BoxDecoration(
-                                            //       color: boxbgclr,
-                                            //       borderRadius:
-                                            //           BorderRadius.circular(10),
-                                            //     ),
-                                            //     child: ClipRRect(
-                                            //       borderRadius:
-                                            //           BorderRadius.circular(10),
-                                            //       child: Image.network(
-                                            //         'https://www.shutterstock.com/shutterstock/photos/2468105649/display_1500/stock-photo--chicken-biryani-quick-and-tasty-chicken-biryani-chicken-dum-biryani-plan-background-2468105649.jpg',
-                                            //         fit: BoxFit.fill,
-                                            //       ),
-                                            //     ),
-                                            //   ), // Replace with asset image if needed
-                                            //   title: Text(
-                                            //     state.orderitems[index].itemName,
-                                            //     style: const TextStyle(
-                                            //         fontSize: 14,
-                                            //         fontWeight: FontWeight.w600),
-                                            //   ),
-                                            //   subtitle: const Text('Amount : ₹ 150/-',
-                                            //       style: TextStyle(
-                                            //         fontSize: 12,
-                                            //       )),
-                                            //   trailing: Column(
-                                            //     children: [
-                                            //       Row(
-                                            //         mainAxisSize: MainAxisSize.min,
-                                            //         children: [
-                                            //           IconButton(
-                                            //             icon: Container(
-                                            //                 decoration: BoxDecoration(
-                                            //                     color: index == 2
-                                            //                         ? Colors.red
-                                            //                         : mainclr,
-                                            //                     borderRadius:
-                                            //                         BorderRadius
-                                            //                             .circular(
-                                            //                                 10)),
-                                            //                 child: const Padding(
-                                            //                   padding:
-                                            //                       EdgeInsets.all(5),
-                                            //                   child: Icon(
-                                            //                     Icons.remove,
-                                            //                     color: Colors.white,
-                                            //                     size: 17,
-                                            //                   ),
-                                            //                 )),
-                                            //             onPressed: () {
-                                            //               // _changeQuantity(item, -1);
-                                            //             },
-                                            //           ),
-                                            //           index != 1
-                                            //               ? const Text(
-                                            //                   '2',
-                                            //                   style: TextStyle(
-                                            //                       color: mainclr,
-                                            //                       fontWeight:
-                                            //                           FontWeight
-                                            //                               .bold,
-                                            //                       fontSize: 17),
-                                            //                 )
-                                            //               : const SizedBox(),
-                                            //           IconButton(
-                                            //             icon: Container(
-                                            //                 decoration: BoxDecoration(
-                                            //                     color: mainclr,
-                                            //                     borderRadius:
-                                            //                         BorderRadius
-                                            //                             .circular(
-                                            //                                 10)),
-                                            //                 child: const Padding(
-                                            //                   padding:
-                                            //                       EdgeInsets.all(5),
-                                            //                   child: Icon(
-                                            //                     Icons.add,
-                                            //                     color: Colors.white,
-                                            //                     size: 17,
-                                            //                   ),
-                                            //                 )),
-                                            //             onPressed: () {
-                                            //               // _changeQuantity(item, 1);
-                                            //             },
-                                            //           ),
-                                            //         ],
-                                            //       ),
-                                            //       const Text('Orderd Qty : 5'),
-                                            //     ],
-                                            //   ),
-                                            // ),
-                                            ),
+                                            )),
                                       );
                                     },
                                   ),
@@ -543,7 +487,15 @@ class OrderDetailsPage extends StatelessWidget {
                         child: MainButton(
                             label: 'Print KOT',
                             onpress: () {
-                              //  _isPrintKOTEnabled ? _printKOT : null
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return SelectedProductsPage();
+                                },
+                              ));
+
+                              BlocProvider.of<ItemsToKotBloc>(context).add(
+                                  ItemsToKotEvent.itemsFromOrder(
+                                      items: state.toAddItems));
                             }),
                       ),
                       Padding(
