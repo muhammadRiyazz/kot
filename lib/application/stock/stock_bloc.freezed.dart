@@ -18,33 +18,33 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$StockEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchStocks,
-    required TResult Function() fetchCategory,
+    required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, Product product, String from) add,
-    required TResult Function(Product product, String from) delete,
+    required TResult Function(int qty, bool? update, String? amount,
+            Product product, String from, bool isIncrement)
+        add,
     required TResult Function(String from, String searchQuary) search,
     required TResult Function(Category category, String from) categorySelection,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchStocks,
-    TResult? Function()? fetchCategory,
+    TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, Product product, String from)? add,
-    TResult? Function(Product product, String from)? delete,
+    TResult? Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult? Function(String from, String searchQuary)? search,
     TResult? Function(Category category, String from)? categorySelection,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchStocks,
-    TResult Function()? fetchCategory,
+    TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, Product product, String from)? add,
-    TResult Function(Product product, String from)? delete,
+    TResult Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult Function(String from, String searchQuary)? search,
     TResult Function(Category category, String from)? categorySelection,
     required TResult orElse(),
@@ -52,33 +52,28 @@ mixin _$StockEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FetchStocks value) fetchStocks,
-    required TResult Function(FetchCategory value) fetchCategory,
+    required TResult Function(FetchStocksAndCategory value)
+        fetchStocksAndCategory,
     required TResult Function(Clearcategory value) clearcategory,
     required TResult Function(Add value) add,
-    required TResult Function(Delete value) delete,
     required TResult Function(Search value) search,
     required TResult Function(CategorySelection value) categorySelection,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FetchStocks value)? fetchStocks,
-    TResult? Function(FetchCategory value)? fetchCategory,
+    TResult? Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult? Function(Clearcategory value)? clearcategory,
     TResult? Function(Add value)? add,
-    TResult? Function(Delete value)? delete,
     TResult? Function(Search value)? search,
     TResult? Function(CategorySelection value)? categorySelection,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FetchStocks value)? fetchStocks,
-    TResult Function(FetchCategory value)? fetchCategory,
+    TResult Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult Function(Clearcategory value)? clearcategory,
     TResult Function(Add value)? add,
-    TResult Function(Delete value)? delete,
     TResult Function(Search value)? search,
     TResult Function(CategorySelection value)? categorySelection,
     required TResult orElse(),
@@ -108,18 +103,20 @@ class _$StockEventCopyWithImpl<$Res, $Val extends StockEvent>
 }
 
 /// @nodoc
-abstract class _$$FetchStocksImplCopyWith<$Res> {
-  factory _$$FetchStocksImplCopyWith(
-          _$FetchStocksImpl value, $Res Function(_$FetchStocksImpl) then) =
-      __$$FetchStocksImplCopyWithImpl<$Res>;
+abstract class _$$FetchStocksAndCategoryImplCopyWith<$Res> {
+  factory _$$FetchStocksAndCategoryImplCopyWith(
+          _$FetchStocksAndCategoryImpl value,
+          $Res Function(_$FetchStocksAndCategoryImpl) then) =
+      __$$FetchStocksAndCategoryImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FetchStocksImplCopyWithImpl<$Res>
-    extends _$StockEventCopyWithImpl<$Res, _$FetchStocksImpl>
-    implements _$$FetchStocksImplCopyWith<$Res> {
-  __$$FetchStocksImplCopyWithImpl(
-      _$FetchStocksImpl _value, $Res Function(_$FetchStocksImpl) _then)
+class __$$FetchStocksAndCategoryImplCopyWithImpl<$Res>
+    extends _$StockEventCopyWithImpl<$Res, _$FetchStocksAndCategoryImpl>
+    implements _$$FetchStocksAndCategoryImplCopyWith<$Res> {
+  __$$FetchStocksAndCategoryImplCopyWithImpl(
+      _$FetchStocksAndCategoryImpl _value,
+      $Res Function(_$FetchStocksAndCategoryImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of StockEvent
@@ -128,18 +125,19 @@ class __$$FetchStocksImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FetchStocksImpl implements FetchStocks {
-  const _$FetchStocksImpl();
+class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
+  const _$FetchStocksAndCategoryImpl();
 
   @override
   String toString() {
-    return 'StockEvent.fetchStocks()';
+    return 'StockEvent.fetchStocksAndCategory()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FetchStocksImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$FetchStocksAndCategoryImpl);
   }
 
   @override
@@ -148,45 +146,45 @@ class _$FetchStocksImpl implements FetchStocks {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchStocks,
-    required TResult Function() fetchCategory,
+    required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, Product product, String from) add,
-    required TResult Function(Product product, String from) delete,
+    required TResult Function(int qty, bool? update, String? amount,
+            Product product, String from, bool isIncrement)
+        add,
     required TResult Function(String from, String searchQuary) search,
     required TResult Function(Category category, String from) categorySelection,
   }) {
-    return fetchStocks();
+    return fetchStocksAndCategory();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchStocks,
-    TResult? Function()? fetchCategory,
+    TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, Product product, String from)? add,
-    TResult? Function(Product product, String from)? delete,
+    TResult? Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult? Function(String from, String searchQuary)? search,
     TResult? Function(Category category, String from)? categorySelection,
   }) {
-    return fetchStocks?.call();
+    return fetchStocksAndCategory?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchStocks,
-    TResult Function()? fetchCategory,
+    TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, Product product, String from)? add,
-    TResult Function(Product product, String from)? delete,
+    TResult Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult Function(String from, String searchQuary)? search,
     TResult Function(Category category, String from)? categorySelection,
     required TResult orElse(),
   }) {
-    if (fetchStocks != null) {
-      return fetchStocks();
+    if (fetchStocksAndCategory != null) {
+      return fetchStocksAndCategory();
     }
     return orElse();
   }
@@ -194,187 +192,47 @@ class _$FetchStocksImpl implements FetchStocks {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FetchStocks value) fetchStocks,
-    required TResult Function(FetchCategory value) fetchCategory,
+    required TResult Function(FetchStocksAndCategory value)
+        fetchStocksAndCategory,
     required TResult Function(Clearcategory value) clearcategory,
     required TResult Function(Add value) add,
-    required TResult Function(Delete value) delete,
     required TResult Function(Search value) search,
     required TResult Function(CategorySelection value) categorySelection,
   }) {
-    return fetchStocks(this);
+    return fetchStocksAndCategory(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FetchStocks value)? fetchStocks,
-    TResult? Function(FetchCategory value)? fetchCategory,
+    TResult? Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult? Function(Clearcategory value)? clearcategory,
     TResult? Function(Add value)? add,
-    TResult? Function(Delete value)? delete,
     TResult? Function(Search value)? search,
     TResult? Function(CategorySelection value)? categorySelection,
   }) {
-    return fetchStocks?.call(this);
+    return fetchStocksAndCategory?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FetchStocks value)? fetchStocks,
-    TResult Function(FetchCategory value)? fetchCategory,
+    TResult Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult Function(Clearcategory value)? clearcategory,
     TResult Function(Add value)? add,
-    TResult Function(Delete value)? delete,
     TResult Function(Search value)? search,
     TResult Function(CategorySelection value)? categorySelection,
     required TResult orElse(),
   }) {
-    if (fetchStocks != null) {
-      return fetchStocks(this);
+    if (fetchStocksAndCategory != null) {
+      return fetchStocksAndCategory(this);
     }
     return orElse();
   }
 }
 
-abstract class FetchStocks implements StockEvent {
-  const factory FetchStocks() = _$FetchStocksImpl;
-}
-
-/// @nodoc
-abstract class _$$FetchCategoryImplCopyWith<$Res> {
-  factory _$$FetchCategoryImplCopyWith(
-          _$FetchCategoryImpl value, $Res Function(_$FetchCategoryImpl) then) =
-      __$$FetchCategoryImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$FetchCategoryImplCopyWithImpl<$Res>
-    extends _$StockEventCopyWithImpl<$Res, _$FetchCategoryImpl>
-    implements _$$FetchCategoryImplCopyWith<$Res> {
-  __$$FetchCategoryImplCopyWithImpl(
-      _$FetchCategoryImpl _value, $Res Function(_$FetchCategoryImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of StockEvent
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$FetchCategoryImpl implements FetchCategory {
-  const _$FetchCategoryImpl();
-
-  @override
-  String toString() {
-    return 'StockEvent.fetchCategory()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FetchCategoryImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() fetchStocks,
-    required TResult Function() fetchCategory,
-    required TResult Function() clearcategory,
-    required TResult Function(int qty, Product product, String from) add,
-    required TResult Function(Product product, String from) delete,
-    required TResult Function(String from, String searchQuary) search,
-    required TResult Function(Category category, String from) categorySelection,
-  }) {
-    return fetchCategory();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchStocks,
-    TResult? Function()? fetchCategory,
-    TResult? Function()? clearcategory,
-    TResult? Function(int qty, Product product, String from)? add,
-    TResult? Function(Product product, String from)? delete,
-    TResult? Function(String from, String searchQuary)? search,
-    TResult? Function(Category category, String from)? categorySelection,
-  }) {
-    return fetchCategory?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchStocks,
-    TResult Function()? fetchCategory,
-    TResult Function()? clearcategory,
-    TResult Function(int qty, Product product, String from)? add,
-    TResult Function(Product product, String from)? delete,
-    TResult Function(String from, String searchQuary)? search,
-    TResult Function(Category category, String from)? categorySelection,
-    required TResult orElse(),
-  }) {
-    if (fetchCategory != null) {
-      return fetchCategory();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(FetchStocks value) fetchStocks,
-    required TResult Function(FetchCategory value) fetchCategory,
-    required TResult Function(Clearcategory value) clearcategory,
-    required TResult Function(Add value) add,
-    required TResult Function(Delete value) delete,
-    required TResult Function(Search value) search,
-    required TResult Function(CategorySelection value) categorySelection,
-  }) {
-    return fetchCategory(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FetchStocks value)? fetchStocks,
-    TResult? Function(FetchCategory value)? fetchCategory,
-    TResult? Function(Clearcategory value)? clearcategory,
-    TResult? Function(Add value)? add,
-    TResult? Function(Delete value)? delete,
-    TResult? Function(Search value)? search,
-    TResult? Function(CategorySelection value)? categorySelection,
-  }) {
-    return fetchCategory?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(FetchStocks value)? fetchStocks,
-    TResult Function(FetchCategory value)? fetchCategory,
-    TResult Function(Clearcategory value)? clearcategory,
-    TResult Function(Add value)? add,
-    TResult Function(Delete value)? delete,
-    TResult Function(Search value)? search,
-    TResult Function(CategorySelection value)? categorySelection,
-    required TResult orElse(),
-  }) {
-    if (fetchCategory != null) {
-      return fetchCategory(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class FetchCategory implements StockEvent {
-  const factory FetchCategory() = _$FetchCategoryImpl;
+abstract class FetchStocksAndCategory implements StockEvent {
+  const factory FetchStocksAndCategory() = _$FetchStocksAndCategoryImpl;
 }
 
 /// @nodoc
@@ -418,11 +276,11 @@ class _$ClearcategoryImpl implements Clearcategory {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchStocks,
-    required TResult Function() fetchCategory,
+    required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, Product product, String from) add,
-    required TResult Function(Product product, String from) delete,
+    required TResult Function(int qty, bool? update, String? amount,
+            Product product, String from, bool isIncrement)
+        add,
     required TResult Function(String from, String searchQuary) search,
     required TResult Function(Category category, String from) categorySelection,
   }) {
@@ -432,11 +290,11 @@ class _$ClearcategoryImpl implements Clearcategory {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchStocks,
-    TResult? Function()? fetchCategory,
+    TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, Product product, String from)? add,
-    TResult? Function(Product product, String from)? delete,
+    TResult? Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult? Function(String from, String searchQuary)? search,
     TResult? Function(Category category, String from)? categorySelection,
   }) {
@@ -446,11 +304,11 @@ class _$ClearcategoryImpl implements Clearcategory {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchStocks,
-    TResult Function()? fetchCategory,
+    TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, Product product, String from)? add,
-    TResult Function(Product product, String from)? delete,
+    TResult Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult Function(String from, String searchQuary)? search,
     TResult Function(Category category, String from)? categorySelection,
     required TResult orElse(),
@@ -464,11 +322,10 @@ class _$ClearcategoryImpl implements Clearcategory {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FetchStocks value) fetchStocks,
-    required TResult Function(FetchCategory value) fetchCategory,
+    required TResult Function(FetchStocksAndCategory value)
+        fetchStocksAndCategory,
     required TResult Function(Clearcategory value) clearcategory,
     required TResult Function(Add value) add,
-    required TResult Function(Delete value) delete,
     required TResult Function(Search value) search,
     required TResult Function(CategorySelection value) categorySelection,
   }) {
@@ -478,11 +335,9 @@ class _$ClearcategoryImpl implements Clearcategory {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FetchStocks value)? fetchStocks,
-    TResult? Function(FetchCategory value)? fetchCategory,
+    TResult? Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult? Function(Clearcategory value)? clearcategory,
     TResult? Function(Add value)? add,
-    TResult? Function(Delete value)? delete,
     TResult? Function(Search value)? search,
     TResult? Function(CategorySelection value)? categorySelection,
   }) {
@@ -492,11 +347,9 @@ class _$ClearcategoryImpl implements Clearcategory {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FetchStocks value)? fetchStocks,
-    TResult Function(FetchCategory value)? fetchCategory,
+    TResult Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult Function(Clearcategory value)? clearcategory,
     TResult Function(Add value)? add,
-    TResult Function(Delete value)? delete,
     TResult Function(Search value)? search,
     TResult Function(CategorySelection value)? categorySelection,
     required TResult orElse(),
@@ -517,7 +370,13 @@ abstract class _$$AddImplCopyWith<$Res> {
   factory _$$AddImplCopyWith(_$AddImpl value, $Res Function(_$AddImpl) then) =
       __$$AddImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int qty, Product product, String from});
+  $Res call(
+      {int qty,
+      bool? update,
+      String? amount,
+      Product product,
+      String from,
+      bool isIncrement});
 }
 
 /// @nodoc
@@ -533,14 +392,25 @@ class __$$AddImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? qty = null,
+    Object? update = freezed,
+    Object? amount = freezed,
     Object? product = null,
     Object? from = null,
+    Object? isIncrement = null,
   }) {
     return _then(_$AddImpl(
       qty: null == qty
           ? _value.qty
           : qty // ignore: cast_nullable_to_non_nullable
               as int,
+      update: freezed == update
+          ? _value.update
+          : update // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      amount: freezed == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as String?,
       product: null == product
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
@@ -549,6 +419,10 @@ class __$$AddImplCopyWithImpl<$Res>
           ? _value.from
           : from // ignore: cast_nullable_to_non_nullable
               as String,
+      isIncrement: null == isIncrement
+          ? _value.isIncrement
+          : isIncrement // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -557,18 +431,29 @@ class __$$AddImplCopyWithImpl<$Res>
 
 class _$AddImpl implements Add {
   const _$AddImpl(
-      {required this.qty, required this.product, required this.from});
+      {required this.qty,
+      this.update,
+      this.amount,
+      required this.product,
+      required this.from,
+      required this.isIncrement});
 
   @override
   final int qty;
   @override
+  final bool? update;
+  @override
+  final String? amount;
+  @override
   final Product product;
   @override
   final String from;
+  @override
+  final bool isIncrement;
 
   @override
   String toString() {
-    return 'StockEvent.add(qty: $qty, product: $product, from: $from)';
+    return 'StockEvent.add(qty: $qty, update: $update, amount: $amount, product: $product, from: $from, isIncrement: $isIncrement)';
   }
 
   @override
@@ -577,12 +462,17 @@ class _$AddImpl implements Add {
         (other.runtimeType == runtimeType &&
             other is _$AddImpl &&
             (identical(other.qty, qty) || other.qty == qty) &&
+            (identical(other.update, update) || other.update == update) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.product, product) || other.product == product) &&
-            (identical(other.from, from) || other.from == from));
+            (identical(other.from, from) || other.from == from) &&
+            (identical(other.isIncrement, isIncrement) ||
+                other.isIncrement == isIncrement));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, qty, product, from);
+  int get hashCode =>
+      Object.hash(runtimeType, qty, update, amount, product, from, isIncrement);
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -595,45 +485,45 @@ class _$AddImpl implements Add {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchStocks,
-    required TResult Function() fetchCategory,
+    required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, Product product, String from) add,
-    required TResult Function(Product product, String from) delete,
+    required TResult Function(int qty, bool? update, String? amount,
+            Product product, String from, bool isIncrement)
+        add,
     required TResult Function(String from, String searchQuary) search,
     required TResult Function(Category category, String from) categorySelection,
   }) {
-    return add(qty, product, from);
+    return add(qty, update, amount, product, from, isIncrement);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchStocks,
-    TResult? Function()? fetchCategory,
+    TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, Product product, String from)? add,
-    TResult? Function(Product product, String from)? delete,
+    TResult? Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult? Function(String from, String searchQuary)? search,
     TResult? Function(Category category, String from)? categorySelection,
   }) {
-    return add?.call(qty, product, from);
+    return add?.call(qty, update, amount, product, from, isIncrement);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchStocks,
-    TResult Function()? fetchCategory,
+    TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, Product product, String from)? add,
-    TResult Function(Product product, String from)? delete,
+    TResult Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult Function(String from, String searchQuary)? search,
     TResult Function(Category category, String from)? categorySelection,
     required TResult orElse(),
   }) {
     if (add != null) {
-      return add(qty, product, from);
+      return add(qty, update, amount, product, from, isIncrement);
     }
     return orElse();
   }
@@ -641,11 +531,10 @@ class _$AddImpl implements Add {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FetchStocks value) fetchStocks,
-    required TResult Function(FetchCategory value) fetchCategory,
+    required TResult Function(FetchStocksAndCategory value)
+        fetchStocksAndCategory,
     required TResult Function(Clearcategory value) clearcategory,
     required TResult Function(Add value) add,
-    required TResult Function(Delete value) delete,
     required TResult Function(Search value) search,
     required TResult Function(CategorySelection value) categorySelection,
   }) {
@@ -655,11 +544,9 @@ class _$AddImpl implements Add {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FetchStocks value)? fetchStocks,
-    TResult? Function(FetchCategory value)? fetchCategory,
+    TResult? Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult? Function(Clearcategory value)? clearcategory,
     TResult? Function(Add value)? add,
-    TResult? Function(Delete value)? delete,
     TResult? Function(Search value)? search,
     TResult? Function(CategorySelection value)? categorySelection,
   }) {
@@ -669,11 +556,9 @@ class _$AddImpl implements Add {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FetchStocks value)? fetchStocks,
-    TResult Function(FetchCategory value)? fetchCategory,
+    TResult Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult Function(Clearcategory value)? clearcategory,
     TResult Function(Add value)? add,
-    TResult Function(Delete value)? delete,
     TResult Function(Search value)? search,
     TResult Function(CategorySelection value)? categorySelection,
     required TResult orElse(),
@@ -688,198 +573,23 @@ class _$AddImpl implements Add {
 abstract class Add implements StockEvent {
   const factory Add(
       {required final int qty,
+      final bool? update,
+      final String? amount,
       required final Product product,
-      required final String from}) = _$AddImpl;
+      required final String from,
+      required final bool isIncrement}) = _$AddImpl;
 
   int get qty;
+  bool? get update;
+  String? get amount;
   Product get product;
   String get from;
+  bool get isIncrement;
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddImplCopyWith<_$AddImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$DeleteImplCopyWith<$Res> {
-  factory _$$DeleteImplCopyWith(
-          _$DeleteImpl value, $Res Function(_$DeleteImpl) then) =
-      __$$DeleteImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({Product product, String from});
-}
-
-/// @nodoc
-class __$$DeleteImplCopyWithImpl<$Res>
-    extends _$StockEventCopyWithImpl<$Res, _$DeleteImpl>
-    implements _$$DeleteImplCopyWith<$Res> {
-  __$$DeleteImplCopyWithImpl(
-      _$DeleteImpl _value, $Res Function(_$DeleteImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of StockEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? product = null,
-    Object? from = null,
-  }) {
-    return _then(_$DeleteImpl(
-      product: null == product
-          ? _value.product
-          : product // ignore: cast_nullable_to_non_nullable
-              as Product,
-      from: null == from
-          ? _value.from
-          : from // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$DeleteImpl implements Delete {
-  const _$DeleteImpl({required this.product, required this.from});
-
-  @override
-  final Product product;
-  @override
-  final String from;
-
-  @override
-  String toString() {
-    return 'StockEvent.delete(product: $product, from: $from)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeleteImpl &&
-            (identical(other.product, product) || other.product == product) &&
-            (identical(other.from, from) || other.from == from));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, product, from);
-
-  /// Create a copy of StockEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeleteImplCopyWith<_$DeleteImpl> get copyWith =>
-      __$$DeleteImplCopyWithImpl<_$DeleteImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() fetchStocks,
-    required TResult Function() fetchCategory,
-    required TResult Function() clearcategory,
-    required TResult Function(int qty, Product product, String from) add,
-    required TResult Function(Product product, String from) delete,
-    required TResult Function(String from, String searchQuary) search,
-    required TResult Function(Category category, String from) categorySelection,
-  }) {
-    return delete(product, from);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchStocks,
-    TResult? Function()? fetchCategory,
-    TResult? Function()? clearcategory,
-    TResult? Function(int qty, Product product, String from)? add,
-    TResult? Function(Product product, String from)? delete,
-    TResult? Function(String from, String searchQuary)? search,
-    TResult? Function(Category category, String from)? categorySelection,
-  }) {
-    return delete?.call(product, from);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchStocks,
-    TResult Function()? fetchCategory,
-    TResult Function()? clearcategory,
-    TResult Function(int qty, Product product, String from)? add,
-    TResult Function(Product product, String from)? delete,
-    TResult Function(String from, String searchQuary)? search,
-    TResult Function(Category category, String from)? categorySelection,
-    required TResult orElse(),
-  }) {
-    if (delete != null) {
-      return delete(product, from);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(FetchStocks value) fetchStocks,
-    required TResult Function(FetchCategory value) fetchCategory,
-    required TResult Function(Clearcategory value) clearcategory,
-    required TResult Function(Add value) add,
-    required TResult Function(Delete value) delete,
-    required TResult Function(Search value) search,
-    required TResult Function(CategorySelection value) categorySelection,
-  }) {
-    return delete(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FetchStocks value)? fetchStocks,
-    TResult? Function(FetchCategory value)? fetchCategory,
-    TResult? Function(Clearcategory value)? clearcategory,
-    TResult? Function(Add value)? add,
-    TResult? Function(Delete value)? delete,
-    TResult? Function(Search value)? search,
-    TResult? Function(CategorySelection value)? categorySelection,
-  }) {
-    return delete?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(FetchStocks value)? fetchStocks,
-    TResult Function(FetchCategory value)? fetchCategory,
-    TResult Function(Clearcategory value)? clearcategory,
-    TResult Function(Add value)? add,
-    TResult Function(Delete value)? delete,
-    TResult Function(Search value)? search,
-    TResult Function(CategorySelection value)? categorySelection,
-    required TResult orElse(),
-  }) {
-    if (delete != null) {
-      return delete(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class Delete implements StockEvent {
-  const factory Delete(
-      {required final Product product,
-      required final String from}) = _$DeleteImpl;
-
-  Product get product;
-  String get from;
-
-  /// Create a copy of StockEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DeleteImplCopyWith<_$DeleteImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -960,11 +670,11 @@ class _$SearchImpl implements Search {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchStocks,
-    required TResult Function() fetchCategory,
+    required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, Product product, String from) add,
-    required TResult Function(Product product, String from) delete,
+    required TResult Function(int qty, bool? update, String? amount,
+            Product product, String from, bool isIncrement)
+        add,
     required TResult Function(String from, String searchQuary) search,
     required TResult Function(Category category, String from) categorySelection,
   }) {
@@ -974,11 +684,11 @@ class _$SearchImpl implements Search {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchStocks,
-    TResult? Function()? fetchCategory,
+    TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, Product product, String from)? add,
-    TResult? Function(Product product, String from)? delete,
+    TResult? Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult? Function(String from, String searchQuary)? search,
     TResult? Function(Category category, String from)? categorySelection,
   }) {
@@ -988,11 +698,11 @@ class _$SearchImpl implements Search {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchStocks,
-    TResult Function()? fetchCategory,
+    TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, Product product, String from)? add,
-    TResult Function(Product product, String from)? delete,
+    TResult Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult Function(String from, String searchQuary)? search,
     TResult Function(Category category, String from)? categorySelection,
     required TResult orElse(),
@@ -1006,11 +716,10 @@ class _$SearchImpl implements Search {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FetchStocks value) fetchStocks,
-    required TResult Function(FetchCategory value) fetchCategory,
+    required TResult Function(FetchStocksAndCategory value)
+        fetchStocksAndCategory,
     required TResult Function(Clearcategory value) clearcategory,
     required TResult Function(Add value) add,
-    required TResult Function(Delete value) delete,
     required TResult Function(Search value) search,
     required TResult Function(CategorySelection value) categorySelection,
   }) {
@@ -1020,11 +729,9 @@ class _$SearchImpl implements Search {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FetchStocks value)? fetchStocks,
-    TResult? Function(FetchCategory value)? fetchCategory,
+    TResult? Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult? Function(Clearcategory value)? clearcategory,
     TResult? Function(Add value)? add,
-    TResult? Function(Delete value)? delete,
     TResult? Function(Search value)? search,
     TResult? Function(CategorySelection value)? categorySelection,
   }) {
@@ -1034,11 +741,9 @@ class _$SearchImpl implements Search {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FetchStocks value)? fetchStocks,
-    TResult Function(FetchCategory value)? fetchCategory,
+    TResult Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult Function(Clearcategory value)? clearcategory,
     TResult Function(Add value)? add,
-    TResult Function(Delete value)? delete,
     TResult Function(Search value)? search,
     TResult Function(CategorySelection value)? categorySelection,
     required TResult orElse(),
@@ -1143,11 +848,11 @@ class _$CategorySelectionImpl implements CategorySelection {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchStocks,
-    required TResult Function() fetchCategory,
+    required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, Product product, String from) add,
-    required TResult Function(Product product, String from) delete,
+    required TResult Function(int qty, bool? update, String? amount,
+            Product product, String from, bool isIncrement)
+        add,
     required TResult Function(String from, String searchQuary) search,
     required TResult Function(Category category, String from) categorySelection,
   }) {
@@ -1157,11 +862,11 @@ class _$CategorySelectionImpl implements CategorySelection {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchStocks,
-    TResult? Function()? fetchCategory,
+    TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, Product product, String from)? add,
-    TResult? Function(Product product, String from)? delete,
+    TResult? Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult? Function(String from, String searchQuary)? search,
     TResult? Function(Category category, String from)? categorySelection,
   }) {
@@ -1171,11 +876,11 @@ class _$CategorySelectionImpl implements CategorySelection {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchStocks,
-    TResult Function()? fetchCategory,
+    TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, Product product, String from)? add,
-    TResult Function(Product product, String from)? delete,
+    TResult Function(int qty, bool? update, String? amount, Product product,
+            String from, bool isIncrement)?
+        add,
     TResult Function(String from, String searchQuary)? search,
     TResult Function(Category category, String from)? categorySelection,
     required TResult orElse(),
@@ -1189,11 +894,10 @@ class _$CategorySelectionImpl implements CategorySelection {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(FetchStocks value) fetchStocks,
-    required TResult Function(FetchCategory value) fetchCategory,
+    required TResult Function(FetchStocksAndCategory value)
+        fetchStocksAndCategory,
     required TResult Function(Clearcategory value) clearcategory,
     required TResult Function(Add value) add,
-    required TResult Function(Delete value) delete,
     required TResult Function(Search value) search,
     required TResult Function(CategorySelection value) categorySelection,
   }) {
@@ -1203,11 +907,9 @@ class _$CategorySelectionImpl implements CategorySelection {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(FetchStocks value)? fetchStocks,
-    TResult? Function(FetchCategory value)? fetchCategory,
+    TResult? Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult? Function(Clearcategory value)? clearcategory,
     TResult? Function(Add value)? add,
-    TResult? Function(Delete value)? delete,
     TResult? Function(Search value)? search,
     TResult? Function(CategorySelection value)? categorySelection,
   }) {
@@ -1217,11 +919,9 @@ class _$CategorySelectionImpl implements CategorySelection {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(FetchStocks value)? fetchStocks,
-    TResult Function(FetchCategory value)? fetchCategory,
+    TResult Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
     TResult Function(Clearcategory value)? clearcategory,
     TResult Function(Add value)? add,
-    TResult Function(Delete value)? delete,
     TResult Function(Search value)? search,
     TResult Function(CategorySelection value)? categorySelection,
     required TResult orElse(),

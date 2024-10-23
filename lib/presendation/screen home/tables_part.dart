@@ -5,11 +5,12 @@ import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
+import 'package:restaurant_kot/presendation/screen%20home/loading/table_page.dart';
 import 'package:restaurant_kot/presendation/screen%20orders%20from%20table/order_list_table.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
 
 class Tablespart extends StatelessWidget {
-  Tablespart({super.key});
+  const Tablespart({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +45,7 @@ class Tablespart extends StatelessWidget {
       child: BlocBuilder<TablesBloc, TablesState>(
         builder: (context, state) {
           return state.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
+              ? buildShimmerGrid(crossAxisCount, childAspectRatio, boxPadding)
               : SingleChildScrollView(
                   child: Column(
                     children: [
@@ -77,7 +76,7 @@ class Tablespart extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10),
                                   child: DropdownButton<String>(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       color: mainclr,
                                       size: 30,
@@ -117,172 +116,226 @@ class Tablespart extends StatelessWidget {
                                     },
                                     // Customize the dropdown appearance
                                     underline:
-                                        SizedBox(), // Remove the underline
+                                        const SizedBox(), // Remove the underline
                                     isExpanded:
                                         true, // Make the dropdown expand to fill the width
-                                    style: TextStyle(color: mainclr),
+                                    style: const TextStyle(color: mainclr),
                                   ),
                                 )),
                           ),
                         ],
                       ),
-                      // GridView.builder with dynamic columns
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: childAspectRatio,
-                          crossAxisCount:
-                              crossAxisCount, // Dynamic number of columns
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                        ),
-                        itemCount: state.tables.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            margin: const EdgeInsets.all(3),
-                            elevation: 8,
-                            borderOnForeground: true,
-                            shadowColor:
-                                const Color.fromARGB(255, 241, 241, 241),
-                            child: InkWell(
-                              onTap: () {
-                                if (state.tables[index].isEmpty) {
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) {
-                                      return ProductChoosingPage();
-                                    },
-                                  ));
-                                } else {
 
-                                              BlocProvider.of<OrdersBloc>(context).add(OrdersEvent.tableOrders(tableNo: state.tables[index].tableName));
-
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) {
-                                      return  ScreenOrdersList(table:state.tables[index] ,);
-                                    },
-                                  ));
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(boxPadding),
-                                decoration: BoxDecoration(
-                                  color: boxbgwhite,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        state.tables[index].tableName,
-                                        style: TextStyle(
-                                            color: mainclr,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: textSize),
-                                      ),
-                                    ),
-                                    const Divider(height: 0),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Center(
-                                            child: Container(
-                                              width: boxImageSize + 8,
-                                              height: boxImageSize,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    state.tables[index].isEmpty
-                                                        ? Colors.white
-                                                        : mainclr,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                border:
-                                                    Border.all(color: mainclr),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5,
-                                                        horizontal: 6),
-                                                child: Image.asset(
-                                                  state.tables[index].isEmpty
-                                                      ? 'assets/img/table/emptytable.png'
-                                                      : 'assets/img/table/tableicon.png',
-                                                  fit: BoxFit.contain,
-                                                  color: state
-                                                          .tables[index].isEmpty
-                                                      ? null
-                                                      : Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${state.tables[index].orderCount} Orders',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: textSize -
-                                                      1, // slightly smaller for order info
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            Text(
-                                              state.tables[index].isEmpty
-                                                  ? '--:--'
-                                                  : time(state.tables[index]
-                                                      .firstOrderTime!),
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: textSize -
-                                                      4, // smaller for time
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Amount',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: textSize - 3,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                        Text(
-                                          '₹ ${state.tables[index].totalOrderPrice}',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: textSize - 2,
-                                              fontWeight: FontWeight.w500),
-                                        )
-                                      ],
-                                    )
-                                  ],
+                      state.tables.isEmpty
+                          ? Container(
+                              // color: Colors.amberAccent,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 90),
+                                child: Center(
+                                  child: Image.asset(
+                                      'assets/img/no data/No_data.png'),
                                 ),
                               ),
+                            )
+                          : GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                childAspectRatio: childAspectRatio,
+                                crossAxisCount:
+                                    crossAxisCount, // Dynamic number of columns
+                                crossAxisSpacing: 10.0,
+                                mainAxisSpacing: 10.0,
+                              ),
+                              itemCount: state.tables.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  margin: const EdgeInsets.all(3),
+                                  elevation: 8,
+                                  borderOnForeground: true,
+                                  shadowColor:
+                                      const Color.fromARGB(255, 241, 241, 241),
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (state.tables[index].isEmpty) {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                          builder: (context) {
+                                            return ProductChoosingPage(
+                                              table:
+                                                  state.tables[index].tableName,
+                                            );
+                                          },
+                                        ));
+                                      } else {
+                                        BlocProvider.of<OrdersBloc>(context)
+                                            .add(OrdersEvent.tableOrders(
+                                                tableNo: state
+                                                    .tables[index].tableName));
+
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                          builder: (context) {
+                                            return ScreenOrdersList(
+                                              table: state.tables[index],
+                                            );
+                                          },
+                                        ));
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(boxPadding),
+                                      decoration: BoxDecoration(
+                                        color: boxbgwhite,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 10),
+                                            child: Text(
+                                              state.tables[index].tableName,
+                                              style: TextStyle(
+                                                  color: mainclr,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: textSize),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            color: mainclr,
+                                            child: Center(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Text(
+                                                    state.tables[index]
+                                                        .tableType,
+                                                    style: TextStyle(
+                                                        color: const Color
+                                                            .fromARGB(
+                                                            255, 255, 255, 255),
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        fontSize:
+                                                            textSize - 5)),
+                                              ),
+                                            ),
+                                          ),
+                                          const Divider(
+                                            height: 0,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Center(
+                                                  child: Container(
+                                                    width: boxImageSize + 8,
+                                                    height: boxImageSize,
+                                                    decoration: BoxDecoration(
+                                                      color: state.tables[index]
+                                                              .isEmpty
+                                                          ? Colors.white
+                                                          : mainclr,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      border: Border.all(
+                                                          color: mainclr),
+                                                    ),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 5,
+                                                          horizontal: 6),
+                                                      child: Image.asset(
+                                                        state.tables[index]
+                                                                .isEmpty
+                                                            ? 'assets/img/table/emptytable.png'
+                                                            : 'assets/img/table/tableicon.png',
+                                                        fit: BoxFit.contain,
+                                                        color: state
+                                                                .tables[index]
+                                                                .isEmpty
+                                                            ? null
+                                                            : Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${state.tables[index].orderCount} Orders',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: textSize -
+                                                            1, // slightly smaller for order info
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                  Text(
+                                                    state.tables[index].isEmpty
+                                                        ? '--:--'
+                                                        : time(state
+                                                            .tables[index]
+                                                            .firstOrderTime!),
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: textSize -
+                                                            4, // smaller for time
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Amount',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: textSize - 3,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                              Text(
+                                                '₹ ${state.tables[index].totalOrderPrice}',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: textSize - 2,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ],
                   ),
                 );

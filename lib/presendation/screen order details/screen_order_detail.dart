@@ -128,18 +128,21 @@ class OrderDetailsPage extends StatelessWidget {
                                           ),
                                         ),
                                         onPressed: () {
-                                          BlocProvider.of<ItemsToKotBloc>(
-                                                  context)
-                                              .add(ItemsToKotEvent
-                                                  .itemsFromOrder(
-                                                      items: state.toAddItems));
+                                          // BlocProvider.of<ItemsToKotBloc>(
+                                          //         context)
+                                          //     .add(ItemsToKotEvent
+                                          //         .itemsFromOrder(
+                                          //             items: state.toAddItems));
 
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return ProductChoosingPage();
-                                            },
-                                          ));
+                                          // Navigator.push(context,
+                                          //     MaterialPageRoute(
+                                          //   builder: (context) {
+                                          //     return ProductChoosingPage(
+                                          //       table: order.tableName,
+                                          //       order: order.orderNumber,
+                                          //     );
+                                          //   },
+                                          // ));
                                         },
                                         child: const Text(
                                           'Add New Item',
@@ -493,9 +496,9 @@ class OrderDetailsPage extends StatelessWidget {
                                 },
                               ));
 
-                              BlocProvider.of<ItemsToKotBloc>(context).add(
-                                  ItemsToKotEvent.itemsFromOrder(
-                                      items: state.toAddItems));
+                              // BlocProvider.of<ItemsToKotBloc>(context).add(
+                              //     ItemsToKotEvent.itemsFromOrder(
+                              //         items: state.toAddItems));
                             }),
                       ),
                       Padding(

@@ -16,44 +16,43 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ItemsToKotEvent {
-  List<OrderItem> get items => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<OrderItem> items) itemsFromOrder,
+    required TResult Function(List<Product> items) itemsFromOrder,
+    required TResult Function(int qty, Product product, bool isIncrement) add,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<OrderItem> items)? itemsFromOrder,
+    TResult? Function(List<Product> items)? itemsFromOrder,
+    TResult? Function(int qty, Product product, bool isIncrement)? add,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<OrderItem> items)? itemsFromOrder,
+    TResult Function(List<Product> items)? itemsFromOrder,
+    TResult Function(int qty, Product product, bool isIncrement)? add,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(itemsFromOrder value) itemsFromOrder,
+    required TResult Function(Add value) add,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(itemsFromOrder value)? itemsFromOrder,
+    TResult? Function(Add value)? add,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(itemsFromOrder value)? itemsFromOrder,
+    TResult Function(Add value)? add,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  /// Create a copy of ItemsToKotEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $ItemsToKotEventCopyWith<ItemsToKotEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -62,8 +61,6 @@ abstract class $ItemsToKotEventCopyWith<$Res> {
   factory $ItemsToKotEventCopyWith(
           ItemsToKotEvent value, $Res Function(ItemsToKotEvent) then) =
       _$ItemsToKotEventCopyWithImpl<$Res, ItemsToKotEvent>;
-  @useResult
-  $Res call({List<OrderItem> items});
 }
 
 /// @nodoc
@@ -78,29 +75,15 @@ class _$ItemsToKotEventCopyWithImpl<$Res, $Val extends ItemsToKotEvent>
 
   /// Create a copy of ItemsToKotEvent
   /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? items = null,
-  }) {
-    return _then(_value.copyWith(
-      items: null == items
-          ? _value.items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<OrderItem>,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$itemsFromOrderImplCopyWith<$Res>
-    implements $ItemsToKotEventCopyWith<$Res> {
+abstract class _$$itemsFromOrderImplCopyWith<$Res> {
   factory _$$itemsFromOrderImplCopyWith(_$itemsFromOrderImpl value,
           $Res Function(_$itemsFromOrderImpl) then) =
       __$$itemsFromOrderImplCopyWithImpl<$Res>;
-  @override
   @useResult
-  $Res call({List<OrderItem> items});
+  $Res call({List<Product> items});
 }
 
 /// @nodoc
@@ -122,7 +105,7 @@ class __$$itemsFromOrderImplCopyWithImpl<$Res>
       items: null == items
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
-              as List<OrderItem>,
+              as List<Product>,
     ));
   }
 }
@@ -130,12 +113,12 @@ class __$$itemsFromOrderImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$itemsFromOrderImpl implements itemsFromOrder {
-  const _$itemsFromOrderImpl({required final List<OrderItem> items})
+  const _$itemsFromOrderImpl({required final List<Product> items})
       : _items = items;
 
-  final List<OrderItem> _items;
+  final List<Product> _items;
   @override
-  List<OrderItem> get items {
+  List<Product> get items {
     if (_items is EqualUnmodifiableListView) return _items;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_items);
@@ -170,7 +153,8 @@ class _$itemsFromOrderImpl implements itemsFromOrder {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<OrderItem> items) itemsFromOrder,
+    required TResult Function(List<Product> items) itemsFromOrder,
+    required TResult Function(int qty, Product product, bool isIncrement) add,
   }) {
     return itemsFromOrder(items);
   }
@@ -178,7 +162,8 @@ class _$itemsFromOrderImpl implements itemsFromOrder {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<OrderItem> items)? itemsFromOrder,
+    TResult? Function(List<Product> items)? itemsFromOrder,
+    TResult? Function(int qty, Product product, bool isIncrement)? add,
   }) {
     return itemsFromOrder?.call(items);
   }
@@ -186,7 +171,8 @@ class _$itemsFromOrderImpl implements itemsFromOrder {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<OrderItem> items)? itemsFromOrder,
+    TResult Function(List<Product> items)? itemsFromOrder,
+    TResult Function(int qty, Product product, bool isIncrement)? add,
     required TResult orElse(),
   }) {
     if (itemsFromOrder != null) {
@@ -199,6 +185,7 @@ class _$itemsFromOrderImpl implements itemsFromOrder {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(itemsFromOrder value) itemsFromOrder,
+    required TResult Function(Add value) add,
   }) {
     return itemsFromOrder(this);
   }
@@ -207,6 +194,7 @@ class _$itemsFromOrderImpl implements itemsFromOrder {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(itemsFromOrder value)? itemsFromOrder,
+    TResult? Function(Add value)? add,
   }) {
     return itemsFromOrder?.call(this);
   }
@@ -215,6 +203,7 @@ class _$itemsFromOrderImpl implements itemsFromOrder {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(itemsFromOrder value)? itemsFromOrder,
+    TResult Function(Add value)? add,
     required TResult orElse(),
   }) {
     if (itemsFromOrder != null) {
@@ -225,17 +214,176 @@ class _$itemsFromOrderImpl implements itemsFromOrder {
 }
 
 abstract class itemsFromOrder implements ItemsToKotEvent {
-  const factory itemsFromOrder({required final List<OrderItem> items}) =
+  const factory itemsFromOrder({required final List<Product> items}) =
       _$itemsFromOrderImpl;
 
-  @override
-  List<OrderItem> get items;
+  List<Product> get items;
 
   /// Create a copy of ItemsToKotEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$itemsFromOrderImplCopyWith<_$itemsFromOrderImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AddImplCopyWith<$Res> {
+  factory _$$AddImplCopyWith(_$AddImpl value, $Res Function(_$AddImpl) then) =
+      __$$AddImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int qty, Product product, bool isIncrement});
+}
+
+/// @nodoc
+class __$$AddImplCopyWithImpl<$Res>
+    extends _$ItemsToKotEventCopyWithImpl<$Res, _$AddImpl>
+    implements _$$AddImplCopyWith<$Res> {
+  __$$AddImplCopyWithImpl(_$AddImpl _value, $Res Function(_$AddImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of ItemsToKotEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? qty = null,
+    Object? product = null,
+    Object? isIncrement = null,
+  }) {
+    return _then(_$AddImpl(
+      qty: null == qty
+          ? _value.qty
+          : qty // ignore: cast_nullable_to_non_nullable
+              as int,
+      product: null == product
+          ? _value.product
+          : product // ignore: cast_nullable_to_non_nullable
+              as Product,
+      isIncrement: null == isIncrement
+          ? _value.isIncrement
+          : isIncrement // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AddImpl implements Add {
+  const _$AddImpl(
+      {required this.qty, required this.product, required this.isIncrement});
+
+  @override
+  final int qty;
+  @override
+  final Product product;
+  @override
+  final bool isIncrement;
+
+  @override
+  String toString() {
+    return 'ItemsToKotEvent.add(qty: $qty, product: $product, isIncrement: $isIncrement)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AddImpl &&
+            (identical(other.qty, qty) || other.qty == qty) &&
+            (identical(other.product, product) || other.product == product) &&
+            (identical(other.isIncrement, isIncrement) ||
+                other.isIncrement == isIncrement));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, qty, product, isIncrement);
+
+  /// Create a copy of ItemsToKotEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AddImplCopyWith<_$AddImpl> get copyWith =>
+      __$$AddImplCopyWithImpl<_$AddImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<Product> items) itemsFromOrder,
+    required TResult Function(int qty, Product product, bool isIncrement) add,
+  }) {
+    return add(qty, product, isIncrement);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<Product> items)? itemsFromOrder,
+    TResult? Function(int qty, Product product, bool isIncrement)? add,
+  }) {
+    return add?.call(qty, product, isIncrement);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<Product> items)? itemsFromOrder,
+    TResult Function(int qty, Product product, bool isIncrement)? add,
+    required TResult orElse(),
+  }) {
+    if (add != null) {
+      return add(qty, product, isIncrement);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(itemsFromOrder value) itemsFromOrder,
+    required TResult Function(Add value) add,
+  }) {
+    return add(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(itemsFromOrder value)? itemsFromOrder,
+    TResult? Function(Add value)? add,
+  }) {
+    return add?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(itemsFromOrder value)? itemsFromOrder,
+    TResult Function(Add value)? add,
+    required TResult orElse(),
+  }) {
+    if (add != null) {
+      return add(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Add implements ItemsToKotEvent {
+  const factory Add(
+      {required final int qty,
+      required final Product product,
+      required final bool isIncrement}) = _$AddImpl;
+
+  int get qty;
+  Product get product;
+  bool get isIncrement;
+
+  /// Create a copy of ItemsToKotEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AddImplCopyWith<_$AddImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -243,6 +391,7 @@ abstract class itemsFromOrder implements ItemsToKotEvent {
 mixin _$ItemsToKotState {
   bool get isLoading => throw _privateConstructorUsedError;
   List<OrderItem> get selectedItems => throw _privateConstructorUsedError;
+  List<Product> get productList => throw _privateConstructorUsedError;
 
   /// Create a copy of ItemsToKotState
   /// with the given fields replaced by the non-null parameter values.
@@ -257,7 +406,10 @@ abstract class $ItemsToKotStateCopyWith<$Res> {
           ItemsToKotState value, $Res Function(ItemsToKotState) then) =
       _$ItemsToKotStateCopyWithImpl<$Res, ItemsToKotState>;
   @useResult
-  $Res call({bool isLoading, List<OrderItem> selectedItems});
+  $Res call(
+      {bool isLoading,
+      List<OrderItem> selectedItems,
+      List<Product> productList});
 }
 
 /// @nodoc
@@ -277,6 +429,7 @@ class _$ItemsToKotStateCopyWithImpl<$Res, $Val extends ItemsToKotState>
   $Res call({
     Object? isLoading = null,
     Object? selectedItems = null,
+    Object? productList = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -287,6 +440,10 @@ class _$ItemsToKotStateCopyWithImpl<$Res, $Val extends ItemsToKotState>
           ? _value.selectedItems
           : selectedItems // ignore: cast_nullable_to_non_nullable
               as List<OrderItem>,
+      productList: null == productList
+          ? _value.productList
+          : productList // ignore: cast_nullable_to_non_nullable
+              as List<Product>,
     ) as $Val);
   }
 }
@@ -299,7 +456,10 @@ abstract class _$$ItemsToKotStateImplCopyWith<$Res>
       __$$ItemsToKotStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, List<OrderItem> selectedItems});
+  $Res call(
+      {bool isLoading,
+      List<OrderItem> selectedItems,
+      List<Product> productList});
 }
 
 /// @nodoc
@@ -317,6 +477,7 @@ class __$$ItemsToKotStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? selectedItems = null,
+    Object? productList = null,
   }) {
     return _then(_$ItemsToKotStateImpl(
       isLoading: null == isLoading
@@ -327,6 +488,10 @@ class __$$ItemsToKotStateImplCopyWithImpl<$Res>
           ? _value._selectedItems
           : selectedItems // ignore: cast_nullable_to_non_nullable
               as List<OrderItem>,
+      productList: null == productList
+          ? _value._productList
+          : productList // ignore: cast_nullable_to_non_nullable
+              as List<Product>,
     ));
   }
 }
@@ -335,8 +500,11 @@ class __$$ItemsToKotStateImplCopyWithImpl<$Res>
 
 class _$ItemsToKotStateImpl implements _ItemsToKotState {
   _$ItemsToKotStateImpl(
-      {required this.isLoading, required final List<OrderItem> selectedItems})
-      : _selectedItems = selectedItems;
+      {required this.isLoading,
+      required final List<OrderItem> selectedItems,
+      required final List<Product> productList})
+      : _selectedItems = selectedItems,
+        _productList = productList;
 
   @override
   final bool isLoading;
@@ -348,9 +516,17 @@ class _$ItemsToKotStateImpl implements _ItemsToKotState {
     return EqualUnmodifiableListView(_selectedItems);
   }
 
+  final List<Product> _productList;
+  @override
+  List<Product> get productList {
+    if (_productList is EqualUnmodifiableListView) return _productList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_productList);
+  }
+
   @override
   String toString() {
-    return 'ItemsToKotState(isLoading: $isLoading, selectedItems: $selectedItems)';
+    return 'ItemsToKotState(isLoading: $isLoading, selectedItems: $selectedItems, productList: $productList)';
   }
 
   @override
@@ -361,12 +537,17 @@ class _$ItemsToKotStateImpl implements _ItemsToKotState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality()
-                .equals(other._selectedItems, _selectedItems));
+                .equals(other._selectedItems, _selectedItems) &&
+            const DeepCollectionEquality()
+                .equals(other._productList, _productList));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading,
-      const DeepCollectionEquality().hash(_selectedItems));
+  int get hashCode => Object.hash(
+      runtimeType,
+      isLoading,
+      const DeepCollectionEquality().hash(_selectedItems),
+      const DeepCollectionEquality().hash(_productList));
 
   /// Create a copy of ItemsToKotState
   /// with the given fields replaced by the non-null parameter values.
@@ -381,12 +562,15 @@ class _$ItemsToKotStateImpl implements _ItemsToKotState {
 abstract class _ItemsToKotState implements ItemsToKotState {
   factory _ItemsToKotState(
       {required final bool isLoading,
-      required final List<OrderItem> selectedItems}) = _$ItemsToKotStateImpl;
+      required final List<OrderItem> selectedItems,
+      required final List<Product> productList}) = _$ItemsToKotStateImpl;
 
   @override
   bool get isLoading;
   @override
   List<OrderItem> get selectedItems;
+  @override
+  List<Product> get productList;
 
   /// Create a copy of ItemsToKotState
   /// with the given fields replaced by the non-null parameter values.

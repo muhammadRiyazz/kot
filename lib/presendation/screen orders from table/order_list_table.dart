@@ -72,7 +72,7 @@ class ScreenOrdersList extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return ProductChoosingPage();
+                                        return ProductChoosingPage(table:table.tableName ,);
                                       },
                                     ));
                                   },

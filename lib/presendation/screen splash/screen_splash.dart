@@ -25,10 +25,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkLoginStatus() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isLoggedIn = prefs.getBool('login') ?? false; // Default to false if not set
+    bool? isLoggedIn =
+        prefs.getBool('login') ?? false; // Default to false if not set
+if (isLoggedIn) {
 
+} else {
+  
+}
     // Navigate to the appropriate screen after 3 seconds
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 5), () {
       if (isLoggedIn) {
         // If the user is logged in, navigate to the home screen
         Navigator.of(context).pushReplacement(
@@ -37,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         // If the user is not logged in, navigate to the login screen
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) =>  ScreenLogin()),
+          MaterialPageRoute(builder: (context) => ScreenLogin()),
         );
       }
     });
@@ -47,17 +52,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
 
-
-
-      BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
-            BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
-             BlocProvider.of<StockBloc>(context)
-              .add(const StockEvent.fetchStocks());
-      BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchCategory());
-
+        BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+      BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
+      BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchStocksAndCategory());
+      // BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchCategory());
     });
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Splash screen background color
+      backgroundColor: const Color.fromARGB(
+          255, 255, 255, 255), // Splash screen background color
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +90,8 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(height: MediaQuery.of(context).size.height * .03),
             const Text(
               'Restaurant KOT Manager',
-              style: TextStyle(color: mainclr, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: mainclr, fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             const Text(

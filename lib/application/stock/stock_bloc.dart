@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mssql_connection/mssql_connection.dart';
@@ -10,285 +11,366 @@ part 'stock_event.dart';
 part 'stock_state.dart';
 part 'stock_bloc.freezed.dart';
 
+// class StockBloc extends Bloc<StockEvent, StockState> {
+//   StockBloc() : super(StockState.initial()) {
+//     List<Product> serProducts = [];
+//     List<Product> goodsProducts = [];
+
+//     on<CategorySelection>((event, emit) async {
+//       try {
+//         if (event.from == 'SER') {
+//           List<Product> serProductsA = serProducts
+//               .where((product) => product.category == event.category.pdtFilter)
+//               .toList();
+
+//           emit(state.copyWith(
+//               isLoading: false,
+//               serProducts: serProductsA,
+//               sercategory: event.category));
+//         } else if (event.from == 'GOODS') {
+//           List<Product> goodsProductsA = goodsProducts
+//               .where((product) => product.category == event.category.pdtFilter)
+//               .toList();
+
+//           emit(state.copyWith(
+//               isLoading: false,
+//               goodsProducts: goodsProductsA,
+//               goodscategory: event.category));
+//         }
+//       } catch (e) {
+//         emit(state.copyWith(isLoading: false));
+//         log(e.toString());
+//       }
+//     });
+
+//     on<Clearcategory>((event, emit) async {
+//       try {
+//         emit(state.copyWith(
+//             isLoading: false,
+//             serProducts: serProducts,
+//             sercategory: null,
+//             goodsProducts: goodsProducts,
+//             goodscategory: null));
+//       } catch (e) {
+//         log(e.toString());
+//       }
+//     });
+
+//     on<Search>((event, emit) async {
+//       try {
+//         emit(state.copyWith(isLoading: true));
+
+//         //   FROM [Restaurant].[dbo].[MainStock]
+//         //   WHERE [SERorGOODS] = '${event.from}'
+//         //     AND ([codeorSKU] LIKE '%${event.searchQuary}%' OR [pdtname] LIKE '%${event.searchQuary}%')
+//         // """;
+
+//         if (event.from == 'SER') {
+//           log('service');
+//           final List<Product> filteredStocks = serProducts.where((product) {
+//             // Check if the product name contains the search term (case-insensitive)
+//             return product.productName
+//                 .toLowerCase()
+//                 .contains(event.searchQuary.toLowerCase());
+//           }).toList();
+
+//           emit(state.copyWith(isLoading: false, serProducts: filteredStocks));
+//         } else if (event.from == 'GOODS') {
+//           log('goods');
+
+//           final List<Product> filteredStocks = goodsProducts.where((product) {
+//             // Check if the product name contains the search term (case-insensitive)
+//             return product.productName
+//                 .toLowerCase()
+//                 .contains(event.searchQuary.toLowerCase());
+//           }).toList();
+//           emit(state.copyWith(isLoading: false, goodsProducts: filteredStocks));
+//         }
+//         emit(state.copyWith(
+//           isLoading: false,
+//         ));
+//       } catch (e) {
+//         log(e.toString());
+//         emit(state.copyWith(isLoading: false));
+//       }
+//     });
+
+//     on<Add>((event, emit) async {
+//       try {
+//         if (event.from == 'SER') {
+//           log('FROM SER');
+//           List<Product> products = state.serProducts;
+//           if (products
+//               .any((existingItem) => existingItem.id == event.product.id)) {
+//             final index = products.indexWhere((i) => i.id == event.product.id);
+
+//             products[index].changedQty = products[index].changedQty + event.qty;
+//             log(products[index].changedQty.toString());
+
+//             emit(state.copyWith(serProducts: products));
+//           }
+//         } else if (event.from == 'GOODS') {
+//           log('FROM GOODS');
+
+//           List<Product> products = state.goodsProducts;
+//           if (products
+//               .any((existingItem) => existingItem.id == event.product.id)) {
+//             final index = products.indexWhere((i) => i.id == event.product.id);
+
+//             products[index].changedQty = products[index].changedQty + event.qty;
+//             log(products[index].changedQty.toString());
+//             emit(state.copyWith(goodsProducts: products));
+//           }
+//         }
+//       } catch (e) {
+//         log(e.toString());
+//       }
+//     });
+//   }
+// }
+
 class StockBloc extends Bloc<StockEvent, StockState> {
   StockBloc() : super(StockState.initial()) {
     List<Product> serProducts = [];
     List<Product> goodsProducts = [];
 
-    on<FetchStocks>((event, emit) async {
-      emit(state.copyWith(
-        isLoading: true,
-      ));
+    // Fetch stocks and categories from the database
+    on<FetchStocksAndCategory>((event, emit) async {
+      log('FetchStocksAndCategory called');
+      emit(state.copyWith(isLoading: true));
 
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
 
-        // Query to get the last 40 products
+        // Query definitions
         String stockQuery = """
-          SELECT 
-              [Id], 
-              [codeorSKU], 
-              [category], 
-              [pdtname], 
-              [HSNCode], 
-              [description], 
-              [puramnt], 
-              [puramntwithtax], 
-              [saleamnt], 
-              [saleamntwithtax], 
-              [profit], 
-              [pcs], 
-              [tax], 
-              [saletaxamnt], 
-              [stockcontrol], 
-              [totalstock], 
-              [lowstock], 
-              [warehouse], 
-              [vendername], 
-              [venderinvoice], 
-              [vendercontactname], 
-              [vendertax], 
-              [purtaxamnt], 
-              [venderimg], 
-              [vendertotalamnt], 
-              [vendertotaltaxamnt], 
-              [privatenote], 
-              [Date], 
-              [productimg], 
-              [status], 
-              [lossorgain], 
-              [vendorid], 
-              [hsncode1], 
-              [venIGST], 
-              [venIGSTamnt], 
-              [venCGST], 
-              [venCGSTamnt], 
-              [venSGST], 
-              [venSGSTamnt], 
-              [SERorGOODS], 
-              [itemMRP], 
-              [SaleincluORexclussive], 
-              [PurchaseincluORexclussive], 
-              [InitialCost], 
-              [AvgCost], 
-              [MessurmentsUnit], 
-              [SincluorExclu], 
-              [PincluorExclu], 
-              [BarcodeID], 
-              [SupplierName], 
-              [CessBasedonQntyorValue], 
-              [CessRate], 
-              [CatType], 
-              [CatBrand], 
-              [CatModelNo], 
-              [CatColor], 
-              [CatSize], 
-              [CatPartNumber], 
-              [CatSerialNumber], 
-              [AliasNameID], 
-              [InitialQuantity], 
-              [PCatType], 
-              [BrandType], 
-              [RePackingApplicable], 
-              [RepackingTo], 
-              [RepackingBalance], 
-              [BulkItemQty], 
-              [BalanceRepackingitemUnit], 
-              [RepackingitemUnit], 
-              [RepackingItemOf], 
-              [saleamntwithtax1AC], 
-              [PrinterName], 
-              [DininACrate], 
-              [DininNonACrate], 
-              [Deliveryrate], 
-              [pickuprate]
-          FROM [Restaurant].[dbo].[MainStock]
-        
+          SELECT * FROM [Restaurant].[dbo].[MainStock]
         """;
-        // ORDER BY [Id] DESC
-        //         OFFSET 0 ROWS
-        //         FETCH NEXT 40 ROWS ONLY
-        String? stockQueryresult = await connection.getData(stockQuery);
-        // log(stockQueryresult);
-        List<dynamic> jsonResponse = jsonDecode(stockQueryresult);
 
-        // Map the JSON to a list of Product objects
+        String categoryQuery = """
+          SELECT * FROM [Restaurant].[dbo].[Category]
+        """;
+
+        // Execute both queries in parallel
+        var stockQueryResultFuture = connection.getData(stockQuery);
+        var categoryQueryResultFuture = connection.getData(categoryQuery);
+
+        // Wait for both futures to complete
+        String? stockQueryResult = await stockQueryResultFuture;
+        String? categoryQueryResult = await categoryQueryResultFuture;
+
+        // Process stock query result
+        List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
         List<Product> stocks =
-            jsonResponse.map((data) => Product.fromJson(data)).toList();
-
-        // Separate SER and GOODS into two lists
+            stockJsonResponse.map((data) => Product.fromJson(data)).toList();
         serProducts =
             stocks.where((product) => product.serOrGoods == 'SER').toList();
         goodsProducts =
             stocks.where((product) => product.serOrGoods == 'GOODS').toList();
 
-        // Emit the state with both lists
+        // Process category query result
+        List<dynamic> categoryJsonResponse = jsonDecode(categoryQueryResult);
+        List<Category> allCategory = categoryJsonResponse
+            .map((data) => Category.fromJson(data))
+            .toList();
+        List<Category> serCategory = allCategory
+            .where((category) => category.serOrGoods == 'SER')
+            .toList();
+        List<Category> goodsCategory = allCategory
+            .where((category) => category.serOrGoods == 'GOODS')
+            .toList();
+
+        // Emit state with stock and category data
         emit(state.copyWith(
             isLoading: false,
             serProducts: serProducts,
-            sercategory: null,
+            serCategory: serCategory,
             goodsProducts: goodsProducts,
-            goodscategory: null));
+            goodsCategory: goodsCategory,
+            toKOTitems: []));
       } catch (e) {
+        log('Error fetching stocks and categories: ${e.toString()}');
         emit(state.copyWith(isLoading: false));
-        log(e.toString());
       }
     });
 
-    on<FetchCategory>((event, emit) async {
-      emit(state.copyWith(
-        isLoading: true,
-      ));
-
-      try {
-        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
-        MssqlConnection connection = await connectionManager.getConnection();
-
-        // Query to get the last 40 products
-        String categoryQuery = """
-         SELECT 
-         [Id],
-         [pdtfilter],
-         [SERorGOODS]
-         FROM 
-         [Restaurant].[dbo].[Category]
-         """;
-
-        String? categoryQueryresult = await connection.getData(categoryQuery);
-        // log(categoryQueryresult);
-        List<dynamic> jsonResponse = jsonDecode(categoryQueryresult);
-
-        // Map the JSON to a list of Product objects
-        List<Category> allCategory =
-            jsonResponse.map((data) => Category.fromJson(data)).toList();
-
-        // Separate SER and GOODS into two lists
-        List<Category> sercategory = allCategory
-            .where((category) => category.serOrGoods == 'SER')
-            .toList();
-        List<Category> goodscategory = allCategory
-            .where((category) => category.serOrGoods == 'GOODS')
-            .toList();
-        // Emit the state with both lists
-        emit(state.copyWith(
-            isLoading: false,
-            goodsCategory: goodscategory,
-            serCategory: sercategory));
-      } catch (e) {
-        emit(state.copyWith(isLoading: false));
-        log(e.toString());
-      }
-    });
-
+    // Handle category selection
     on<CategorySelection>((event, emit) async {
+      log('CategorySelection: ${event.category.pdtFilter} from ${event.from}');
       try {
         if (event.from == 'SER') {
           List<Product> serProductsA = serProducts
               .where((product) => product.category == event.category.pdtFilter)
               .toList();
-
           emit(state.copyWith(
-              isLoading: false,
-              serProducts: serProductsA,
-              sercategory: event.category));
+            isLoading: false,
+            serProducts: serProductsA,
+            sercategory: event.category,
+          ));
         } else if (event.from == 'GOODS') {
           List<Product> goodsProductsA = goodsProducts
               .where((product) => product.category == event.category.pdtFilter)
               .toList();
-
           emit(state.copyWith(
-              isLoading: false,
-              goodsProducts: goodsProductsA,
-              goodscategory: event.category));
+            isLoading: false,
+            goodsProducts: goodsProductsA,
+            goodscategory: event.category,
+          ));
         }
       } catch (e) {
+        log('Error during category selection: ${e.toString()}');
         emit(state.copyWith(isLoading: false));
-        log(e.toString());
       }
     });
 
+    // Clear category selection
     on<Clearcategory>((event, emit) async {
+      log('Clearcategory called');
       try {
         emit(state.copyWith(
-            isLoading: false,
-            serProducts: serProducts,
-            sercategory: null,
-            goodsProducts: goodsProducts,
-            goodscategory: null));
+          isLoading: false,
+          serProducts: serProducts,
+          sercategory: null,
+          goodsProducts: goodsProducts,
+          goodscategory: null,
+        ));
       } catch (e) {
-        log(e.toString());
+        log('Error clearing category: ${e.toString()}');
       }
     });
 
+    // Search products
     on<Search>((event, emit) async {
+      log('Search called with query: ${event.searchQuary}');
       try {
         emit(state.copyWith(isLoading: true));
 
-        //   FROM [Restaurant].[dbo].[MainStock]
-        //   WHERE [SERorGOODS] = '${event.from}'
-        //     AND ([codeorSKU] LIKE '%${event.searchQuary}%' OR [pdtname] LIKE '%${event.searchQuary}%')
-        // """;
-
+        List<Product> filteredStocks = [];
         if (event.from == 'SER') {
-          log('service');
-          final List<Product> filteredStocks = serProducts.where((product) {
-            // Check if the product name contains the search term (case-insensitive)
+          filteredStocks = serProducts.where((product) {
             return product.productName
                 .toLowerCase()
                 .contains(event.searchQuary.toLowerCase());
           }).toList();
-
           emit(state.copyWith(isLoading: false, serProducts: filteredStocks));
         } else if (event.from == 'GOODS') {
-          log('goods');
-
-          final List<Product> filteredStocks = goodsProducts.where((product) {
-            // Check if the product name contains the search term (case-insensitive)
+          filteredStocks = goodsProducts.where((product) {
             return product.productName
                 .toLowerCase()
                 .contains(event.searchQuary.toLowerCase());
           }).toList();
           emit(state.copyWith(isLoading: false, goodsProducts: filteredStocks));
         }
-        emit(state.copyWith(
-          isLoading: false,
-        ));
       } catch (e) {
-        log(e.toString());
+        log('Error during search: ${e.toString()}');
         emit(state.copyWith(isLoading: false));
       }
     });
 
+    // Add products
     on<Add>((event, emit) async {
+      emit(state.copyWith(isLoading: true));
+
+      log('${event.isIncrement ? 'Increment' : 'Decrement'} product: ${event.product.productName} with quantity: ${event.qty} from ${event.from}');
+
       try {
-        if (event.from == 'SER') {
-          log('FROM SER');
-          List<Product> products = state.serProducts;
-          if (products
-              .any((existingItem) => existingItem.id == event.product.id)) {
-            final index = products.indexWhere((i) => i.id == event.product.id);
+        List<Product> tokotItems = List.from(state
+            .toKOTitems); // Create a copy to avoid mutating the original state
 
-            products[index].changedQty = products[index].changedQty + event.qty;
-            log(products[index].changedQty.toString());
+        // Function to update tokotItems based on qty changes
+        void updateTokotItems(Product product, int qtyChange) {
+          final tokotIndex =
+              tokotItems.indexWhere((item) => item.id == product.id);
 
-            emit(state.copyWith(serProducts: products));
+          if (tokotIndex >= 0) {
+            tokotItems[tokotIndex].changedQty += qtyChange;
+            if (tokotItems[tokotIndex].changedQty <= 0) {
+              tokotItems.removeAt(tokotIndex);
+              log('Removed product ${product.productName} from tokotItems');
+            } else {
+              log('Updated tokotItems quantity: ${tokotItems[tokotIndex].changedQty}');
+            }
+          } else if (qtyChange > 0) {
+            Product newProduct = product.copyWith(changedQty: qtyChange);
+            tokotItems.add(newProduct);
+            log('Added product ${newProduct.productName} to tokotItems with qty: ${newProduct.changedQty}');
           }
-        } else if (event.from == 'GOODS') {
-          log('FROM GOODS');
+        }
 
-          List<Product> products = state.goodsProducts;
+        // Handling for SER products
+        if (event.from == 'SER') {
+          List<Product> products =
+              List.from(state.serProducts); // Create a copy
+
+          if (products
+              .any((existingItem) => existingItem.id == event.product.id)) {
+            final index = products.indexWhere((i) => i.id == event.product.id);
+            if (event.update != null) {
+              products[index].changedQty = event.qty;
+              products[index].saleAmount = event.amount.toString();
+            } else {
+              if (event.isIncrement) {
+                products[index].changedQty += event.qty;
+              } else {
+                products[index].changedQty =
+                    (products[index].changedQty - event.qty)
+                        .clamp(0, double.infinity)
+                        .toInt();
+              }
+            }
+
+            log('Updated quantity in SER: ${products[index].changedQty}');
+            updateTokotItems(
+                products[index], event.isIncrement ? event.qty : -event.qty);
+
+            emit(state.copyWith(
+                serProducts: products,
+                toKOTitems: tokotItems,
+                isLoading: false));
+          }
+        }
+
+        // Handling for GOODS products
+        else if (event.from == 'GOODS') {
+          List<Product> products =
+              List.from(state.goodsProducts); // Create a copy
+
           if (products
               .any((existingItem) => existingItem.id == event.product.id)) {
             final index = products.indexWhere((i) => i.id == event.product.id);
 
-            products[index].changedQty = products[index].changedQty + event.qty;
-            log(products[index].changedQty.toString());
-            emit(state.copyWith(goodsProducts: products));
+            if (event.update != null) {
+              products[index].changedQty = event.qty;
+            } else {
+              if (event.isIncrement) {
+                double totalStock = double.parse(products[index].totalStock);
+                if (totalStock != products[index].changedQty) {
+                  products[index].changedQty += event.qty;
+                } else {
+                  log('out of stock');
+                }
+              } else {
+                products[index].changedQty =
+                    (products[index].changedQty - event.qty)
+                        .clamp(0, double.infinity)
+                        .toInt();
+              }
+            }
+
+            log('Updated quantity in GOODS: ${products[index].changedQty}');
+            updateTokotItems(
+                products[index], event.isIncrement ? event.qty : -event.qty);
+
+            emit(state.copyWith(
+                goodsProducts: products,
+                toKOTitems: tokotItems,
+                isLoading: false));
           }
         }
       } catch (e) {
-        log(e.toString());
+        log('Error updating product: ${e.toString()}');
+        emit(state.copyWith(isLoading: false));
       }
     });
   }

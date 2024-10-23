@@ -5,13 +5,13 @@ class ItemsToKotState with _$ItemsToKotState {
  factory ItemsToKotState({
     required bool isLoading,
     required      List<OrderItem> selectedItems,
-        
+      required    List<Product> productList,  
 
 
   }) = _ItemsToKotState;
   factory ItemsToKotState.initial() {
     return ItemsToKotState(
       selectedItems: [],
-      isLoading: false,
+      isLoading: false,productList: []
     );
   }}

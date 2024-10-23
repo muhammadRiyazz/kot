@@ -34,29 +34,29 @@ class SelectedProductsPage extends StatelessWidget {
                   Expanded(
                     child: ListView(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Items',
                               style: TextStyle(fontSize: 18),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Column(
                               children: List.generate(
-                               state. selectedItems.length,
+                                state.productList.length,
                                 (index) {
-                                  final product = state. selectedItems[index];
+                                  final product = state.productList[index];
 
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 8),
                                     child: Card(
-                                      margin: EdgeInsets.all(0),
+                                      margin: const EdgeInsets.all(0),
                                       elevation: 2,
                                       borderOnForeground: true,
                                       shadowColor: const Color.fromARGB(
@@ -90,7 +90,7 @@ class SelectedProductsPage extends StatelessWidget {
                                           //   ),
                                           // ),
                                           title: Text(
-                                            product.itemName,
+                                            product.productName,
                                             style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w600),
@@ -98,7 +98,8 @@ class SelectedProductsPage extends StatelessWidget {
                                           subtitle: Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 5),
-                                            child: Text('₹ ${product.totalSalePrice}/-'),
+                                            child: Text(
+                                                '₹ ${product.saleAmount}/-'),
                                           ),
                                           trailing: Row(
                                             mainAxisSize: MainAxisSize.min,
@@ -112,8 +113,7 @@ class SelectedProductsPage extends StatelessWidget {
                                                                 .circular(10)),
                                                     child: const Padding(
                                                       padding:
-                                                          EdgeInsets.all(
-                                                              5),
+                                                          EdgeInsets.all(5),
                                                       child: Icon(
                                                         Icons.remove,
                                                         color: Colors.white,
@@ -138,7 +138,7 @@ class SelectedProductsPage extends StatelessWidget {
                                                 child: Text(
                                                   '${product.changedQty}',
                                                   style:
-                                                      TextStyle(fontSize: 17),
+                                                      const TextStyle(fontSize: 17),
                                                 ),
                                               ),
                                               IconButton(
@@ -198,7 +198,7 @@ class SelectedProductsPage extends StatelessWidget {
                                     .withOpacity(0.3),
                                 blurRadius: 15,
                                 spreadRadius: 5,
-                                offset: Offset(0, 5),
+                                offset: const Offset(0, 5),
                               ),
                             ],
                           ),
@@ -208,7 +208,7 @@ class SelectedProductsPage extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'If any note, please add here', // Short title added
                                   style: TextStyle(
                                     color: mainclr,
@@ -230,21 +230,21 @@ class SelectedProductsPage extends StatelessWidget {
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
                                       borderSide: const BorderSide(
-                                        color: Color.fromARGB(
-                                            255, 192, 192, 192),
+                                        color:
+                                            Color.fromARGB(255, 192, 192, 192),
                                       ),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
                                       borderSide: const BorderSide(
-                                        color: Color.fromARGB(
-                                            255, 192, 192, 192),
+                                        color:
+                                            Color.fromARGB(255, 192, 192, 192),
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide(
-                                        color: const Color.fromARGB(
+                                      borderSide: const BorderSide(
+                                        color: Color.fromARGB(
                                             255, 192, 192, 192),
                                       ),
                                     ),
@@ -253,7 +253,7 @@ class SelectedProductsPage extends StatelessWidget {
                                         mainclr, // Set the icon color
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(

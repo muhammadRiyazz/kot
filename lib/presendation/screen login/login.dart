@@ -4,6 +4,7 @@ import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
 import 'package:restaurant_kot/presendation/screen%20login/passcose/passcode.dart';
+import 'package:restaurant_kot/presendation/screen%20splash/screen_splash.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
 
@@ -100,23 +101,23 @@ class ScreenLogin extends StatelessWidget {
                               labelText: 'Username',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                    color: const Color.fromARGB(
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(
                                         255, 192, 192, 192)),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                    color: const Color.fromARGB(
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(
                                         255, 192, 192, 192)),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                    color: const Color.fromARGB(
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(
                                         255, 192, 192, 192)),
                               ),
-                              prefixIcon: Icon(Icons.person),
+                              prefixIcon: const Icon(Icons.person),
                               prefixIconColor: mainclr,
                             ),
                             validator: (value) {
@@ -126,7 +127,7 @@ class ScreenLogin extends StatelessWidget {
                               return null;
                             },
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           // Password Field
                           TextFormField(
                             controller: _passwordController,
@@ -135,20 +136,20 @@ class ScreenLogin extends StatelessWidget {
                               labelText: 'Password',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                    color: const Color.fromARGB(
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(
                                         255, 192, 192, 192)),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                    color: const Color.fromARGB(
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(
                                         255, 192, 192, 192)),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                    color: const Color.fromARGB(
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(
                                         255, 192, 192, 192)),
                               ),
                               prefixIcon: Icon(Icons.lock),
@@ -161,7 +162,7 @@ class ScreenLogin extends StatelessWidget {
                               return null;
                             },
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           // Login Button
                           BlocConsumer<LoginBloc, LoginState>(
                             listener: (context, state) {
@@ -169,7 +170,7 @@ class ScreenLogin extends StatelessWidget {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const HomeScreen()),
+                                      builder: (context) => const SplashScreen()),
                                   (route) => false,
                                 );
                               }
@@ -199,7 +200,7 @@ class ScreenLogin extends StatelessWidget {
                             },
                             builder: (context, state) {
                               return state.isLoading
-                                  ? Loading()
+                                  ? const Loading()
                                   : MainButton(
                                       label: 'Login',
                                       onpress: () {
