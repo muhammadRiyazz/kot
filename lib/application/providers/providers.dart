@@ -21,9 +21,9 @@ blocProviders() {
     BlocProvider(
       create: (context) => OrdersBloc(),
     ),
-    BlocProvider(
-      create: (context) => ItemsToKotBloc(),
-    ),
+    // BlocProvider(
+    //   create: (context) => ItemsToKotBloc(),
+    // ),
     BlocProvider(
       create: (context) => OrderDetailsBloc(),
     ),

@@ -169,7 +169,7 @@ class Tablespart extends StatelessWidget {
                                                   state.tables[index].tableName,
                                             );
                                           },
-                                        ));
+                                        ));   
                                       } else {
                                         BlocProvider.of<OrdersBloc>(context)
                                             .add(OrdersEvent.tableOrders(

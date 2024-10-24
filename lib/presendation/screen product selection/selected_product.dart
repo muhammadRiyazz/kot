@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/items%20To%20Kot/items_to_kot_bloc.dart';
+import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/update.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
 class SelectedProductsPage extends StatelessWidget {
@@ -25,7 +29,7 @@ class SelectedProductsPage extends StatelessWidget {
             )
           ],
         ),
-        body: BlocBuilder<ItemsToKotBloc, ItemsToKotState>(
+        body: BlocBuilder<StockBloc, StockState>(
           builder: (context, state) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -49,134 +53,147 @@ class SelectedProductsPage extends StatelessWidget {
                             ),
                             Column(
                               children: List.generate(
-                                state.productList.length,
+                                state.toKOTitems.length,
                                 (index) {
-                                  final product = state.productList[index];
+                                  final product = state.toKOTitems[index];
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Card(
-                                      margin: const EdgeInsets.all(0),
-                                      elevation: 2,
-                                      borderOnForeground: true,
-                                      shadowColor: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Container(
-                                        padding: const EdgeInsets.only(
-                                          bottom: 0,
-                                          right: 2,
-                                          left: 5,
+                                  return Card(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 3),
+                                    elevation: 6,
+                                    borderOnForeground: true,
+                                    shadowColor: const Color.fromARGB(
+                                        255, 244, 244, 244),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: ListTile(
+                                        contentPadding: const EdgeInsets.only(
+                                            left: 8, top: 8, bottom: 8),
+                                        // leading: Container(
+                                        //   height: 100,
+                                        //   width: 60,
+                                        //   decoration: BoxDecoration(
+                                        //     color: boxbgclr,
+                                        //     borderRadius:
+                                        //         BorderRadius.circular(
+                                        //             10),
+                                        //   ),
+                                        //   child: ClipRRect(
+                                        //     borderRadius:
+                                        //         BorderRadius.circular(
+                                        //             10),
+                                        //     // child: Image.network(
+                                        //     //   product,
+                                        //     //   fit: BoxFit.fill,
+                                        //     // ),
+                                        //   ),
+                                        // ),
+                                        title: Text(
+                                          product.productName,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
                                         ),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: ListTile(
-                                          contentPadding: const EdgeInsets.only(
-                                              left: 8, top: 8, bottom: 8),
-                                          // leading: Container(
-                                          //   height: 100,
-                                          //   width: 60,
-                                          //   decoration: BoxDecoration(
-                                          //     color: boxbgclr,
-                                          //     borderRadius: BorderRadius.circular(10),
-                                          //   ),
-                                          //   child: ClipRRect(
-                                          //     borderRadius: BorderRadius.circular(10),
-                                          //     child: Image.network(
-                                          //       product.image,
-                                          //       fit: BoxFit.fill,
-                                          //     ),
-                                          //   ),
-                                          // ),
-                                          title: Text(
-                                            product.productName,
-                                            style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          subtitle: Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 5),
-                                            child: Text(
-                                                '₹ ${product.saleAmount}/-'),
-                                          ),
-                                          trailing: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              IconButton(
-                                                icon: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: mainclr,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                    child: const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(5),
-                                                      child: Icon(
-                                                        Icons.remove,
-                                                        color: Colors.white,
-                                                        size: 17,
-                                                      ),
-                                                    )),
-                                                onPressed: () {
-                                                  // setState(() {
-                                                  //   if (product.quantity == 1) {
-                                                  //     // Remove the product if its quantity is 1
-                                                  //     selectedProducts.remove(product);
-                                                  //   }
-                                                  //   if (product.quantity > 0)
-                                                  //     product.quantity--;
-                                                  // });
-                                                },
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 2),
-                                                child: Text(
-                                                  '${product.changedQty}',
-                                                  style:
-                                                      const TextStyle(fontSize: 17),
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: mainclr,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                    child: const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(5.0),
-                                                      child: Icon(
-                                                        Icons.add,
-                                                        size: 17,
-                                                        color: Colors.white,
-                                                      ),
-                                                    )),
-                                                onPressed: () {
-                                                  // setState(() {
-                                                  //   product.quantity++;
-                                                  //   if (!selectedProducts.contains(product)) {
-                                                  //     selectedProducts.add(product);
-                                                  //   } else {
-                                                  //     // Update the quantity of the existing product
-                                                  //     selectedProducts
-                                                  //         .firstWhere((p) => p == product)
-                                                  //         .quantity = product.quantity;
-                                                  //   }
-                                                  // });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          onLongPress: () {
-                                            // showQuantityInput(product);
-                                          },
+                                        subtitle: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child:
+                                              Text('₹ ${product.saleAmount}/-'),
                                         ),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                              icon: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: mainclr,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: const Padding(
+                                                    padding: EdgeInsets.all(5),
+                                                    child: Icon(
+                                                      Icons.remove,
+                                                      color: Colors.white,
+                                                      size: 17,
+                                                    ),
+                                                  )),
+                                              onPressed: () {
+                                                BlocProvider.of<StockBloc>(
+                                                        context)
+                                                    .add(StockEvent.add(
+                                                        isIncrement: false,
+                                                        from: 'SER',
+                                                        product: product,
+                                                        qty: 1));
+
+                                                // BlocProvider.of<
+                                                //             ItemsToKotBloc>(
+                                                //         context)
+                                                //     .add(ItemsToKotEvent.add(
+                                                //         isIncrement:
+                                                //             false,
+                                                //         product:
+                                                //             product,
+                                                //         qty:
+                                                //             1));
+                                              },
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2),
+                                              child: Text(
+                                                product.changedQty.toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 17),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: mainclr,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    child: Icon(
+                                                      Icons.add,
+                                                      size: 17,
+                                                      color: Colors.white,
+                                                    ),
+                                                  )),
+                                              onPressed: () {
+                                                BlocProvider.of<StockBloc>(
+                                                        context)
+                                                    .add(StockEvent.add(
+                                                        isIncrement: true,
+                                                        from: 'SER',
+                                                        product: product,
+                                                        qty: 1));
+                                                // BlocProvider.of<
+                                                //             ItemsToKotBloc>(
+                                                //         context)
+                                                //     .add(ItemsToKotEvent.add(
+                                                //         isIncrement:
+                                                //             true,
+                                                //         product:
+                                                //             product,
+                                                //         qty:
+                                                //             1));
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        onLongPress: () {
+                                          updatebox(context, product);
+                                          log('onLongPress ser');
+                                        },
                                       ),
                                     ),
                                   );
@@ -244,8 +261,8 @@ class SelectedProductsPage extends StatelessWidget {
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
                                       borderSide: const BorderSide(
-                                        color: Color.fromARGB(
-                                            255, 192, 192, 192),
+                                        color:
+                                            Color.fromARGB(255, 192, 192, 192),
                                       ),
                                     ),
                                     prefixIcon: Icon(Icons.note_alt_outlined),

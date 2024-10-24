@@ -8,18 +8,18 @@ class MainButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onpress, // Your onPressed function
-      child: Text(
-        label,
-        style: TextStyle(color: Colors.white),
-      ),
+      onPressed: onpress,
       style: ElevatedButton.styleFrom(
         backgroundColor: buttonclr, // Set the button background color
 
-        minimumSize: Size(double.infinity, 55), // Full-width button
+        minimumSize: const Size(double.infinity, 55), // Full-width button
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20), // Border radius of 10
         ),
+      ), // Your onPressed function
+      child: Text(
+        label,
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
