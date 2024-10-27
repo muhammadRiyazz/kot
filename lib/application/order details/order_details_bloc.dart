@@ -21,15 +21,18 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
-        String ordersitemQuery =
-            "SELECT [Id], [OrderNumber], [EntryDate], [UserName], [CustomerId], [CustomerName], "
-            "[TableName], [FloorNumber], [StartDateTime], [ItemCode], [ItemName], [salePrice], "
-            "[Qty], [TotalsalePrice], [GST], [GSTAmount], [inclusiceSaleprice], [ActiveInnactive], "
-            "[KOTNo], [DeliveryQuantity], [BillNumber], [unitPricetaxnotaffect], [UserID] "
-            "FROM [Restaurant].[dbo].[OrderItemDetailsDetails] "
-            "WHERE [EntryDate] = 'Sep 10 2024 12:00AM' AND [OrderNumber] = '${event.orderNo}'  ";
+String ordersitemQuery = """
+  SELECT [Id], [OrderNumber], [KOTNumber], [EntryDate], [StartTime], [EndTime], [CustomerId], [CustomerName],
+         [TableName], [FloorNumber], [Description], [ItemCode], [ItemName], [Quantity], [BasicRate],
+         [UnitTaxableAmountBeforeDiscount], [Discount], [UnitTaxableAmount], [TotalTaxableAmount], [GSTPer],
+         [CessPer], [TotalTaxAmount], [TotalCessAmount], [TotalAmount], [DineInOrOther], [Delivery],
+         [BillNumber], [KitchenName], [UserID]
+  FROM [Restaurant].[dbo].[OrderItemDetailsDetails]
+  WHERE CAST(EntryDate AS DATE) = '2024-10-23' AND [OrderNumber] = '${event.orderNo}';
+""";
+
         String? ordersitemresult = await connection.getData(ordersitemQuery);
-        // log(ordersitemresult);
+        log(ordersitemresult);
         List<dynamic> ordersitemresultjson = jsonDecode(ordersitemresult);
 
         // // Map the JSON to a list of Order objects
@@ -56,7 +59,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
           log('existingItem ${items[index].itemName}');
           log(items[index].changedQty.toString());
           // Check current quantity
-          if (items[index].qty != items[index].changedQty.abs() ||
+          if (items[index].quantity != items[index].changedQty.abs() ||
               !items[index].changedQty.isNegative) {
             // If qty is greater than 0, decrement it
             items[index] = items[index].copyWith(

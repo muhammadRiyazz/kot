@@ -195,7 +195,7 @@ class OrderDetailsPage extends StatelessWidget {
                                               ),
                                               Text(
                                                 time(DateTime.parse(
-                                                    order.startDateTime)),
+                                                    order.startTime)),
                                                 style: const TextStyle(
                                                     color: mainclr,
                                                     fontSize: 13,
@@ -325,9 +325,9 @@ class OrderDetailsPage extends StatelessWidget {
                                                     const SizedBox(
                                                       height: 3,
                                                     ),
-                                                    const Text(
-                                                        'Amount : ₹ 150/-',
-                                                        style: TextStyle(
+                                                    Text(
+                                                        'Amount : ₹ ${state.orderitems[index].totalAmount}/-',
+                                                        style: const TextStyle(
                                                           fontSize: 12,
                                                         )),
                                                   ],
@@ -447,7 +447,7 @@ class OrderDetailsPage extends StatelessWidget {
                                                             text: state
                                                                 .orderitems[
                                                                     index]
-                                                                .qty
+                                                                .quantity
                                                                 .toString(),
                                                             style:
                                                                 const TextStyle(

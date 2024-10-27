@@ -27,7 +27,7 @@ List<TableModel> tabeledata(String tablesJson, String ordersJson) {
     DateTime? firstOrderTime;
     if (!isEmpty) {
       firstOrderTime = DateTime.parse(
-          tableOrders.first['StartDateTime'] ?? DateTime.now().toString());
+          tableOrders.first['StartTime'] ?? DateTime.now().toString());
     }
 
     // Sum the total order price

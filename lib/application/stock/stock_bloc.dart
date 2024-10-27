@@ -203,6 +203,10 @@ class StockBloc extends Bloc<StockEvent, StockState> {
           List<Product> serProductsA = serProducts
               .where((product) => product.category == event.category.pdtFilter)
               .toList();
+              
+
+
+
           emit(state.copyWith(
             isLoading: false,
             serProducts: serProductsA,
@@ -224,15 +228,40 @@ class StockBloc extends Bloc<StockEvent, StockState> {
       }
     });
 
+
+
+
     // Clear category selection
     on<Clearcategory>((event, emit) async {
+
+
       log('Clearcategory called');
       try {
+
+
+
+Map<String, Product> serMap = {for (var item in serProducts) item.id: item};
+  Map<String, Product> goodsMap = {for (var item in goodsProducts) item.id: item};
+
+  for (var item in  state.toKOTitems) {
+    if (item.serOrGoods == 'SER') {
+      serMap[item.id] = item; // Update or add in serMap
+    } else if (item.serOrGoods == 'GOODS') {
+      goodsMap[item.id] = item; // Update or add in goodsMap
+    }
+  }
+
+  // // Update the original lists from maps
+  // serProducts = serMap.values.toList();
+  // goodsProducts = goodsMap.values.toList();
+
+
+
         emit(state.copyWith(
           isLoading: false,
-          serProducts: serProducts,
+          serProducts: serMap.values.toList(),
           sercategory: null,
-          goodsProducts: goodsProducts,
+          goodsProducts:goodsMap.values.toList(),
           goodscategory: null,
         ));
       } catch (e) {
@@ -248,14 +277,14 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
         List<Product> filteredStocks = [];
         if (event.from == 'SER') {
-          filteredStocks = serProducts.where((product) {
+          filteredStocks =state. serProducts.where((product) {
             return product.productName
                 .toLowerCase()
                 .contains(event.searchQuary.toLowerCase());
           }).toList();
           emit(state.copyWith(isLoading: false, serProducts: filteredStocks));
         } else if (event.from == 'GOODS') {
-          filteredStocks = goodsProducts.where((product) {
+          filteredStocks =state. goodsProducts.where((product) {
             return product.productName
                 .toLowerCase()
                 .contains(event.searchQuary.toLowerCase());
@@ -270,13 +299,15 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
     // Add products
     on<Add>((event, emit) async {
-      emit(state.copyWith(isLoading: true));
+      log(event.product.changedQty.toString());
+      log(event.product.saleAmount.toString());
 
       log('${event.isIncrement ? 'Increment' : 'Decrement'} product: ${event.product.productName} with quantity: ${event.qty} from ${event.from}');
 
       try {
-        List<Product> tokotItems = List.from(state
-            .toKOTitems); // Create a copy to avoid mutating the original state
+        // Create a deep copy of tokotItems to avoid mutating the original state
+        List<Product> tokotItems =
+            state.toKOTitems.map((product) => product.copyWith()).toList();
 
         // Function to update tokotItems based on qty changes
         void updateTokotItems(Product product, int qtyChange) {
@@ -284,14 +315,30 @@ class StockBloc extends Bloc<StockEvent, StockState> {
               tokotItems.indexWhere((item) => item.id == product.id);
 
           if (tokotIndex >= 0) {
-            tokotItems[tokotIndex].changedQty += qtyChange;
-            if (tokotItems[tokotIndex].changedQty <= 0) {
-              tokotItems.removeAt(tokotIndex);
-              log('Removed product ${product.productName} from tokotItems');
-            } else {
-              log('Updated tokotItems quantity: ${tokotItems[tokotIndex].changedQty}');
+            log('tokotIndex >= 0');
+
+            if (event.update != null) {
+              Product updatedProduct = tokotItems[tokotIndex]
+                  .copyWith(changedQty: qtyChange, saleAmount: event.amount);
+              tokotItems[tokotIndex] = updatedProduct;
+            } else if (event.update == null) {
+              // Modify changedQty through copyWith to ensure immutability
+              Product updatedProduct = tokotItems[tokotIndex].copyWith(
+                changedQty: tokotItems[tokotIndex].changedQty + qtyChange,
+              );
+
+              if (updatedProduct.changedQty <= 0) {
+                tokotItems.removeAt(tokotIndex);
+                log('Removed product ${product.productName} from tokotItems');
+              } else {
+                tokotItems[tokotIndex] = updatedProduct;
+                log('Updated tokotItems quantity: ${updatedProduct.changedQty}');
+              }
             }
           } else if (qtyChange > 0) {
+            log('qtyChange > 0');
+
+            // Add new product with the updated quantity
             Product newProduct = product.copyWith(changedQty: qtyChange);
             tokotItems.add(newProduct);
             log('Added product ${newProduct.productName} to tokotItems with qty: ${newProduct.changedQty}');
@@ -300,23 +347,39 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
         // Handling for SER products
         if (event.from == 'SER') {
+          // Create a deep copy of the SER products list
           List<Product> products =
-              List.from(state.serProducts); // Create a copy
+              state.serProducts.map((product) => product.copyWith()).toList();
 
           if (products
               .any((existingItem) => existingItem.id == event.product.id)) {
             final index = products.indexWhere((i) => i.id == event.product.id);
+
+            // Update product quantity and sale amount
             if (event.update != null) {
-              products[index].changedQty = event.qty;
-              products[index].saleAmount = event.amount.toString();
+              log('event.update != null');
+              products[index] = products[index].copyWith(
+                changedQty: event.qty,
+                saleAmount: event.amount.toString(),
+              );
+              log(event.amount.toString());
+
+              log(products[index].saleAmount);
+              log(products[index].changedQty.toString());
             } else {
               if (event.isIncrement) {
-                products[index].changedQty += event.qty;
+                log('event.isIncrement');
+                products[index] = products[index].copyWith(
+                  changedQty: products[index].changedQty + event.qty,
+                );
               } else {
-                products[index].changedQty =
-                    (products[index].changedQty - event.qty)
-                        .clamp(0, double.infinity)
-                        .toInt();
+                log('event.isIncrement  not');
+
+                products[index] = products[index].copyWith(
+                  changedQty: (products[index].changedQty - event.qty)
+                      .clamp(0, double.infinity)
+                      .toInt(),
+                );
               }
             }
 
@@ -324,37 +387,45 @@ class StockBloc extends Bloc<StockEvent, StockState> {
             updateTokotItems(
                 products[index], event.isIncrement ? event.qty : -event.qty);
 
+            // Emit the updated state with deep-copied lists
             emit(state.copyWith(
-                serProducts: products,
-                toKOTitems: tokotItems,
-                isLoading: false));
+              serProducts: products,
+              toKOTitems: tokotItems,
+              isLoading: false,
+            ));
           }
         }
 
         // Handling for GOODS products
         else if (event.from == 'GOODS') {
+          // Create a deep copy of the GOODS products list
           List<Product> products =
-              List.from(state.goodsProducts); // Create a copy
+              state.goodsProducts.map((product) => product.copyWith()).toList();
 
           if (products
               .any((existingItem) => existingItem.id == event.product.id)) {
             final index = products.indexWhere((i) => i.id == event.product.id);
 
             if (event.update != null) {
-              products[index].changedQty = event.qty;
+              // Update product quantity
+              products[index] = products[index]
+                  .copyWith(changedQty: event.qty, saleAmount: event.amount);
             } else {
               if (event.isIncrement) {
                 double totalStock = double.parse(products[index].totalStock);
                 if (totalStock != products[index].changedQty) {
-                  products[index].changedQty += event.qty;
+                  products[index] = products[index].copyWith(
+                    changedQty: products[index].changedQty + event.qty,
+                  );
                 } else {
-                  log('out of stock');
+                  log('Out of stock');
                 }
               } else {
-                products[index].changedQty =
-                    (products[index].changedQty - event.qty)
-                        .clamp(0, double.infinity)
-                        .toInt();
+                products[index] = products[index].copyWith(
+                  changedQty: (products[index].changedQty - event.qty)
+                      .clamp(0, double.infinity)
+                      .toInt(),
+                );
               }
             }
 
@@ -362,10 +433,12 @@ class StockBloc extends Bloc<StockEvent, StockState> {
             updateTokotItems(
                 products[index], event.isIncrement ? event.qty : -event.qty);
 
+            // Emit the updated state with deep-copied lists
             emit(state.copyWith(
-                goodsProducts: products,
-                toKOTitems: tokotItems,
-                isLoading: false));
+              goodsProducts: products,
+              toKOTitems: tokotItems,
+              isLoading: false,
+            ));
           }
         }
       } catch (e) {

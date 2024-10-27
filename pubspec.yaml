@@ -29,6 +29,7 @@ dependencies:
   flutter_esc_pos_network: ^1.0.3
   flutter_esc_pos_utils: ^1.0.1
   flutter_pos_printer_platform_image_3: ^1.1.2
+  blue_thermal_printer: ^1.2.3
 
 
   

@@ -882,8 +882,11 @@ class ProductChoosingPage extends StatelessWidget {
                                                           padding:
                                                               const EdgeInsets
                                                                   .only(top: 5),
-                                                          child: Text(
-                                                              '₹ ${product.saleAmount}/-'),
+                                                          child: Text(product
+                                                                      .changedQty ==
+                                                                  0
+                                                              ? '₹ ${product.saleAmount} /-'
+                                                              : '₹ ${(double.parse(product.saleAmount) * product.changedQty).toDouble()} /-'),
                                                         ),
                                                         trailing: Row(
                                                           mainAxisSize:
@@ -1025,7 +1028,8 @@ class ProductChoosingPage extends StatelessWidget {
                         state.toKOTitems.isEmpty
                             ? const SizedBox()
                             : Container(
-                                decoration: const BoxDecoration(color: Colors.white),
+                                decoration:
+                                    const BoxDecoration(color: Colors.white),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       bottom: 7, right: 10, left: 10),
@@ -1045,7 +1049,7 @@ class ProductChoosingPage extends StatelessWidget {
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                             builder: (context) {
-                                              return const SelectedProductsPage();
+                                              return  SelectedProductsPage();
                                             },
                                           ));
                                         },
@@ -1088,6 +1092,4 @@ class ProductChoosingPage extends StatelessWidget {
       ),
     );
   }
-
-  
 }

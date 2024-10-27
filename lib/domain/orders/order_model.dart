@@ -127,63 +127,69 @@ class Order {
   final int id;
   final String orderNumber;
   final String entryDate;
-  final String userName;
   final String customerId;
   final String customerName;
   final String tableName;
   final String floorNumber;
-  final double taxableAmount;
+  final double totalAmountBeforeDisc;
   final double discount;
+  final double totalTaxableAmount;
+  final double totalTaxAmount;
+  final double totalCessAmount;
   final double totalAmount;
-  final String startDateTime;
+  final String startTime;
+  final String endTime;
   final String activeInnactive;
   final String dineInOrOther;
-  final String? creditOrPaid;
-  final String? billNumber;
-  final String? paidOrNot;
-  final String? userId;
+  final String creditOrPaid;
+  final String billNumber;
+  final String userId;
 
   Order({
     required this.id,
     required this.orderNumber,
     required this.entryDate,
-    required this.userName,
     required this.customerId,
     required this.customerName,
     required this.tableName,
     required this.floorNumber,
-    required this.taxableAmount,
+    required this.totalAmountBeforeDisc,
     required this.discount,
+    required this.totalTaxableAmount,
+    required this.totalTaxAmount,
+    required this.totalCessAmount,
     required this.totalAmount,
-    required this.startDateTime,
+    required this.startTime,
+    required this.endTime,
     required this.activeInnactive,
     required this.dineInOrOther,
-    this.creditOrPaid,
-    this.billNumber,
-    this.paidOrNot,
-    this.userId,
+    required this.creditOrPaid,
+    required this.billNumber,
+    required this.userId,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
-      id: json['Id'],
-      orderNumber: json['OrderNumber'],
-      entryDate: json['EntryDate'],
-      userName: json['UserName'],
-      customerId: json['CustomerId'],
-      customerName: json['CustomerName'],
-      tableName: json['TableName'],
-      floorNumber: json['FloorNumber'],
-      taxableAmount: json['TaxableAmount'],
-      discount: json['Discount'],
-      totalAmount: json['TotalAmount'],
-      startDateTime: json['StartDateTime'],
-      activeInnactive: json['ActiveInnactive'],
-      dineInOrOther: json['DineInOrOther'],
-      creditOrPaid: json['CreditOrPaid'],
-      billNumber: json['BillNumber'],
-      paidOrNot: json['paidornot'],
-      userId: json['UserID'],
+      id: json['Id'] ?? 0,
+      orderNumber: json['OrderNumber'] ?? '',
+      entryDate: json['EntryDate'] ?? '',
+      customerId: json['CustomerId'] ?? '',
+      customerName: json['CustomerName'] ?? '',
+      tableName: json['TableName'] ?? '',
+      floorNumber: json['FloorNumber'] ?? '',
+      totalAmountBeforeDisc: (json['TotalAmountBeforeDisc'] as num?)?.toDouble() ?? 0.0,
+      discount: (json['Discount'] as num?)?.toDouble() ?? 0.0,
+      totalTaxableAmount: (json['TotalTaxableAmount'] as num?)?.toDouble() ?? 0.0,
+      totalTaxAmount: (json['TotalTaxAmount'] as num?)?.toDouble() ?? 0.0,
+      totalCessAmount: (json['TotalCessAmount'] as num?)?.toDouble() ?? 0.0,
+      totalAmount: (json['TotalAmount'] as num?)?.toDouble() ?? 0.0,
+      startTime: json['StartTime'] ?? '',
+      endTime: json['EndTime'] ?? '',
+      activeInnactive: json['ActiveInnactive'] ?? '',
+      dineInOrOther: json['DineInOrOther'] ?? '',
+      creditOrPaid: json['CreditOrPaid'] ?? '',
+      billNumber: json['BillNumber'] ?? '',
+      userId: json['UserID'] ?? '',
     );
   }
 
@@ -192,20 +198,22 @@ class Order {
       'Id': id,
       'OrderNumber': orderNumber,
       'EntryDate': entryDate,
-      'UserName': userName,
       'CustomerId': customerId,
       'CustomerName': customerName,
       'TableName': tableName,
       'FloorNumber': floorNumber,
-      'TaxableAmount': taxableAmount,
+      'TotalAmountBeforeDisc': totalAmountBeforeDisc,
       'Discount': discount,
+      'TotalTaxableAmount': totalTaxableAmount,
+      'TotalTaxAmount': totalTaxAmount,
+      'TotalCessAmount': totalCessAmount,
       'TotalAmount': totalAmount,
-      'StartDateTime': startDateTime,
+      'StartTime': startTime,
+      'EndTime': endTime,
       'ActiveInnactive': activeInnactive,
       'DineInOrOther': dineInOrOther,
       'CreditOrPaid': creditOrPaid,
       'BillNumber': billNumber,
-      'paidornot': paidOrNot,
       'UserID': userId,
     };
   }

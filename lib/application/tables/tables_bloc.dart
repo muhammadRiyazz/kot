@@ -104,7 +104,6 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
   List<TableModel> _tableModels = []; // Cached list for table models
 
   TablesBloc() : super(TablesState.initial()) {
-    
     // Helper function for database queries
     Future<List<dynamic>> _fetchData(String query) async {
       try {
@@ -118,13 +117,14 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
 
         return jsonDecode(result);
       } catch (e) {
-        log("Database query failed: $e");
+        log("Database query failed ---: $e");
         throw Exception("Failed to fetch data");
       }
     }
 
     // Fetch table configuration and orders
     on<TableData>((event, emit) async {
+      log('TableData');
       emit(state.copyWith(isLoading: true, selectedFloor: null));
 
       try {
@@ -141,11 +141,12 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
             .toList();
 
         // Fetching order data for a specific date
-        String ordersQuery = """
-          SELECT Id, OrderNumber, EntryDate, UserName, CustomerId, CustomerName, TableName, FloorNumber, TaxableAmount, Discount, TotalAmount, StartDateTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, paidornot, UserID 
-          FROM dbo.OrderMainDetails 
-          WHERE EntryDate = '2024-09-10 00:00:00.000'
-        """;
+      String ordersQuery = """
+  SELECT Id, OrderNumber, EntryDate, CustomerId, CustomerName, TableName, FloorNumber, Discount, TotalAmount, StartTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
+  FROM dbo.OrderMainDetails
+  WHERE CAST(EntryDate AS DATE) = '2024-10-23' AND ActiveInnactive = 'Active'
+""";
+
         List<dynamic> orders = await _fetchData(ordersQuery);
 
         // Convert the fetched data to `TableModel`

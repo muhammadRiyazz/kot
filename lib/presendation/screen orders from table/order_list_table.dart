@@ -236,7 +236,7 @@ class ScreenOrdersList extends StatelessWidget {
                                                             DateTime.parse(state
                                                                 .tableOrders[
                                                                     index]
-                                                                .entryDate))),
+                                                                .entryDate!))),
                                                       ],
                                                     ),
                                                   ),

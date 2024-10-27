@@ -22,8 +22,31 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
-        String ordersQuery =
-            "SELECT [Id], [OrderNumber], [EntryDate], [UserName], [CustomerId], [CustomerName], [TableName], [FloorNumber], [TaxableAmount], [Discount], [TotalAmount], [StartDateTime], [ActiveInnactive], [DineInOrOther], [CreditOrPaid], [BillNumber], [paidornot], [UserID] FROM [Restaurant].[dbo].[OrderMainDetails] WHERE [EntryDate] = '10/09/2024 00:00:00' AND [ActiveInnactive] = 'Active'";
+       String ordersQuery = """
+    SELECT [Id], 
+           [OrderNumber], 
+           [EntryDate], 
+           [CustomerId], 
+           [CustomerName], 
+           [TableName], 
+           [FloorNumber], 
+           [TotalAmountBeforeDisc], 
+           [Discount], 
+           [TotalTaxableAmount], 
+           [TotalTaxAmount], 
+           [TotalCessAmount], 
+           [TotalAmount], 
+           [StartTime], 
+           [EndTime], 
+           [ActiveInnactive], 
+           [DineInOrOther], 
+           [CreditOrPaid], 
+           [BillNumber], 
+           [UserID]
+    FROM [Restaurant].[dbo].[OrderMainDetails]
+    WHERE CAST([EntryDate] AS DATE) = '2024-10-23' 
+          AND [ActiveInnactive] = 'Active';
+""";
 
         // String ordersQuery =
         //     "SELECT [Id], [OrderNumber], [EntryDate], [UserName], [CustomerId], [CustomerName], "
@@ -35,7 +58,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         // "WHERE [EntryDate] = '2024-09-09 00:00:00.000'"
         // AND ActiveInnactive = 'Active'
         String? ordersresult = await connection.getData(ordersQuery);
-        // log(ordersresult);
+        log(ordersresult);
         List<dynamic> jsonResponse = jsonDecode(ordersresult);
 
         // Map the JSON to a list of Order objects
@@ -56,8 +79,30 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
-        String ordersQuery =
-            "SELECT [Id], [OrderNumber], [EntryDate], [UserName], [CustomerId], [CustomerName], [TableName], [FloorNumber], [TaxableAmount], [Discount], [TotalAmount], [StartDateTime], [ActiveInnactive], [DineInOrOther], [CreditOrPaid], [BillNumber], [paidornot], [UserID] FROM [Restaurant].[dbo].[OrderMainDetails] WHERE [EntryDate] = '2024-09-10 00:00:00.000' AND [TableName] = '${event.tableNo}' ";
+       String ordersQuery = """
+    SELECT [Id], 
+           [OrderNumber], 
+           [EntryDate], 
+           [CustomerId], 
+           [CustomerName], 
+           [TableName], 
+           [FloorNumber], 
+           [TotalAmountBeforeDisc], 
+           [Discount], 
+           [TotalTaxableAmount], 
+           [TotalTaxAmount], 
+           [TotalCessAmount], 
+           [TotalAmount], 
+           [StartTime], 
+           [EndTime], 
+           [ActiveInnactive], 
+           [DineInOrOther], 
+           [CreditOrPaid], 
+           [BillNumber], 
+           [UserID]
+    FROM [Restaurant].[dbo].[OrderMainDetails]
+ WHERE CAST([EntryDate] AS DATE) = '2024-10-23'   AND [TableName] = '${event.tableNo}';
+""";
 
         String? ordersresult = await connection.getData(ordersQuery);
         log(ordersresult);

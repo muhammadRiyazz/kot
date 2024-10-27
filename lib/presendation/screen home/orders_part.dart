@@ -265,7 +265,7 @@ class _OrderPageState extends State<OrderPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'Total: ₹${state.orders[index].totalAmount.toStringAsFixed(1)}',
+                                                        'Total: ₹${state.orders[index].totalAmount!.toStringAsFixed(1)}',
                                                         style: TextStyle(
                                                           fontSize:
                                                               textSize - 2,
@@ -292,7 +292,7 @@ class _OrderPageState extends State<OrderPage> {
                                                             ? '- -'
                                                             : state
                                                                 .orders[index]
-                                                                .tableName,
+                                                                .tableName!,
                                                         style: TextStyle(
                                                           color: Colors.white,
                                                           fontWeight:
@@ -396,7 +396,7 @@ class _OrderPageState extends State<OrderPage> {
                                                       Text(
                                                         time(DateTime.parse(state
                                                             .orders[index]
-                                                            .startDateTime)),
+                                                            .startTime)),
                                                         style: TextStyle(
                                                           fontSize:
                                                               textSize - 3,
