@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/items%20To%20Kot/items_to_kot_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
+import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
@@ -90,7 +91,7 @@ class OrderDetailsPage extends StatelessWidget {
             log('building');
             // log(state.orderitems[0].changedQty.toString());
             return state.isLoading
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator(),
                   )
                 : Column(
@@ -106,7 +107,7 @@ class OrderDetailsPage extends StatelessWidget {
                               child: Column(
                                 children: [
                                   ListTile(
-                                    contentPadding: EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 0),
                                     splashColor:
                                         const Color.fromARGB(0, 255, 255, 255),
@@ -114,7 +115,7 @@ class OrderDetailsPage extends StatelessWidget {
                                         const Color.fromARGB(0, 255, 255, 255),
                                     title: Text(
                                       order.orderNumber,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 17,
                                           fontWeight: FontWeight.w600),
                                     ),
@@ -122,27 +123,27 @@ class OrderDetailsPage extends StatelessWidget {
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.white,
                                           shape: RoundedRectangleBorder(
-                                            side: BorderSide(color: mainclr),
+                                            side: const BorderSide(
+                                                color: mainclr),
                                             borderRadius: BorderRadius.circular(
                                                 20), // Border radius of 10
                                           ),
                                         ),
                                         onPressed: () {
-                                          // BlocProvider.of<ItemsToKotBloc>(
-                                          //         context)
-                                          //     .add(ItemsToKotEvent
-                                          //         .itemsFromOrder(
-                                          //             items: state.toAddItems));
-
-                                          // Navigator.push(context,
-                                          //     MaterialPageRoute(
-                                          //   builder: (context) {
-                                          //     return ProductChoosingPage(
-                                          //       table: order.tableName,
-                                          //       order: order.orderNumber,
-                                          //     );
-                                          //   },
-                                          // ));
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                            builder: (context) {
+                                              return ProductChoosingPage(
+                                                table: order.tableName,
+                                                order: order.orderNumber,
+                                              );
+                                            },
+                                          ));
+                                          BlocProvider.of<StockBloc>(context)
+                                              .add(ListFromOrder(
+                                                  cancelItemslist:
+                                                      state.toCancelItems,
+                                                  itemslist: state.toAddItems));
                                         },
                                         child: const Text(
                                           'Add New Item',
@@ -159,7 +160,7 @@ class OrderDetailsPage extends StatelessWidget {
                                             borderRadius:
                                                 BorderRadius.circular(10)),
                                         child: Padding(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               vertical: 12, horizontal: 10),
                                           child: Text(
                                             order.tableName,
@@ -177,9 +178,10 @@ class OrderDetailsPage extends StatelessWidget {
                                     children: [
                                       Container(
                                         decoration: const BoxDecoration(
-                                            color: mainclrbg),
+                                            color: Color.fromARGB(
+                                                255, 226, 242, 255)),
                                         child: Padding(
-                                          padding: EdgeInsets.all(8.0),
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Row(
                                             children: [
                                               const SizedBox(
@@ -190,7 +192,7 @@ class OrderDetailsPage extends StatelessWidget {
                                                 color: mainclr,
                                                 size: 17,
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 5,
                                               ),
                                               Text(
@@ -248,10 +250,53 @@ class OrderDetailsPage extends StatelessWidget {
 
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 14),
-                              child: Text(
-                                ' ${state.orderitems.length} Items',
-                                style: TextStyle(fontSize: 16),
+                                  horizontal: 0,
+                                  vertical: state.toAddItems.isNotEmpty ||
+                                          state.toCancelItems.isNotEmpty
+                                      ? 0
+                                      : 12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '   ${state.orderitems.length} Items',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  state.toAddItems.isNotEmpty ||
+                                          state.toCancelItems.isNotEmpty
+                                      ? TextButton(
+                                          onPressed: () {
+                                            BlocProvider.of<StockBloc>(context)
+                                                .add(const StockEvent
+                                                    .clearSelection());
+                                            BlocProvider.of<OrderDetailsBloc>(
+                                                    context)
+                                                .add(OrderDetailsEvent
+                                                    .clearItemSelection());
+                                          },
+                                          child: const Row(
+                                            children: [
+                                              Text(
+                                                'Clear Selection',
+                                                style: TextStyle(
+                                                    color: Colors.blue,
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Icon(
+                                                Icons.close,
+                                                size: 22,
+                                                color: Colors.blue,
+                                              ),
+                                            ],
+                                          ))
+                                      : SizedBox()
+                                ],
                               ),
                             ),
                             // Item List
@@ -344,7 +389,7 @@ class OrderDetailsPage extends StatelessWidget {
                                                         IconButton(
                                                           icon: Container(
                                                               decoration: BoxDecoration(
-                                                                  color: state.orderitems[index].changedQty <
+                                                                  color: state.orderitems[index].quantity <
                                                                           0
                                                                       ? Colors
                                                                           .red
@@ -366,26 +411,51 @@ class OrderDetailsPage extends StatelessWidget {
                                                                 ),
                                                               )),
                                                           onPressed: () {
+                                                            if (state
+                                                                    .orderitems[
+                                                                        index]
+                                                                    .quantity >
+                                                                0) {
+                                                              log('calling ---');
+                                                              BlocProvider.of<
+                                                                          StockBloc>(
+                                                                      context)
+                                                                  .add(StockEvent.add(
+                                                                      item: state
+                                                                              .orderitems[
+                                                                          index],
+                                                                      isIncrement:
+                                                                          false,
+                                                                      productid: state
+                                                                          .orderitems[
+                                                                              index]
+                                                                          .itemCode,
+                                                                      qty: 1));
+
+                                                              // Your code here
+                                                            }
+
                                                             BlocProvider.of<
                                                                         OrderDetailsBloc>(
                                                                     context)
                                                                 .add(OrderDetailsEvent.cancelQty(
-                                                                    currentItem:
-                                                                        state.orderitems[
-                                                                            index]));
+                                                                    currentItemid: state
+                                                                        .orderitems[
+                                                                            index]
+                                                                        .itemCode));
                                                           },
                                                         ),
                                                         Text(
                                                           state
                                                                       .orderitems[
                                                                           index]
-                                                                      .changedQty ==
+                                                                      .quantity ==
                                                                   0
                                                               ? ''
                                                               : state
                                                                   .orderitems[
                                                                       index]
-                                                                  .changedQty
+                                                                  .quantity
                                                                   .toString(),
                                                           style:
                                                               const TextStyle(
@@ -418,14 +488,31 @@ class OrderDetailsPage extends StatelessWidget {
                                                                 ),
                                                               )),
                                                           onPressed: () {
+                                                            if (state
+                                                                    .orderitems[
+                                                                        index]
+                                                                    .quantity !=
+                                                                -1) {
+                                                              BlocProvider.of<StockBloc>(context).add(StockEvent.add(
+                                                                  item: state
+                                                                          .orderitems[
+                                                                      index],
+                                                                  isIncrement:
+                                                                      true,
+                                                                  productid: state
+                                                                      .orderitems[
+                                                                          index]
+                                                                      .itemCode,
+                                                                  qty: 1));
+                                                            }
+
                                                             BlocProvider.of<OrderDetailsBloc>(
                                                                     context)
                                                                 .add(OrderDetailsEvent.addQty(
-                                                                    currentItem:
-                                                                        state.orderitems[
-                                                                            index]));
-
-                                                            // _changeQuantity(item, 1);
+                                                                    currentItemid: state
+                                                                        .orderitems[
+                                                                            index]
+                                                                        .itemCode));
                                                           },
                                                         ),
                                                       ],
@@ -447,7 +534,7 @@ class OrderDetailsPage extends StatelessWidget {
                                                             text: state
                                                                 .orderitems[
                                                                     index]
-                                                                .quantity
+                                                                .qty
                                                                 .toString(),
                                                             style:
                                                                 const TextStyle(
@@ -484,23 +571,27 @@ class OrderDetailsPage extends StatelessWidget {
                           ],
                         ),
                       ),
+                      state.toAddItems.isNotEmpty ||
+                              state.toCancelItems.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: MainButton(
+                                  label: 'KOT',
+                                  onpress: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return const SelectedProductsPage();
+                                      },
+                                    ));
 
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: MainButton(
-                            label: 'Print KOT',
-                            onpress: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return SelectedProductsPage();
-                                },
-                              ));
-
-                              // BlocProvider.of<ItemsToKotBloc>(context).add(
-                              //     ItemsToKotEvent.itemsFromOrder(
-                              //         items: state.toAddItems));
-                            }),
-                      ),
+                                    BlocProvider.of<StockBloc>(context)
+                                        .add(ListFromOrder(
+                                      cancelItemslist: state.toCancelItems,
+                                      itemslist: state.toAddItems,
+                                    ));
+                                  }),
+                            )
+                          : const SizedBox(),
                       Padding(
                         padding: const EdgeInsets.only(
                             bottom: 10, right: 12, left: 12),

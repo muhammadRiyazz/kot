@@ -1,173 +1,30 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
 import 'package:restaurant_kot/domain/category/category.dart';
+import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/stock/stock_model.dart';
 part 'stock_event.dart';
 part 'stock_state.dart';
 part 'stock_bloc.freezed.dart';
 
-// class StockBloc extends Bloc<StockEvent, StockState> {
-//   StockBloc() : super(StockState.initial()) {
-//     List<Product> serProducts = [];
-//     List<Product> goodsProducts = [];
-
-//     on<CategorySelection>((event, emit) async {
-//       try {
-//         if (event.from == 'SER') {
-//           List<Product> serProductsA = serProducts
-//               .where((product) => product.category == event.category.pdtFilter)
-//               .toList();
-
-//           emit(state.copyWith(
-//               isLoading: false,
-//               serProducts: serProductsA,
-//               sercategory: event.category));
-//         } else if (event.from == 'GOODS') {
-//           List<Product> goodsProductsA = goodsProducts
-//               .where((product) => product.category == event.category.pdtFilter)
-//               .toList();
-
-//           emit(state.copyWith(
-//               isLoading: false,
-//               goodsProducts: goodsProductsA,
-//               goodscategory: event.category));
-//         }
-//       } catch (e) {
-//         emit(state.copyWith(isLoading: false));
-//         log(e.toString());
-//       }
-//     });
-
-//     on<Clearcategory>((event, emit) async {
-//       try {
-//         emit(state.copyWith(
-//             isLoading: false,
-//             serProducts: serProducts,
-//             sercategory: null,
-//             goodsProducts: goodsProducts,
-//             goodscategory: null));
-//       } catch (e) {
-//         log(e.toString());
-//       }
-//     });
-
-//     on<Search>((event, emit) async {
-//       try {
-//         emit(state.copyWith(isLoading: true));
-
-//         //   FROM [Restaurant].[dbo].[MainStock]
-//         //   WHERE [SERorGOODS] = '${event.from}'
-//         //     AND ([codeorSKU] LIKE '%${event.searchQuary}%' OR [pdtname] LIKE '%${event.searchQuary}%')
-//         // """;
-
-//         if (event.from == 'SER') {
-//           log('service');
-//           final List<Product> filteredStocks = serProducts.where((product) {
-//             // Check if the product name contains the search term (case-insensitive)
-//             return product.productName
-//                 .toLowerCase()
-//                 .contains(event.searchQuary.toLowerCase());
-//           }).toList();
-
-//           emit(state.copyWith(isLoading: false, serProducts: filteredStocks));
-//         } else if (event.from == 'GOODS') {
-//           log('goods');
-
-//           final List<Product> filteredStocks = goodsProducts.where((product) {
-//             // Check if the product name contains the search term (case-insensitive)
-//             return product.productName
-//                 .toLowerCase()
-//                 .contains(event.searchQuary.toLowerCase());
-//           }).toList();
-//           emit(state.copyWith(isLoading: false, goodsProducts: filteredStocks));
-//         }
-//         emit(state.copyWith(
-//           isLoading: false,
-//         ));
-//       } catch (e) {
-//         log(e.toString());
-//         emit(state.copyWith(isLoading: false));
-//       }
-//     });
-
-//     on<Add>((event, emit) async {
-//       try {
-//         if (event.from == 'SER') {
-//           log('FROM SER');
-//           List<Product> products = state.serProducts;
-//           if (products
-//               .any((existingItem) => existingItem.id == event.product.id)) {
-//             final index = products.indexWhere((i) => i.id == event.product.id);
-
-//             products[index].changedQty = products[index].changedQty + event.qty;
-//             log(products[index].changedQty.toString());
-
-//             emit(state.copyWith(serProducts: products));
-//           }
-//         } else if (event.from == 'GOODS') {
-//           log('FROM GOODS');
-
-//           List<Product> products = state.goodsProducts;
-//           if (products
-//               .any((existingItem) => existingItem.id == event.product.id)) {
-//             final index = products.indexWhere((i) => i.id == event.product.id);
-
-//             products[index].changedQty = products[index].changedQty + event.qty;
-//             log(products[index].changedQty.toString());
-//             emit(state.copyWith(goodsProducts: products));
-//           }
-//         }
-//       } catch (e) {
-//         log(e.toString());
-//       }
-//     });
-//   }
-// }
-
 class StockBloc extends Bloc<StockEvent, StockState> {
   StockBloc() : super(StockState.initial()) {
-    List<Product> serProducts = [];
-    List<Product> goodsProducts = [];
-
-    // Fetch stocks and categories from the database
-    on<FetchStocksAndCategory>((event, emit) async {
-      log('FetchStocksAndCategory called');
-      emit(state.copyWith(isLoading: true));
+    on<CategoryFetch>((event, emit) async {
+      log('CategoryFetch-------StockBloc');
 
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
 
-        // Query definitions
-        String stockQuery = """
-          SELECT * FROM [Restaurant].[dbo].[MainStock]
-        """;
-
         String categoryQuery = """
-          SELECT * FROM [Restaurant].[dbo].[Category]
-        """;
+      SELECT * FROM [Restaurant].[dbo].[Category]
+       """;
 
-        // Execute both queries in parallel
-        var stockQueryResultFuture = connection.getData(stockQuery);
-        var categoryQueryResultFuture = connection.getData(categoryQuery);
-
-        // Wait for both futures to complete
-        String? stockQueryResult = await stockQueryResultFuture;
-        String? categoryQueryResult = await categoryQueryResultFuture;
-
-        // Process stock query result
-        List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
-        List<Product> stocks =
-            stockJsonResponse.map((data) => Product.fromJson(data)).toList();
-        serProducts =
-            stocks.where((product) => product.serOrGoods == 'SER').toList();
-        goodsProducts =
-            stocks.where((product) => product.serOrGoods == 'GOODS').toList();
+        String? categoryQueryResult = await connection.getData(categoryQuery);
 
         // Process category query result
         List<dynamic> categoryJsonResponse = jsonDecode(categoryQueryResult);
@@ -180,90 +37,236 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         List<Category> goodsCategory = allCategory
             .where((category) => category.serOrGoods == 'GOODS')
             .toList();
-
-        // Emit state with stock and category data
         emit(state.copyWith(
-            isLoading: false,
-            serProducts: serProducts,
-            serCategory: serCategory,
-            goodsProducts: goodsProducts,
-            goodsCategory: goodsCategory,
-            toKOTitems: []));
+            goodsCategory: goodsCategory, serCategory: serCategory));
       } catch (e) {
-        log('Error fetching stocks and categories: ${e.toString()}');
+        log(e.toString());
+      }
+    });
+    on<ItemInitalFetch>((event, emit) async {
+      log('ItemInitalFetch-------StockBloc');
+      emit(state.copyWith(isLoading: true));
+
+      try {
+        // Initialize database connection
+        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+        MssqlConnection connection = await connectionManager.getConnection();
+
+        // SQL Query for fetching unique items based on `pdtcode`, ordered by `Id` descending
+        const String itemsQuery = """
+      WITH UniqueItems AS (
+          SELECT 
+                [Id], [pdtcode], [pdtname], [HSNCode], [discp], [unitprice],
+                [itemMRP], [Amount], [GrossValueAftrITMDisc], [ItemBillDiscPER],
+                [ItemBillDiscAmount], [ItemTotalNETAmount], [gst], [gstamount],
+                [Totalamount], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt],
+                [venSGST], [venSGSTamnt], [SerManDetails], [CessPercentage],
+                [CessAmount], [ItemUnitSaleRate],
+                ROW_NUMBER() OVER(PARTITION BY [pdtcode] ORDER BY [Id] DESC) AS row_num
+          FROM [Restaurant].[dbo].[invoicedetail]
+      )
+      SELECT *
+      FROM UniqueItems
+      WHERE row_num = 1
+      ORDER BY [Id] DESC;
+    """;
+
+        // Execute query and get result
+        String? itemQueryResult = await connection.getData(itemsQuery);
+
+        // Parse JSON result if it exists
+        List<Map<String, dynamic>> rows = [];
+        try {
+          rows = List<Map<String, dynamic>>.from(json.decode(itemQueryResult));
+        } catch (e) {
+          log('Error parsing JSON: $e');
+        }
+
+        // Initialize lists for categorizing items
+        List<KitchenItem> serKitchenItems = [];
+        List<KitchenItem> goodsKitchenItems = [];
+
+        // Process each row and categorize items based on `pdtcode`
+        for (var row in rows) {
+          KitchenItem item = KitchenItem(
+            stock: '0',
+            qty: 0,
+            serOrGoods: row['serOrGoods'] ?? '',
+            kitchenName: '',
+            itemName: row['pdtname'] ?? '',
+            itemCode: row['pdtcode'] ?? '',
+            quantity: 0,
+            basicRate: row['saleamnt']?.toString() ?? '0',
+            unitTaxableAmountBeforeDiscount: '0',
+            unitTaxableAmount: '0',
+            totalTaxableAmount: '0',
+            gstPer: '0',
+            cessPer: '0',
+            totalTaxAmount: '0',
+            totalCessAmount: '0',
+            totalAmount: '0',
+            dininACrate: '0',
+            dininNonACrate: '0',
+          );
+
+          // Categorize based on `serOrGoods`
+          if (getCategory(row['pdtcode']) == 'SER') {
+            serKitchenItems.add(item);
+          } else if (getCategory(row['pdtcode']) == 'GOODS') {
+            goodsKitchenItems.add(item);
+          }
+        }
+
+        var toKOTMap = {
+          for (var element in state.toKOTitems)
+            element.itemCode: element.quantity
+        };
+
+// Iterate through items and update quantity
+        for (var item in serKitchenItems) {
+          item.quantity = toKOTMap[item.itemCode] ?? 0;
+        }
+
+        // Emit state with updated data
+        emit(state.copyWith(
+          isLoading: false,
+          seritems: serKitchenItems,
+          goodsitems: goodsKitchenItems,
+          stocklist: serKitchenItems, // Default to 'SER' items for now
+          goodsOrSER: 'Service',
+        ));
+      } catch (e) {
         emit(state.copyWith(isLoading: false));
+        log('Error fetching items: $e');
       }
     });
 
-    // Handle category selection
-    on<CategorySelection>((event, emit) async {
-      log('CategorySelection: ${event.category.pdtFilter} from ${event.from}');
+    on<TypeChange>((event, emit) async {
+      log('TypeChange-------StockBloc');
+
       try {
-        if (event.from == 'SER') {
-          List<Product> serProductsA = serProducts
-              .where((product) => product.category == event.category.pdtFilter)
-              .toList();
-              
+        // Select items and category based on type (Goods/Service)
+        List<KitchenItem> items = [];
+        List<Category> category = [];
 
-
-
-          emit(state.copyWith(
-            isLoading: false,
-            serProducts: serProductsA,
-            sercategory: event.category,
-          ));
-        } else if (event.from == 'GOODS') {
-          List<Product> goodsProductsA = goodsProducts
-              .where((product) => product.category == event.category.pdtFilter)
-              .toList();
-          emit(state.copyWith(
-            isLoading: false,
-            goodsProducts: goodsProductsA,
-            goodscategory: event.category,
-          ));
+        if (event.type == 'Goods') {
+          items = state.goodsitems;
+          category = state.goodsCategory;
+        } else {
+          items = state.seritems;
+          category = state.serCategory;
         }
+
+        // Update quantities in itemslist based on kotQuantityMap
+        // Create a map for quick lookup of itemCode to quantity
+        var toKOTMap = {
+          for (var element in state.toKOTitems)
+            element.itemCode: element.quantity
+        };
+
+// Iterate through items and update quantity
+        for (var item in items) {
+          item.quantity = toKOTMap[item.itemCode] ?? 0;
+        }
+
+        // Emit state with updated stocklist
+        emit(state.copyWith(
+          category: category,
+          goodsOrSER: event.type,
+          selectedcategory: null,
+          stocklist: items,
+        ));
+      } catch (e) {
+        emit(state.copyWith(isLoading: false));
+        log('Error in TypeChange: $e');
+      }
+    });
+
+    on<CategorySelection>((event, emit) async {
+      log('CategorySelection-------StockBloc');
+
+      emit(state.copyWith(isLoading: true));
+
+      try {
+        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+        MssqlConnection connection = await connectionManager.getConnection();
+
+        String stockQuery = """
+  SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
+  FROM [Restaurant].[dbo].[MainStock]
+  WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}' 
+    AND [category] = '${event.category.pdtFilter}';
+""";
+
+        String stockQueryResult = await connection.getData(stockQuery);
+        List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
+
+        List<Product> stocks =
+            stockJsonResponse.map((data) => Product.fromJson(data)).toList();
+
+        final List<KitchenItem> stocksnew = [];
+
+        for (var element in stocks) {
+          stocksnew.add(KitchenItem(
+              dininACrate: element.dineInACRate,
+              dininNonACrate: element.dineInNonACRate,
+              stock: '0',
+              qty: 0,
+              serOrGoods: getCategory(element.codeOrSKU),
+              kitchenName: element.printerName,
+              itemName: element.productName,
+              itemCode: element.codeOrSKU,
+              quantity: 0,
+              basicRate: element.saleAmount,
+              unitTaxableAmountBeforeDiscount: '0',
+              unitTaxableAmount: '0',
+              totalTaxableAmount: element.saleAmountWithTax,
+              gstPer: '0',
+              cessPer: '0',
+              totalTaxAmount: '0',
+              totalCessAmount: '0',
+              totalAmount: element.saleAmountWithTax));
+        }
+
+        var toKOTMap = {
+          for (var element in state.toKOTitems)
+            element.itemCode: element.quantity
+        };
+
+// Iterate through items and update quantity
+        for (var item in stocksnew) {
+          item.quantity = toKOTMap[item.itemCode] ?? 0;
+        }
+        emit(state.copyWith(
+            isLoading: false,
+            stocklist: stocksnew,
+            selectedcategory: event.category));
       } catch (e) {
         log('Error during category selection: ${e.toString()}');
         emit(state.copyWith(isLoading: false));
       }
     });
 
-
-
-
     // Clear category selection
     on<Clearcategory>((event, emit) async {
-
-
-      log('Clearcategory called');
+      log('Clearcategory-------StockBloc');
       try {
+        List<KitchenItem> items = [];
+        if (state.goodsOrSER == 'Goods') {
+          items = state.goodsitems;
+        } else {
+          items = state.seritems;
+        }
+        var toKOTMap = {
+          for (var element in state.toKOTitems)
+            element.itemCode: element.quantity
+        };
 
-
-
-Map<String, Product> serMap = {for (var item in serProducts) item.id: item};
-  Map<String, Product> goodsMap = {for (var item in goodsProducts) item.id: item};
-
-  for (var item in  state.toKOTitems) {
-    if (item.serOrGoods == 'SER') {
-      serMap[item.id] = item; // Update or add in serMap
-    } else if (item.serOrGoods == 'GOODS') {
-      goodsMap[item.id] = item; // Update or add in goodsMap
-    }
-  }
-
-  // // Update the original lists from maps
-  // serProducts = serMap.values.toList();
-  // goodsProducts = goodsMap.values.toList();
-
-
-
-        emit(state.copyWith(
-          isLoading: false,
-          serProducts: serMap.values.toList(),
-          sercategory: null,
-          goodsProducts:goodsMap.values.toList(),
-          goodscategory: null,
-        ));
+// Iterate through items and update quantity
+        for (var item in items) {
+          item.quantity = toKOTMap[item.itemCode] ?? 0;
+        }
+        emit(state.copyWith(selectedcategory: null, stocklist: items));
       } catch (e) {
         log('Error clearing category: ${e.toString()}');
       }
@@ -271,180 +274,253 @@ Map<String, Product> serMap = {for (var item in serProducts) item.id: item};
 
     // Search products
     on<Search>((event, emit) async {
-      log('Search called with query: ${event.searchQuary}');
-      try {
-        emit(state.copyWith(isLoading: true));
+      emit(state.copyWith(
+        isLoading: true,
+      ));
 
-        List<Product> filteredStocks = [];
-        if (event.from == 'SER') {
-          filteredStocks =state. serProducts.where((product) {
-            return product.productName
-                .toLowerCase()
-                .contains(event.searchQuary.toLowerCase());
-          }).toList();
-          emit(state.copyWith(isLoading: false, serProducts: filteredStocks));
-        } else if (event.from == 'GOODS') {
-          filteredStocks =state. goodsProducts.where((product) {
-            return product.productName
-                .toLowerCase()
-                .contains(event.searchQuary.toLowerCase());
-          }).toList();
-          emit(state.copyWith(isLoading: false, goodsProducts: filteredStocks));
+      log('Search-------StockBloc');
+      try {
+        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+        MssqlConnection connection = await connectionManager.getConnection();
+
+        String stockQuery = """
+  SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
+  FROM [Restaurant].[dbo].[MainStock]
+ WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}'
+    AND LOWER([pdtname]) LIKE LOWER('%${event.searchQuary.trim()}%');
+""";
+        String stockQueryResult = await connection.getData(stockQuery);
+        List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
+
+        List<Product> stocks =
+            stockJsonResponse.map((data) => Product.fromJson(data)).toList();
+
+        final List<KitchenItem> stocksnew = [];
+
+        for (var element in stocks) {
+          stocksnew.add(KitchenItem(
+              dininACrate: element.dineInACRate,
+              dininNonACrate: element.dineInNonACRate,
+              stock: '0',
+              qty: 0,
+              serOrGoods: getCategory(element.codeOrSKU),
+              kitchenName: element.printerName,
+              itemName: element.productName,
+              itemCode: element.codeOrSKU,
+              quantity: 0,
+              basicRate: element.saleAmount,
+              unitTaxableAmountBeforeDiscount: '0',
+              unitTaxableAmount: '0',
+              totalTaxableAmount: element.saleAmountWithTax,
+              gstPer: '0',
+              cessPer: '0',
+              totalTaxAmount: '0',
+              totalCessAmount: '0',
+              totalAmount: element.saleAmountWithTax));
         }
+
+        var toKOTMap = {
+          for (var element in state.toKOTitems)
+            element.itemCode: element.quantity
+        };
+
+// Iterate through items and update quantity
+        for (var item in stocksnew) {
+          item.quantity = toKOTMap[item.itemCode] ?? 0;
+        }
+        emit(state.copyWith(
+            isLoading: false, stocklist: stocksnew, selectedcategory: null));
       } catch (e) {
         log('Error during search: ${e.toString()}');
         emit(state.copyWith(isLoading: false));
       }
     });
 
+    on<ClearSelection>((event, emit) async {
+      log('ClearSelection-------StockBloc');
+
+      emit(state.copyWith(
+        toKOTitems: [],
+        cancelKOTitems: [],
+      ));
+    });
+
     // Add products
     on<Add>((event, emit) async {
-      log(event.product.changedQty.toString());
-      log(event.product.saleAmount.toString());
+      log('Add-------StockBloc');
 
-      log('${event.isIncrement ? 'Increment' : 'Decrement'} product: ${event.product.productName} with quantity: ${event.qty} from ${event.from}');
+      log('${event.isIncrement ? 'Increment' : 'Decrement'} product: ${event.productid} with quantity: ${event.qty}');
 
       try {
-        // Create a deep copy of tokotItems to avoid mutating the original state
-        List<Product> tokotItems =
-            state.toKOTitems.map((product) => product.copyWith()).toList();
+        // Create a mutable copy of toKOTitems to avoid mutating the original state
+        List<KitchenItem> tokotItems = List.from(state.toKOTitems);
 
-        // Function to update tokotItems based on qty changes
-        void updateTokotItems(Product product, int qtyChange) {
-          final tokotIndex =
-              tokotItems.indexWhere((item) => item.id == product.id);
+        void updateTokotItems(KitchenItem product, int qtyChange) {
+          log('updateTokotItems');
+          final tokotIndex = tokotItems
+              .indexWhere((item) => item.itemCode == product.itemCode);
 
           if (tokotIndex >= 0) {
-            log('tokotIndex >= 0');
-
             if (event.update != null) {
-              Product updatedProduct = tokotItems[tokotIndex]
-                  .copyWith(changedQty: qtyChange, saleAmount: event.amount);
+              KitchenItem updatedProduct = tokotItems[tokotIndex]
+                  .copyWith(quantity: qtyChange, totalAmount: event.amount);
               tokotItems[tokotIndex] = updatedProduct;
             } else if (event.update == null) {
+              log('not from update section ');
               // Modify changedQty through copyWith to ensure immutability
-              Product updatedProduct = tokotItems[tokotIndex].copyWith(
-                changedQty: tokotItems[tokotIndex].changedQty + qtyChange,
+              KitchenItem updatedProduct = tokotItems[tokotIndex].copyWith(
+                quantity: tokotItems[tokotIndex].quantity + qtyChange,
               );
 
-              if (updatedProduct.changedQty <= 0) {
+              if (updatedProduct.quantity <= 0) {
                 tokotItems.removeAt(tokotIndex);
-                log('Removed product ${product.productName} from tokotItems');
+                log('Removed product ${product.itemCode} from tokotItems');
               } else {
                 tokotItems[tokotIndex] = updatedProduct;
-                log('Updated tokotItems quantity: ${updatedProduct.changedQty}');
+                log('Updated tokotItems quantity: ${updatedProduct.quantity}');
               }
             }
           } else if (qtyChange > 0) {
-            log('qtyChange > 0');
-
             // Add new product with the updated quantity
-            Product newProduct = product.copyWith(changedQty: qtyChange);
+            KitchenItem newProduct = product.copyWith(quantity: qtyChange);
             tokotItems.add(newProduct);
-            log('Added product ${newProduct.productName} to tokotItems with qty: ${newProduct.changedQty}');
+            log('Added product ${newProduct.itemName} to tokotItems with qty: ${newProduct.quantity}');
           }
         }
 
         // Handling for SER products
-        if (event.from == 'SER') {
-          // Create a deep copy of the SER products list
-          List<Product> products =
-              state.serProducts.map((product) => product.copyWith()).toList();
+        // if (event.from == 'SER') {
+        // Create a deep copy of the SER products list
+        List<KitchenItem> products =
+            state.stocklist.map((product) => product.copyWith()).toList();
 
-          if (products
-              .any((existingItem) => existingItem.id == event.product.id)) {
-            final index = products.indexWhere((i) => i.id == event.product.id);
+        if (products
+            .any((existingItem) => existingItem.itemCode == event.productid)) {
+          final index =
+              products.indexWhere((i) => i.itemCode == event.productid);
 
-            // Update product quantity and sale amount
-            if (event.update != null) {
-              log('event.update != null');
+          // Update product quantity and sale amount
+          if (event.update != null) {
+            products[index] = products[index].copyWith(
+              quantity: event.qty,
+              basicRate: event.amount.toString(),
+            );
+            // log(event.amount.toString());
+
+            // log(products[index].saleAmount);
+            // log(products[index].changedQty.toString());
+          } else {
+            if (event.isIncrement) {
+              log('event.isIncrement');
               products[index] = products[index].copyWith(
-                changedQty: event.qty,
-                saleAmount: event.amount.toString(),
+                quantity: products[index].quantity + event.qty,
               );
-              log(event.amount.toString());
-
-              log(products[index].saleAmount);
-              log(products[index].changedQty.toString());
             } else {
-              if (event.isIncrement) {
-                log('event.isIncrement');
-                products[index] = products[index].copyWith(
-                  changedQty: products[index].changedQty + event.qty,
-                );
-              } else {
-                log('event.isIncrement  not');
+              log('event.isIncrement  not');
 
-                products[index] = products[index].copyWith(
-                  changedQty: (products[index].changedQty - event.qty)
-                      .clamp(0, double.infinity)
-                      .toInt(),
-                );
-              }
+              products[index] = products[index].copyWith(
+                quantity: (products[index].quantity - event.qty)
+                    .clamp(0, double.infinity)
+                    .toInt(),
+              );
             }
-
-            log('Updated quantity in SER: ${products[index].changedQty}');
-            updateTokotItems(
-                products[index], event.isIncrement ? event.qty : -event.qty);
-
-            // Emit the updated state with deep-copied lists
-            emit(state.copyWith(
-              serProducts: products,
-              toKOTitems: tokotItems,
-              isLoading: false,
-            ));
           }
+
+          log('Updated quantity in SER: ${products[index].quantity}');
+          updateTokotItems(
+              products[index], event.isIncrement ? event.qty : -event.qty);
+
+          // Emit the updated state with deep-copied lists
+          emit(state.copyWith(
+            stocklist: products,
+            toKOTitems: tokotItems,
+            isLoading: false,
+          ));
         }
 
-        // Handling for GOODS products
-        else if (event.from == 'GOODS') {
-          // Create a deep copy of the GOODS products list
-          List<Product> products =
-              state.goodsProducts.map((product) => product.copyWith()).toList();
+        if (   event.item!=null) {
+          updateTokotItems(
+              event.item!, event.isIncrement ? event.qty : -event.qty);
 
-          if (products
-              .any((existingItem) => existingItem.id == event.product.id)) {
-            final index = products.indexWhere((i) => i.id == event.product.id);
-
-            if (event.update != null) {
-              // Update product quantity
-              products[index] = products[index]
-                  .copyWith(changedQty: event.qty, saleAmount: event.amount);
-            } else {
-              if (event.isIncrement) {
-                double totalStock = double.parse(products[index].totalStock);
-                if (totalStock != products[index].changedQty) {
-                  products[index] = products[index].copyWith(
-                    changedQty: products[index].changedQty + event.qty,
-                  );
-                } else {
-                  log('Out of stock');
-                }
-              } else {
-                products[index] = products[index].copyWith(
-                  changedQty: (products[index].changedQty - event.qty)
-                      .clamp(0, double.infinity)
-                      .toInt(),
-                );
-              }
-            }
-
-            log('Updated quantity in GOODS: ${products[index].changedQty}');
-            updateTokotItems(
-                products[index], event.isIncrement ? event.qty : -event.qty);
-
-            // Emit the updated state with deep-copied lists
-            emit(state.copyWith(
-              goodsProducts: products,
-              toKOTitems: tokotItems,
-              isLoading: false,
-            ));
-          }
+          // Emit the updated state with deep-copied lists
+          emit(state.copyWith(
+            stocklist: products,
+            toKOTitems: tokotItems,
+            isLoading: false,
+          ));
         }
+        log('tokotItems-----${tokotItems.length}');
       } catch (e) {
         log('Error updating product: ${e.toString()}');
         emit(state.copyWith(isLoading: false));
       }
     });
+
+    on<ListFromOrder>((event, emit) async {
+      log(event.itemslist.length.toString());
+      log(state.toKOTitems.length.toString());
+      log('ListFromOrder-------StockBloc');
+
+      try {
+        // // if (event.from==1) {
+        // final existingItemCodes =
+        //     state.toKOTitems.map((item) => item.itemCode).toSet();
+        // List<KitchenItem> newItems = event.itemslist
+        //     .where((item) => !existingItemCodes.contains(item.itemCode))
+        //     .map((item) {
+        //   return item;
+        // }).toList();
+
+        emit(state.copyWith(
+          cancelKOTitems: event.cancelItemslist,
+          isLoading: false,
+        ));
+        // } else {
+        //   emit(state.copyWith(
+        //   toKOTitems: event.itemslist,
+        //   isLoading: false,
+        // ));
+        // }
+      } catch (e) {
+        log('Error updating product: ${e.toString()}');
+        emit(state.copyWith(isLoading: false));
+      }
+    });
+
+on<ItemAction>((event, emit) async {
+  log('StockBloc  -- ItemAction');
+
+  List<KitchenItem> cancelKitchenItem = List.from(state.cancelKOTitems);
+  List<KitchenItem> kotKItem = List.from(state.toKOTitems);
+
+  if (event.from == 'cancellist') {
+    cancelKitchenItem.removeWhere((element) => event.item.itemCode == element.itemCode);
+  } else if (event.from == 'kotlist') {
+    kotKItem.removeWhere((element) => event.item.itemCode == element.itemCode);
+  }
+
+  emit(state.copyWith(
+    cancelKOTitems: cancelKitchenItem,
+    toKOTitems: kotKItem,
+  ));
+});
+
+
+  }
+}
+
+String getCategory(String code) {
+  final regex = RegExp(r'^[A-Z]+'); // Regular expression to capture the prefix
+  final match = regex.firstMatch(code);
+  String prefix = match?.group(0) ?? ''; // Extracted prefix
+
+  // Map the prefix to the corresponding category
+  switch (prefix) {
+    case 'PDT':
+      return 'GOODS';
+    case 'SER':
+      return 'SER';
+    default:
+      return 'Unknown Category';
   }
 }

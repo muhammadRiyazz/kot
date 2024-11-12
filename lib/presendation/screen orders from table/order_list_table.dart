@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
+import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/tables/table_model.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
@@ -28,8 +28,9 @@ class ScreenOrdersList extends StatelessWidget {
           )
         ],
       ),
-      body: RefreshIndicator(    backgroundColor: mainclr,
-      color: mainclrbg,
+      body: RefreshIndicator(
+        backgroundColor: mainclr,
+        color: mainclrbg,
         onRefresh: () async {
           BlocProvider.of<OrdersBloc>(context)
               .add(OrdersEvent.tableOrders(tableNo: table.tableName));
@@ -72,7 +73,9 @@ class ScreenOrdersList extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return ProductChoosingPage(table:table.tableName ,);
+                                        return ProductChoosingPage(
+                                          table: table.tableName,
+                                        );
                                       },
                                     ));
                                   },
@@ -172,6 +175,13 @@ class ScreenOrdersList extends StatelessWidget {
                                                         const Color.fromARGB(
                                                             0, 255, 255, 255),
                                                     onTap: () {
+                                                          BlocProvider.of<
+                                                                  StockBloc>(
+                                                              context)
+                                                          .add(
+                                                              const ClearSelection());
+                                                      
+
                                                       BlocProvider.of<
                                                                   OrderDetailsBloc>(
                                                               context)
@@ -184,9 +194,19 @@ class ScreenOrdersList extends StatelessWidget {
                                                       Navigator.push(context,
                                                           MaterialPageRoute(
                                                         builder: (context) {
-                                                          return  OrderDetailsPage(order:state.tableOrders[index] ,);
+                                                          return OrderDetailsPage(
+                                                            order: state
+                                                                    .tableOrders[
+                                                                index],
+                                                          );
                                                         },
                                                       ));
+                                                  BlocProvider.of<
+                                                                  StockBloc>(
+                                                              context)
+                                                          .add(const StockEvent
+                                                              .typeChange(
+                                                              type: 'Service'));
                                                     },
                                                     leading: Container(
                                                         decoration: BoxDecoration(
@@ -236,7 +256,7 @@ class ScreenOrdersList extends StatelessWidget {
                                                             DateTime.parse(state
                                                                 .tableOrders[
                                                                     index]
-                                                                .entryDate!))),
+                                                                .entryDate))),
                                                       ],
                                                     ),
                                                   ),

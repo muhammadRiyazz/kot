@@ -5,8 +5,7 @@ import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import '../../consts/colors.dart';
 
 class CategoryBottomSheet extends StatelessWidget {
-  const CategoryBottomSheet({super.key, required this.from});
-  final String from;
+  const CategoryBottomSheet({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<StockBloc, StockState>(
@@ -17,7 +16,7 @@ class CategoryBottomSheet extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               // Handle grip (optional)
@@ -45,21 +44,14 @@ class CategoryBottomSheet extends StatelessWidget {
                     mainAxisSpacing: 8,
                     childAspectRatio: .9,
                   ),
-                  itemCount: from == 'SER'
-                      ? state.serCategory.length
-                      : state.goodsCategory.length,
+                  itemCount: state.category.length,
                   itemBuilder: (context, index) {
-                    final category = from == 'SER'
-                        ? state.serCategory[index]
-                        : state.goodsCategory[index];
+                         state.category[index];
                     return GestureDetector(
                       onTap: () {
                         BlocProvider.of<StockBloc>(context)
                             .add(StockEvent.categorySelection(
-                          category: from == 'SER'
-                              ? state.serCategory[index]
-                              : state.goodsCategory[index],
-                          from: from,
+                          category:state.category[index] ,
                         ));
 
                         // Return the selected category and close bottom sheet
@@ -67,19 +59,12 @@ class CategoryBottomSheet extends StatelessWidget {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            color: from == 'SER'
-                                ? state.sercategory != null &&
-                                        state.serCategory[index] ==
-                                            state.sercategory
-                                    ? mainclr
-                                    : boxbgwhite
-                                : from == 'GOODS'
-                                    ? state.goodscategory != null &&
-                                            state.goodsCategory[index] ==
-                                                state.goodscategory
+                            color:  state.selectedcategory != null &&
+                                            state.category[index] ==
+                                                state.selectedcategory
                                         ? mainclr
                                         : boxbgwhite
-                                    : null,
+                                  ,
                             borderRadius: BorderRadius.circular(12)),
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
@@ -97,22 +82,16 @@ class CategoryBottomSheet extends StatelessWidget {
                               // ),
                               const SizedBox(height: 8),
                               Text(
-                                category.pdtFilter,
+                                state.category[
+                                                            index].pdtFilter,
                                 style: TextStyle(
-                                    color: from == 'SER'
-                                        ? state.sercategory != null &&
-                                                state.serCategory[index] ==
-                                                    state.sercategory
-                                            ? boxbgwhite
-                                            : mainclr
-                                        : from == 'GOODS'
-                                            ? state.goodscategory != null &&
-                                                    state.goodsCategory[
+                                    color: state.selectedcategory != null &&
+                                                    state.category[
                                                             index] ==
-                                                        state.goodscategory
+                                                        state.selectedcategory
                                                 ? boxbgwhite
                                                 : mainclr
-                                            : null),
+                                            ),
                               ),
                             ],
                           ),

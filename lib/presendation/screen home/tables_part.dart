@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
+import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
@@ -14,9 +15,10 @@ class Tablespart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   BlocProvider.of<TablesBloc>(context).add(TablesEvent.taledata());
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<StockBloc>(context)
+          .add(const StockEvent.itemInitalFetch());
+    });
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -160,6 +162,8 @@ class Tablespart extends StatelessWidget {
                                       const Color.fromARGB(255, 241, 241, 241),
                                   child: InkWell(
                                     onTap: () {
+                                   
+
                                       if (state.tables[index].isEmpty) {
                                         Navigator.push(context,
                                             MaterialPageRoute(
@@ -169,7 +173,7 @@ class Tablespart extends StatelessWidget {
                                                   state.tables[index].tableName,
                                             );
                                           },
-                                        ));   
+                                        ));
                                       } else {
                                         BlocProvider.of<OrdersBloc>(context)
                                             .add(OrdersEvent.tableOrders(
@@ -185,6 +189,8 @@ class Tablespart extends StatelessWidget {
                                           },
                                         ));
                                       }
+                                        BlocProvider.of<StockBloc>(context).add(
+                                          const StockEvent.clearSelection());
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(boxPadding),

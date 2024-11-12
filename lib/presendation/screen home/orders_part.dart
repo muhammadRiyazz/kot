@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
+import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/screen_order_detail.dart';
@@ -187,6 +188,8 @@ class _OrderPageState extends State<OrderPage> {
                                       ),
                                       child: InkWell(
                                         onTap: () {
+                                          BlocProvider.of<StockBloc>(context)
+                                              .add(const ClearSelection());
                                           BlocProvider.of<OrderDetailsBloc>(
                                                   context)
                                               .add(OrderDetailsEvent.orderItems(
@@ -265,7 +268,7 @@ class _OrderPageState extends State<OrderPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'Total: ₹${state.orders[index].totalAmount!.toStringAsFixed(1)}',
+                                                        'Total: ₹${state.orders[index].totalAmount.toStringAsFixed(1)}',
                                                         style: TextStyle(
                                                           fontSize:
                                                               textSize - 2,
@@ -394,9 +397,9 @@ class _OrderPageState extends State<OrderPage> {
                                                       ),
                                                       SizedBox(width: 6),
                                                       Text(
-                                                        time(DateTime.parse(state
-                                                            .orders[index]
-                                                            .startTime)),
+                                                        time(DateTime.parse(
+                                                            state.orders[index]
+                                                                .startTime)),
                                                         style: TextStyle(
                                                           fontSize:
                                                               textSize - 3,

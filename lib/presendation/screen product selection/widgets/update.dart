@@ -4,11 +4,17 @@ import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/stock/stock_model.dart';
 
-Future<dynamic> updatebox(BuildContext context, Product product) {
+Future<dynamic> updatebox(
+    {required context,
+    required String productid,
+    required String saleAmount,
+    required String qty,
+    required String serOrGoods,
+    required int stock}) {
   final TextEditingController amountController =
-      TextEditingController(text: product.saleAmount);
-  final TextEditingController qtyController = TextEditingController(
-      text: product.changedQty == 0 ? null : product.changedQty.toString());
+      TextEditingController(text: saleAmount);
+  final TextEditingController qtyController =
+      TextEditingController(text: int.parse(qty) == 0 ? null : qty);
 
   final _formKey = GlobalKey<FormState>(); // Form key for validation
 
@@ -85,10 +91,9 @@ Future<dynamic> updatebox(BuildContext context, Product product) {
                     return 'Quantity must be greater than 0';
                   }
                   final totalStock = double.tryParse(
-                      product.totalStock); // Parse totalStock as double
-                  if (enteredQty > totalStock! &&
-                      product.serOrGoods == 'GOODS') {
-                    return 'Quantity exceeds available stock (${product.totalStock})';
+                      stock.toString()); // Parse totalStock as double
+                  if (enteredQty > totalStock! && serOrGoods == 'GOODS') {
+                    return 'Quantity exceeds available stock (${stock.toString()})';
                   }
                   return null;
                 },
@@ -113,24 +118,13 @@ Future<dynamic> updatebox(BuildContext context, Product product) {
                 String amount = amountController.text;
                 String qty = qtyController.text;
 
-                // Perform update operation with amount and qty
-                if (product.serOrGoods == 'GOODS') {
-                  BlocProvider.of<StockBloc>(context).add(StockEvent.add(
-                      isIncrement: true,
-                      from: 'GOODS',
-                      update: true,
-                      amount: amount,
-                      product: product,
-                      qty: int.parse(qty))); // Parse qty as int
-                } else if (product.serOrGoods == 'SER') {
-                  BlocProvider.of<StockBloc>(context).add(StockEvent.add(
-                      isIncrement: true,
-                      from: 'SER',
-                      update: true,
-                      amount: amount,
-                      product: product,
-                      qty: int.parse(qty))); // Parse qty as int
-                }
+                BlocProvider.of<StockBloc>(context).add(StockEvent.add(
+                    isIncrement: true,
+                    update: true,
+                    amount: amount,
+                    productid: productid,
+                    qty: int.parse(qty))); // Parse qty as int
+
                 Navigator.of(context).pop(); // Close dialog after update
               }
             },

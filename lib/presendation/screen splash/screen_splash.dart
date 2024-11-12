@@ -52,9 +52,11 @@ if (isLoggedIn) {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
 
-        BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+      BlocProvider.of<StockBloc>(context).add(const StockEvent.categoryFetch());
+                BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+
       BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
-      BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchStocksAndCategory());
+      // BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchStocksAndCategory());
       // BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchCategory());
     });
     return Scaffold(
