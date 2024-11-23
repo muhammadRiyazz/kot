@@ -19,9 +19,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           isLoading: true, errorMsg: null, loged: false, uservalid: true));
 
       try {
+
+
+     
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         bool? serverCon = prefs.getBool('server');
-
         if (serverCon != null && serverCon) {
           MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
           MssqlConnection connection = await connectionManager.getConnection();

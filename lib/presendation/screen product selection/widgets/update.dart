@@ -7,12 +7,12 @@ import 'package:restaurant_kot/domain/stock/stock_model.dart';
 Future<dynamic> updatebox(
     {required context,
     required String productid,
-    required String saleAmount,
+    required double saleAmount,
     required String qty,
     required String serOrGoods,
-    required int stock}) {
+   }) {
   final TextEditingController amountController =
-      TextEditingController(text: saleAmount);
+      TextEditingController(text: saleAmount.toString());
   final TextEditingController qtyController =
       TextEditingController(text: int.parse(qty) == 0 ? null : qty);
 
@@ -90,11 +90,11 @@ Future<dynamic> updatebox(
                   if (enteredQty <= 0) {
                     return 'Quantity must be greater than 0';
                   }
-                  final totalStock = double.tryParse(
-                      stock.toString()); // Parse totalStock as double
-                  if (enteredQty > totalStock! && serOrGoods == 'GOODS') {
-                    return 'Quantity exceeds available stock (${stock.toString()})';
-                  }
+                  // final totalStock = double.tryParse(
+                  //     stock.toString()); // Parse totalStock as double
+                  // if (enteredQty > totalStock! && serOrGoods == 'GOODS') {
+                  //   return 'Quantity exceeds available stock (${stock.toString()})';
+                  // }
                   return null;
                 },
               ),
@@ -121,7 +121,7 @@ Future<dynamic> updatebox(
                 BlocProvider.of<StockBloc>(context).add(StockEvent.add(
                     isIncrement: true,
                     update: true,
-                    amount: amount,
+                    amount: double.parse(amount) ,
                     productid: productid,
                     qty: int.parse(qty))); // Parse qty as int
 

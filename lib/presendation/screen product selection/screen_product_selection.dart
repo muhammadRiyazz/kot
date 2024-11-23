@@ -2,19 +2,21 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/category_selection.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/selected_product.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/update.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProductChoosingPage extends StatelessWidget {
-  ProductChoosingPage({super.key, required this.table, this.order});
+  ProductChoosingPage({super.key, this.order, required this.tableinfo});
 
   // // Selected products
-  final String table;
   String? order;
+  final TableInfo tableinfo;
 
   TextEditingController searchController = TextEditingController();
 
@@ -81,8 +83,8 @@ class ProductChoosingPage extends StatelessWidget {
           color: mainclrbg,
           onRefresh: () async {
             searchController.clear();
-            BlocProvider.of<StockBloc>(context)
-                .add(const StockEvent.itemInitalFetch());
+            BlocProvider.of<StockBloc>(context).add(StockEvent.itemInitalFetch(
+                acOrNonAc: tableinfo.acOrNonAc == 'AC' ? true : false));
           },
           child: BlocBuilder<StockBloc, StockState>(
             builder: (context, state) {
@@ -158,8 +160,8 @@ class ProductChoosingPage extends StatelessWidget {
                                     }
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
                                     child: Center(
                                       child: Column(
                                         children: [
@@ -172,12 +174,12 @@ class ProductChoosingPage extends StatelessWidget {
                                                     : Colors.grey,
                                                 fontSize: state.goodsOrSER ==
                                                         'Service'
-                                                    ? 16
+                                                    ? 14
                                                     : 12, // Font size for the active tab
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           const SizedBox(
-                                            height: 10,
+                                            height: 8,
                                           ),
                                           Container(
                                             height:
@@ -210,8 +212,8 @@ class ProductChoosingPage extends StatelessWidget {
                                     }
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
                                     child: Center(
                                       child: Column(
                                         children: [
@@ -224,12 +226,12 @@ class ProductChoosingPage extends StatelessWidget {
                                                         : Colors.grey,
                                                 fontSize: state.goodsOrSER ==
                                                         'Goods'
-                                                    ? 16
+                                                    ? 14
                                                     : 12, // Font size for the active tab
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           const SizedBox(
-                                            height: 10,
+                                            height: 8,
                                           ),
                                           Container(
                                             height: state.goodsOrSER == 'Goods'
@@ -250,150 +252,95 @@ class ProductChoosingPage extends StatelessWidget {
                           ),
                         ),
 
-                        // Expanded(
-                        //   child: TabBarView(
-                        //     children: [
                         Expanded(
                           child: Column(
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 0, horizontal: 10),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      padding:
-                                          const EdgeInsetsDirectional.symmetric(
-                                              horizontal: 20),
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: const Color.fromARGB(
-                                                      255, 206, 206, 206)
-                                                  .withOpacity(
-                                                      0.3), // Shadow color
-                                              spreadRadius:
-                                                  1, // How much the shadow spreads
-                                              blurRadius:
-                                                  7, // Softness of the shadow
-                                              offset: const Offset(0,
-                                                  4), // Position of the shadow (x, y)
-                                            ),
-                                          ],
-                                          color: mainclr,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Column(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color.fromARGB(
+                                                  255, 206, 206, 206)
+                                              .withOpacity(0.3), // Shadow color
+                                          spreadRadius:
+                                              1, // How much the shadow spreads
+                                          blurRadius:
+                                              7, // Softness of the shadow
+                                          offset: const Offset(0,
+                                              4), // Position of the shadow (x, y)
+                                        ),
+                                      ],
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 10),
+                                    child: InkWell(
+                                      onTap: () {
+                                        searchController.clear();
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(16)),
+                                          ),
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CategoryBottomSheet(
+                                              ac: tableinfo.acOrNonAc == 'AC'
+                                                  ? true
+                                                  : false,
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            table,
+                                            state.selectedcategory == null
+                                                ? 'All Category'
+                                                : state.selectedcategory!
+                                                    .pdtFilter,
                                             style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
+                                                color: mainclr,
+                                                fontSize: 14,
                                                 fontWeight: FontWeight.w600),
-                                          )
+                                          ),
+                                          state.selectedcategory != null
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    BlocProvider.of<StockBloc>(
+                                                            context)
+                                                        .add(const StockEvent
+                                                            .clearcategory());
+                                                  },
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    child: Icon(
+                                                      Icons.close,
+                                                      color: mainclr,
+                                                    ),
+                                                  ))
+                                              : const Icon(
+                                                  Icons
+                                                      .keyboard_arrow_down_rounded,
+                                                  color: mainclr,
+                                                  size: 30,
+                                                )
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: const Color.fromARGB(
-                                                        255, 206, 206, 206)
-                                                    .withOpacity(
-                                                        0.3), // Shadow color
-                                                spreadRadius:
-                                                    1, // How much the shadow spreads
-                                                blurRadius:
-                                                    7, // Softness of the shadow
-                                                offset: const Offset(0,
-                                                    4), // Position of the shadow (x, y)
-                                              ),
-                                            ],
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 10),
-                                          child: InkWell(
-                                            onTap: () {
-                                              searchController.clear();
-                                              showModalBottomSheet(
-                                                isScrollControlled: true,
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.vertical(
-                                                          top: Radius.circular(
-                                                              16)),
-                                                ),
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return const CategoryBottomSheet();
-                                                },
-                                              );
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  state.selectedcategory == null
-                                                      ? 'All Category'
-                                                      : state.selectedcategory!
-                                                          .pdtFilter,
-                                                  style: const TextStyle(
-                                                      color: mainclr,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                state.selectedcategory != null
-                                                    ? InkWell(
-                                                        onTap: () {
-                                                          BlocProvider.of<
-                                                                      StockBloc>(
-                                                                  context)
-                                                              .add(const StockEvent
-                                                                  .clearcategory());
-                                                        },
-                                                        child: const Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  5.0),
-                                                          child: Icon(
-                                                            Icons.close,
-                                                            color: mainclr,
-                                                          ),
-                                                        ))
-                                                    : const Icon(
-                                                        Icons
-                                                            .keyboard_arrow_down_rounded,
-                                                        color: mainclr,
-                                                        size: 30,
-                                                      )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -490,9 +437,13 @@ class ProductChoosingPage extends StatelessWidget {
                                               BlocProvider.of<StockBloc>(
                                                       context)
                                                   .add(StockEvent.search(
-                                                searchQuary:
-                                                    searchController.text,
-                                              ));
+                                                      searchQuary:
+                                                          searchController.text,
+                                                      acOrNonAc:
+                                                          tableinfo.acOrNonAc ==
+                                                                  'AC'
+                                                              ? true
+                                                              : false));
                                             }
                                           },
                                           icon: Container(
@@ -530,7 +481,7 @@ class ProductChoosingPage extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 3,
                               ),
                               Expanded(
                                 child: Padding(
@@ -544,13 +495,14 @@ class ProductChoosingPage extends StatelessWidget {
                                       : ListView.separated(
                                           separatorBuilder: (context, index) {
                                             return const SizedBox(
-                                              height: 7,
+                                              height: 3,
                                             );
                                           },
                                           itemCount: state.stocklist.length,
                                           itemBuilder: (context, index) {
                                             final product =
                                                 state.stocklist[index];
+
                                             return Card(
                                               margin:
                                                   const EdgeInsets.symmetric(
@@ -567,11 +519,52 @@ class ProductChoosingPage extends StatelessWidget {
                                                         BorderRadius.circular(
                                                             15)),
                                                 child: ListTile(
+                                                  onTap: () {
+                                                    String dialogContent = '''
+Item quantity : ${product.quantity}
+Item qty : ${product.qty}
+
+Item Name: ${product.itemName}
+Kitchen Name: ${product.kitchenName}
+Service or Goods: ${product.serOrGoods}
+Basic Rate: ${product.basicRate.toString()}
+Unit Taxable Amount Before Discount: ${product.unitTaxableAmountBeforeDiscount.toString()}
+Unit Taxable Amount: ${product.unitTaxableAmount.toString()}
+Cess Percentage: ${product.cessPer.toString()}
+GST Percentage: ${product.gstPer.toString()}
+''';
+
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: const Text(
+                                                              'Product Details'),
+                                                          content:
+                                                              SingleChildScrollView(
+                                                            child: Text(
+                                                                dialogContent),
+                                                          ),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(),
+                                                              child: const Text(
+                                                                  'OK'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
                                                   contentPadding:
                                                       const EdgeInsets.only(
                                                           left: 8,
-                                                          top: 8,
-                                                          bottom: 8),
+                                                          top: 5,
+                                                          bottom: 5),
                                                   // leading: Container(
                                                   //   height: 100,
                                                   //   width: 60,
@@ -606,7 +599,7 @@ class ProductChoosingPage extends StatelessWidget {
                                                                 .quantity ==
                                                             0
                                                         ? '₹ ${product.basicRate} /-'
-                                                        : '₹ ${(double.parse(product.basicRate) * product.quantity).toDouble()} /-'),
+                                                        : '₹ ${product.basicRate * product.quantity} /-'),
                                                   ),
                                                   trailing: Row(
                                                     mainAxisSize:
@@ -642,6 +635,17 @@ class ProductChoosingPage extends StatelessWidget {
                                                                   productid: product
                                                                       .itemCode,
                                                                   qty: 1));
+                                                          if (product
+                                                                  .quantity !=
+                                                              0) {
+                                                            BlocProvider.of<
+                                                                        OrderDetailsBloc>(
+                                                                    context)
+                                                                .add(OrderDetailsEvent.cancelQty(
+                                                                    currentItemid:
+                                                                        product
+                                                                            .itemCode));
+                                                          }
 
                                                           // BlocProvider.of<
                                                           //             ItemsToKotBloc>(
@@ -698,16 +702,14 @@ class ProductChoosingPage extends StatelessWidget {
                                                                       .itemCode,
                                                                   qty: 1));
 
-                                                          // BlocProvider.of<
-                                                          //             ItemsToKotBloc>(
-                                                          //         context)
-                                                          //     .add(ItemsToKotEvent.add(
-                                                          //         isIncrement:
-                                                          //             true,
-                                                          //         product:
-                                                          //             product,
-                                                          //         qty:
-                                                          //             1));
+                                                          BlocProvider.of<
+                                                                      OrderDetailsBloc>(
+                                                                  context)
+                                                              .add(OrderDetailsEvent
+                                                                  .addQty(
+                                                                      currentItemid:
+                                                                          product
+                                                                              .itemCode));
                                                         },
                                                       ),
                                                     ],
@@ -715,17 +717,16 @@ class ProductChoosingPage extends StatelessWidget {
                                                   onLongPress: () {
                                                     log('onLongPress goods');
                                                     updatebox(
-                                                        context: context,
-                                                        productid:
-                                                            product.itemCode,
-                                                        qty: product.quantity
-                                                            .toString(),
-                                                        saleAmount:
-                                                            product.basicRate,
-                                                        serOrGoods:
-                                                            product.serOrGoods,
-                                                        stock: int.parse(
-                                                            product.stock));
+                                                      context: context,
+                                                      productid:
+                                                          product.itemCode,
+                                                      qty: product.quantity
+                                                          .toString(),
+                                                      saleAmount:
+                                                          product.basicRate,
+                                                      serOrGoods:
+                                                          product.serOrGoods,
+                                                    );
                                                   },
                                                 ),
                                               ),
@@ -1252,65 +1253,260 @@ class ProductChoosingPage extends StatelessWidget {
                         // BlocBuilder<ItemsToKotBloc, ItemsToKotState>(
                         //   builder: (context, state) {
                         //     return
-                        state.toKOTitems.isEmpty
-                            ? const SizedBox()
-                            : Container(
-                                decoration:
-                                    const BoxDecoration(color: Colors.white),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 7, right: 10, left: 10),
-                                  child: Card(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: mainclr,
-                                      ),
-                                      child: ListTile(
-                                        onTap: () {
-                                          // BlocProvider.of<ItemsToKotBloc>(
-                                          //         context)
-                                          //     .add(ItemsToKotEvent
-                                          //         .itemsFromOrder(
-                                          //             items: state.toKOTitems));
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return const SelectedProductsPage(orderNo: '',tableNo: '',);
+                        Container(
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 0, right: 3, left: 3),
+                            child: Card(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: mainclr,
+                                ),
+                                child: Column(
+                                  children: [
+                                    state.toKOTitems.isEmpty
+                                        ? const SizedBox()
+                                        : ListTile(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 3,
+                                                    horizontal: 15),
+                                            onTap: () {
+                                              // BlocProvider.of<ItemsToKotBloc>(
+                                              //        context)
+                                              //        .add(ItemsToKotEvent
+                                              //        .itemsFromOrder(
+                                              //        items: state.toKOTitems));
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                builder: (context) {
+                                                  return SelectedProductsPage(
+                                                    orderNo: order,
+                                                    table: tableinfo,
+                                                  );
+                                                },
+                                              ));
                                             },
-                                          ));
-                                        },
-                                        title: Text(
-                                          '${state.toKOTitems.length} Items Added',
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        trailing: const Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              'View',
-                                              style: TextStyle(
+                                            title: Text(
+                                              '${state.toKOTitems.length} Items Added',
+                                              style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
                                             ),
-                                            SizedBox(
-                                              width: 5,
+                                            trailing: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 5, horizontal: 5),
+                                              decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10)),
+                                                  color: Colors.white),
+                                              child: const Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    '   Proceed',
+                                                    style: TextStyle(
+                                                        color: mainclr,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 3,
+                                                  ),
+                                                  Icon(
+                                                    Icons.arrow_right,
+                                                    color: mainclr,
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                            Icon(
-                                              Icons.arrow_right,
-                                              color: Colors.white,
-                                            )
+                                          ),
+                                    state.toKOTitems.isEmpty
+                                        ? const SizedBox()
+                                        : Divider(
+                                            height: 1,
+                                          ),
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                          color: mainclr,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 18),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text:
+                                                        state.toKOTitems.isEmpty
+                                                            ? 'Table No\n'
+                                                            : '',
+                                                    style: TextStyle(
+                                                      fontFamily:
+                                                          'Montserrat', // Apply Montserrat font globally
+
+                                                      fontSize: 12,
+                                                      color: Color.fromARGB(
+                                                          255, 255, 255, 255),
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: tableinfo.tableName,
+                                                    style: const TextStyle(
+                                                      fontFamily:
+                                                          'Montserrat', // Apply Montserrat font globally
+
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color.fromARGB(
+                                                          255, 255, 255, 255),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            if (order != null)
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: state.toKOTitems
+                                                              .isEmpty
+                                                          ? 'Order No\n'
+                                                          : '',
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontFamily:
+                                                            'Montserrat', // Apply Montserrat font globally
+
+                                                        color: Color.fromARGB(
+                                                            255, 255, 255, 255),
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text: order,
+                                                      style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontFamily:
+                                                            'Montserrat', // Apply Montserrat font globally
+
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromARGB(
+                                                            255, 255, 255, 255),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                           ],
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              )
+                              ),
+                            ),
+                          ),
+                        ),
+                        // state.toKOTitems.isEmpty
+                        //     ? SizedBox(
+                        //         height: 5,
+                        //       )
+                        //     : const SizedBox(),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 13),
+                        //   child: Container(
+                        //     decoration: const BoxDecoration(
+                        //         color: mainclr,
+                        //         borderRadius:
+                        //             BorderRadius.all(Radius.circular(10))),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.symmetric(
+                        //           vertical: 12, horizontal: 18),
+                        //       child: Row(
+                        //         mainAxisAlignment:
+                        //             MainAxisAlignment.spaceBetween,
+                        //         children: [
+                        //           RichText(
+                        //             text: TextSpan(
+                        //               children: [
+                        //                 TextSpan(
+                        //                   text: state.toKOTitems.isEmpty
+                        //                       ? 'Table No\n'
+                        //                       : '',
+                        //                   style: TextStyle(
+                        //                     fontFamily:
+                        //                         'Montserrat', // Apply Montserrat font globally
+
+                        //                     fontSize: 12,
+                        //                     color: Color.fromARGB(
+                        //                         255, 255, 255, 255),
+                        //                   ),
+                        //                 ),
+                        //                 TextSpan(
+                        //                   text: table,
+                        //                   style: const TextStyle(
+                        //                     fontFamily:
+                        //                         'Montserrat', // Apply Montserrat font globally
+
+                        //                     fontSize: 15,
+                        //                     fontWeight: FontWeight.bold,
+                        //                     color: Color.fromARGB(
+                        //                         255, 255, 255, 255),
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           if (order != null)
+                        //             RichText(
+                        //               text: TextSpan(
+                        //                 children: [
+                        //                   TextSpan(
+                        //                     text: state.toKOTitems.isEmpty
+                        //                         ? 'Order No\n'
+                        //                         : '',
+                        //                     style: TextStyle(
+                        //                       fontSize: 12,
+                        //                       fontFamily:
+                        //                           'Montserrat', // Apply Montserrat font globally
+
+                        //                       color: Color.fromARGB(
+                        //                           255, 255, 255, 255),
+                        //                     ),
+                        //                   ),
+                        //                   TextSpan(
+                        //                     text: order,
+                        //                     style: const TextStyle(
+                        //                       fontSize: 15,
+                        //                       fontFamily:
+                        //                           'Montserrat', // Apply Montserrat font globally
+
+                        //                       fontWeight: FontWeight.bold,
+                        //                       color: Color.fromARGB(
+                        //                           255, 255, 255, 255),
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     );
             },

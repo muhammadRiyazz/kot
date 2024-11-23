@@ -3,8 +3,10 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
+import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/tables/table_model.dart';
 import 'package:restaurant_kot/infrastructure/tables/table_configration.dart';
 
@@ -124,6 +126,7 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
 
     // Fetch table configuration and orders
     on<TableData>((event, emit) async {
+      String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
       log('TableData');
       emit(state.copyWith(isLoading: true, selectedFloor: null));
 
@@ -132,7 +135,11 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         String tableQuery = """
           SELECT TableNumber, TableType, FloorMumber FROM dbo.TableConfiguration
         """;
-        List<dynamic> tables = await _fetchData(tableQuery);
+                List<dynamic> tables = await _fetchData(tableQuery);
+
+         List<TableInfo> tableInfolist = (tables)
+            .map((data) => TableInfo.fromJson(data))
+            .toList();
 
         // Extract unique floor numbers from tables
         List<String> floors = tables
@@ -144,7 +151,7 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
       String ordersQuery = """
   SELECT Id, OrderNumber, EntryDate, CustomerId, CustomerName, TableName, FloorNumber, Discount, TotalAmount, StartTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
   FROM dbo.OrderMainDetails
-  WHERE CAST(EntryDate AS DATE) = '2024-10-23' AND ActiveInnactive = 'Active'
+  WHERE CAST(EntryDate AS DATE) = '$currentDate' AND ActiveInnactive = 'Active'
 """;
 
         List<dynamic> orders = await _fetchData(ordersQuery);
@@ -155,7 +162,7 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         emit(state.copyWith(
           isLoading: false,
           floors: floors,
-          tables: _tableModels,
+          tables: _tableModels,tablesinfolist: tableInfolist
         ));
       } catch (e) {
         log("Error fetching table data: $e");

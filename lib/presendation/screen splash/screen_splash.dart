@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/customerpart/customerpart_bloc.dart';
+import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
 import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,18 +30,19 @@ class _SplashScreenState extends State<SplashScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isLoggedIn =
         prefs.getBool('login') ?? false; // Default to false if not set
-if (isLoggedIn) {
 
-} else {
-  
-}
     // Navigate to the appropriate screen after 3 seconds
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 5), () async{
       if (isLoggedIn) {
+                await StockMng().fetchstockmngGoods();
+                await StockMng().fetchstockmngService();
+
         // If the user is logged in, navigate to the home screen
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
+              BlocProvider.of<CustomerpartBloc>(context).add(CustomerpartEvent.cfetchlist());
+
       } else {
         // If the user is not logged in, navigate to the login screen
         Navigator.of(context).pushReplacement(
@@ -51,6 +55,7 @@ if (isLoggedIn) {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<InitalDataBloc>(context).add(const InitalDataEvent.fetchinitaldatas());
 
       BlocProvider.of<StockBloc>(context).add(const StockEvent.categoryFetch());
                 BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());

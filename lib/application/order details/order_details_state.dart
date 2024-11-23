@@ -5,9 +5,9 @@ class OrderDetailsState with _$OrderDetailsState {
  factory OrderDetailsState({
     required bool isLoading,
     // required      List<OrderItem> orderitems,
-        required      List<KitchenItem> toAddItems,
-                required      List<KitchenItem> toCancelItems,
-             required   List<KitchenItem> orderitems
+        required      List<kotItem> toAddItems,
+                required      List<kotItem> toCancelItems,
+             required   List<kotItem> orderitems
 
 
   }) = _OrderDetailsState;

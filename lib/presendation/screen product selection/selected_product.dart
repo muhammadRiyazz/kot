@@ -2,25 +2,30 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/KotSubmitPrint/kot_submit_print_bloc.dart';
+import 'package:restaurant_kot/application/customerpart/customerpart_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/presendation/conn/bluetooth.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/re_print.dart';
+import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
 class SelectedProductsPage extends StatelessWidget {
-  final String? tableNo;
+  final TableInfo table;
   final String? orderNo;
 
-  const SelectedProductsPage({
+  SelectedProductsPage({
     super.key,
-    this.tableNo,
+    required this.table,
     this.orderNo,
   });
-
+  TextEditingController noteController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         log('onWillPop');
@@ -66,49 +71,108 @@ class SelectedProductsPage extends StatelessWidget {
                   Expanded(
                     child: ListView(
                       children: [
-                        Container(
-                          decoration: const BoxDecoration(color: mainclr),
-                          child: ListTile(
-                              title: const Text(
-                                'Table No',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              subtitle: const Text(
-                                'TB 001',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              trailing: tableNo != null
-                                  ? const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          'Order No',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Text(
-                                          'ORD 001',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : null),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                                color: mainclr,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            child: Column(
+                              children: [
+                                ListTile(
+                                    title: const Text(
+                                      'Table No',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      table.tableName,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    trailing: orderNo != null
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              const Text(
+                                                'Order No',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              Text(
+                                                orderNo!,
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : null),
+                                // const Padding(
+                                //   padding: EdgeInsets.symmetric(horizontal: 12),
+                                //   child: Divider(
+                                //     height: 1,
+                                //   ),
+                                // ),
+                                // Padding(
+                                //   padding: EdgeInsets.symmetric(
+                                //       horizontal: 15, vertical: 0),
+                                //   child: Row(
+                                //     mainAxisAlignment:
+                                //         MainAxisAlignment.spaceBetween,
+                                //     children: [
+                                //       Text(
+                                //         'To -',
+                                //         style: TextStyle(
+                                //           fontSize: 13,
+                                //           fontWeight: FontWeight.bold,
+                                //           color: Colors.white,
+                                //         ),
+                                //       ),
+                                //       IconButton(
+                                //           onPressed: () {
+                                //             Navigator.push(
+                                //                 context,
+                                //                 MaterialPageRoute(
+                                //                   builder: (context) =>
+                                //                       const CustomerView(),
+                                //                 ));
+                                //           },
+                                //           icon: Row(
+                                //             children: [
+                                //               Text(
+                                //                 'POS Billing',
+                                //                 style: TextStyle(
+                                //                   fontSize: 13,
+                                //                   fontWeight: FontWeight.w500,
+                                //                   color: Colors.white,
+                                //                 ),
+                                //               ),
+                                //               Icon(
+                                //                 Icons.arrow_right_rounded,
+                                //                 color: Colors.white,
+                                //               )
+                                //             ],
+                                //           ))
+                                //     ],
+                                //   ),
+                                // )
+                              ],
+                            ),
+                          ),
                         ),
                         state.cancelKOTitems.isNotEmpty
                             ? Column(
@@ -295,8 +359,8 @@ class SelectedProductsPage extends StatelessWidget {
                                                     top: 5),
                                                 child: Text(product.quantity ==
                                                         0
-                                                    ? '₹ ${product.totalAmount} /-'
-                                                    : '₹ ${(double.parse(product.totalAmount) * product.quantity).toDouble()} /-'),
+                                                    ? '₹ ${product.basicRate} /-'
+                                                    : '₹ ${product.basicRate * product.quantity} /-'),
                                               ),
                                               trailing: Text(
                                                 '${product.quantity.toString()}  ',
@@ -536,8 +600,8 @@ class SelectedProductsPage extends StatelessWidget {
                                                     top: 5),
                                                 child: Text(product.quantity ==
                                                         0
-                                                    ? '₹ ${product.totalAmount} /-'
-                                                    : '₹ ${(double.parse(product.totalAmount) * product.quantity).toDouble()} /-'),
+                                                    ? '₹ ${product.basicRate} /-'
+                                                    : '₹ ${product.basicRate * product.quantity} /-'),
                                               ),
                                               trailing: Text(
                                                 'Qty : ${product.quantity.toString()}    ',
@@ -692,6 +756,7 @@ class SelectedProductsPage extends StatelessWidget {
                                             ),
                                             const SizedBox(height: 20),
                                             TextFormField(
+                                              controller: noteController,
                                               keyboardType: TextInputType.text,
                                               obscureText: false,
                                               validator: (value) {
@@ -737,10 +802,23 @@ class SelectedProductsPage extends StatelessWidget {
                                                       .spaceBetween,
                                               children: [
                                                 const Text('Parcel Order'),
-                                                Checkbox(
-                                                  activeColor: mainclr,
-                                                  value: true,
-                                                  onChanged: (bool? value) {},
+                                                BlocBuilder<KotSubmitPrintBloc,
+                                                    KotSubmitPrintState>(
+                                                  builder: (context, state) {
+                                                    return Checkbox(
+                                                      activeColor: mainclr,
+                                                      value: state.parcel,
+                                                      onChanged: (bool? value) {
+                                                        BlocProvider.of<
+                                                                    KotSubmitPrintBloc>(
+                                                                context)
+                                                            .add(KotSubmitPrintEvent
+                                                                .parcel(
+                                                                    parcel:
+                                                                        value!));
+                                                      },
+                                                    );
+                                                  },
                                                 )
                                               ],
                                             ),
@@ -805,24 +883,113 @@ class SelectedProductsPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MainButton(
-                      label: 'Submit & Print KOT',
-                      onpress: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => const ScreenBluetooth(),
-                        //     ));
+                  BlocConsumer<KotSubmitPrintBloc, KotSubmitPrintState>(
+                    listener: (context, state) {
+                      if (state.stockout) {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20)),
+                          ),
+                          builder: (context) {
+                            // Adjust height based on list length, but with a maximum height
+                            double height =
+                                (state.outofStock.length * 210).toDouble();
+                            height = height >
+                                    MediaQuery.of(context).size.height * 0.6
+                                ? MediaQuery.of(context).size.height * 0.6
+                                : height;
 
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RePrintPage(),
-                            ));
-                      },
-                    ),
+                            return Container(
+                              height: height,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  const Text(
+                                    "Sorry",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 5),
+                                    child: Text(
+                                      "Some Items Have Limited Stock",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  Divider(),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: state.outofStock.length,
+                                      itemBuilder: (context, index) {
+                                        var product = state.outofStock[index];
+                                        return Column(
+                                          children: [
+                                            ListTile(
+                                              leading: const Icon(Icons.warning,
+                                                  color: Colors.red),
+                                              title: Text(product.itemName),
+                                              subtitle: Text(
+                                                  'Only Available Qty : ${product.stock}'),
+                                            ),
+                                            const Divider()
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    builder: (context, astate) {
+                      return astate.isLoading
+                          ? const LinearProgressIndicator(color: mainclr)
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: MainButton(
+                                label: 'Submit & Print KOT',
+                                onpress: () {
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) =>
+                                  //           const RePrintPage(),
+                                  //     ));
+
+                                  BlocProvider.of<KotSubmitPrintBloc>(context)
+                                      .add(KotSubmitPrintEvent.submitAndPrint(
+                                    selectedcustomer: context
+                                        .read<CustomerpartBloc>()
+                                        .state
+                                        .selectedcustomer!,
+                                    table: table,
+                                    kotitems: state.toKOTitems,
+                                    note: noteController.text,
+                                    kotretunitems: state.cancelKOTitems,
+                                    currentorderid: orderNo,
+                                    currentitems: context
+                                        .read<OrderDetailsBloc>()
+                                        .state
+                                        .orderitems
+                                  ));
+                                },
+                              ),
+                            );
+                    },
                   ),
                 ],
               ),

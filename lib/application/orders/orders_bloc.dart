@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
 
@@ -72,6 +73,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       }
     });
     on<TableOrders>((event, emit) async {
+            String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
       emit(state.copyWith(
         isLoading: true,
       ));
@@ -101,7 +104,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [BillNumber], 
            [UserID]
     FROM [Restaurant].[dbo].[OrderMainDetails]
- WHERE CAST([EntryDate] AS DATE) = '2024-10-23'   AND [TableName] = '${event.tableNo}';
+ WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}';
 """;
 
         String? ordersresult = await connection.getData(ordersQuery);

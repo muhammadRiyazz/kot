@@ -9,7 +9,7 @@ class Product {
   final String description;
   final String purchaseAmount;
   final String purchaseAmountWithTax;
-   String saleAmount;
+  String saleAmount;
   final String saleAmountWithTax;
   final String profit;
   final String pcs;
@@ -235,10 +235,10 @@ class Product {
       rePackingItemOf: json['RePackingItemof'] ?? '',
       saleAmountWithTaxAC: json['saleamntwithtaxAC']?.toString() ?? '',
       printerName: json['PrinterName'] ?? '',
-      dineInACRate: json['DineInACRate']?.toString() ?? '',
-      dineInNonACRate: json['DineInNonACRate']?.toString() ?? '',
-      deliveryRate: json['DeliveryRate']?.toString() ?? '',
-      pickUpRate: json['PickupRate']?.toString() ?? '',
+      dineInACRate: json['DininACrate']?.toString() ?? '',
+      dineInNonACRate: json['DininNonACrate']?.toString() ?? '',
+      deliveryRate: json['Deliveryrate']?.toString() ?? '',
+      pickUpRate: json['pickuprate']?.toString() ?? '',
     );
   }
 
@@ -415,7 +415,8 @@ class Product {
       hsnCode: hsnCode ?? this.hsnCode,
       description: description ?? this.description,
       purchaseAmount: purchaseAmount ?? this.purchaseAmount,
-      purchaseAmountWithTax: purchaseAmountWithTax ?? this.purchaseAmountWithTax,
+      purchaseAmountWithTax:
+          purchaseAmountWithTax ?? this.purchaseAmountWithTax,
       saleAmount: saleAmount ?? this.saleAmount,
       saleAmountWithTax: saleAmountWithTax ?? this.saleAmountWithTax,
       profit: profit ?? this.profit,
@@ -449,8 +450,10 @@ class Product {
       vendorSGSTAmount: vendorSGSTAmount ?? this.vendorSGSTAmount,
       serOrGoods: serOrGoods ?? this.serOrGoods,
       itemMRP: itemMRP ?? this.itemMRP,
-      saleInclusiveOrExclusive: saleInclusiveOrExclusive ?? this.saleInclusiveOrExclusive,
-      purchaseInclusiveOrExclusive: purchaseInclusiveOrExclusive ?? this.purchaseInclusiveOrExclusive,
+      saleInclusiveOrExclusive:
+          saleInclusiveOrExclusive ?? this.saleInclusiveOrExclusive,
+      purchaseInclusiveOrExclusive:
+          purchaseInclusiveOrExclusive ?? this.purchaseInclusiveOrExclusive,
       initialCost: initialCost ?? this.initialCost,
       avgCost: avgCost ?? this.avgCost,
       measurementsUnit: measurementsUnit ?? this.measurementsUnit,
@@ -458,7 +461,8 @@ class Product {
       purchaseInclusive: purchaseInclusive ?? this.purchaseInclusive,
       barcodeId: barcodeId ?? this.barcodeId,
       supplierName: supplierName ?? this.supplierName,
-      cessBasedOnQuantityOrValue: cessBasedOnQuantityOrValue ?? this.cessBasedOnQuantityOrValue,
+      cessBasedOnQuantityOrValue:
+          cessBasedOnQuantityOrValue ?? this.cessBasedOnQuantityOrValue,
       cessRate: cessRate ?? this.cessRate,
       categoryType: categoryType ?? this.categoryType,
       categoryBrand: categoryBrand ?? this.categoryBrand,
@@ -475,7 +479,8 @@ class Product {
       rePackingTo: rePackingTo ?? this.rePackingTo,
       rePackingBalance: rePackingBalance ?? this.rePackingBalance,
       bulkItemQuantity: bulkItemQuantity ?? this.bulkItemQuantity,
-      balanceRePackingItemUnit: balanceRePackingItemUnit ?? this.balanceRePackingItemUnit,
+      balanceRePackingItemUnit:
+          balanceRePackingItemUnit ?? this.balanceRePackingItemUnit,
       rePackingItemUnit: rePackingItemUnit ?? this.rePackingItemUnit,
       rePackingItemOf: rePackingItemOf ?? this.rePackingItemOf,
       saleAmountWithTaxAC: saleAmountWithTaxAC ?? this.saleAmountWithTaxAC,

@@ -5,6 +5,7 @@ import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
 import 'package:restaurant_kot/presendation/screen%20home/loading/table_page.dart';
 import 'package:restaurant_kot/presendation/screen%20orders%20from%20table/order_list_table.dart';
@@ -16,8 +17,7 @@ class Tablespart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<StockBloc>(context)
-          .add(const StockEvent.itemInitalFetch());
+     
     });
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -129,17 +129,14 @@ class Tablespart extends StatelessWidget {
                       ),
 
                       state.tables.isEmpty
-                          ? Container(
-                              // color: Colors.amberAccent,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 90),
-                                child: Center(
-                                  child: Image.asset(
-                                      'assets/img/no data/No_data.png'),
-                                ),
-                              ),
-                            )
+                          ? Padding(
+                            padding:
+                                const EdgeInsets.symmetric(vertical: 90),
+                            child: Center(
+                              child: Image.asset(
+                                  'assets/img/no data/No_data.png'),
+                            ),
+                          )
                           : GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -163,14 +160,15 @@ class Tablespart extends StatelessWidget {
                                   child: InkWell(
                                     onTap: () {
                                    
-
+ BlocProvider.of<StockBloc>(context)
+          .add( StockEvent.itemInitalFetch(acOrNonAc: state.tables[index].tableType==''?true:false));
                                       if (state.tables[index].isEmpty) {
+                                        
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                           builder: (context) {
-                                            return ProductChoosingPage(
-                                              table:
-                                                  state.tables[index].tableName,
+                                            return ProductChoosingPage(tableinfo: 
+                                              TableInfo(acOrNonAc: state.tables[index].tableType,floor: state.tables[index].floorName,tableName: state.tables[index].tableName)
                                             );
                                           },
                                         ));

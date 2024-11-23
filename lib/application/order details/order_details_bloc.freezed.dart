@@ -19,28 +19,28 @@ mixin _$OrderDetailsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String orderNo) orderItems,
-    required TResult Function(String currentItemid) addQty,
-    required TResult Function(String currentItemid) cancelQty,
+    required TResult Function(String currentItemid, String? kotno) addQty,
+    required TResult Function(String currentItemid, String? kotno) cancelQty,
     required TResult Function() clearItemSelection,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String orderNo)? orderItems,
-    TResult? Function(String currentItemid)? addQty,
-    TResult? Function(String currentItemid)? cancelQty,
+    TResult? Function(String currentItemid, String? kotno)? addQty,
+    TResult? Function(String currentItemid, String? kotno)? cancelQty,
     TResult? Function()? clearItemSelection,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String orderNo)? orderItems,
-    TResult Function(String currentItemid)? addQty,
-    TResult Function(String currentItemid)? cancelQty,
+    TResult Function(String currentItemid, String? kotno)? addQty,
+    TResult Function(String currentItemid, String? kotno)? cancelQty,
     TResult Function()? clearItemSelection,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -164,10 +164,10 @@ class _$OrderDetailsImpl implements OrderDetails {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String orderNo) orderItems,
-    required TResult Function(String currentItemid) addQty,
-    required TResult Function(String currentItemid) cancelQty,
+    required TResult Function(String currentItemid, String? kotno) addQty,
+    required TResult Function(String currentItemid, String? kotno) cancelQty,
     required TResult Function() clearItemSelection,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
   }) {
     return orderItems(orderNo);
   }
@@ -176,10 +176,10 @@ class _$OrderDetailsImpl implements OrderDetails {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String orderNo)? orderItems,
-    TResult? Function(String currentItemid)? addQty,
-    TResult? Function(String currentItemid)? cancelQty,
+    TResult? Function(String currentItemid, String? kotno)? addQty,
+    TResult? Function(String currentItemid, String? kotno)? cancelQty,
     TResult? Function()? clearItemSelection,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
   }) {
     return orderItems?.call(orderNo);
   }
@@ -188,10 +188,10 @@ class _$OrderDetailsImpl implements OrderDetails {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String orderNo)? orderItems,
-    TResult Function(String currentItemid)? addQty,
-    TResult Function(String currentItemid)? cancelQty,
+    TResult Function(String currentItemid, String? kotno)? addQty,
+    TResult Function(String currentItemid, String? kotno)? cancelQty,
     TResult Function()? clearItemSelection,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     required TResult orElse(),
   }) {
     if (orderItems != null) {
@@ -260,7 +260,7 @@ abstract class _$$AddQtyImplCopyWith<$Res> {
           _$AddQtyImpl value, $Res Function(_$AddQtyImpl) then) =
       __$$AddQtyImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String currentItemid});
+  $Res call({String currentItemid, String? kotno});
 }
 
 /// @nodoc
@@ -277,12 +277,17 @@ class __$$AddQtyImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? currentItemid = null,
+    Object? kotno = freezed,
   }) {
     return _then(_$AddQtyImpl(
       currentItemid: null == currentItemid
           ? _value.currentItemid
           : currentItemid // ignore: cast_nullable_to_non_nullable
               as String,
+      kotno: freezed == kotno
+          ? _value.kotno
+          : kotno // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -290,14 +295,16 @@ class __$$AddQtyImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AddQtyImpl implements AddQty {
-  const _$AddQtyImpl({required this.currentItemid});
+  const _$AddQtyImpl({required this.currentItemid, this.kotno});
 
   @override
   final String currentItemid;
+  @override
+  final String? kotno;
 
   @override
   String toString() {
-    return 'OrderDetailsEvent.addQty(currentItemid: $currentItemid)';
+    return 'OrderDetailsEvent.addQty(currentItemid: $currentItemid, kotno: $kotno)';
   }
 
   @override
@@ -306,11 +313,12 @@ class _$AddQtyImpl implements AddQty {
         (other.runtimeType == runtimeType &&
             other is _$AddQtyImpl &&
             (identical(other.currentItemid, currentItemid) ||
-                other.currentItemid == currentItemid));
+                other.currentItemid == currentItemid) &&
+            (identical(other.kotno, kotno) || other.kotno == kotno));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentItemid);
+  int get hashCode => Object.hash(runtimeType, currentItemid, kotno);
 
   /// Create a copy of OrderDetailsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -324,38 +332,38 @@ class _$AddQtyImpl implements AddQty {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String orderNo) orderItems,
-    required TResult Function(String currentItemid) addQty,
-    required TResult Function(String currentItemid) cancelQty,
+    required TResult Function(String currentItemid, String? kotno) addQty,
+    required TResult Function(String currentItemid, String? kotno) cancelQty,
     required TResult Function() clearItemSelection,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
   }) {
-    return addQty(currentItemid);
+    return addQty(currentItemid, kotno);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String orderNo)? orderItems,
-    TResult? Function(String currentItemid)? addQty,
-    TResult? Function(String currentItemid)? cancelQty,
+    TResult? Function(String currentItemid, String? kotno)? addQty,
+    TResult? Function(String currentItemid, String? kotno)? cancelQty,
     TResult? Function()? clearItemSelection,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
   }) {
-    return addQty?.call(currentItemid);
+    return addQty?.call(currentItemid, kotno);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String orderNo)? orderItems,
-    TResult Function(String currentItemid)? addQty,
-    TResult Function(String currentItemid)? cancelQty,
+    TResult Function(String currentItemid, String? kotno)? addQty,
+    TResult Function(String currentItemid, String? kotno)? cancelQty,
     TResult Function()? clearItemSelection,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     required TResult orElse(),
   }) {
     if (addQty != null) {
-      return addQty(currentItemid);
+      return addQty(currentItemid, kotno);
     }
     return orElse();
   }
@@ -402,9 +410,12 @@ class _$AddQtyImpl implements AddQty {
 }
 
 abstract class AddQty implements OrderDetailsEvent {
-  const factory AddQty({required final String currentItemid}) = _$AddQtyImpl;
+  const factory AddQty(
+      {required final String currentItemid,
+      final String? kotno}) = _$AddQtyImpl;
 
   String get currentItemid;
+  String? get kotno;
 
   /// Create a copy of OrderDetailsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -419,7 +430,7 @@ abstract class _$$CancelQtyImplCopyWith<$Res> {
           _$CancelQtyImpl value, $Res Function(_$CancelQtyImpl) then) =
       __$$CancelQtyImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String currentItemid});
+  $Res call({String currentItemid, String? kotno});
 }
 
 /// @nodoc
@@ -436,12 +447,17 @@ class __$$CancelQtyImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? currentItemid = null,
+    Object? kotno = freezed,
   }) {
     return _then(_$CancelQtyImpl(
       currentItemid: null == currentItemid
           ? _value.currentItemid
           : currentItemid // ignore: cast_nullable_to_non_nullable
               as String,
+      kotno: freezed == kotno
+          ? _value.kotno
+          : kotno // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -449,14 +465,16 @@ class __$$CancelQtyImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$CancelQtyImpl implements CancelQty {
-  const _$CancelQtyImpl({required this.currentItemid});
+  const _$CancelQtyImpl({required this.currentItemid, this.kotno});
 
   @override
   final String currentItemid;
+  @override
+  final String? kotno;
 
   @override
   String toString() {
-    return 'OrderDetailsEvent.cancelQty(currentItemid: $currentItemid)';
+    return 'OrderDetailsEvent.cancelQty(currentItemid: $currentItemid, kotno: $kotno)';
   }
 
   @override
@@ -465,11 +483,12 @@ class _$CancelQtyImpl implements CancelQty {
         (other.runtimeType == runtimeType &&
             other is _$CancelQtyImpl &&
             (identical(other.currentItemid, currentItemid) ||
-                other.currentItemid == currentItemid));
+                other.currentItemid == currentItemid) &&
+            (identical(other.kotno, kotno) || other.kotno == kotno));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentItemid);
+  int get hashCode => Object.hash(runtimeType, currentItemid, kotno);
 
   /// Create a copy of OrderDetailsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -483,38 +502,38 @@ class _$CancelQtyImpl implements CancelQty {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String orderNo) orderItems,
-    required TResult Function(String currentItemid) addQty,
-    required TResult Function(String currentItemid) cancelQty,
+    required TResult Function(String currentItemid, String? kotno) addQty,
+    required TResult Function(String currentItemid, String? kotno) cancelQty,
     required TResult Function() clearItemSelection,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
   }) {
-    return cancelQty(currentItemid);
+    return cancelQty(currentItemid, kotno);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String orderNo)? orderItems,
-    TResult? Function(String currentItemid)? addQty,
-    TResult? Function(String currentItemid)? cancelQty,
+    TResult? Function(String currentItemid, String? kotno)? addQty,
+    TResult? Function(String currentItemid, String? kotno)? cancelQty,
     TResult? Function()? clearItemSelection,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
   }) {
-    return cancelQty?.call(currentItemid);
+    return cancelQty?.call(currentItemid, kotno);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String orderNo)? orderItems,
-    TResult Function(String currentItemid)? addQty,
-    TResult Function(String currentItemid)? cancelQty,
+    TResult Function(String currentItemid, String? kotno)? addQty,
+    TResult Function(String currentItemid, String? kotno)? cancelQty,
     TResult Function()? clearItemSelection,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     required TResult orElse(),
   }) {
     if (cancelQty != null) {
-      return cancelQty(currentItemid);
+      return cancelQty(currentItemid, kotno);
     }
     return orElse();
   }
@@ -561,10 +580,12 @@ class _$CancelQtyImpl implements CancelQty {
 }
 
 abstract class CancelQty implements OrderDetailsEvent {
-  const factory CancelQty({required final String currentItemid}) =
-      _$CancelQtyImpl;
+  const factory CancelQty(
+      {required final String currentItemid,
+      final String? kotno}) = _$CancelQtyImpl;
 
   String get currentItemid;
+  String? get kotno;
 
   /// Create a copy of OrderDetailsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -615,10 +636,10 @@ class _$ClearItemSelectionImpl implements ClearItemSelection {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String orderNo) orderItems,
-    required TResult Function(String currentItemid) addQty,
-    required TResult Function(String currentItemid) cancelQty,
+    required TResult Function(String currentItemid, String? kotno) addQty,
+    required TResult Function(String currentItemid, String? kotno) cancelQty,
     required TResult Function() clearItemSelection,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
   }) {
     return clearItemSelection();
   }
@@ -627,10 +648,10 @@ class _$ClearItemSelectionImpl implements ClearItemSelection {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String orderNo)? orderItems,
-    TResult? Function(String currentItemid)? addQty,
-    TResult? Function(String currentItemid)? cancelQty,
+    TResult? Function(String currentItemid, String? kotno)? addQty,
+    TResult? Function(String currentItemid, String? kotno)? cancelQty,
     TResult? Function()? clearItemSelection,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
   }) {
     return clearItemSelection?.call();
   }
@@ -639,10 +660,10 @@ class _$ClearItemSelectionImpl implements ClearItemSelection {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String orderNo)? orderItems,
-    TResult Function(String currentItemid)? addQty,
-    TResult Function(String currentItemid)? cancelQty,
+    TResult Function(String currentItemid, String? kotno)? addQty,
+    TResult Function(String currentItemid, String? kotno)? cancelQty,
     TResult Function()? clearItemSelection,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     required TResult orElse(),
   }) {
     if (clearItemSelection != null) {
@@ -702,7 +723,7 @@ abstract class _$$ItemActionImplCopyWith<$Res> {
           _$ItemActionImpl value, $Res Function(_$ItemActionImpl) then) =
       __$$ItemActionImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String from, KitchenItem item});
+  $Res call({String from, kotItem item});
 }
 
 /// @nodoc
@@ -729,7 +750,7 @@ class __$$ItemActionImplCopyWithImpl<$Res>
       item: null == item
           ? _value.item
           : item // ignore: cast_nullable_to_non_nullable
-              as KitchenItem,
+              as kotItem,
     ));
   }
 }
@@ -742,7 +763,7 @@ class _$ItemActionImpl implements ItemAction {
   @override
   final String from;
   @override
-  final KitchenItem item;
+  final kotItem item;
 
   @override
   String toString() {
@@ -773,10 +794,10 @@ class _$ItemActionImpl implements ItemAction {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String orderNo) orderItems,
-    required TResult Function(String currentItemid) addQty,
-    required TResult Function(String currentItemid) cancelQty,
+    required TResult Function(String currentItemid, String? kotno) addQty,
+    required TResult Function(String currentItemid, String? kotno) cancelQty,
     required TResult Function() clearItemSelection,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
   }) {
     return itemAction(from, item);
   }
@@ -785,10 +806,10 @@ class _$ItemActionImpl implements ItemAction {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String orderNo)? orderItems,
-    TResult? Function(String currentItemid)? addQty,
-    TResult? Function(String currentItemid)? cancelQty,
+    TResult? Function(String currentItemid, String? kotno)? addQty,
+    TResult? Function(String currentItemid, String? kotno)? cancelQty,
     TResult? Function()? clearItemSelection,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
   }) {
     return itemAction?.call(from, item);
   }
@@ -797,10 +818,10 @@ class _$ItemActionImpl implements ItemAction {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String orderNo)? orderItems,
-    TResult Function(String currentItemid)? addQty,
-    TResult Function(String currentItemid)? cancelQty,
+    TResult Function(String currentItemid, String? kotno)? addQty,
+    TResult Function(String currentItemid, String? kotno)? cancelQty,
     TResult Function()? clearItemSelection,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     required TResult orElse(),
   }) {
     if (itemAction != null) {
@@ -853,10 +874,10 @@ class _$ItemActionImpl implements ItemAction {
 abstract class ItemAction implements OrderDetailsEvent {
   const factory ItemAction(
       {required final String from,
-      required final KitchenItem item}) = _$ItemActionImpl;
+      required final kotItem item}) = _$ItemActionImpl;
 
   String get from;
-  KitchenItem get item;
+  kotItem get item;
 
   /// Create a copy of OrderDetailsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -869,9 +890,9 @@ abstract class ItemAction implements OrderDetailsEvent {
 mixin _$OrderDetailsState {
   bool get isLoading =>
       throw _privateConstructorUsedError; // required      List<OrderItem> orderitems,
-  List<KitchenItem> get toAddItems => throw _privateConstructorUsedError;
-  List<KitchenItem> get toCancelItems => throw _privateConstructorUsedError;
-  List<KitchenItem> get orderitems => throw _privateConstructorUsedError;
+  List<kotItem> get toAddItems => throw _privateConstructorUsedError;
+  List<kotItem> get toCancelItems => throw _privateConstructorUsedError;
+  List<kotItem> get orderitems => throw _privateConstructorUsedError;
 
   /// Create a copy of OrderDetailsState
   /// with the given fields replaced by the non-null parameter values.
@@ -888,9 +909,9 @@ abstract class $OrderDetailsStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isLoading,
-      List<KitchenItem> toAddItems,
-      List<KitchenItem> toCancelItems,
-      List<KitchenItem> orderitems});
+      List<kotItem> toAddItems,
+      List<kotItem> toCancelItems,
+      List<kotItem> orderitems});
 }
 
 /// @nodoc
@@ -921,15 +942,15 @@ class _$OrderDetailsStateCopyWithImpl<$Res, $Val extends OrderDetailsState>
       toAddItems: null == toAddItems
           ? _value.toAddItems
           : toAddItems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       toCancelItems: null == toCancelItems
           ? _value.toCancelItems
           : toCancelItems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       orderitems: null == orderitems
           ? _value.orderitems
           : orderitems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
     ) as $Val);
   }
 }
@@ -944,9 +965,9 @@ abstract class _$$OrderDetailsStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool isLoading,
-      List<KitchenItem> toAddItems,
-      List<KitchenItem> toCancelItems,
-      List<KitchenItem> orderitems});
+      List<kotItem> toAddItems,
+      List<kotItem> toCancelItems,
+      List<kotItem> orderitems});
 }
 
 /// @nodoc
@@ -975,15 +996,15 @@ class __$$OrderDetailsStateImplCopyWithImpl<$Res>
       toAddItems: null == toAddItems
           ? _value._toAddItems
           : toAddItems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       toCancelItems: null == toCancelItems
           ? _value._toCancelItems
           : toCancelItems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       orderitems: null == orderitems
           ? _value._orderitems
           : orderitems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
     ));
   }
 }
@@ -993,9 +1014,9 @@ class __$$OrderDetailsStateImplCopyWithImpl<$Res>
 class _$OrderDetailsStateImpl implements _OrderDetailsState {
   _$OrderDetailsStateImpl(
       {required this.isLoading,
-      required final List<KitchenItem> toAddItems,
-      required final List<KitchenItem> toCancelItems,
-      required final List<KitchenItem> orderitems})
+      required final List<kotItem> toAddItems,
+      required final List<kotItem> toCancelItems,
+      required final List<kotItem> orderitems})
       : _toAddItems = toAddItems,
         _toCancelItems = toCancelItems,
         _orderitems = orderitems;
@@ -1003,26 +1024,26 @@ class _$OrderDetailsStateImpl implements _OrderDetailsState {
   @override
   final bool isLoading;
 // required      List<OrderItem> orderitems,
-  final List<KitchenItem> _toAddItems;
+  final List<kotItem> _toAddItems;
 // required      List<OrderItem> orderitems,
   @override
-  List<KitchenItem> get toAddItems {
+  List<kotItem> get toAddItems {
     if (_toAddItems is EqualUnmodifiableListView) return _toAddItems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_toAddItems);
   }
 
-  final List<KitchenItem> _toCancelItems;
+  final List<kotItem> _toCancelItems;
   @override
-  List<KitchenItem> get toCancelItems {
+  List<kotItem> get toCancelItems {
     if (_toCancelItems is EqualUnmodifiableListView) return _toCancelItems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_toCancelItems);
   }
 
-  final List<KitchenItem> _orderitems;
+  final List<kotItem> _orderitems;
   @override
-  List<KitchenItem> get orderitems {
+  List<kotItem> get orderitems {
     if (_orderitems is EqualUnmodifiableListView) return _orderitems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_orderitems);
@@ -1069,18 +1090,18 @@ class _$OrderDetailsStateImpl implements _OrderDetailsState {
 abstract class _OrderDetailsState implements OrderDetailsState {
   factory _OrderDetailsState(
       {required final bool isLoading,
-      required final List<KitchenItem> toAddItems,
-      required final List<KitchenItem> toCancelItems,
-      required final List<KitchenItem> orderitems}) = _$OrderDetailsStateImpl;
+      required final List<kotItem> toAddItems,
+      required final List<kotItem> toCancelItems,
+      required final List<kotItem> orderitems}) = _$OrderDetailsStateImpl;
 
   @override
   bool get isLoading; // required      List<OrderItem> orderitems,
   @override
-  List<KitchenItem> get toAddItems;
+  List<kotItem> get toAddItems;
   @override
-  List<KitchenItem> get toCancelItems;
+  List<kotItem> get toCancelItems;
   @override
-  List<KitchenItem> get orderitems;
+  List<kotItem> get orderitems;
 
   /// Create a copy of OrderDetailsState
   /// with the given fields replaced by the non-null parameter values.

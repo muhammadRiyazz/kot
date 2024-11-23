@@ -20,57 +20,56 @@ mixin _$StockEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -190,19 +189,20 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
     return fetchStocksAndCategory();
   }
@@ -212,19 +212,18 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
     return fetchStocksAndCategory?.call();
   }
@@ -234,19 +233,18 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (fetchStocksAndCategory != null) {
@@ -362,19 +360,20 @@ class _$ClearcategoryImpl implements Clearcategory {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
     return clearcategory();
   }
@@ -384,19 +383,18 @@ class _$ClearcategoryImpl implements Clearcategory {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
     return clearcategory?.call();
   }
@@ -406,19 +404,18 @@ class _$ClearcategoryImpl implements Clearcategory {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (clearcategory != null) {
@@ -499,8 +496,8 @@ abstract class _$$AddImplCopyWith<$Res> {
   $Res call(
       {int qty,
       bool? update,
-      String? amount,
-      KitchenItem? item,
+      double? amount,
+      kotItem? item,
       String productid,
       bool isIncrement});
 }
@@ -536,11 +533,11 @@ class __$$AddImplCopyWithImpl<$Res>
       amount: freezed == amount
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as double?,
       item: freezed == item
           ? _value.item
           : item // ignore: cast_nullable_to_non_nullable
-              as KitchenItem?,
+              as kotItem?,
       productid: null == productid
           ? _value.productid
           : productid // ignore: cast_nullable_to_non_nullable
@@ -569,9 +566,9 @@ class _$AddImpl implements Add {
   @override
   final bool? update;
   @override
-  final String? amount;
+  final double? amount;
   @override
-  final KitchenItem? item;
+  final kotItem? item;
   @override
   final String productid;
   @override
@@ -614,19 +611,20 @@ class _$AddImpl implements Add {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
     return add(qty, update, amount, item, productid, isIncrement);
   }
@@ -636,19 +634,18 @@ class _$AddImpl implements Add {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
     return add?.call(qty, update, amount, item, productid, isIncrement);
   }
@@ -658,19 +655,18 @@ class _$AddImpl implements Add {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (add != null) {
@@ -743,15 +739,15 @@ abstract class Add implements StockEvent {
   const factory Add(
       {required final int qty,
       final bool? update,
-      final String? amount,
-      final KitchenItem? item,
+      final double? amount,
+      final kotItem? item,
       required final String productid,
       required final bool isIncrement}) = _$AddImpl;
 
   int get qty;
   bool? get update;
-  String? get amount;
-  KitchenItem? get item;
+  double? get amount;
+  kotItem? get item;
   String get productid;
   bool get isIncrement;
 
@@ -768,7 +764,7 @@ abstract class _$$ListFromOrderImplCopyWith<$Res> {
           _$ListFromOrderImpl value, $Res Function(_$ListFromOrderImpl) then) =
       __$$ListFromOrderImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist});
+  $Res call({List<kotItem> itemslist, List<kotItem> cancelItemslist});
 }
 
 /// @nodoc
@@ -791,11 +787,11 @@ class __$$ListFromOrderImplCopyWithImpl<$Res>
       itemslist: null == itemslist
           ? _value._itemslist
           : itemslist // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       cancelItemslist: null == cancelItemslist
           ? _value._cancelItemslist
           : cancelItemslist // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
     ));
   }
 }
@@ -804,22 +800,22 @@ class __$$ListFromOrderImplCopyWithImpl<$Res>
 
 class _$ListFromOrderImpl implements ListFromOrder {
   const _$ListFromOrderImpl(
-      {required final List<KitchenItem> itemslist,
-      required final List<KitchenItem> cancelItemslist})
+      {required final List<kotItem> itemslist,
+      required final List<kotItem> cancelItemslist})
       : _itemslist = itemslist,
         _cancelItemslist = cancelItemslist;
 
-  final List<KitchenItem> _itemslist;
+  final List<kotItem> _itemslist;
   @override
-  List<KitchenItem> get itemslist {
+  List<kotItem> get itemslist {
     if (_itemslist is EqualUnmodifiableListView) return _itemslist;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_itemslist);
   }
 
-  final List<KitchenItem> _cancelItemslist;
+  final List<kotItem> _cancelItemslist;
   @override
-  List<KitchenItem> get cancelItemslist {
+  List<kotItem> get cancelItemslist {
     if (_cancelItemslist is EqualUnmodifiableListView) return _cancelItemslist;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_cancelItemslist);
@@ -860,19 +856,20 @@ class _$ListFromOrderImpl implements ListFromOrder {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
     return listFromOrder(itemslist, cancelItemslist);
   }
@@ -882,19 +879,18 @@ class _$ListFromOrderImpl implements ListFromOrder {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
     return listFromOrder?.call(itemslist, cancelItemslist);
   }
@@ -904,19 +900,18 @@ class _$ListFromOrderImpl implements ListFromOrder {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (listFromOrder != null) {
@@ -987,11 +982,11 @@ class _$ListFromOrderImpl implements ListFromOrder {
 
 abstract class ListFromOrder implements StockEvent {
   const factory ListFromOrder(
-      {required final List<KitchenItem> itemslist,
-      required final List<KitchenItem> cancelItemslist}) = _$ListFromOrderImpl;
+      {required final List<kotItem> itemslist,
+      required final List<kotItem> cancelItemslist}) = _$ListFromOrderImpl;
 
-  List<KitchenItem> get itemslist;
-  List<KitchenItem> get cancelItemslist;
+  List<kotItem> get itemslist;
+  List<kotItem> get cancelItemslist;
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1043,19 +1038,20 @@ class _$ClearSelectionImpl implements ClearSelection {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
     return clearSelection();
   }
@@ -1065,19 +1061,18 @@ class _$ClearSelectionImpl implements ClearSelection {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
     return clearSelection?.call();
   }
@@ -1087,19 +1082,18 @@ class _$ClearSelectionImpl implements ClearSelection {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (clearSelection != null) {
@@ -1178,7 +1172,7 @@ abstract class _$$SearchImplCopyWith<$Res> {
           _$SearchImpl value, $Res Function(_$SearchImpl) then) =
       __$$SearchImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String searchQuary});
+  $Res call({String searchQuary, bool acOrNonAc});
 }
 
 /// @nodoc
@@ -1195,12 +1189,17 @@ class __$$SearchImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? searchQuary = null,
+    Object? acOrNonAc = null,
   }) {
     return _then(_$SearchImpl(
       searchQuary: null == searchQuary
           ? _value.searchQuary
           : searchQuary // ignore: cast_nullable_to_non_nullable
               as String,
+      acOrNonAc: null == acOrNonAc
+          ? _value.acOrNonAc
+          : acOrNonAc // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -1208,14 +1207,16 @@ class __$$SearchImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SearchImpl implements Search {
-  const _$SearchImpl({required this.searchQuary});
+  const _$SearchImpl({required this.searchQuary, required this.acOrNonAc});
 
   @override
   final String searchQuary;
+  @override
+  final bool acOrNonAc;
 
   @override
   String toString() {
-    return 'StockEvent.search(searchQuary: $searchQuary)';
+    return 'StockEvent.search(searchQuary: $searchQuary, acOrNonAc: $acOrNonAc)';
   }
 
   @override
@@ -1224,11 +1225,13 @@ class _$SearchImpl implements Search {
         (other.runtimeType == runtimeType &&
             other is _$SearchImpl &&
             (identical(other.searchQuary, searchQuary) ||
-                other.searchQuary == searchQuary));
+                other.searchQuary == searchQuary) &&
+            (identical(other.acOrNonAc, acOrNonAc) ||
+                other.acOrNonAc == acOrNonAc));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, searchQuary);
+  int get hashCode => Object.hash(runtimeType, searchQuary, acOrNonAc);
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1243,21 +1246,22 @@ class _$SearchImpl implements Search {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
-    return search(searchQuary);
+    return search(searchQuary, acOrNonAc);
   }
 
   @override
@@ -1265,21 +1269,20 @@ class _$SearchImpl implements Search {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
-    return search?.call(searchQuary);
+    return search?.call(searchQuary, acOrNonAc);
   }
 
   @override
@@ -1287,23 +1290,22 @@ class _$SearchImpl implements Search {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (search != null) {
-      return search(searchQuary);
+      return search(searchQuary, acOrNonAc);
     }
     return orElse();
   }
@@ -1369,9 +1371,12 @@ class _$SearchImpl implements Search {
 }
 
 abstract class Search implements StockEvent {
-  const factory Search({required final String searchQuary}) = _$SearchImpl;
+  const factory Search(
+      {required final String searchQuary,
+      required final bool acOrNonAc}) = _$SearchImpl;
 
   String get searchQuary;
+  bool get acOrNonAc;
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -1385,6 +1390,8 @@ abstract class _$$ItemInitalFetchImplCopyWith<$Res> {
   factory _$$ItemInitalFetchImplCopyWith(_$ItemInitalFetchImpl value,
           $Res Function(_$ItemInitalFetchImpl) then) =
       __$$ItemInitalFetchImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool acOrNonAc});
 }
 
 /// @nodoc
@@ -1397,47 +1404,75 @@ class __$$ItemInitalFetchImplCopyWithImpl<$Res>
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? acOrNonAc = null,
+  }) {
+    return _then(_$ItemInitalFetchImpl(
+      acOrNonAc: null == acOrNonAc
+          ? _value.acOrNonAc
+          : acOrNonAc // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$ItemInitalFetchImpl implements ItemInitalFetch {
-  const _$ItemInitalFetchImpl();
+  const _$ItemInitalFetchImpl({required this.acOrNonAc});
+
+  @override
+  final bool acOrNonAc;
 
   @override
   String toString() {
-    return 'StockEvent.itemInitalFetch()';
+    return 'StockEvent.itemInitalFetch(acOrNonAc: $acOrNonAc)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ItemInitalFetchImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$ItemInitalFetchImpl &&
+            (identical(other.acOrNonAc, acOrNonAc) ||
+                other.acOrNonAc == acOrNonAc));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, acOrNonAc);
+
+  /// Create a copy of StockEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ItemInitalFetchImplCopyWith<_$ItemInitalFetchImpl> get copyWith =>
+      __$$ItemInitalFetchImplCopyWithImpl<_$ItemInitalFetchImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
-    return itemInitalFetch();
+    return itemInitalFetch(acOrNonAc);
   }
 
   @override
@@ -1445,21 +1480,20 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
-    return itemInitalFetch?.call();
+    return itemInitalFetch?.call(acOrNonAc);
   }
 
   @override
@@ -1467,23 +1501,22 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (itemInitalFetch != null) {
-      return itemInitalFetch();
+      return itemInitalFetch(acOrNonAc);
     }
     return orElse();
   }
@@ -1549,7 +1582,16 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
 }
 
 abstract class ItemInitalFetch implements StockEvent {
-  const factory ItemInitalFetch() = _$ItemInitalFetchImpl;
+  const factory ItemInitalFetch({required final bool acOrNonAc}) =
+      _$ItemInitalFetchImpl;
+
+  bool get acOrNonAc;
+
+  /// Create a copy of StockEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ItemInitalFetchImplCopyWith<_$ItemInitalFetchImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1622,19 +1664,20 @@ class _$TypeChangeImpl implements TypeChange {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
     return typeChange(type);
   }
@@ -1644,19 +1687,18 @@ class _$TypeChangeImpl implements TypeChange {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
     return typeChange?.call(type);
   }
@@ -1666,19 +1708,18 @@ class _$TypeChangeImpl implements TypeChange {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (typeChange != null) {
@@ -1765,7 +1806,7 @@ abstract class _$$ItemActionImplCopyWith<$Res> {
           _$ItemActionImpl value, $Res Function(_$ItemActionImpl) then) =
       __$$ItemActionImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String from, KitchenItem item});
+  $Res call({String from, kotItem item});
 }
 
 /// @nodoc
@@ -1792,7 +1833,7 @@ class __$$ItemActionImplCopyWithImpl<$Res>
       item: null == item
           ? _value.item
           : item // ignore: cast_nullable_to_non_nullable
-              as KitchenItem,
+              as kotItem,
     ));
   }
 }
@@ -1805,7 +1846,7 @@ class _$ItemActionImpl implements ItemAction {
   @override
   final String from;
   @override
-  final KitchenItem item;
+  final kotItem item;
 
   @override
   String toString() {
@@ -1837,19 +1878,20 @@ class _$ItemActionImpl implements ItemAction {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
     return itemAction(from, item);
   }
@@ -1859,19 +1901,18 @@ class _$ItemActionImpl implements ItemAction {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
     return itemAction?.call(from, item);
   }
@@ -1881,19 +1922,18 @@ class _$ItemActionImpl implements ItemAction {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (itemAction != null) {
@@ -1965,10 +2005,10 @@ class _$ItemActionImpl implements ItemAction {
 abstract class ItemAction implements StockEvent {
   const factory ItemAction(
       {required final String from,
-      required final KitchenItem item}) = _$ItemActionImpl;
+      required final kotItem item}) = _$ItemActionImpl;
 
   String get from;
-  KitchenItem get item;
+  kotItem get item;
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -2020,19 +2060,20 @@ class _$CategoryFetchImpl implements CategoryFetch {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
     return categoryFetch();
   }
@@ -2042,19 +2083,18 @@ class _$CategoryFetchImpl implements CategoryFetch {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
     return categoryFetch?.call();
   }
@@ -2064,19 +2104,18 @@ class _$CategoryFetchImpl implements CategoryFetch {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (categoryFetch != null) {
@@ -2155,7 +2194,7 @@ abstract class _$$CategorySelectionImplCopyWith<$Res> {
           $Res Function(_$CategorySelectionImpl) then) =
       __$$CategorySelectionImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Category category});
+  $Res call({Category category, bool acOrNonAc});
 }
 
 /// @nodoc
@@ -2172,12 +2211,17 @@ class __$$CategorySelectionImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? category = null,
+    Object? acOrNonAc = null,
   }) {
     return _then(_$CategorySelectionImpl(
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as Category,
+      acOrNonAc: null == acOrNonAc
+          ? _value.acOrNonAc
+          : acOrNonAc // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -2185,14 +2229,17 @@ class __$$CategorySelectionImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$CategorySelectionImpl implements CategorySelection {
-  const _$CategorySelectionImpl({required this.category});
+  const _$CategorySelectionImpl(
+      {required this.category, required this.acOrNonAc});
 
   @override
   final Category category;
+  @override
+  final bool acOrNonAc;
 
   @override
   String toString() {
-    return 'StockEvent.categorySelection(category: $category)';
+    return 'StockEvent.categorySelection(category: $category, acOrNonAc: $acOrNonAc)';
   }
 
   @override
@@ -2201,11 +2248,13 @@ class _$CategorySelectionImpl implements CategorySelection {
         (other.runtimeType == runtimeType &&
             other is _$CategorySelectionImpl &&
             (identical(other.category, category) ||
-                other.category == category));
+                other.category == category) &&
+            (identical(other.acOrNonAc, acOrNonAc) ||
+                other.acOrNonAc == acOrNonAc));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, category);
+  int get hashCode => Object.hash(runtimeType, category, acOrNonAc);
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -2221,21 +2270,22 @@ class _$CategorySelectionImpl implements CategorySelection {
   TResult when<TResult extends Object?>({
     required TResult Function() fetchStocksAndCategory,
     required TResult Function() clearcategory,
-    required TResult Function(int qty, bool? update, String? amount,
-            KitchenItem? item, String productid, bool isIncrement)
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
         add,
     required TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
-    required TResult Function(String searchQuary) search,
-    required TResult Function() itemInitalFetch,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
-    required TResult Function(String from, KitchenItem item) itemAction,
+    required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category) categorySelection,
+    required TResult Function(Category category, bool acOrNonAc)
+        categorySelection,
   }) {
-    return categorySelection(category);
+    return categorySelection(category, acOrNonAc);
   }
 
   @override
@@ -2243,21 +2293,20 @@ class _$CategorySelectionImpl implements CategorySelection {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetchStocksAndCategory,
     TResult? Function()? clearcategory,
-    TResult? Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult? Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
-    TResult? Function(String searchQuary)? search,
-    TResult? Function()? itemInitalFetch,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
-    TResult? Function(String from, KitchenItem item)? itemAction,
+    TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category)? categorySelection,
+    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
   }) {
-    return categorySelection?.call(category);
+    return categorySelection?.call(category, acOrNonAc);
   }
 
   @override
@@ -2265,23 +2314,22 @@ class _$CategorySelectionImpl implements CategorySelection {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetchStocksAndCategory,
     TResult Function()? clearcategory,
-    TResult Function(int qty, bool? update, String? amount, KitchenItem? item,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
             String productid, bool isIncrement)?
         add,
-    TResult Function(
-            List<KitchenItem> itemslist, List<KitchenItem> cancelItemslist)?
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
-    TResult Function(String searchQuary)? search,
-    TResult Function()? itemInitalFetch,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
-    TResult Function(String from, KitchenItem item)? itemAction,
+    TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category)? categorySelection,
+    TResult Function(Category category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (categorySelection != null) {
-      return categorySelection(category);
+      return categorySelection(category, acOrNonAc);
     }
     return orElse();
   }
@@ -2347,10 +2395,12 @@ class _$CategorySelectionImpl implements CategorySelection {
 }
 
 abstract class CategorySelection implements StockEvent {
-  const factory CategorySelection({required final Category category}) =
-      _$CategorySelectionImpl;
+  const factory CategorySelection(
+      {required final Category category,
+      required final bool acOrNonAc}) = _$CategorySelectionImpl;
 
   Category get category;
+  bool get acOrNonAc;
 
   /// Create a copy of StockEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -2363,13 +2413,13 @@ abstract class CategorySelection implements StockEvent {
 mixin _$StockState {
   String get goodsOrSER => throw _privateConstructorUsedError;
   Category? get selectedcategory => throw _privateConstructorUsedError;
-  List<KitchenItem> get stocklist => throw _privateConstructorUsedError;
-  List<KitchenItem> get seritems => throw _privateConstructorUsedError;
-  List<KitchenItem> get goodsitems => throw _privateConstructorUsedError;
+  List<kotItem> get stocklist => throw _privateConstructorUsedError;
+  List<kotItem> get seritems => throw _privateConstructorUsedError;
+  List<kotItem> get goodsitems => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   bool get hasReachedMax => throw _privateConstructorUsedError;
-  List<KitchenItem> get toKOTitems => throw _privateConstructorUsedError;
-  List<KitchenItem> get cancelKOTitems => throw _privateConstructorUsedError;
+  List<kotItem> get toKOTitems => throw _privateConstructorUsedError;
+  List<kotItem> get cancelKOTitems => throw _privateConstructorUsedError;
   List<Category> get goodsCategory => throw _privateConstructorUsedError;
   List<Category> get serCategory => throw _privateConstructorUsedError;
   List<Category> get category => throw _privateConstructorUsedError;
@@ -2390,13 +2440,13 @@ abstract class $StockStateCopyWith<$Res> {
   $Res call(
       {String goodsOrSER,
       Category? selectedcategory,
-      List<KitchenItem> stocklist,
-      List<KitchenItem> seritems,
-      List<KitchenItem> goodsitems,
+      List<kotItem> stocklist,
+      List<kotItem> seritems,
+      List<kotItem> goodsitems,
       bool isLoading,
       bool hasReachedMax,
-      List<KitchenItem> toKOTitems,
-      List<KitchenItem> cancelKOTitems,
+      List<kotItem> toKOTitems,
+      List<kotItem> cancelKOTitems,
       List<Category> goodsCategory,
       List<Category> serCategory,
       List<Category> category});
@@ -2442,15 +2492,15 @@ class _$StockStateCopyWithImpl<$Res, $Val extends StockState>
       stocklist: null == stocklist
           ? _value.stocklist
           : stocklist // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       seritems: null == seritems
           ? _value.seritems
           : seritems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       goodsitems: null == goodsitems
           ? _value.goodsitems
           : goodsitems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -2462,11 +2512,11 @@ class _$StockStateCopyWithImpl<$Res, $Val extends StockState>
       toKOTitems: null == toKOTitems
           ? _value.toKOTitems
           : toKOTitems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       cancelKOTitems: null == cancelKOTitems
           ? _value.cancelKOTitems
           : cancelKOTitems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       goodsCategory: null == goodsCategory
           ? _value.goodsCategory
           : goodsCategory // ignore: cast_nullable_to_non_nullable
@@ -2494,13 +2544,13 @@ abstract class _$$StockStateImplCopyWith<$Res>
   $Res call(
       {String goodsOrSER,
       Category? selectedcategory,
-      List<KitchenItem> stocklist,
-      List<KitchenItem> seritems,
-      List<KitchenItem> goodsitems,
+      List<kotItem> stocklist,
+      List<kotItem> seritems,
+      List<kotItem> goodsitems,
       bool isLoading,
       bool hasReachedMax,
-      List<KitchenItem> toKOTitems,
-      List<KitchenItem> cancelKOTitems,
+      List<kotItem> toKOTitems,
+      List<kotItem> cancelKOTitems,
       List<Category> goodsCategory,
       List<Category> serCategory,
       List<Category> category});
@@ -2544,15 +2594,15 @@ class __$$StockStateImplCopyWithImpl<$Res>
       stocklist: null == stocklist
           ? _value._stocklist
           : stocklist // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       seritems: null == seritems
           ? _value._seritems
           : seritems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       goodsitems: null == goodsitems
           ? _value._goodsitems
           : goodsitems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -2564,11 +2614,11 @@ class __$$StockStateImplCopyWithImpl<$Res>
       toKOTitems: null == toKOTitems
           ? _value._toKOTitems
           : toKOTitems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       cancelKOTitems: null == cancelKOTitems
           ? _value._cancelKOTitems
           : cancelKOTitems // ignore: cast_nullable_to_non_nullable
-              as List<KitchenItem>,
+              as List<kotItem>,
       goodsCategory: null == goodsCategory
           ? _value._goodsCategory
           : goodsCategory // ignore: cast_nullable_to_non_nullable
@@ -2591,13 +2641,13 @@ class _$StockStateImpl implements _StockState {
   _$StockStateImpl(
       {required this.goodsOrSER,
       this.selectedcategory,
-      required final List<KitchenItem> stocklist,
-      required final List<KitchenItem> seritems,
-      required final List<KitchenItem> goodsitems,
+      required final List<kotItem> stocklist,
+      required final List<kotItem> seritems,
+      required final List<kotItem> goodsitems,
       required this.isLoading,
       required this.hasReachedMax,
-      required final List<KitchenItem> toKOTitems,
-      required final List<KitchenItem> cancelKOTitems,
+      required final List<kotItem> toKOTitems,
+      required final List<kotItem> cancelKOTitems,
       required final List<Category> goodsCategory,
       required final List<Category> serCategory,
       required final List<Category> category})
@@ -2614,25 +2664,25 @@ class _$StockStateImpl implements _StockState {
   final String goodsOrSER;
   @override
   final Category? selectedcategory;
-  final List<KitchenItem> _stocklist;
+  final List<kotItem> _stocklist;
   @override
-  List<KitchenItem> get stocklist {
+  List<kotItem> get stocklist {
     if (_stocklist is EqualUnmodifiableListView) return _stocklist;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_stocklist);
   }
 
-  final List<KitchenItem> _seritems;
+  final List<kotItem> _seritems;
   @override
-  List<KitchenItem> get seritems {
+  List<kotItem> get seritems {
     if (_seritems is EqualUnmodifiableListView) return _seritems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_seritems);
   }
 
-  final List<KitchenItem> _goodsitems;
+  final List<kotItem> _goodsitems;
   @override
-  List<KitchenItem> get goodsitems {
+  List<kotItem> get goodsitems {
     if (_goodsitems is EqualUnmodifiableListView) return _goodsitems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_goodsitems);
@@ -2642,17 +2692,17 @@ class _$StockStateImpl implements _StockState {
   final bool isLoading;
   @override
   final bool hasReachedMax;
-  final List<KitchenItem> _toKOTitems;
+  final List<kotItem> _toKOTitems;
   @override
-  List<KitchenItem> get toKOTitems {
+  List<kotItem> get toKOTitems {
     if (_toKOTitems is EqualUnmodifiableListView) return _toKOTitems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_toKOTitems);
   }
 
-  final List<KitchenItem> _cancelKOTitems;
+  final List<kotItem> _cancelKOTitems;
   @override
-  List<KitchenItem> get cancelKOTitems {
+  List<kotItem> get cancelKOTitems {
     if (_cancelKOTitems is EqualUnmodifiableListView) return _cancelKOTitems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_cancelKOTitems);
@@ -2745,13 +2795,13 @@ abstract class _StockState implements StockState {
   factory _StockState(
       {required final String goodsOrSER,
       final Category? selectedcategory,
-      required final List<KitchenItem> stocklist,
-      required final List<KitchenItem> seritems,
-      required final List<KitchenItem> goodsitems,
+      required final List<kotItem> stocklist,
+      required final List<kotItem> seritems,
+      required final List<kotItem> goodsitems,
       required final bool isLoading,
       required final bool hasReachedMax,
-      required final List<KitchenItem> toKOTitems,
-      required final List<KitchenItem> cancelKOTitems,
+      required final List<kotItem> toKOTitems,
+      required final List<kotItem> cancelKOTitems,
       required final List<Category> goodsCategory,
       required final List<Category> serCategory,
       required final List<Category> category}) = _$StockStateImpl;
@@ -2761,19 +2811,19 @@ abstract class _StockState implements StockState {
   @override
   Category? get selectedcategory;
   @override
-  List<KitchenItem> get stocklist;
+  List<kotItem> get stocklist;
   @override
-  List<KitchenItem> get seritems;
+  List<kotItem> get seritems;
   @override
-  List<KitchenItem> get goodsitems;
+  List<kotItem> get goodsitems;
   @override
   bool get isLoading;
   @override
   bool get hasReachedMax;
   @override
-  List<KitchenItem> get toKOTitems;
+  List<kotItem> get toKOTitems;
   @override
-  List<KitchenItem> get cancelKOTitems;
+  List<kotItem> get cancelKOTitems;
   @override
   List<Category> get goodsCategory;
   @override

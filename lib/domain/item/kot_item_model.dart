@@ -1,27 +1,27 @@
-class KitchenItem {
+class kotItem {
   final String serOrGoods;
-  final String kitchenName; // Name of the kitchen
+  String kitchenName; // Name of the kitchen
   final String itemName; // Name of the item
   final String itemCode; // Code for the item
   int quantity; // Quantity of the item
   final int qty; // Quantity of the item
-  final String stock; // Quantity of the item
+  final int stock; // Quantity of the item
+   final String kotno; // Name of the kitchen
 
-  final String basicRate; // Basic rate of the item
-  final String unitTaxableAmountBeforeDiscount; // Taxable amount before discount
-  final String unitTaxableAmount; // Taxable amount after discount
-  final String totalTaxableAmount; // Total taxable amount
-  final String gstPer; // GST percentage
-  final String cessPer; // Cess percentage
-  final String totalTaxAmount; // Total tax amount
-  final String totalCessAmount; // Total cess amount
-  final String totalAmount; // Total amount after all calculations
+  final double basicRate; // Basic rate of the item
+  final double
+      unitTaxableAmountBeforeDiscount; // Taxable amount before discount
+  final double unitTaxableAmount; // Taxable amount after discount
+  final double gstPer; // GST percentage
+  final double cessPer; // Cess percentage
 
-  final String dininACrate; // Rate for Dining with AC
-  final String dininNonACrate; // Rate for Dining without AC
+  // final double dininACrate; // Rate for Dining with AC
+  // final double dininNonACrate; // Rate for Dining without AC
 
   // Constructor
-  KitchenItem({
+  kotItem({
+        required this.kotno,
+
     required this.stock,
     required this.qty,
     required this.serOrGoods,
@@ -32,38 +32,35 @@ class KitchenItem {
     required this.basicRate,
     required this.unitTaxableAmountBeforeDiscount,
     required this.unitTaxableAmount,
-    required this.totalTaxableAmount,
     required this.gstPer,
     required this.cessPer,
-    required this.totalTaxAmount,
-    required this.totalCessAmount,
-    required this.totalAmount,
-    required this.dininACrate, // Add to constructor
-    required this.dininNonACrate, // Add to constructor
+
+    // required this.dininACrate, // Add to constructor
+    // required this.dininNonACrate, // Add to constructor
   });
 
   // CopyWith method
-  KitchenItem copyWith({
+  kotItem copyWith({
+        String? kotno,
+
     String? serOrGoods,
     String? kitchenName,
     String? itemName,
     String? itemCode,
     int? quantity,
     int? qty,
-    String? stock,
-    String? basicRate,
-    String? unitTaxableAmountBeforeDiscount,
-    String? unitTaxableAmount,
-    String? totalTaxableAmount,
-    String? gstPer,
-    String? cessPer,
-    String? totalTaxAmount,
-    String? totalCessAmount,
-    String? totalAmount,
-    String? dininACrate, // Add to copyWith method
-    String? dininNonACrate, // Add to copyWith method
+    int? stock,
+    double? basicRate,
+    double? unitTaxableAmountBeforeDiscount,
+    double? unitTaxableAmount,
+    double? gstPer,
+    double? cessPer,
+
+    // double? dininACrate, // Add to copyWith method
+    // double? dininNonACrate, // Add to copyWith method
   }) {
-    return KitchenItem(
+    return kotItem(
+      kotno: kotno ??this.kotno,
       stock: stock ?? this.stock,
       qty: qty ?? this.qty,
       serOrGoods: serOrGoods ?? this.serOrGoods,
@@ -72,17 +69,59 @@ class KitchenItem {
       itemCode: itemCode ?? this.itemCode,
       quantity: quantity ?? this.quantity,
       basicRate: basicRate ?? this.basicRate,
-      unitTaxableAmountBeforeDiscount:
-          unitTaxableAmountBeforeDiscount ?? this.unitTaxableAmountBeforeDiscount,
+      unitTaxableAmountBeforeDiscount: unitTaxableAmountBeforeDiscount ??
+          this.unitTaxableAmountBeforeDiscount,
       unitTaxableAmount: unitTaxableAmount ?? this.unitTaxableAmount,
-      totalTaxableAmount: totalTaxableAmount ?? this.totalTaxableAmount,
       gstPer: gstPer ?? this.gstPer,
       cessPer: cessPer ?? this.cessPer,
-      totalTaxAmount: totalTaxAmount ?? this.totalTaxAmount,
-      totalCessAmount: totalCessAmount ?? this.totalCessAmount,
-      totalAmount: totalAmount ?? this.totalAmount,
-      dininACrate: dininACrate ?? this.dininACrate, // Use new field
-      dininNonACrate: dininNonACrate ?? this.dininNonACrate, // Use new field
+      // dininACrate: dininACrate ?? this.dininACrate, // Use new field
+      // dininNonACrate: dininNonACrate ?? this.dininNonACrate, // Use new field
     );
   }
+}
+
+class TableInfo {
+  final String tableName; // Name of the table
+  final String floor; // Floor where the table is located
+  final String acOrNonAc; // Whether the table is AC or Non-AC
+
+  // Constructor
+  TableInfo({
+    required this.tableName,
+    required this.floor,
+    required this.acOrNonAc,
+  });
+ factory TableInfo.fromJson(Map<String, dynamic> json) {
+    return TableInfo(
+      tableName: json['TableNumber'] as String,
+      floor: json['FloorMumber'] as String,
+      acOrNonAc: json['TableType'] as String,
+    );
+  }
+  // CopyWith method for TableInfo
+  TableInfo copyWith({
+    String? tableName,
+    String? floor,
+    String? acOrNonAc,
+  }) {
+    return TableInfo(
+      tableName: tableName ?? this.tableName,
+      floor: floor ?? this.floor,
+      acOrNonAc: acOrNonAc ?? this.acOrNonAc,
+    );
+  }
+}
+
+class KotDataModel {
+  final kotItem itemslist; 
+  final TableInfo table; 
+
+
+  KotDataModel({
+    required this.itemslist,
+    required this.table,
+
+    // required this.dininACrate, // Add to constructor
+    // required this.dininNonACrate, // Add to constructor
+  });
 }

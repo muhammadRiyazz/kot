@@ -8,8 +8,8 @@ class StockEvent with _$StockEvent {
   const factory StockEvent.add(
       {required int qty,
       bool? update,
-      String? amount,
-          KitchenItem? item,
+      double? amount,
+          kotItem? item,
 
       required String productid,
       required bool isIncrement}) = Add;
@@ -17,17 +17,17 @@ class StockEvent with _$StockEvent {
 
 
   const factory StockEvent.listFromOrder({
-    required List<KitchenItem> itemslist,
-    required List<KitchenItem> cancelItemslist,
+    required List<kotItem> itemslist,
+    required List<kotItem> cancelItemslist,
   }) = ListFromOrder;
 
   const factory StockEvent.clearSelection() = ClearSelection;
 
   const factory StockEvent.search({
-    required String searchQuary,
+    required String searchQuary,required  bool acOrNonAc
   }) = Search;
 
-  const factory StockEvent.itemInitalFetch(
+  const factory StockEvent.itemInitalFetch({required  bool acOrNonAc}
   ) = ItemInitalFetch;
 
   const factory StockEvent.typeChange({
@@ -35,12 +35,12 @@ class StockEvent with _$StockEvent {
   }) = TypeChange;
     const factory StockEvent.itemAction({
     required String from,
-   required KitchenItem item
+   required kotItem item
   }) = ItemAction;
 
   const factory StockEvent.categoryFetch() = CategoryFetch;
 
   const factory StockEvent.categorySelection({
-    required Category category,
+    required Category category,required  bool acOrNonAc
   }) = CategorySelection;
 }

@@ -7,6 +7,7 @@ import 'package:restaurant_kot/core/conn.dart';
 import 'package:restaurant_kot/domain/category/category.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/stock/stock_model.dart';
+import 'package:restaurant_kot/infrastructure/stock/price_calculation.dart';
 part 'stock_event.dart';
 part 'stock_state.dart';
 part 'stock_bloc.freezed.dart';
@@ -43,6 +44,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         log(e.toString());
       }
     });
+
     on<ItemInitalFetch>((event, emit) async {
       log('ItemInitalFetch-------StockBloc');
       emit(state.copyWith(isLoading: true));
@@ -73,7 +75,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
         // Execute query and get result
         String? itemQueryResult = await connection.getData(itemsQuery);
-
+        // log(itemQueryResult);
         // Parse JSON result if it exists
         List<Map<String, dynamic>> rows = [];
         try {
@@ -83,36 +85,51 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         }
 
         // Initialize lists for categorizing items
-        List<KitchenItem> serKitchenItems = [];
-        List<KitchenItem> goodsKitchenItems = [];
+        List<kotItem> serKitchenItems = [];
+        List<kotItem> goodsKitchenItems = [];
 
         // Process each row and categorize items based on `pdtcode`
-        for (var row in rows) {
-          KitchenItem item = KitchenItem(
-            stock: '0',
+        for (var element in rows) {
+          double basicRate = calculateBasicRate(
+            element: element,
+            isAc: event.acOrNonAc,
+          );
+          double taxableAmount = calculationtaxableAmount(
+            element: element,
+          );
+
+          String stockQuery = """
+  SELECT [PrinterName]
+  FROM [Restaurant].[dbo].[MainStock]
+  WHERE [codeorSKU] = '${element['pdtcode']}' 
+""";
+          String? queryResult = await connection.getData(stockQuery);
+          log(queryResult);
+
+          var decodedJson = jsonDecode(queryResult);
+          String printerName = decodedJson[0]['PrinterName'];
+          kotItem item = kotItem(kotno: 'null',
+            stock: 0,
             qty: 0,
-            serOrGoods: row['serOrGoods'] ?? '',
-            kitchenName: '',
-            itemName: row['pdtname'] ?? '',
-            itemCode: row['pdtcode'] ?? '',
+            serOrGoods: getCategory(element['pdtcode'] ?? ''),
+            kitchenName: printerName,
+            itemName: element['pdtname'] ?? '',
+            itemCode: element['pdtcode'] ?? '',
             quantity: 0,
-            basicRate: row['saleamnt']?.toString() ?? '0',
-            unitTaxableAmountBeforeDiscount: '0',
-            unitTaxableAmount: '0',
-            totalTaxableAmount: '0',
-            gstPer: '0',
-            cessPer: '0',
-            totalTaxAmount: '0',
-            totalCessAmount: '0',
-            totalAmount: '0',
-            dininACrate: '0',
-            dininNonACrate: '0',
+            basicRate: basicRate,
+            unitTaxableAmountBeforeDiscount: taxableAmount,
+            unitTaxableAmount: taxableAmount,
+            gstPer:
+                double.tryParse(element['venIGST']?.toString() ?? '0.0') ?? 0.0,
+            cessPer: double.tryParse(
+                    element['CessPercentage']?.toString() ?? '0.0') ??
+                0.0,
           );
 
           // Categorize based on `serOrGoods`
-          if (getCategory(row['pdtcode']) == 'SER') {
+          if (getCategory(element['pdtcode']) == 'SER') {
             serKitchenItems.add(item);
-          } else if (getCategory(row['pdtcode']) == 'GOODS') {
+          } else if (getCategory(element['pdtcode']) == 'GOODS') {
             goodsKitchenItems.add(item);
           }
         }
@@ -146,7 +163,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
       try {
         // Select items and category based on type (Goods/Service)
-        List<KitchenItem> items = [];
+        List<kotItem> items = [];
         List<Category> category = [];
 
         if (event.type == 'Goods') {
@@ -204,28 +221,30 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         List<Product> stocks =
             stockJsonResponse.map((data) => Product.fromJson(data)).toList();
 
-        final List<KitchenItem> stocksnew = [];
+        final List<kotItem> stocksnew = [];
 
         for (var element in stocks) {
-          stocksnew.add(KitchenItem(
-              dininACrate: element.dineInACRate,
-              dininNonACrate: element.dineInNonACRate,
-              stock: '0',
-              qty: 0,
-              serOrGoods: getCategory(element.codeOrSKU),
-              kitchenName: element.printerName,
-              itemName: element.productName,
-              itemCode: element.codeOrSKU,
-              quantity: 0,
-              basicRate: element.saleAmount,
-              unitTaxableAmountBeforeDiscount: '0',
-              unitTaxableAmount: '0',
-              totalTaxableAmount: element.saleAmountWithTax,
-              gstPer: '0',
-              cessPer: '0',
-              totalTaxAmount: '0',
-              totalCessAmount: '0',
-              totalAmount: element.saleAmountWithTax));
+          double basicRate = basicRateclc(
+            element: element,
+            isAc: event.acOrNonAc,
+          );
+
+          double taxableAmount =
+              taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
+          stocksnew.add(kotItem(kotno: 'null',
+            stock: 0,
+            qty: 0,
+            serOrGoods: getCategory(element.codeOrSKU),
+            kitchenName: element.printerName,
+            itemName: element.productName,
+            itemCode: element.codeOrSKU,
+            quantity: 0,
+            basicRate: basicRate,
+            unitTaxableAmountBeforeDiscount: taxableAmount,
+            unitTaxableAmount: taxableAmount,
+            gstPer: double.parse(element.vendorIGST.toString()),
+            cessPer: double.parse(element.cessRate.toString()),
+          ));
         }
 
         var toKOTMap = {
@@ -251,7 +270,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     on<Clearcategory>((event, emit) async {
       log('Clearcategory-------StockBloc');
       try {
-        List<KitchenItem> items = [];
+        List<kotItem> items = [];
         if (state.goodsOrSER == 'Goods') {
           items = state.goodsitems;
         } else {
@@ -289,34 +308,39 @@ class StockBloc extends Bloc<StockEvent, StockState> {
  WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}'
     AND LOWER([pdtname]) LIKE LOWER('%${event.searchQuary.trim()}%');
 """;
+
         String stockQueryResult = await connection.getData(stockQuery);
         List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
-
+        log(stockQueryResult);
         List<Product> stocks =
             stockJsonResponse.map((data) => Product.fromJson(data)).toList();
 
-        final List<KitchenItem> stocksnew = [];
+        final List<kotItem> stocksnew = [];
 
         for (var element in stocks) {
-          stocksnew.add(KitchenItem(
-              dininACrate: element.dineInACRate,
-              dininNonACrate: element.dineInNonACRate,
-              stock: '0',
-              qty: 0,
-              serOrGoods: getCategory(element.codeOrSKU),
-              kitchenName: element.printerName,
-              itemName: element.productName,
-              itemCode: element.codeOrSKU,
-              quantity: 0,
-              basicRate: element.saleAmount,
-              unitTaxableAmountBeforeDiscount: '0',
-              unitTaxableAmount: '0',
-              totalTaxableAmount: element.saleAmountWithTax,
-              gstPer: '0',
-              cessPer: '0',
-              totalTaxAmount: '0',
-              totalCessAmount: '0',
-              totalAmount: element.saleAmountWithTax));
+          log('dineInACRate =====${element.dineInACRate}');
+          log('dineInNonACRate =====${element.dineInNonACRate}');
+
+          double basicRate = basicRateclc(
+            element: element,
+            isAc: event.acOrNonAc,
+          );
+          double taxableAmount =
+              taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
+          stocksnew.add(kotItem(kotno: 'null',
+            stock: 0,
+            qty: 0,
+            serOrGoods: getCategory(element.codeOrSKU),
+            kitchenName: element.printerName,
+            itemName: element.productName,
+            itemCode: element.codeOrSKU,
+            quantity: 0,
+            basicRate: basicRate,
+            unitTaxableAmountBeforeDiscount: taxableAmount,
+            unitTaxableAmount: taxableAmount,
+            gstPer: double.parse(element.vendorIGST.toString()),
+            cessPer: double.parse(element.cessRate.toString()),
+          ));
         }
 
         var toKOTMap = {
@@ -353,22 +377,22 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
       try {
         // Create a mutable copy of toKOTitems to avoid mutating the original state
-        List<KitchenItem> tokotItems = List.from(state.toKOTitems);
+        List<kotItem> tokotItems = List.from(state.toKOTitems);
 
-        void updateTokotItems(KitchenItem product, int qtyChange) {
+        void updateTokotItems(kotItem product, int qtyChange) {
           log('updateTokotItems');
           final tokotIndex = tokotItems
               .indexWhere((item) => item.itemCode == product.itemCode);
 
           if (tokotIndex >= 0) {
             if (event.update != null) {
-              KitchenItem updatedProduct = tokotItems[tokotIndex]
-                  .copyWith(quantity: qtyChange, totalAmount: event.amount);
+              kotItem updatedProduct = tokotItems[tokotIndex]
+                  .copyWith(quantity: qtyChange, basicRate: event.amount);
               tokotItems[tokotIndex] = updatedProduct;
             } else if (event.update == null) {
               log('not from update section ');
               // Modify changedQty through copyWith to ensure immutability
-              KitchenItem updatedProduct = tokotItems[tokotIndex].copyWith(
+              kotItem updatedProduct = tokotItems[tokotIndex].copyWith(
                 quantity: tokotItems[tokotIndex].quantity + qtyChange,
               );
 
@@ -382,7 +406,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
             }
           } else if (qtyChange > 0) {
             // Add new product with the updated quantity
-            KitchenItem newProduct = product.copyWith(quantity: qtyChange);
+            kotItem newProduct = product.copyWith(quantity: qtyChange);
             tokotItems.add(newProduct);
             log('Added product ${newProduct.itemName} to tokotItems with qty: ${newProduct.quantity}');
           }
@@ -391,7 +415,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         // Handling for SER products
         // if (event.from == 'SER') {
         // Create a deep copy of the SER products list
-        List<KitchenItem> products =
+        List<kotItem> products =
             state.stocklist.map((product) => product.copyWith()).toList();
 
         if (products
@@ -403,18 +427,23 @@ class StockBloc extends Bloc<StockEvent, StockState> {
           if (event.update != null) {
             products[index] = products[index].copyWith(
               quantity: event.qty,
-              basicRate: event.amount.toString(),
+              basicRate: event.amount,
             );
+            log('products[index].qty   ---${products[index].quantity}');
+
             // log(event.amount.toString());
 
             // log(products[index].saleAmount);
             // log(products[index].changedQty.toString());
           } else {
+            log('event.update == null');
+            log(' products[index].quantity case a   ---${products[index].quantity}');
             if (event.isIncrement) {
               log('event.isIncrement');
               products[index] = products[index].copyWith(
                 quantity: products[index].quantity + event.qty,
               );
+              log(' products[index].quantity case b ---${products[index].quantity}');
             } else {
               log('event.isIncrement  not');
 
@@ -426,28 +455,40 @@ class StockBloc extends Bloc<StockEvent, StockState> {
             }
           }
 
-          log('Updated quantity in SER: ${products[index].quantity}');
-          updateTokotItems(
-              products[index], event.isIncrement ? event.qty : -event.qty);
+          if (event.item != null) {
+            log('case ---1');
 
-          // Emit the updated state with deep-copied lists
-          emit(state.copyWith(
-            stocklist: products,
-            toKOTitems: tokotItems,
-            isLoading: false,
-          ));
-        }
+            updateTokotItems(
+                event.item!, event.isIncrement ? event.qty : -event.qty);
+ emit(state.copyWith(
+              stocklist: products,
+              toKOTitems: tokotItems,
+              isLoading: false,
+            ));
+            // Emit the updated state with deep-copied lists
+          } else {
+            log('case ---2');
+            updateTokotItems(
+                products[index], event.isIncrement ? event.qty : -event.qty);
 
-        if (   event.item!=null) {
+            // Emit the updated state with deep-copied lists
+            emit(state.copyWith(
+              stocklist: products,
+              toKOTitems: tokotItems,
+              isLoading: false,
+            ));
+          }
+        } else {
           updateTokotItems(
               event.item!, event.isIncrement ? event.qty : -event.qty);
 
-          // Emit the updated state with deep-copied lists
           emit(state.copyWith(
             stocklist: products,
             toKOTitems: tokotItems,
             isLoading: false,
           ));
+
+          log('ppppp');
         }
         log('tokotItems-----${tokotItems.length}');
       } catch (e) {
@@ -487,40 +528,24 @@ class StockBloc extends Bloc<StockEvent, StockState> {
       }
     });
 
-on<ItemAction>((event, emit) async {
-  log('StockBloc  -- ItemAction');
+    on<ItemAction>((event, emit) async {
+      log('StockBloc  -- ItemAction');
 
-  List<KitchenItem> cancelKitchenItem = List.from(state.cancelKOTitems);
-  List<KitchenItem> kotKItem = List.from(state.toKOTitems);
+      List<kotItem> cancelKitchenItem = List.from(state.cancelKOTitems);
+      List<kotItem> kotKItem = List.from(state.toKOTitems);
 
-  if (event.from == 'cancellist') {
-    cancelKitchenItem.removeWhere((element) => event.item.itemCode == element.itemCode);
-  } else if (event.from == 'kotlist') {
-    kotKItem.removeWhere((element) => event.item.itemCode == element.itemCode);
-  }
+      if (event.from == 'cancellist') {
+        cancelKitchenItem
+            .removeWhere((element) => event.item.itemCode == element.itemCode);
+      } else if (event.from == 'kotlist') {
+        kotKItem
+            .removeWhere((element) => event.item.itemCode == element.itemCode);
+      }
 
-  emit(state.copyWith(
-    cancelKOTitems: cancelKitchenItem,
-    toKOTitems: kotKItem,
-  ));
-});
-
-
-  }
-}
-
-String getCategory(String code) {
-  final regex = RegExp(r'^[A-Z]+'); // Regular expression to capture the prefix
-  final match = regex.firstMatch(code);
-  String prefix = match?.group(0) ?? ''; // Extracted prefix
-
-  // Map the prefix to the corresponding category
-  switch (prefix) {
-    case 'PDT':
-      return 'GOODS';
-    case 'SER':
-      return 'SER';
-    default:
-      return 'Unknown Category';
+      emit(state.copyWith(
+        cancelKOTitems: cancelKitchenItem,
+        toKOTitems: kotKItem,
+      ));
+    });
   }
 }

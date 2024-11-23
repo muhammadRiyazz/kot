@@ -5,7 +5,8 @@ import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import '../../consts/colors.dart';
 
 class CategoryBottomSheet extends StatelessWidget {
-  const CategoryBottomSheet({super.key});
+  const CategoryBottomSheet({super.key ,required this.ac});
+  final bool ac;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<StockBloc, StockState>(
@@ -50,7 +51,7 @@ class CategoryBottomSheet extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         BlocProvider.of<StockBloc>(context)
-                            .add(StockEvent.categorySelection(
+                            .add(StockEvent.categorySelection( acOrNonAc: ac,
                           category:state.category[index] ,
                         ));
 

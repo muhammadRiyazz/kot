@@ -327,6 +327,7 @@ mixin _$TablesState {
   bool get isLoading => throw _privateConstructorUsedError;
   List<String> get floors => throw _privateConstructorUsedError;
   String? get selectedFloor => throw _privateConstructorUsedError;
+  List<TableInfo> get tablesinfolist => throw _privateConstructorUsedError;
   List<TableModel> get tables => throw _privateConstructorUsedError;
 
   /// Create a copy of TablesState
@@ -346,6 +347,7 @@ abstract class $TablesStateCopyWith<$Res> {
       {bool isLoading,
       List<String> floors,
       String? selectedFloor,
+      List<TableInfo> tablesinfolist,
       List<TableModel> tables});
 }
 
@@ -367,6 +369,7 @@ class _$TablesStateCopyWithImpl<$Res, $Val extends TablesState>
     Object? isLoading = null,
     Object? floors = null,
     Object? selectedFloor = freezed,
+    Object? tablesinfolist = null,
     Object? tables = null,
   }) {
     return _then(_value.copyWith(
@@ -382,6 +385,10 @@ class _$TablesStateCopyWithImpl<$Res, $Val extends TablesState>
           ? _value.selectedFloor
           : selectedFloor // ignore: cast_nullable_to_non_nullable
               as String?,
+      tablesinfolist: null == tablesinfolist
+          ? _value.tablesinfolist
+          : tablesinfolist // ignore: cast_nullable_to_non_nullable
+              as List<TableInfo>,
       tables: null == tables
           ? _value.tables
           : tables // ignore: cast_nullable_to_non_nullable
@@ -402,6 +409,7 @@ abstract class _$$TablesStateImplCopyWith<$Res>
       {bool isLoading,
       List<String> floors,
       String? selectedFloor,
+      List<TableInfo> tablesinfolist,
       List<TableModel> tables});
 }
 
@@ -421,6 +429,7 @@ class __$$TablesStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? floors = null,
     Object? selectedFloor = freezed,
+    Object? tablesinfolist = null,
     Object? tables = null,
   }) {
     return _then(_$TablesStateImpl(
@@ -436,6 +445,10 @@ class __$$TablesStateImplCopyWithImpl<$Res>
           ? _value.selectedFloor
           : selectedFloor // ignore: cast_nullable_to_non_nullable
               as String?,
+      tablesinfolist: null == tablesinfolist
+          ? _value._tablesinfolist
+          : tablesinfolist // ignore: cast_nullable_to_non_nullable
+              as List<TableInfo>,
       tables: null == tables
           ? _value._tables
           : tables // ignore: cast_nullable_to_non_nullable
@@ -451,8 +464,10 @@ class _$TablesStateImpl implements _TablesState {
       {required this.isLoading,
       required final List<String> floors,
       this.selectedFloor,
+      required final List<TableInfo> tablesinfolist,
       required final List<TableModel> tables})
       : _floors = floors,
+        _tablesinfolist = tablesinfolist,
         _tables = tables;
 
   @override
@@ -467,6 +482,14 @@ class _$TablesStateImpl implements _TablesState {
 
   @override
   final String? selectedFloor;
+  final List<TableInfo> _tablesinfolist;
+  @override
+  List<TableInfo> get tablesinfolist {
+    if (_tablesinfolist is EqualUnmodifiableListView) return _tablesinfolist;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tablesinfolist);
+  }
+
   final List<TableModel> _tables;
   @override
   List<TableModel> get tables {
@@ -477,7 +500,7 @@ class _$TablesStateImpl implements _TablesState {
 
   @override
   String toString() {
-    return 'TablesState(isLoading: $isLoading, floors: $floors, selectedFloor: $selectedFloor, tables: $tables)';
+    return 'TablesState(isLoading: $isLoading, floors: $floors, selectedFloor: $selectedFloor, tablesinfolist: $tablesinfolist, tables: $tables)';
   }
 
   @override
@@ -490,6 +513,8 @@ class _$TablesStateImpl implements _TablesState {
             const DeepCollectionEquality().equals(other._floors, _floors) &&
             (identical(other.selectedFloor, selectedFloor) ||
                 other.selectedFloor == selectedFloor) &&
+            const DeepCollectionEquality()
+                .equals(other._tablesinfolist, _tablesinfolist) &&
             const DeepCollectionEquality().equals(other._tables, _tables));
   }
 
@@ -499,6 +524,7 @@ class _$TablesStateImpl implements _TablesState {
       isLoading,
       const DeepCollectionEquality().hash(_floors),
       selectedFloor,
+      const DeepCollectionEquality().hash(_tablesinfolist),
       const DeepCollectionEquality().hash(_tables));
 
   /// Create a copy of TablesState
@@ -515,6 +541,7 @@ abstract class _TablesState implements TablesState {
       {required final bool isLoading,
       required final List<String> floors,
       final String? selectedFloor,
+      required final List<TableInfo> tablesinfolist,
       required final List<TableModel> tables}) = _$TablesStateImpl;
 
   @override
@@ -523,6 +550,8 @@ abstract class _TablesState implements TablesState {
   List<String> get floors;
   @override
   String? get selectedFloor;
+  @override
+  List<TableInfo> get tablesinfolist;
   @override
   List<TableModel> get tables;
 

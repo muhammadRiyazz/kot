@@ -4,6 +4,7 @@ import 'package:restaurant_kot/application/order%20details/order_details_bloc.da
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/tables/table_model.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/screen_order_detail.dart';
@@ -74,7 +75,7 @@ class ScreenOrdersList extends StatelessWidget {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
                                         return ProductChoosingPage(
-                                          table: table.tableName,
+                                          tableinfo:TableInfo(acOrNonAc: table.tableType,floor: table.floorName,tableName: table.tableName),
                                         );
                                       },
                                     ));
@@ -194,7 +195,8 @@ class ScreenOrdersList extends StatelessWidget {
                                                       Navigator.push(context,
                                                           MaterialPageRoute(
                                                         builder: (context) {
-                                                          return OrderDetailsPage(
+                                                          return OrderDetailsPage(table: TableInfo(acOrNonAc: table.tableType,floor: table.floorName,tableName: table.tableName) ,
+
                                                             order: state
                                                                     .tableOrders[
                                                                 index],

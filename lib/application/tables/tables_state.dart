@@ -6,10 +6,11 @@ factory TablesState({
     required bool isLoading,
        required List<String> floors,
        String? selectedFloor,
+    required   List<TableInfo> tablesinfolist,
  required List<TableModel> tables, 
   }) = _TablesState;
   factory TablesState.initial() {
-    return TablesState(
+    return TablesState(tablesinfolist: [],
       tables: [],
       isLoading: false,
      floors: [],
