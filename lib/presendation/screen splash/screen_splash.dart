@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/customerpart/customerpart_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
+import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
@@ -34,6 +35,8 @@ class _SplashScreenState extends State<SplashScreen> {
     // Navigate to the appropriate screen after 3 seconds
     Timer(const Duration(seconds: 5), () async{
       if (isLoggedIn) {
+      BlocProvider.of<PrinterSetupBloc>(context).add(const PrinterSetupEvent.fetchKitchens());
+      BlocProvider.of<PrinterSetupBloc>(context).add( const PrinterSetupEvent.fetchPrinter());
                 await StockMng().fetchstockmngGoods();
                 await StockMng().fetchstockmngService();
 

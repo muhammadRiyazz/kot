@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
+import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
 import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
+import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/settings/stock_mng.dart';
 
 import '../../core/printer/network_printer.dart';
@@ -89,12 +91,15 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Option 4'),
+            leading: const Icon(Icons.print_rounded),
+            title: const Text('Printer Mangament'),
             onTap: () {
-              // Handle navigation to Settings
-              Navigator.pop(context);
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
+
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return const KitchensPage();
+                },
+              ));
             },
           ),
 
@@ -143,7 +148,6 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 }
-  // final List<int> test = await NetworkPrinter().testTicket();
-              // NetworkPrinter().printTicket(test);
+ 
               // Handle navigation to Settings
               // Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));

@@ -6,6 +6,7 @@ import 'package:restaurant_kot/application/items%20To%20Kot/items_to_kot_bloc.da
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
+import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/application/server%20conn/server_conn_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
@@ -36,7 +37,11 @@ blocProviders() {
     BlocProvider(
       create: (context) => InitalDataBloc(),
     ),
+  
     BlocProvider(
+      create: (context) => PrinterSetupBloc(),
+    ),
+     BlocProvider(
       create: (context) => CustomerpartBloc(),
     ),
   ];
