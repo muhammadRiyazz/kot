@@ -161,7 +161,8 @@ class PrinterSetupPage extends StatelessWidget {
                                       onPressed: () async {
                                         final List<int> test =
                                             await NetworkPrinter().testTicket();
-                                        NetworkPrinter().printTicket(test);
+                                        NetworkPrinter()
+                                            .printTicket(test, context);
                                       },
                                       child: const Text(
                                         'Test Print',
