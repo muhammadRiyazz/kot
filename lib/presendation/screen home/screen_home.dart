@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
@@ -11,19 +12,21 @@ import 'package:restaurant_kot/presendation/screen%20home/tables_part.dart';
 import 'orders_part.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
+  const HomeScreen({super.key, required this.from});
+  final int from;
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (from == 1) {
+        BlocProvider.of<FinishadOrderBloc>(context)
+            .add(FinishadOrderEvent.fetchBills());
 
+        BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+        BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
+      }
 
-
-      // BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
-      //       BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
-            //  BlocProvider.of<StockBloc>(context)
-            //   .add(const StockEvent.fetchStocks());
-
+      //  BlocProvider.of<StockBloc>(context)
+      //   .add(const StockEvent.fetchStocks());
     });
     return DefaultTabController(
       length: 3, // Number of tabs
@@ -33,7 +36,12 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: mainclrbg,
         appBar: AppBar(
           backgroundColor: appbarbg,
-          // title: const Center(child: Text('ABC Hotel')),
+          title: const Center(
+              child: Text(
+            'Home',
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 15, color: mainclr),
+          )),
           actions: const [
             SizedBox(
                 // color: Colors.blue,
@@ -79,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                         fontFamily:
                             'Montserrat', // Apply Montserrat font globally
                       ),
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontFamily:
                             'Montserrat', // Apply Montserrat font globally
@@ -96,7 +104,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
 

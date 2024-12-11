@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/BillSubmitPrint/bill_submit_print_bloc.dart';
 import 'package:restaurant_kot/application/KotSubmitPrint/kot_submit_print_bloc.dart';
 import 'package:restaurant_kot/application/customerpart/customerpart_bloc.dart';
+import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/items%20To%20Kot/items_to_kot_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
@@ -37,12 +39,18 @@ blocProviders() {
     BlocProvider(
       create: (context) => InitalDataBloc(),
     ),
-  
     BlocProvider(
       create: (context) => PrinterSetupBloc(),
     ),
-     BlocProvider(
+    BlocProvider(
       create: (context) => CustomerpartBloc(),
     ),
+    BlocProvider(
+      create: (context) => BillSubmitPrintBloc(),
+    ),
+    BlocProvider(
+      create: (context) => FinishadOrderBloc(),
+    ),
+   
   ];
 }

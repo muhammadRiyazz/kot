@@ -33,7 +33,11 @@ class PrinterSetupBloc extends Bloc<PrinterSetupEvent, PrinterSetupState> {
         List<String> kitchenNames = kitchenNameresultjson
             .map((item) => item['KitchenName'] as String)
             .toList();
-        emit(state.copyWith(isLoading: false, kitchenlist: kitchenNames));
+
+        emit(state.copyWith(
+          isLoading: false,
+          kitchenlist: kitchenNames,
+        ));
       } catch (e) {
         log(e.toString());
         emit(state.copyWith(
@@ -52,7 +56,7 @@ class PrinterSetupBloc extends Bloc<PrinterSetupEvent, PrinterSetupState> {
         String getPrintersQuery = '''
     SELECT [PrinterName], [KitchenName], [ComputerName]
     FROM [Restaurant].[dbo].[KitchenPrinterConfig]
-  
+    WHERE ComputerName ='Mob-II01' 
 ''';
 
         String? result = await connection.getData(getPrintersQuery);
@@ -65,17 +69,38 @@ class PrinterSetupBloc extends Bloc<PrinterSetupEvent, PrinterSetupState> {
             .map((jsonItem) => PrinterConfig.fromJson(jsonItem))
             .toList();
         PrinterConfig? printerinfo;
+        PrinterConfig? billPrinterInfo;
 
-        if (event.kitchen != null) {
-            for (var element in state.priterlist!) {
+        if (result == '[]') {
+          emit(state.copyWith(
+            isLoading: false,
+          ));
+        } else {
+          log('result==not emty');
+          if (event.kitchen != null) {
+            log('----- opo');
+            for (var element in printers) {
               if (element.kitchenName == event.kitchen) {
                 printerinfo = element;
               }
-            
+            }
           }
+          log('----- 0000');
+
+          for (var element in printers) {
+            if (element.kitchenName == 'Bill' &&
+                element.computerName == 'Mob-II01') {
+              billPrinterInfo = element;
+            }
+          }
+          log('----- 9900');
+
+          emit(state.copyWith(
+              isLoading: false,
+              priterlist: printers,
+              priterinfo: printerinfo,
+              billPrinterInfo: billPrinterInfo));
         }
-        emit(state.copyWith(
-            isLoading: false, priterlist: printers, priterinfo: printerinfo));
       } catch (e) {
         log(e.toString());
         emit(state.copyWith(
@@ -89,7 +114,12 @@ class PrinterSetupBloc extends Bloc<PrinterSetupEvent, PrinterSetupState> {
         PrinterConfig? printerinfo;
         if (state.priterlist != null) {
           for (var element in state.priterlist!) {
-            if (element.kitchenName == event.kitchen) {
+            log('------${event.kitchen}');
+
+            log(element.kitchenName);
+            if (element.kitchenName == event.kitchen &&
+                element.computerName == 'Mob-II01') {
+              log('------${event.kitchen}');
               printerinfo = element;
             }
           }
@@ -109,9 +139,9 @@ class PrinterSetupBloc extends Bloc<PrinterSetupEvent, PrinterSetupState> {
         MssqlConnection connection = await connectionManager.getConnection();
 
         String addQuery = '''
-    MERGE INTO [Restaurant].[dbo].[KitchenPrinterConfig] AS target
-    USING (SELECT 'Mob-II01' AS ComputerName, '${event.kitchen}' AS KitchenName, '${event.ip}' AS PrinterName) AS source
-    ON target.ComputerName = source.ComputerName AND target.KitchenName = source.KitchenName
+       MERGE INTO [Restaurant].[dbo].[KitchenPrinterConfig] AS target
+       USING (SELECT 'Mob-II01' AS ComputerName, '${event.kitchen}' AS KitchenName, '${event.ip}' AS PrinterName) AS source
+      ON target.ComputerName = source.ComputerName AND target.KitchenName = source.KitchenName
     WHEN MATCHED THEN
         UPDATE SET target.PrinterName = source.PrinterName
     WHEN NOT MATCHED THEN

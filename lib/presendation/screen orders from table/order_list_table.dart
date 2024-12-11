@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
@@ -75,7 +76,10 @@ class ScreenOrdersList extends StatelessWidget {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
                                         return ProductChoosingPage(
-                                          tableinfo:TableInfo(acOrNonAc: table.tableType,floor: table.floorName,tableName: table.tableName),
+                                          tableinfo: TableInfo(
+                                              acOrNonAc: table.tableType,
+                                              floor: table.floorName,
+                                              tableName: table.tableName),
                                         );
                                       },
                                     ));
@@ -157,7 +161,18 @@ class ScreenOrdersList extends StatelessWidget {
                                                   width: 5,
                                                   height: 50,
                                                   decoration: BoxDecoration(
-                                                      color: mainclr,
+                                                      color: state
+                                                                      .tableOrders[
+                                                                          index]
+                                                                      .billNumber !=
+                                                                  '' &&
+                                                              state
+                                                                      .tableOrders[
+                                                                          index]
+                                                                      .creditOrPaid ==
+                                                                  'Credit'
+                                                          ? Colors.red
+                                                          : mainclr,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               10)),
@@ -176,12 +191,15 @@ class ScreenOrdersList extends StatelessWidget {
                                                         const Color.fromARGB(
                                                             0, 255, 255, 255),
                                                     onTap: () {
-                                                          BlocProvider.of<
+                                                    
+
+                                                      
+
+                                                      BlocProvider.of<
                                                                   StockBloc>(
                                                               context)
                                                           .add(
                                                               const ClearSelection());
-                                                      
 
                                                       BlocProvider.of<
                                                                   OrderDetailsBloc>(
@@ -195,15 +213,21 @@ class ScreenOrdersList extends StatelessWidget {
                                                       Navigator.push(context,
                                                           MaterialPageRoute(
                                                         builder: (context) {
-                                                          return OrderDetailsPage(table: TableInfo(acOrNonAc: table.tableType,floor: table.floorName,tableName: table.tableName) ,
-
+                                                          return OrderDetailsPage(
+                                                            table: TableInfo(
+                                                                acOrNonAc: table
+                                                                    .tableType,
+                                                                floor: table
+                                                                    .floorName,
+                                                                tableName: table
+                                                                    .tableName),
                                                             order: state
                                                                     .tableOrders[
                                                                 index],
                                                           );
                                                         },
                                                       ));
-                                                  BlocProvider.of<
+                                                      BlocProvider.of<
                                                                   StockBloc>(
                                                               context)
                                                           .add(const StockEvent
@@ -212,7 +236,15 @@ class ScreenOrdersList extends StatelessWidget {
                                                     },
                                                     leading: Container(
                                                         decoration: BoxDecoration(
-                                                            color: mainclr,
+                                                            color: state.tableOrders[index].billNumber !=
+                                                                        '' &&
+                                                                    state
+                                                                            .tableOrders[
+                                                                                index]
+                                                                            .creditOrPaid ==
+                                                                        'Credit'
+                                                                ? Colors.red
+                                                                : mainclr,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -232,33 +264,81 @@ class ScreenOrdersList extends StatelessWidget {
                                                           ),
                                                         )),
                                                     title: Text(
-                                                      '${state.tableOrders[index].orderNumber}',
+                                                      state.tableOrders[index]
+                                                          .orderNumber,
                                                       style: const TextStyle(
                                                           fontSize: 17),
                                                     ),
                                                     subtitle: Text(
                                                         'Amount: ₹${state.tableOrders[index].totalAmount}'),
-                                                    trailing: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
+                                                    trailing: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
                                                       children: [
-                                                        const Icon(
-                                                          Icons.timer_sharp,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              204,
-                                                              204,
-                                                              204),
-                                                          size: 18,
+                                                        SizedBox(),
+                                                        Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.timer_sharp,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      204,
+                                                                      204,
+                                                                      204),
+                                                              size: 18,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 6,
+                                                            ),
+                                                            Text(time(DateTime
+                                                                .parse(state
+                                                                    .tableOrders[
+                                                                        index]
+                                                                    .entryDate))),
+                                                          ],
                                                         ),
-                                                        const SizedBox(
-                                                          width: 6,
-                                                        ),
-                                                        Text(time(
-                                                            DateTime.parse(state
-                                                                .tableOrders[
-                                                                    index]
-                                                                .entryDate))),
+                                                        state.tableOrders[index]
+                                                                        .billNumber !=
+                                                                    '' &&
+                                                                state
+                                                                        .tableOrders[
+                                                                            index]
+                                                                        .creditOrPaid ==
+                                                                    'Credit'
+                                                            ? Container(
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                8),
+                                                                    color: Colors
+                                                                        .red),
+                                                                child:
+                                                                    const Padding(
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              10,
+                                                                          vertical:
+                                                                              3),
+                                                                  child: Text(
+                                                                    'UnPaid',
+                                                                    style: TextStyle(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            255,
+                                                                            255,
+                                                                            255)),
+                                                                  ),
+                                                                ))
+                                                            : const SizedBox(),
                                                       ],
                                                     ),
                                                   ),

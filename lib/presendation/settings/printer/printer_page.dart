@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/core/printer/network_printer.dart';
+import 'package:restaurant_kot/presendation/printer%20ui/kot_print.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
 class PrinterSetupPage extends StatelessWidget {
@@ -37,6 +38,10 @@ class PrinterSetupPage extends StatelessWidget {
         child: BlocConsumer<PrinterSetupBloc, PrinterSetupState>(
           listener: (context, state) {
             if (state.updated == 1) {
+
+              BlocProvider.of<PrinterSetupBloc>(context)
+                  .add(PrinterSetupEvent.fetchkitchenPrinter(kitchen: kitchen));
+
               BlocProvider.of<PrinterSetupBloc>(context)
                   .add(PrinterSetupEvent.fetchPrinter(kitchen: kitchen));
             }
@@ -112,33 +117,42 @@ class PrinterSetupPage extends StatelessWidget {
                                     ),
                                   ],
                                 )
-                              : Column(
+                              : const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
+                                    SizedBox(
+                                      height: 30,
+                                    ),
                                     Text(
-                                      'No Printers Found in $kitchen!',
-                                      style: const TextStyle(
+                                      'No Printer Found',
+                                      style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 5,
+                                    SizedBox(
+                                      height: 8,
                                     ),
-                                    const Text(
-                                      'It seems there’s no printer here. Please add one to get started!',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 12),
+                                      child: Text(
+                                        textAlign: TextAlign.center,
+                                        'It seems there’s no printer here. Please add one to get started!',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                           Image.asset('assets/img/printer/printerb.jpg'),
                           const SizedBox(
-                            height: 15,
+                            height: 5,
                           ),
                           state.priterinfo == null
                               ? const SizedBox()
@@ -161,8 +175,11 @@ class PrinterSetupPage extends StatelessWidget {
                                       onPressed: () async {
                                         final List<int> test =
                                             await NetworkPrinter().testTicket();
-                                        NetworkPrinter()
-                                            .printTicket(test, context);
+
+                                        NetworkPrinter().testprintTicket(
+                                            test,
+                                            state.priterinfo!.printerName,
+                                            context);
                                       },
                                       child: const Text(
                                         'Test Print',

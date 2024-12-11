@@ -31,7 +31,7 @@ class _MngStockPageState extends State<MngStockPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -42,7 +42,7 @@ class _MngStockPageState extends State<MngStockPage> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(

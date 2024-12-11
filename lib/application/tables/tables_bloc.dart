@@ -128,18 +128,18 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
     on<TableData>((event, emit) async {
       String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
       log('TableData');
-      emit(state.copyWith(isLoading: true, selectedFloor: null));
+      emit(
+          state.copyWith(isLoading: true, selectedFloor: null, changed: false));
 
       try {
         // Fetching table configuration data
         String tableQuery = """
           SELECT TableNumber, TableType, FloorMumber FROM dbo.TableConfiguration
         """;
-                List<dynamic> tables = await _fetchData(tableQuery);
+        List<dynamic> tables = await _fetchData(tableQuery);
 
-         List<TableInfo> tableInfolist = (tables)
-            .map((data) => TableInfo.fromJson(data))
-            .toList();
+        List<TableInfo> tableInfolist =
+            (tables).map((data) => TableInfo.fromJson(data)).toList();
 
         // Extract unique floor numbers from tables
         List<String> floors = tables
@@ -148,11 +148,11 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
             .toList();
 
         // Fetching order data for a specific date
-      String ordersQuery = """
-  SELECT Id, OrderNumber, EntryDate, CustomerId, CustomerName, TableName, FloorNumber, Discount, TotalAmount, StartTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
-  FROM dbo.OrderMainDetails
-  WHERE CAST(EntryDate AS DATE) = '$currentDate' AND ActiveInnactive = 'Active'
-""";
+        String ordersQuery = """
+        SELECT Id, OrderNumber, EntryDate, CustomerId, CustomerName, TableName, FloorNumber, Discount, TotalAmount, StartTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
+         FROM dbo.OrderMainDetails
+          WHERE CAST(EntryDate AS DATE) = '$currentDate' AND ActiveInnactive = 'Active' AND CreditOrPaid ='Credit'
+          """;
 
         List<dynamic> orders = await _fetchData(ordersQuery);
 
@@ -160,10 +160,10 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         _tableModels = tabeledata(jsonEncode(tables), jsonEncode(orders));
 
         emit(state.copyWith(
-          isLoading: false,
-          floors: floors,
-          tables: _tableModels,tablesinfolist: tableInfolist
-        ));
+            isLoading: false,
+            floors: floors,
+            tables: _tableModels,
+            tablesinfolist: tableInfolist));
       } catch (e) {
         log("Error fetching table data: $e");
         emit(state.copyWith(isLoading: false));
@@ -172,7 +172,8 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
 
     // Handle floor selection and table filtering
     on<ChooseFloor>((event, emit) async {
-      emit(state.copyWith(isLoading: true, selectedFloor: event.floor));
+      emit(state.copyWith(
+          isLoading: true, selectedFloor: event.floor, changed: false));
 
       try {
         // Filter and sort tables for the selected floor
@@ -195,6 +196,47 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         log("Error selecting floor: $e");
         emit(state.copyWith(isLoading: false));
       }
+    });
+
+    on<Change>((event, emit) async {
+  try {
+    emit(state.copyWith(isLoading: true, changed: false));
+
+    MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+    MssqlConnection connection = await connectionManager.getConnection();
+
+    String updateQuery = '''
+      UPDATE [Restaurant].[dbo].[OrderMainDetails]
+      SET TableName = '${event.tablename}'
+      WHERE OrderNumber = '${event.orderNo}';
+    ''';
+
+    await connection.writeData(updateQuery);
+
+    String itemUpdateQuery = '''
+      UPDATE [Restaurant].[dbo].[OrderItemDetailsDetails]
+      SET TableName = '${event.tablename}'
+      WHERE OrderNumber = '${event.orderNo}';
+    ''';
+
+    log(itemUpdateQuery);
+    await connection.writeData(itemUpdateQuery);
+
+    emit(state.copyWith(isLoading: false, changed: true));
+  } catch (e) {
+    emit(state.copyWith(isLoading: false, changed: false));
+    log(e.toString());
+  }
+});
+
+    on<Select>((event, emit) async {
+
+
+
+
+        emit(state.copyWith(selectedtable: event.tablename));
+        // emit(state.copyWith(isLoading: false, changed: false));
+
     });
   }
 }

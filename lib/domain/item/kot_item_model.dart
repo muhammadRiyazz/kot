@@ -1,13 +1,12 @@
 class kotItem {
   final String serOrGoods;
-  String kitchenName; // Name of the kitchen
-  final String itemName; // Name of the item
-  final String itemCode; // Code for the item
-  int quantity; // Quantity of the item
-  final int qty; // Quantity of the item
-  final int stock; // Quantity of the item
-   final String kotno; // Name of the kitchen
-
+  String kitchenName;
+  final String itemName;
+  final String itemCode;
+  int quantity; // Quantity for the item
+  int qty; // Quantity for the item
+  final int stock; // Stock of the item
+  final String kotno; // Kot number for the item
   final double basicRate; // Basic rate of the item
   final double
       unitTaxableAmountBeforeDiscount; // Taxable amount before discount
@@ -15,13 +14,13 @@ class kotItem {
   final double gstPer; // GST percentage
   final double cessPer; // Cess percentage
 
-  // final double dininACrate; // Rate for Dining with AC
-  // final double dininNonACrate; // Rate for Dining without AC
+   final double cessAmt;
+  final double gstAmt;
 
-  // Constructor
   kotItem({
-        required this.kotno,
-
+   required this.gstAmt,
+   required this.cessAmt,
+    required this.kotno,
     required this.stock,
     required this.qty,
     required this.serOrGoods,
@@ -34,15 +33,11 @@ class kotItem {
     required this.unitTaxableAmount,
     required this.gstPer,
     required this.cessPer,
-
-    // required this.dininACrate, // Add to constructor
-    // required this.dininNonACrate, // Add to constructor
   });
 
-  // CopyWith method
+  // CopyWith method to create a modified copy of kotItem
   kotItem copyWith({
-        String? kotno,
-
+    String? kotno,
     String? serOrGoods,
     String? kitchenName,
     String? itemName,
@@ -54,13 +49,14 @@ class kotItem {
     double? unitTaxableAmountBeforeDiscount,
     double? unitTaxableAmount,
     double? gstPer,
+    double? gstAmt,
+    double? cessAmt,
     double? cessPer,
-
-    // double? dininACrate, // Add to copyWith method
-    // double? dininNonACrate, // Add to copyWith method
   }) {
     return kotItem(
-      kotno: kotno ??this.kotno,
+      cessAmt: cessAmt ?? this.cessAmt,
+      gstAmt: gstAmt ?? this.gstAmt,
+      kotno: kotno ?? this.kotno,
       stock: stock ?? this.stock,
       qty: qty ?? this.qty,
       serOrGoods: serOrGoods ?? this.serOrGoods,
@@ -74,31 +70,39 @@ class kotItem {
       unitTaxableAmount: unitTaxableAmount ?? this.unitTaxableAmount,
       gstPer: gstPer ?? this.gstPer,
       cessPer: cessPer ?? this.cessPer,
-      // dininACrate: dininACrate ?? this.dininACrate, // Use new field
-      // dininNonACrate: dininNonACrate ?? this.dininNonACrate, // Use new field
     );
   }
 }
 
-class TableInfo {
-  final String tableName; // Name of the table
-  final String floor; // Floor where the table is located
-  final String acOrNonAc; // Whether the table is AC or Non-AC
+class KotDataModel {
+  final kotItem itemslist;
+  final TableInfo table;
 
-  // Constructor
+  KotDataModel({
+    required this.itemslist,
+    required this.table,
+  });
+}
+
+class TableInfo {
+  final String tableName;
+  final String floor;
+  final String acOrNonAc;
+
   TableInfo({
     required this.tableName,
     required this.floor,
     required this.acOrNonAc,
   });
- factory TableInfo.fromJson(Map<String, dynamic> json) {
+
+  factory TableInfo.fromJson(Map<String, dynamic> json) {
     return TableInfo(
       tableName: json['TableNumber'] as String,
       floor: json['FloorMumber'] as String,
       acOrNonAc: json['TableType'] as String,
     );
   }
-  // CopyWith method for TableInfo
+
   TableInfo copyWith({
     String? tableName,
     String? floor,
@@ -110,18 +114,4 @@ class TableInfo {
       acOrNonAc: acOrNonAc ?? this.acOrNonAc,
     );
   }
-}
-
-class KotDataModel {
-  final kotItem itemslist; 
-  final TableInfo table; 
-
-
-  KotDataModel({
-    required this.itemslist,
-    required this.table,
-
-    // required this.dininACrate, // Add to constructor
-    // required this.dininNonACrate, // Add to constructor
-  });
 }

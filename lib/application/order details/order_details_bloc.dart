@@ -45,7 +45,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
             .toList();
         List<kotItem> neworderItems = [];
         for (var element in items) {
-          neworderItems.add(kotItem(
+          neworderItems.add(kotItem(cessAmt: element.totalCessAmount,gstAmt: element.totalTaxAmount,
             kotno: element.kotNumber,
             stock: 0,
             qty: element.quantity.toInt(),

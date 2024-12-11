@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
+import 'package:restaurant_kot/core/printer/network_printer.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
+import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/get_time.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
-
+import 'package:restaurant_kot/presendation/printer%20ui/kot_print.dart';
 part 'kot_submit_print_event.dart';
 part 'kot_submit_print_state.dart';
 part 'kot_submit_print_bloc.freezed.dart';
@@ -17,11 +20,16 @@ class KotSubmitPrintBloc
     extends Bloc<KotSubmitPrintEvent, KotSubmitPrintState> {
   KotSubmitPrintBloc() : super(KotSubmitPrintState.initial()) {
     on<Parcel>((event, emit) {
-      emit(state.copyWith(parcel: event.parcel, stockout: false));
+      emit(state.copyWith(
+          parcel: event.parcel,
+          stockout: false,
+          printerstatus: 0,
+          submitstatus: 0));
     });
 
     on<SubmitAndPrint>((event, emit) async {
-      emit(state.copyWith(isLoading: true, stockout: false));
+      emit(state.copyWith(
+          isLoading: true, stockout: false, printerstatus: 0, submitstatus: 0));
 
       try {
         List<kotItem> kotitems = event.kotitems;
@@ -29,11 +37,11 @@ class KotSubmitPrintBloc
         // Initialize and establish the MSSQL connection
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
+        List<kotItem> outofStock = [];
 
         // Out of stock section ----- (if enabled)
         if (stockmngGoods! || stockmngService!) {
           log('stockmngGoods! || stockmngService!');
-          List<kotItem> outofStock = [];
 
           for (var product in kotitems) {
             log(product.serOrGoods);
@@ -66,75 +74,25 @@ class KotSubmitPrintBloc
               log('----');
             }
           }
+        }
 
-          if (outofStock.isNotEmpty) {
-            emit(state.copyWith(
-              isLoading: false,
-              stockout: true,
-              outofStock: outofStock,
-            ));
-          }
+        if (outofStock.isNotEmpty) {
+          emit(state.copyWith(
+            isLoading: false,
+            stockout: true,
+            outofStock: outofStock,
+          ));
         } else {
           // If stock management is not enabled
 
           var formattedDate = getDateTime();
           log("formattedDate ---- ---- ---- $formattedDate");
 
-          // // // Next KOT ID fetching
-
-          String kotId = '';
-          if (kotitems.isNotEmpty) {
-            String kotIdPrefix = "KOT";
-            String kotIdQuery = '''
-                SELECT ISNULL(
-                  '$kotIdPrefix' + CAST((1 + MAX(CONVERT(INT, RIGHT(KOTNo, LEN(KOTNo) - 3)))) AS VARCHAR),
-                  '$kotIdPrefix' + '100'
-                ) AS KOT
-                FROM KOTNo
-              ''';
-
-            var kotIdResult = await connection.getData(kotIdQuery);
-            log('KOT ID Result: $kotIdResult');
-
-            if (kotIdResult == '[]') {
-              throw Exception("Failed to fetch KOT ID");
-            }
-
-            List<dynamic> jsonListkot = json.decode(kotIdResult);
-            kotId = jsonListkot[0]['KOT'];
-
-            // // Insert the new KOTId into KOTNo
-            String insertKotQuery = '''
-          INSERT INTO KOTNo (KOTNo, KOTDate)
-          VALUES ('$kotId', '$formattedDate')
-          ''';
-            await connection.writeData(insertKotQuery);
-          }
-
-          String orderId = '';
-
-          if (event.currentorderid == null) {
-            String orderIdPrefix = "ORD";
-            String orderIdQuery = '''
-                SELECT ISNULL(
-                  '$orderIdPrefix' + CAST((1 + MAX(CONVERT(INT, RIGHT(OrderNumber, LEN(OrderNumber) - 3)))) AS VARCHAR),
-                  '$orderIdPrefix' + '100'
-                ) AS ORD
-                FROM OrderMainDetails
-              ''';
-
-            var orderIdResult = await connection.getData(orderIdQuery);
-            log('Order ID Result: $orderIdResult');
-
-            if (orderIdResult == '[]') {
-              throw Exception("Failed to fetch Order ID");
-            }
-
-            List<dynamic> jsonListOrderId = json.decode(orderIdResult);
-            orderId = jsonListOrderId[0]['ORD'];
-          } else {
-            orderId = event.currentorderid!;
-          }
+          //         // Fetch KOT ID
+          String kotId = await _fetchKotId(connection);
+          // Fetch or Create Order ID
+          String orderId =
+              event.currentorderid ?? await _fetchOrderId(connection);
 
           List<kotItem> kotitemslist = [];
           if (event.currentorderid != null && event.currentitems != null) {
@@ -202,9 +160,9 @@ class KotSubmitPrintBloc
     EndTime = '$formattedDate',
     ActiveInnactive = 'Active',
     DineInOrOther = 'Dining',
-    CreditOrPaid = 'CreditOrPaid',
-    BillNumber = '-',
-    UserID = 'UserID'
+    CreditOrPaid = 'Credit',
+    BillNumber = '',
+    UserID = '${event.userId}'
   WHERE
     OrderNumber = '$orderId';
 ''';
@@ -224,7 +182,7 @@ class KotSubmitPrintBloc
           '$orderId', '$formattedDate', '${event.selectedcustomer.cusid}', '${event.selectedcustomer.bussinessname}', '${event.table.tableName}',
           '${event.table.floor}', $totalAmountBeforeDisc, $discount, $totalTaxableAmount,
           $totalTaxAmount, $totalCessAmount, $totalAmount, '$formattedDate', '$formattedDate',
-           'Active', 'Dining', 'CreditOrPaid', '-', 'UserID'
+           'Active', 'Dining', 'Credit', '', '${event.userId}'
            )
            ''';
 
@@ -257,7 +215,7 @@ class KotSubmitPrintBloc
            '${event.note ?? ""}', '${element.itemCode}', '${element.itemName}', ${element.quantity}, ${element.basicRate},
             ${element.unitTaxableAmountBeforeDiscount}, 0.0, 0.0, ${element.unitTaxableAmount}, $totalTaxableAmount,
             ${element.gstPer}, ${element.cessPer}, $totalTaxAmount, $totalCessAmount, $totalAmount,
-            'Dining', '-',  'ParcelOrNot','-', '${element.kitchenName}', 'UserID'
+            'Dining', '-',  'ParcelOrNot','', '${element.kitchenName}','${event.userId}'
             )
             ''';
 
@@ -306,12 +264,12 @@ class KotSubmitPrintBloc
         DineInOrOther = 'Dining',
         Delivery = '-',
         ParcelOrNot = 'ParcelOrNot',
-        BillNumber = '-',
+        BillNumber = '',
         KitchenName = '${element.kitchenName}',
-        UserID = 'UserID'
-    WHERE 
+        UserID = '${event.userId}'
+        WHERE 
         KOTNumber = '${element.kotno}' AND ItemCode = '${element.itemCode}';
-''';
+        ''';
 
               log(itemUpdateQuery);
               final resultitemUpdateQuery =
@@ -319,9 +277,126 @@ class KotSubmitPrintBloc
               log(resultitemUpdateQuery.toString());
             }
           }
+          emit(state.copyWith(
+            isLoading: false,
+            submitstatus: 1,
+            kotNo: kotId,
+            ordno: orderId,
+          ));
+          log('print section ----------');
+
+          List<PrinterConfig?>? printers = event.printers;
+
+          int printingStatus = 0;
+
+          if (event.kotPrint) {
+            Map<String, List<kotItem>> groupedItems = {};
+            log(kotitems.length.toString());
+            for (var item in kotitems) {
+              if (!groupedItems.containsKey(item.kitchenName)) {
+                groupedItems[item.kitchenName] = [];
+              }
+              groupedItems[item.kitchenName]!.add(item);
+            }
+
+            for (var kitchen in groupedItems.keys) {
+              PrinterConfig? printer;
+
+              log('Kitchen: $kitchen');
+
+              // Find the printer for the kitchen
+              for (var element in printers!) {
+                if (element!.kitchenName == kitchen) {
+                  printer = element;
+                }
+              }
+
+              // Print the ticket and await the result
+              final List<int> test = await kotPrintData(
+                note: event.note ?? '',
+                items: groupedItems[kitchen]!,
+                kotNo: kotId,
+                orderNo: orderId,
+                tableNo: event.table.tableName,
+                user: 'user',
+              );
+
+              printingStatus = await NetworkPrinter().printTicket(
+                test,
+                printer!.printerName,
+              );
+
+              log('Printer response---$printingStatus');
+            }
+          }
+
+          if (event.cancelKotPrint) {
+            Map<String, List<kotItem>> groupedcancelItems = {};
+            log(kotitems.length.toString());
+            for (var item in event.kotretunitems) {
+              if (!groupedcancelItems.containsKey(item.kitchenName)) {
+                groupedcancelItems[item.kitchenName] = [];
+              }
+              groupedcancelItems[item.kitchenName]!.add(item);
+            }
+            for (var kitchen in groupedcancelItems.keys) {
+              PrinterConfig? printer;
+
+              log('Kitchen: $kitchen');
+
+              // Find the printer for the kitchen
+              for (var element in printers!) {
+                if (element!.kitchenName == kitchen) {
+                  printer = element;
+                }
+              }
+
+              // Print the ticket and await the result
+              final List<int> test = await kotPrintData(
+                note: event.note ?? '',
+                items: groupedcancelItems[kitchen]!,
+                kotNo: '--',
+                orderNo: orderId,
+                tableNo: event.table.tableName,
+                user: 'user',
+              );
+
+              printingStatus = await NetworkPrinter().printTicket(
+                test,
+                printer!.printerName,
+              );
+
+              log('Printer response---$printingStatus');
+            }
+          }
+
+          if (event.cancelKotPrint || event.kotPrint) {
+            // After all the async operations, check the status
+            if (printingStatus == 1) {
+              log('Printer status: 2---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 2,
+                submitstatus: 0,
+              ));
+            } else {
+              log('Printer status: 1---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 1,
+                submitstatus: 0,
+              ));
+            }
+          } else {
+            emit(state.copyWith(
+              isLoading: false,
+              printerstatus: 1,
+              submitstatus: 0,
+            ));
+          }
         }
 
-        emit(state.copyWith(isLoading: false));
+        // emit(state.copyWith(isLoading: false));
       } catch (e) {
         log('Error in SubmitAndPrint: $e');
         emit(state.copyWith(isLoading: false));
@@ -330,48 +405,60 @@ class KotSubmitPrintBloc
 
     on<CancelKOT>((event, emit) async {
       log('CancelKOT-------------------');
-      emit(state.copyWith(isLoading: true, stockout: false));
+      emit(state.copyWith(
+          isLoading: true, stockout: false, printerstatus: 0, submitstatus: 0));
 
       try {
         List<kotItem> cancelkotitems = event.cancelkotitems;
         List<kotItem> currentkotitems = event.currentitems;
         List<kotItem> newlist = [];
 
-// Add items from cancelkotitems that are not in currentkotitems
-        newlist = currentkotitems.where((currentItem) {
-          return !cancelkotitems.any((cancelItem) =>
-              currentItem.itemCode == cancelItem.itemCode &&
-              currentItem.kotno == cancelItem.kotno); // Match criteria
-        }).toList();
-        log(' cancelkotitems.length  ${cancelkotitems.length.toString()}');
-        log('currentkotitems.length---${currentkotitems.length.toString()}');
-        log("newlist.length----${newlist.length.toString()}");
-
         // Initialize and establish the MSSQL connection
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
         var formattedDate = getDateTime();
 
-// Add data to OrderMainDetails
-        double totalAmountBeforeDisc = 0.0;
-        double discount = 0.0;
-        double totalTaxableAmount = 0.0;
-        double totalTaxAmount = 0.0;
-        double totalCessAmount = 0.0;
-        double totalAmount = 0.0;
+        if (currentkotitems.length == cancelkotitems.length) {
+          String deleteQueary = '''
+           DELETE FROM [Restaurant].[dbo].[OrderMainDetails]
+            WHERE OrderNumber = '${event.currentorderid}';
+           ''';
 
-        for (var element in newlist) {
-          int qty = element.qty;
-          log('${element.itemName}  -----   ${element.kotno}    ---${element.qty} ');
-          totalAmountBeforeDisc +=
-              element.unitTaxableAmountBeforeDiscount * qty;
-          totalTaxableAmount += element.unitTaxableAmount * qty;
-          totalAmount += element.basicRate * qty;
-          totalTaxAmount = totalTaxableAmount * (element.gstPer / 100);
-          totalCessAmount = totalTaxableAmount * (element.cessPer / 100);
-        }
+          log(deleteQueary);
+          final resultitemUpdateQuery =
+              await connection.writeData(deleteQueary);
+          log(resultitemUpdateQuery.toString());
+        } else {
+          // Add items from cancelkotitems that are not in currentkotitems
+          newlist = currentkotitems.where((currentItem) {
+            return !cancelkotitems.any((cancelItem) =>
+                currentItem.itemCode == cancelItem.itemCode &&
+                currentItem.kotno == cancelItem.kotno); // Match criteria
+          }).toList();
+          log(' cancelkotitems.length  ${cancelkotitems.length.toString()}');
+          log('currentkotitems.length---${currentkotitems.length.toString()}');
+          log("newlist.length----${newlist.length.toString()}");
 
-        String updateQuery = '''
+          // Add data to OrderMainDetails
+          double totalAmountBeforeDisc = 0.0;
+          double discount = 0.0;
+          double totalTaxableAmount = 0.0;
+          double totalTaxAmount = 0.0;
+          double totalCessAmount = 0.0;
+          double totalAmount = 0.0;
+
+          for (var element in newlist) {
+            int qty = element.qty;
+            log('${element.itemName}  -----   ${element.kotno}    ---${element.qty} ');
+            totalAmountBeforeDisc +=
+                element.unitTaxableAmountBeforeDiscount * qty;
+            totalTaxableAmount += element.unitTaxableAmount * qty;
+            totalAmount += element.basicRate * qty;
+            totalTaxAmount = totalTaxableAmount * (element.gstPer / 100);
+            totalCessAmount = totalTaxableAmount * (element.cessPer / 100);
+          }
+
+          String updateQuery = '''
   UPDATE [Restaurant].[dbo].[OrderMainDetails]
   SET
     EntryDate = '$formattedDate',
@@ -389,17 +476,18 @@ class KotSubmitPrintBloc
     EndTime = '$formattedDate',
     ActiveInnactive = 'Active',
     DineInOrOther = 'Dining',
-    CreditOrPaid = 'CreditOrPaid',
-    BillNumber = '-',
-    UserID = 'UserID'
+    CreditOrPaid = 'Credit',
+    BillNumber = '',
+    UserID ='${event.userId}'
   WHERE
     OrderNumber = '${event.currentorderid}';
 ''';
 
-        log(updateQuery);
+          log(updateQuery);
 
-        final resultIfUpdate = await connection.writeData(updateQuery);
-        log(resultIfUpdate);
+          final resultIfUpdate = await connection.writeData(updateQuery);
+          log(resultIfUpdate);
+        }
 
         for (var element in cancelkotitems) {
           String itemUpdateQuery = '''
@@ -412,12 +500,284 @@ class KotSubmitPrintBloc
               await connection.writeData(itemUpdateQuery);
           log(resultitemUpdateQuery.toString());
         }
+        emit(state.copyWith(
+          isLoading: false,
+          submitstatus: 1,
+        ));
 
-        emit(state.copyWith(isLoading: false, stockout: false));
+        if (event.cancelKotPrint) {
+          log('print section ----------');
+          Map<String, List<kotItem>> groupedItems = {};
+          for (var item in cancelkotitems) {
+            if (!groupedItems.containsKey(item.kitchenName)) {
+              groupedItems[item.kitchenName] = [];
+            }
+            groupedItems[item.kitchenName]!.add(item);
+          }
+
+          List<PrinterConfig?>? printers = event.printers;
+
+          int printingStatus = 0;
+
+          for (var kitchen in groupedItems.keys) {
+            PrinterConfig? printer;
+
+            log('Kitchen: $kitchen');
+
+            // Find the printer for the kitchen
+            for (var element in printers!) {
+              if (element!.kitchenName == kitchen) {
+                printer = element;
+              }
+            }
+
+            // Print the ticket and await the result
+            final List<int> test = await kotPrintData(
+              note: '',
+              items: groupedItems[kitchen]!,
+              kotNo: '--',
+              orderNo: event.currentorderid,
+              tableNo: event.table.tableName,
+              user: 'user',
+            );
+
+            printingStatus = await NetworkPrinter().printTicket(
+              test,
+              printer!.printerName,
+            );
+
+            log('Printer response---$printingStatus');
+          }
+
+          if (printingStatus == 1) {
+            log('Printer status: 2---------');
+            emit(state.copyWith(
+              isLoading: false,
+              printerstatus: 2,
+              submitstatus: 0,
+            ));
+          } else {
+            log('Printer status: 1---------');
+            emit(state.copyWith(
+              isLoading: false,
+              printerstatus: 1,
+              submitstatus: 0,
+            ));
+          }
+        } else {
+          log('Printer status: 1---------');
+          emit(state.copyWith(
+            isLoading: false,
+            printerstatus: 1,
+            submitstatus: 0,
+          ));
+        }
       } catch (e) {
         log(e.toString());
         emit(state.copyWith(isLoading: false, stockout: false));
       }
     });
+
+    on<rePrint>((event, emit) async {
+      emit(state.copyWith(printerstatus: 0));
+
+      if (!event.cancel) {
+        List<kotItem> kotitems = event.kotitems;
+
+        log('print section ----------');
+
+        List<PrinterConfig?>? printers = event.printers;
+
+        int printingStatus = 0;
+
+        Map<String, List<kotItem>> groupedItems = {};
+        log(kotitems.length.toString());
+        for (var item in kotitems) {
+          if (!groupedItems.containsKey(item.kitchenName)) {
+            groupedItems[item.kitchenName] = [];
+          }
+          groupedItems[item.kitchenName]!.add(item);
+        }
+
+        for (var kitchen in groupedItems.keys) {
+          PrinterConfig? printer;
+
+          log('Kitchen: $kitchen');
+
+          // Find the printer for the kitchen
+          for (var element in printers!) {
+            if (element!.kitchenName == kitchen) {
+              printer = element;
+            }
+          }
+
+          // Print the ticket and await the result
+          final List<int> test = await kotPrintData(
+            note: event.note ?? '',
+            items: groupedItems[kitchen]!,
+            kotNo: state.kotNo,
+            orderNo: state.ordno,
+            tableNo: event.table.tableName,
+            user: 'user',
+          );
+
+          printingStatus = await NetworkPrinter().printTicket(
+            test,
+            printer!.printerName,
+          );
+
+          log('Printer response---$printingStatus');
+        }
+
+        Map<String, List<kotItem>> groupedcancelItems = {};
+        log(kotitems.length.toString());
+        for (var item in event.kotretunitems) {
+          if (!groupedcancelItems.containsKey(item.kitchenName)) {
+            groupedcancelItems[item.kitchenName] = [];
+          }
+          groupedcancelItems[item.kitchenName]!.add(item);
+        }
+        for (var kitchen in groupedcancelItems.keys) {
+          PrinterConfig? printer;
+
+          log('Kitchen: $kitchen');
+
+          // Find the printer for the kitchen
+          for (var element in printers!) {
+            if (element!.kitchenName == kitchen) {
+              printer = element;
+            }
+          }
+
+          // Print the ticket and await the result
+          final List<int> test = await kotPrintData(
+            note: event.note ?? '',
+            items: groupedcancelItems[kitchen]!,
+            kotNo: '--',
+            orderNo: state.ordno,
+            tableNo: event.table.tableName,
+            user: 'user',
+          );
+
+          printingStatus = await NetworkPrinter().printTicket(
+            test,
+            printer!.printerName,
+          );
+
+          log('Printer response---$printingStatus');
+        }
+
+        // After all the async operations, check the status
+        if (printingStatus == 1) {
+          log('Printer status: 2---------');
+          emit(state.copyWith(
+            isLoading: false,
+            printerstatus: 2,
+            submitstatus: 0,
+          ));
+        } else {
+          log('Printer status: 1---------');
+          emit(state.copyWith(
+            isLoading: false,
+            printerstatus: 1,
+            submitstatus: 0,
+          ));
+        }
+      } else {
+        log('print section ----------');
+        Map<String, List<kotItem>> groupedItems = {};
+        for (var item in event.cancellist) {
+          if (!groupedItems.containsKey(item.kitchenName)) {
+            groupedItems[item.kitchenName] = [];
+          }
+          groupedItems[item.kitchenName]!.add(item);
+        }
+
+        List<PrinterConfig?>? printers = event.printers;
+
+        int printingStatus = 0;
+
+        for (var kitchen in groupedItems.keys) {
+          PrinterConfig? printer;
+
+          log('Kitchen: $kitchen');
+
+          // Find the printer for the kitchen
+          for (var element in printers!) {
+            if (element!.kitchenName == kitchen) {
+              printer = element;
+            }
+          }
+
+          // Print the ticket and await the result
+          final List<int> test = await kotPrintData(
+            note: '',
+            items: groupedItems[kitchen]!,
+            kotNo: '--',
+            orderNo: event.currentorderid!,
+            tableNo: event.table.tableName,
+            user: 'user',
+          );
+
+          printingStatus = await NetworkPrinter().printTicket(
+            test,
+            printer!.printerName,
+          );
+
+          log('Printer response---$printingStatus');
+        }
+
+        if (printingStatus == 1) {
+          log('Printer status: 2---------');
+          emit(state.copyWith(
+            isLoading: false,
+            printerstatus: 2,
+            submitstatus: 0,
+          ));
+        } else {
+          log('Printer status: 1---------');
+          emit(state.copyWith(
+            isLoading: false,
+            printerstatus: 1,
+            submitstatus: 0,
+          ));
+        }
+      }
+    });
   }
+}
+
+Future<String> _fetchKotId(MssqlConnection connection) async {
+  String query = '''
+    SELECT ISNULL(
+      'KOT' + CAST((1 + MAX(CONVERT(INT, RIGHT(KOTNo, LEN(KOTNo) - 3)))) AS VARCHAR),
+      'KOT100'
+    ) AS KOT FROM KOTNo
+    ''';
+  var result = await connection.getData(query);
+  if (result == '[]') throw Exception("Failed to fetch KOT ID");
+
+  List<dynamic> jsonList = json.decode(result);
+  String kotId = jsonList[0]['KOT'];
+
+  // Insert new KOT ID into database
+  String insertQuery = '''
+    INSERT INTO KOTNo (KOTNo, KOTDate) VALUES ('$kotId', '${getDateTime()}')
+    ''';
+  await connection.writeData(insertQuery);
+  return kotId;
+}
+
+Future<String> _fetchOrderId(MssqlConnection connection) async {
+  String query = '''
+    SELECT ISNULL(
+      'ORD' + CAST((1 + MAX(CONVERT(INT, RIGHT(OrderNumber, LEN(OrderNumber) - 3)))) AS VARCHAR),
+      'ORD100'
+    ) AS ORD FROM OrderMainDetails
+    ''';
+  var result = await connection.getData(query);
+  if (result == '[]') throw Exception("Failed to fetch Order ID");
+
+  List<dynamic> jsonList = json.decode(result);
+  return jsonList[0]['ORD'];
 }

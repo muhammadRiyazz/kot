@@ -681,6 +681,7 @@ mixin _$PrinterSetupState {
   List<String> get kitchenlist => throw _privateConstructorUsedError;
   List<PrinterConfig>? get priterlist => throw _privateConstructorUsedError;
   PrinterConfig? get priterinfo => throw _privateConstructorUsedError;
+  PrinterConfig? get billPrinterInfo => throw _privateConstructorUsedError;
   int get updated => throw _privateConstructorUsedError;
 
   /// Create a copy of PrinterSetupState
@@ -701,6 +702,7 @@ abstract class $PrinterSetupStateCopyWith<$Res> {
       List<String> kitchenlist,
       List<PrinterConfig>? priterlist,
       PrinterConfig? priterinfo,
+      PrinterConfig? billPrinterInfo,
       int updated});
 }
 
@@ -723,6 +725,7 @@ class _$PrinterSetupStateCopyWithImpl<$Res, $Val extends PrinterSetupState>
     Object? kitchenlist = null,
     Object? priterlist = freezed,
     Object? priterinfo = freezed,
+    Object? billPrinterInfo = freezed,
     Object? updated = null,
   }) {
     return _then(_value.copyWith(
@@ -741,6 +744,10 @@ class _$PrinterSetupStateCopyWithImpl<$Res, $Val extends PrinterSetupState>
       priterinfo: freezed == priterinfo
           ? _value.priterinfo
           : priterinfo // ignore: cast_nullable_to_non_nullable
+              as PrinterConfig?,
+      billPrinterInfo: freezed == billPrinterInfo
+          ? _value.billPrinterInfo
+          : billPrinterInfo // ignore: cast_nullable_to_non_nullable
               as PrinterConfig?,
       updated: null == updated
           ? _value.updated
@@ -763,6 +770,7 @@ abstract class _$$CustomerpartStateImplCopyWith<$Res>
       List<String> kitchenlist,
       List<PrinterConfig>? priterlist,
       PrinterConfig? priterinfo,
+      PrinterConfig? billPrinterInfo,
       int updated});
 }
 
@@ -783,6 +791,7 @@ class __$$CustomerpartStateImplCopyWithImpl<$Res>
     Object? kitchenlist = null,
     Object? priterlist = freezed,
     Object? priterinfo = freezed,
+    Object? billPrinterInfo = freezed,
     Object? updated = null,
   }) {
     return _then(_$CustomerpartStateImpl(
@@ -802,6 +811,10 @@ class __$$CustomerpartStateImplCopyWithImpl<$Res>
           ? _value.priterinfo
           : priterinfo // ignore: cast_nullable_to_non_nullable
               as PrinterConfig?,
+      billPrinterInfo: freezed == billPrinterInfo
+          ? _value.billPrinterInfo
+          : billPrinterInfo // ignore: cast_nullable_to_non_nullable
+              as PrinterConfig?,
       updated: null == updated
           ? _value.updated
           : updated // ignore: cast_nullable_to_non_nullable
@@ -818,6 +831,7 @@ class _$CustomerpartStateImpl implements _CustomerpartState {
       required final List<String> kitchenlist,
       final List<PrinterConfig>? priterlist,
       this.priterinfo,
+      this.billPrinterInfo,
       required this.updated})
       : _kitchenlist = kitchenlist,
         _priterlist = priterlist;
@@ -845,11 +859,13 @@ class _$CustomerpartStateImpl implements _CustomerpartState {
   @override
   final PrinterConfig? priterinfo;
   @override
+  final PrinterConfig? billPrinterInfo;
+  @override
   final int updated;
 
   @override
   String toString() {
-    return 'PrinterSetupState(isLoading: $isLoading, kitchenlist: $kitchenlist, priterlist: $priterlist, priterinfo: $priterinfo, updated: $updated)';
+    return 'PrinterSetupState(isLoading: $isLoading, kitchenlist: $kitchenlist, priterlist: $priterlist, priterinfo: $priterinfo, billPrinterInfo: $billPrinterInfo, updated: $updated)';
   }
 
   @override
@@ -865,6 +881,8 @@ class _$CustomerpartStateImpl implements _CustomerpartState {
                 .equals(other._priterlist, _priterlist) &&
             (identical(other.priterinfo, priterinfo) ||
                 other.priterinfo == priterinfo) &&
+            (identical(other.billPrinterInfo, billPrinterInfo) ||
+                other.billPrinterInfo == billPrinterInfo) &&
             (identical(other.updated, updated) || other.updated == updated));
   }
 
@@ -875,6 +893,7 @@ class _$CustomerpartStateImpl implements _CustomerpartState {
       const DeepCollectionEquality().hash(_kitchenlist),
       const DeepCollectionEquality().hash(_priterlist),
       priterinfo,
+      billPrinterInfo,
       updated);
 
   /// Create a copy of PrinterSetupState
@@ -893,6 +912,7 @@ abstract class _CustomerpartState implements PrinterSetupState {
       required final List<String> kitchenlist,
       final List<PrinterConfig>? priterlist,
       final PrinterConfig? priterinfo,
+      final PrinterConfig? billPrinterInfo,
       required final int updated}) = _$CustomerpartStateImpl;
 
   @override
@@ -903,6 +923,8 @@ abstract class _CustomerpartState implements PrinterSetupState {
   List<PrinterConfig>? get priterlist;
   @override
   PrinterConfig? get priterinfo;
+  @override
+  PrinterConfig? get billPrinterInfo;
   @override
   int get updated;
 

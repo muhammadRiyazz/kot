@@ -7,6 +7,8 @@ class PrinterSetupState with _$PrinterSetupState {
     required List<String> kitchenlist,
     List<PrinterConfig>? priterlist,
     PrinterConfig? priterinfo,
+        PrinterConfig? billPrinterInfo,
+
  required  int updated,
   }) = _CustomerpartState;
   factory PrinterSetupState.initial() {

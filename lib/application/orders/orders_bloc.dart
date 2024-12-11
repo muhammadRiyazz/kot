@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
+import 'package:restaurant_kot/infrastructure/get_time.dart';
 
 import '../../domain/orders/order_model.dart';
 
@@ -16,14 +17,16 @@ part 'orders_bloc.freezed.dart';
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   OrdersBloc() : super(OrdersState.initial()) {
     on<AllOrders>((event, emit) async {
+      log('AllOrders --------------------------');
       emit(state.copyWith(
         isLoading: true,
       ));
 
       try {
+        String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
-       String ordersQuery = """
+        String ordersQuery = """
     SELECT [Id], 
            [OrderNumber], 
            [EntryDate], 
@@ -45,8 +48,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [BillNumber], 
            [UserID]
     FROM [Restaurant].[dbo].[OrderMainDetails]
-    WHERE CAST([EntryDate] AS DATE) = '2024-10-23' 
-          AND [ActiveInnactive] = 'Active';
+    WHERE CAST([EntryDate] AS DATE) = '$currentDate' 
+          AND [ActiveInnactive] = 'Active' AND [CreditOrPaid] ='Credit';
 """;
 
         // String ordersQuery =
@@ -66,6 +69,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         List<Order> orders =
             jsonResponse.map((data) => Order.fromJson(data)).toList();
         // Emit state with tableModels data
+
         emit(state.copyWith(isLoading: false, orders: orders));
       } catch (e) {
         emit(state.copyWith(isLoading: false));
@@ -73,7 +77,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       }
     });
     on<TableOrders>((event, emit) async {
-            String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
       emit(state.copyWith(
         isLoading: true,
@@ -82,7 +86,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
-       String ordersQuery = """
+        String ordersQuery = """
     SELECT [Id], 
            [OrderNumber], 
            [EntryDate], 
@@ -104,7 +108,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [BillNumber], 
            [UserID]
     FROM [Restaurant].[dbo].[OrderMainDetails]
- WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}';
+ WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}' AND [CreditOrPaid] ='Credit';
 """;
 
         String? ordersresult = await connection.getData(ordersQuery);

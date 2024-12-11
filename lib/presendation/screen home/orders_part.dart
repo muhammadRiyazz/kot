@@ -202,7 +202,6 @@ class _OrderPageState extends State<OrderPage> {
                                                 table.tableName ==
                                                 state.orders[index].tableName,
                                             orElse: () {
-
                                               throw Exception(
                                                   'Table not found');
                                             }, // Handle if table is not found
@@ -255,7 +254,12 @@ class _OrderPageState extends State<OrderPage> {
                                                         )
                                                       : Container(
                                                           decoration: BoxDecoration(
-                                                              color: mainclr,
+                                                              color: state.orders[index].billNumber !=
+                                                                          '' &&
+                                                                      state.orders[index].creditOrPaid ==
+                                                                          'Credit'
+                                                                  ? Colors.red
+                                                                  : mainclr,
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
@@ -299,7 +303,16 @@ class _OrderPageState extends State<OrderPage> {
                                                   Spacer(),
                                                   Container(
                                                     decoration: BoxDecoration(
-                                                      color: mainclr,
+                                                      color: state.orders[index]
+                                                                      .billNumber !=
+                                                                  '' &&
+                                                              state
+                                                                      .orders[
+                                                                          index]
+                                                                      .creditOrPaid ==
+                                                                  'Credit'
+                                                          ? Colors.red
+                                                          : mainclr,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               10),
@@ -401,12 +414,20 @@ class _OrderPageState extends State<OrderPage> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text(
-                                                    '',
-                                                    style: TextStyle(
-                                                      fontSize: textSize,
-                                                    ),
-                                                  ),
+                                                  state.orders[index]
+                                                                  .billNumber !=
+                                                              '' &&
+                                                          state.orders[index]
+                                                                  .creditOrPaid ==
+                                                              'Credit'
+                                                      ? Text(
+                                                          'UnPaid',
+                                                          style: TextStyle(
+                                                              // fontSize: 12,
+                                                              color:
+                                                                  Colors.red),
+                                                        )
+                                                      : const SizedBox(),
                                                   Row(
                                                     children: [
                                                       Icon(

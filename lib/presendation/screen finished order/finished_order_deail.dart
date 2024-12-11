@@ -1,332 +1,429 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
+import 'package:restaurant_kot/domain/invoice/inv_order_model.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
-class FinishedOrderDetail extends StatefulWidget {
-  @override
-  _FinishedOrderDetailState createState() => _FinishedOrderDetailState();
-}
-
-class _FinishedOrderDetailState extends State<FinishedOrderDetail> {
+class FinishedOrderDetail extends StatelessWidget {
+  const FinishedOrderDetail({super.key, required this.invoice});
+  final InvoicesList invoice;
   // List of ordered items
-  List<Map<String, dynamic>> orderedItems = [
-    {
-      'image':
-          'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      'name': 'Malabari Chicken Biriyani',
-      'qty': 2,
-      'price': 200
-    },
-    {
-      'image':
-          'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      'name': 'Chicken tikka',
-      'qty': 1,
-      'price': 150
-    },
-    {
-      'image':
-          'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      'name': 'Periperi Chicken',
-      'qty': 2,
-      'price': 200
-    },
-    {
-      'image':
-          'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      'name': 'Biriyani',
-      'qty': 1,
-      'price': 150
-    },
-    {
-      'image':
-          'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      'name': 'Item 1',
-      'qty': 2,
-      'price': 200
-    },
-    {
-      'image':
-          'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      'name': 'Mango Juce',
-      'qty': 4,
-      'price': 150
-    },
-    {
-      'image':
-          'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      'name': 'Item 1',
-      'qty': 2,
-      'price': 200
-    },
-    {
-      'image':
-          'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      'name': 'Apple Shake',
-      'qty': 1,
-      'price': 150
-    },
-    // Add more items as necessary
-  ];
-
-  // Variables for payment calculation
-  double gst = 18; // Assume 18% GST
-  double discount = 50; // Flat discount
-  double totalAmount = 0.0;
-  double grandTotal = 0.0;
-  bool isPaid = false; // Paid/Unpaid state
-
-  // Payment dropdown variables
-  String selectedPaymentMethod = 'Cash';
-  Map<String, double> paymentBreakdown = {
-    'Cash': 0.0,
-    'GPay': 0.0,
-    'Card': 0.0
-  };
-
-  @override
-  void initState() {
-    super.initState();
-    calculateTotal();
-  }
-
-  // Calculate total and grand total
-  void calculateTotal() {
-    totalAmount = orderedItems.fold(
-        0, (sum, item) => sum + (item['qty'] * item['price']));
-    double gstAmount = totalAmount * gst / 100;
-    grandTotal = totalAmount + gstAmount - discount;
-  }
-
-  // Update the payment breakdown
-  void updatePayment(String method, double amount) {
-    setState(() {
-      paymentBreakdown[method] = amount;
-    });
-  }
-
-  
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      // borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      splashColor: Color.fromARGB(0, 255, 255, 255),
-                      tileColor: Color.fromARGB(0, 255, 255, 255),
-                      title: Text(
-                        'Table No: TB 001',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w600),
-                      ),
-                      
-                      subtitle: Text('Order No: ORD001',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      // borderRadius: BorderRadius.circular(15)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: List.generate(
-                          4,
-                          (index) {
-                            final item = orderedItems[index];
-
-                            return Column(
+    return Scaffold(
+      appBar: AppBar(),
+      body: BlocBuilder<FinishadOrderBloc, FinishadOrderState>(
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: state.isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : state.invoices.isEmpty
+                    ? Center(
+                        child: Image.asset('assets/img/no data/No_data.png'),
+                      )
+                    : Column(
+                        children: [
+                          Expanded(
+                            child: ListView(
                               children: [
-                                ListTile(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 2, horizontal: 10),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              Color.fromARGB(66, 188, 188, 188),
+                                          blurRadius: 6,
+                                          offset: Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            invoice.custominvno!,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                          const Divider(),
+                                          // Customer Name Section
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'To:',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                invoice.cusname!,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black87,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
 
-                                  title: Padding(
-                                    padding: const EdgeInsets.only(bottom: 6),
-                                    child: Text(
-                                      '${index + 1}     ${item['name']}',
-                                      style: const TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500),
+                                          // Bill Number Section
+
+                                          // Table Number Section
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Table:',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                invoice.tableNumber!,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black87,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+
+                                          // Order Number Section
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Order:',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                invoice.orderNumber!,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black87,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                  // subtitle: Text('        Qty: ${item['qty']}'),
-                                  trailing: Text(
-                                    ' ₹${item['qty'] * item['price']}',
-                                    style: TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  child: Text(
+                                    'Items ${state.invoiceDetails!.length}',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(15)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                66, 188, 188, 188),
+                                            blurRadius: 6,
+                                            offset: Offset(0, 3),
+                                          ),
+                                        ]),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: List.generate(
+                                          state.invoiceDetails!.length,
+                                          (index) {
+                                            final item =
+                                                state.invoiceDetails![index];
+
+                                            return Column(
+                                              children: [
+                                                ListTile(
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 2,
+                                                          horizontal: 10),
+                                                  title: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 6),
+                                                    child: Text(
+                                                      item.pdtname!,
+                                                      style: const TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                  subtitle: Text(
+                                                      'Qty: ${item.qty != null ? item.qty!.toInt().toString() : "0"}'),
+                                                  trailing: Text(
+                                                    '₹ ${item.totalAmount.toString()}',
+                                                    style:
+                                                        TextStyle(fontSize: 16),
+                                                  ),
+                                                ),
+                                                index !=
+                                                        state.invoiceDetails!
+                                                                .length -
+                                                            1
+                                                    ? Divider()
+                                                    : SizedBox()
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(15)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                66, 163, 163, 163),
+                                            blurRadius: 6,
+                                            offset: Offset(0, 3),
+                                          ),
+                                        ]),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 15),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Sub Total',
+                                                style: TextStyle(fontSize: 17),
+                                              ),
+                                              Text(
+                                                '₹ ${invoice.totalamount!.toStringAsFixed(2)}',
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 6,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text('Tax'),
+                                              Text(
+                                                  '₹ ${invoice.totaltaxamount!.toStringAsFixed(2)}'),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 6,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Cess'),
+                                              Text(
+                                                  '₹ ${invoice.totalCessAmount!.toStringAsFixed(2)}'),
+                                            ],
+                                          ),
+                                          const Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: 2, top: 8),
+                                            child: Divider(),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Total Amount',
+                                                style: TextStyle(fontSize: 17),
+                                              ),
+                                              Text(
+                                                '₹ ${invoice.totalHaveToPayAmount!.toStringAsFixed(2)}',
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 12,
+                                          ),
+                                          const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Status',
+                                                style: TextStyle(fontSize: 17),
+                                              ),
+                                              Text(
+                                                'Paid',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                          // const SizedBox(
+                                          //   height: 12,
+                                          // ),
+                                          //  Row(
+                                          //   mainAxisAlignment:
+                                          //       MainAxisAlignment.spaceBetween,
+                                          //   children: [
+                                          //     Text(
+                                          //       'Pyment Method',
+                                          //       style: TextStyle(fontSize: 17),
+                                          //     ),
+                                          //     Text(
+                                          //       invoice.,
+                                          //       style: TextStyle(
+                                          //           fontSize: 18,
+                                          //           fontWeight:
+                                          //               FontWeight.w500),
+                                          //     ),
+                                          //   ],
+                                          // ),
+                                          const SizedBox(
+                                            height: 30,
+                                          ),
+                                          Column(
+                                            children: [
+                                              MainButton(
+                                                  label: 'Print Bill',
+                                                  onpress: () {
+                                                    // submitAndPrint();
+                                                  }),
+                                              SizedBox(
+                                                height: 12,
+                                              ),
+                                              billEdit!
+                                                  ? ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: const Color
+                                                            .fromARGB(
+                                                            255,
+                                                            255,
+                                                            255,
+                                                            255), // Set the button background color
+
+                                                        minimumSize: Size(
+                                                            double.infinity,
+                                                            55), // Full-width button
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          side: BorderSide(
+                                                              color: mainclr),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  20), // Border radius of 10
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        // Navigator.push(context, MaterialPageRoute(
+                                                        //   builder: (context) {
+                                                        //     return BillPage();
+                                                        //   },
+                                                        // ));
+                                                      },
+                                                      child: Text(
+                                                        'Restore Order',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: mainclr),
+                                                      ))
+                                                  : SizedBox()
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
                               ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      // borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 15),
-                      child: Column(
-                        children: [
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Sub Total',
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              Text(
-                                '₹ 2300',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 6,
-                          ),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Tax'),
-                              Text('₹ 20'),
-                            ],
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 2, top: 12),
-                            child: Divider(
-                              color: Color.fromARGB(255, 223, 223, 223),
                             ),
-                          ),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total Amount',
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              Text(
-                                '₹ 2320',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          // const Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     Text(
-                          //       'Status',
-                          //       style: TextStyle(fontSize: 17),
-                          //     ),
-                          //     Text(
-                          //       'Paid',
-                          //       style: TextStyle(
-                          //           fontSize: 18, fontWeight: FontWeight.w500),
-                          //     ),
-                          //   ],
-                          // ),
-                          // const SizedBox(
-                          //   height: 12,
-                          // ),
-                          // const Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     Text(
-                          //       'Pyment Method',
-                          //       style: TextStyle(fontSize: 17),
-                          //     ),
-                          //     Text(
-                          //       'Cash',
-                          //       style: TextStyle(
-                          //           fontSize: 18, fontWeight: FontWeight.w500),
-                          //     ),
-                          //   ],
-                          // ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Column(
-                            children: [
-                              MainButton(
-                                  label: 'Print Bill',
-                                  onpress: () {
-                                    // submitAndPrint();
-                                  }),
-                                  SizedBox(height: 12,),
-                                 ElevatedButton(
-                                     style: ElevatedButton.styleFrom(
-                                       backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Set the button background color
-                                 
-                                       minimumSize: Size(double.infinity, 55), // Full-width button
-                                       shape: RoundedRectangleBorder(
-                                         side: BorderSide(color: mainclr),
-                                         borderRadius:
-                                             BorderRadius.circular(20), // Border radius of 10
-                                       ),
-                                     ),
-                                     onPressed: () {
-                                       // Navigator.push(context, MaterialPageRoute(
-                                       //   builder: (context) {
-                                       //     return BillPage();
-                                       //   },
-                                       // ));
-                                     },
-                                     child: Text(
-                                       'Restore Order',
-                                       style: TextStyle(fontWeight: FontWeight.bold,color: mainclr),
-                                     )),
-                            ],
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 }
-
-

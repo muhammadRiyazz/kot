@@ -13,7 +13,7 @@ class KitchensPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Kitchens",
+          "Printers",
           style: TextStyle(
             fontSize: 15,
             color: Colors.black,
@@ -35,6 +35,11 @@ class KitchensPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 10),
+                      const Text(
+                        '   KOT Printers',
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                      ),
+                      const SizedBox(height: 5),
                       Card(
                           elevation: 4,
                           shape: RoundedRectangleBorder(
@@ -82,6 +87,42 @@ class KitchensPage extends StatelessWidget {
                               },
                             ),
                           )),
+                      const SizedBox(height: 50),
+                      Text(
+                        '   Bill Printer',
+                        style:
+                            const TextStyle(fontSize: 15, color: Colors.black),
+                      ),
+                      const SizedBox(height: 5),
+                      Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          onTap: () {
+                            BlocProvider.of<PrinterSetupBloc>(context).add(
+                                const PrinterSetupEvent.fetchkitchenPrinter(
+                                    kitchen: 'Bill'));
+
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return const PrinterSetupPage(
+                                  kitchen: 'Bill',
+                                );
+                              },
+                            ));
+                          },
+                          title: const Text(
+                            'Bill',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          subtitle: const Text(
+                            "Manage Bill Printer",
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
+                          ),
+                        ),
+                      ),
                       Spacer(),
                     ],
                   );

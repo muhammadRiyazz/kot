@@ -20,27 +20,22 @@ class CustomerpartBloc extends Bloc<CustomerpartEvent, CustomerpartState> {
         MssqlConnection connection = await connectionManager.getConnection();
 
         String query =
-            "SELECT cusid, bussinessname, bussinessaddr, CustomerTYPE FROM dbo.CustomerDetails";
+            "SELECT cusid, bussinessname, bussinessaddr,gstno ,CustomerTYPE FROM dbo.CustomerDetails";
 
         String? result = await connection.getData(query);
 
-        log(result);
+        log('------result---------------000000--------${result}');
         List<CustomerDetails> customerList = (jsonDecode(result) as List)
             .map((data) => CustomerDetails.fromJson(data))
             .toList();
-        // log(result);
-        // customerslist = customerslistFromJson(result);
-        // final String id =
-        //     customerslist[customerslist.length - 1].bussinessname;
 
-        // log(id);
         emit(state.copyWith(
             customerlist: customerList,
             isLoading: false,
             selectedcustomer: customerList[0]));
       } catch (e) {
         emit(state.copyWith(isLoading: false, customerlist: []));
-        log('Error: $e');
+        log('Error: CustomerDetails --$e');
       }
     });
 

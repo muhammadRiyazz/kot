@@ -55,99 +55,167 @@ class NetworkPrinter {
     return bytes;
   }
 
-  Future<void> printTicket(List<int> ticket, BuildContext context) async {
+  Future<int> printTicket(List<int> ticket, String ip) async {
     try {
+      log('printing ip-------$ip');
       log('Attempting to connect to printer');
-      final printer =
-          PrinterNetworkManager('192.168.1.100'); // Ensure correct IP and port
+      final printer = PrinterNetworkManager(ip,
+          timeout: const Duration(seconds: 10), port: 9100);
       PosPrintResult connect = await printer.connect();
 
-      switch (connect) {
-        case PosPrintResult.success:
-          log('Printer connected successfully');
-          PosPrintResult printing = await printer.printTicket(ticket);
-          log('Print result: ${printing.msg}');
-          printer.disconnect();
-          break;
-        case PosPrintResult.ticketEmpty:
-          log('Ticket is empty');
-          _showErrorBottomSheet(
-            context,
-          );
-          break;
-        case PosPrintResult.scanInProgress:
-          _showErrorBottomSheet(
-            context,
-          );
-          break;
-        case PosPrintResult.printInProgress:
-          log('Print in progress');
-          _showErrorBottomSheet(
-            context,
-          );
-          break;
-        case PosPrintResult.printerConnected:
-          log('Printer already connected');
-          _showErrorBottomSheet(
-            context,
-          );
-          break;
-        case PosPrintResult.timeout:
-          log('Connection timed out');
-          _showErrorBottomSheet(
-            context,
-          );
-          break;
-        default:
-          log('Unknown error');
-          _showErrorBottomSheet(
-            context,
-          );
-          break;
+      if (connect == PosPrintResult.success) {
+        log('Printer connected successfully');
+        PosPrintResult printing = await printer.printTicket(ticket);
+        log('Print result: ${printing.msg}');
+        printer.disconnect();
+        return 0; // Success
       }
+
+      // Handle other connection issues
+      log('Connection failed: ${connect.msg}');
+
+      return 1; // Failure
     } catch (e) {
-      log(e.toString());
-      _showErrorBottomSheet(
-        context,
-      );
+      log('Error: $e');
+      return 1; // Exception case
     }
   }
 
-  void _showErrorBottomSheet(
-    BuildContext context,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          width: double.infinity,
-          height: 300,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.error_outline, size: 100, color: mainclr),
-              SizedBox(width: 16),
+  Future<int> testprintTicket(
+      List<int> ticket, String ip, BuildContext context) async {
+    try {
+      log('printing ip-------$ip');
+      log('Attempting to connect to printer');
+      final printer = PrinterNetworkManager(ip,
+          timeout: const Duration(seconds: 5), port: 9100);
+      PosPrintResult connect = await printer.connect();
+
+      if (connect == PosPrintResult.success) {
+        log('Printer connected successfully');
+        PosPrintResult printing = await printer.printTicket(ticket);
+        log('Print result: ${printing.msg}');
+        printer.disconnect();
+        return 0; // Success
+      }
+
+      // Handle other connection issues
+      log('Connection failed: ${connect.msg}');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Column(
+            children: [
               Text(
-                'Sorry!',
+                "Sorry",
                 style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              SizedBox(width: 10),
               Text(
-                textAlign: TextAlign.center,
-                'Please Check Your Printer\nConnection!',
+                "Please check the printer for any issues.",
                 style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
+                  color: Colors.white,
+                  fontSize: 12,
+                  // fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-        );
-      },
-    );
+          backgroundColor: mainclr,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(12),
+          duration: Duration(seconds: 4),
+        ),
+      );
+
+      return 1; // Failure
+    } catch (e) {
+      log('Error: $e');
+      return 1; // Exception case
+    }
   }
+}
+
+void showErrorBottomSheet(
+  BuildContext context,dynamic onpress
+) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        color: Colors.white,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 25,
+            ),
+            const Text(
+              'Sorry',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(
+              height: 2,
+            ),
+            const Text(
+              'Printing was not completed\nPlease check the printer for any issues.',
+              textAlign: TextAlign.center,
+            ),
+            const Text(
+              'Try again',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            // Use Expanded or Flexible for responsive image
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Image.asset(
+                  'assets/img/printer/printerb.jpg',
+                  fit: BoxFit
+                      .contain, // Adjust to ensure the image fits within the available space
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 32),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Colors.white, // Set the button background color
+                    minimumSize:
+                        const Size(double.infinity, 55), // Full-width button
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(color: mainclr),
+                      borderRadius:
+                          BorderRadius.circular(20), // Border radius of 10
+                    ),
+                  ),
+                  onPressed: onpress,
+                  child: const Text(
+                    'Re-Print',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, color: mainclr),
+                  )),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_event.dart';
@@ -19,9 +20,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           isLoading: true, errorMsg: null, loged: false, uservalid: true));
 
       try {
-
-
-     
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         bool? serverCon = prefs.getBool('server');
         if (serverCon != null && serverCon) {
@@ -34,7 +32,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
           if (checkDateValidity(result1)) {
             String query =
-                'SELECT Id, username, password FROM dbo.login WHERE username = \'${event.username}\' AND password = \'${event.pass}\'';
+                'SELECT Id, username, password, role FROM dbo.login WHERE username = \'${event.username}\' AND password = \'${event.pass}\'';
 
             log('Executing query: $query'); // Log the query for debugging
 
@@ -49,9 +47,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
             if (jsonResponse.isNotEmpty) {
               await prefs.setBool('login', true); // Save login status
+              await prefs.setString(
+                  'userID', jsonResponse[0]['username']); // Save login status
+              usernameA = jsonResponse[0]['username'];
+              String roles = jsonResponse[0]['role'].toString();
+              String targetRole = "B1";
+
+              // Check if the target role is included in the roles string
+              bool billEditt = roles.split(',').contains(targetRole);
+              await prefs.setBool('billEdit', billEditt); // Save login status
+
+              billEdit = billEditt;
 
               log('Login successful');
-              emit(state.copyWith(isLoading: false, loged: true));
+              emit(state.copyWith(
+                  isLoading: false,
+                  loged: true,
+                  userId: jsonResponse[0]['username']));
             } else {
               log('Invalid username or password');
               emit(state.copyWith(
@@ -81,6 +93,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       log('User logged out');
       emit(state.copyWith(loged: false)); // Update state if needed
+    });
+    on<FetchLogin>((event, emit) async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userid = prefs.getString('userID');
+    bool? billEditt=  prefs.getBool('billEdit'); // Save login status
+      // Clear login status
+      usernameA = userid;
+
+      billEdit = billEditt;
+      emit(state.copyWith(userId: userid)); // Update state if needed
     });
   }
 }

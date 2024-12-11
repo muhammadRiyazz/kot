@@ -20,18 +20,21 @@ mixin _$LoginEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String pass, String username) login,
     required TResult Function() logout,
+    required TResult Function() fetchLogin,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String pass, String username)? login,
     TResult? Function()? logout,
+    TResult? Function()? fetchLogin,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String pass, String username)? login,
     TResult Function()? logout,
+    TResult Function()? fetchLogin,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +42,21 @@ mixin _$LoginEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(Login value) login,
     required TResult Function(Logout value) logout,
+    required TResult Function(FetchLogin value) fetchLogin,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Login value)? login,
     TResult? Function(Logout value)? logout,
+    TResult? Function(FetchLogin value)? fetchLogin,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Login value)? login,
     TResult Function(Logout value)? logout,
+    TResult Function(FetchLogin value)? fetchLogin,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -156,6 +162,7 @@ class _$LoginImpl implements Login {
   TResult when<TResult extends Object?>({
     required TResult Function(String pass, String username) login,
     required TResult Function() logout,
+    required TResult Function() fetchLogin,
   }) {
     return login(pass, username);
   }
@@ -165,6 +172,7 @@ class _$LoginImpl implements Login {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String pass, String username)? login,
     TResult? Function()? logout,
+    TResult? Function()? fetchLogin,
   }) {
     return login?.call(pass, username);
   }
@@ -174,6 +182,7 @@ class _$LoginImpl implements Login {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String pass, String username)? login,
     TResult Function()? logout,
+    TResult Function()? fetchLogin,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -187,6 +196,7 @@ class _$LoginImpl implements Login {
   TResult map<TResult extends Object?>({
     required TResult Function(Login value) login,
     required TResult Function(Logout value) logout,
+    required TResult Function(FetchLogin value) fetchLogin,
   }) {
     return login(this);
   }
@@ -196,6 +206,7 @@ class _$LoginImpl implements Login {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Login value)? login,
     TResult? Function(Logout value)? logout,
+    TResult? Function(FetchLogin value)? fetchLogin,
   }) {
     return login?.call(this);
   }
@@ -205,6 +216,7 @@ class _$LoginImpl implements Login {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Login value)? login,
     TResult Function(Logout value)? logout,
+    TResult Function(FetchLogin value)? fetchLogin,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -272,6 +284,7 @@ class _$LogoutImpl implements Logout {
   TResult when<TResult extends Object?>({
     required TResult Function(String pass, String username) login,
     required TResult Function() logout,
+    required TResult Function() fetchLogin,
   }) {
     return logout();
   }
@@ -281,6 +294,7 @@ class _$LogoutImpl implements Logout {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String pass, String username)? login,
     TResult? Function()? logout,
+    TResult? Function()? fetchLogin,
   }) {
     return logout?.call();
   }
@@ -290,6 +304,7 @@ class _$LogoutImpl implements Logout {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String pass, String username)? login,
     TResult Function()? logout,
+    TResult Function()? fetchLogin,
     required TResult orElse(),
   }) {
     if (logout != null) {
@@ -303,6 +318,7 @@ class _$LogoutImpl implements Logout {
   TResult map<TResult extends Object?>({
     required TResult Function(Login value) login,
     required TResult Function(Logout value) logout,
+    required TResult Function(FetchLogin value) fetchLogin,
   }) {
     return logout(this);
   }
@@ -312,6 +328,7 @@ class _$LogoutImpl implements Logout {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Login value)? login,
     TResult? Function(Logout value)? logout,
+    TResult? Function(FetchLogin value)? fetchLogin,
   }) {
     return logout?.call(this);
   }
@@ -321,6 +338,7 @@ class _$LogoutImpl implements Logout {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Login value)? login,
     TResult Function(Logout value)? logout,
+    TResult Function(FetchLogin value)? fetchLogin,
     required TResult orElse(),
   }) {
     if (logout != null) {
@@ -335,11 +353,123 @@ abstract class Logout implements LoginEvent {
 }
 
 /// @nodoc
+abstract class _$$FetchLoginImplCopyWith<$Res> {
+  factory _$$FetchLoginImplCopyWith(
+          _$FetchLoginImpl value, $Res Function(_$FetchLoginImpl) then) =
+      __$$FetchLoginImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$FetchLoginImplCopyWithImpl<$Res>
+    extends _$LoginEventCopyWithImpl<$Res, _$FetchLoginImpl>
+    implements _$$FetchLoginImplCopyWith<$Res> {
+  __$$FetchLoginImplCopyWithImpl(
+      _$FetchLoginImpl _value, $Res Function(_$FetchLoginImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of LoginEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$FetchLoginImpl implements FetchLogin {
+  const _$FetchLoginImpl();
+
+  @override
+  String toString() {
+    return 'LoginEvent.fetchLogin()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$FetchLoginImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String pass, String username) login,
+    required TResult Function() logout,
+    required TResult Function() fetchLogin,
+  }) {
+    return fetchLogin();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String pass, String username)? login,
+    TResult? Function()? logout,
+    TResult? Function()? fetchLogin,
+  }) {
+    return fetchLogin?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String pass, String username)? login,
+    TResult Function()? logout,
+    TResult Function()? fetchLogin,
+    required TResult orElse(),
+  }) {
+    if (fetchLogin != null) {
+      return fetchLogin();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(Login value) login,
+    required TResult Function(Logout value) logout,
+    required TResult Function(FetchLogin value) fetchLogin,
+  }) {
+    return fetchLogin(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Login value)? login,
+    TResult? Function(Logout value)? logout,
+    TResult? Function(FetchLogin value)? fetchLogin,
+  }) {
+    return fetchLogin?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(Login value)? login,
+    TResult Function(Logout value)? logout,
+    TResult Function(FetchLogin value)? fetchLogin,
+    required TResult orElse(),
+  }) {
+    if (fetchLogin != null) {
+      return fetchLogin(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FetchLogin implements LoginEvent {
+  const factory FetchLogin() = _$FetchLoginImpl;
+}
+
+/// @nodoc
 mixin _$LoginState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get errorMsg => throw _privateConstructorUsedError;
   bool get loged => throw _privateConstructorUsedError;
   bool? get uservalid => throw _privateConstructorUsedError;
+  String? get userId => throw _privateConstructorUsedError;
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.
@@ -354,7 +484,12 @@ abstract class $LoginStateCopyWith<$Res> {
           LoginState value, $Res Function(LoginState) then) =
       _$LoginStateCopyWithImpl<$Res, LoginState>;
   @useResult
-  $Res call({bool isLoading, String? errorMsg, bool loged, bool? uservalid});
+  $Res call(
+      {bool isLoading,
+      String? errorMsg,
+      bool loged,
+      bool? uservalid,
+      String? userId});
 }
 
 /// @nodoc
@@ -376,6 +511,7 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
     Object? errorMsg = freezed,
     Object? loged = null,
     Object? uservalid = freezed,
+    Object? userId = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -394,6 +530,10 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
           ? _value.uservalid
           : uservalid // ignore: cast_nullable_to_non_nullable
               as bool?,
+      userId: freezed == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -406,7 +546,12 @@ abstract class _$$LoginStateImplCopyWith<$Res>
       __$$LoginStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, String? errorMsg, bool loged, bool? uservalid});
+  $Res call(
+      {bool isLoading,
+      String? errorMsg,
+      bool loged,
+      bool? uservalid,
+      String? userId});
 }
 
 /// @nodoc
@@ -426,6 +571,7 @@ class __$$LoginStateImplCopyWithImpl<$Res>
     Object? errorMsg = freezed,
     Object? loged = null,
     Object? uservalid = freezed,
+    Object? userId = freezed,
   }) {
     return _then(_$LoginStateImpl(
       isLoading: null == isLoading
@@ -444,6 +590,10 @@ class __$$LoginStateImplCopyWithImpl<$Res>
           ? _value.uservalid
           : uservalid // ignore: cast_nullable_to_non_nullable
               as bool?,
+      userId: freezed == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -455,7 +605,8 @@ class _$LoginStateImpl implements _LoginState {
       {required this.isLoading,
       this.errorMsg,
       required this.loged,
-      this.uservalid});
+      this.uservalid,
+      this.userId});
 
   @override
   final bool isLoading;
@@ -465,10 +616,12 @@ class _$LoginStateImpl implements _LoginState {
   final bool loged;
   @override
   final bool? uservalid;
+  @override
+  final String? userId;
 
   @override
   String toString() {
-    return 'LoginState(isLoading: $isLoading, errorMsg: $errorMsg, loged: $loged, uservalid: $uservalid)';
+    return 'LoginState(isLoading: $isLoading, errorMsg: $errorMsg, loged: $loged, uservalid: $uservalid, userId: $userId)';
   }
 
   @override
@@ -482,12 +635,13 @@ class _$LoginStateImpl implements _LoginState {
                 other.errorMsg == errorMsg) &&
             (identical(other.loged, loged) || other.loged == loged) &&
             (identical(other.uservalid, uservalid) ||
-                other.uservalid == uservalid));
+                other.uservalid == uservalid) &&
+            (identical(other.userId, userId) || other.userId == userId));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, isLoading, errorMsg, loged, uservalid);
+      Object.hash(runtimeType, isLoading, errorMsg, loged, uservalid, userId);
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.
@@ -503,7 +657,8 @@ abstract class _LoginState implements LoginState {
       {required final bool isLoading,
       final String? errorMsg,
       required final bool loged,
-      final bool? uservalid}) = _$LoginStateImpl;
+      final bool? uservalid,
+      final String? userId}) = _$LoginStateImpl;
 
   @override
   bool get isLoading;
@@ -513,6 +668,8 @@ abstract class _LoginState implements LoginState {
   bool get loged;
   @override
   bool? get uservalid;
+  @override
+  String? get userId;
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/customerpart/customerpart_bloc.dart';
+import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
+import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
@@ -33,19 +35,33 @@ class _SplashScreenState extends State<SplashScreen> {
         prefs.getBool('login') ?? false; // Default to false if not set
 
     // Navigate to the appropriate screen after 3 seconds
-    Timer(const Duration(seconds: 5), () async{
+    Timer(const Duration(seconds: 5), () async {
       if (isLoggedIn) {
-      BlocProvider.of<PrinterSetupBloc>(context).add(const PrinterSetupEvent.fetchKitchens());
-      BlocProvider.of<PrinterSetupBloc>(context).add( const PrinterSetupEvent.fetchPrinter());
-                await StockMng().fetchstockmngGoods();
-                await StockMng().fetchstockmngService();
+               BlocProvider.of<LoginBloc>(context)
+            .add(const         FetchLogin
+());
+        BlocProvider.of<InitalDataBloc>(context)
+            .add(const InitalDataEvent.fetchAppEnty());
+        BlocProvider.of<InitalDataBloc>(context).add(const FetchPaymentType());
+        BlocProvider.of<InitalDataBloc>(context)
+            .add(const InitalDataEvent.addinitaldatas());
 
+        BlocProvider.of<PrinterSetupBloc>(context)
+            .add(const PrinterSetupEvent.fetchKitchens());
+        BlocProvider.of<PrinterSetupBloc>(context)
+            .add(const PrinterSetupEvent.fetchPrinter());
+        await StockMng().fetchstockmngGoods();
+        await StockMng().fetchstockmngService();
+BlocProvider.of<CustomerpartBloc>(context)
+            .add(const CustomerpartEvent.cfetchlist());
         // If the user is logged in, navigate to the home screen
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(
+              builder: (context) => const HomeScreen(
+                    from: 0,
+                  )),
         );
-              BlocProvider.of<CustomerpartBloc>(context).add(CustomerpartEvent.cfetchlist());
-
+        
       } else {
         // If the user is not logged in, navigate to the login screen
         Navigator.of(context).pushReplacement(
@@ -58,11 +74,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<InitalDataBloc>(context).add(const InitalDataEvent.fetchinitaldatas());
+      BlocProvider.of<InitalDataBloc>(context)
+          .add(const InitalDataEvent.fetchinitaldatas());
 
       BlocProvider.of<StockBloc>(context).add(const StockEvent.categoryFetch());
-                BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
-
+      BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+      BlocProvider.of<FinishadOrderBloc>(context)
+          .add(const FinishadOrderEvent.fetchBills());
       BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
       // BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchStocksAndCategory());
       // BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchCategory());

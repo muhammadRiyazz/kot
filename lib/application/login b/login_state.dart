@@ -7,6 +7,8 @@ class LoginState with _$LoginState {
     String? errorMsg,
     required bool loged,
     bool? uservalid,
+        String? userId,
+
   }) = _LoginState;
   factory LoginState.initial() {
     return LoginState(
