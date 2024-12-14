@@ -51,7 +51,6 @@ class _BillPageState extends State<BillPage> {
                 context.read<InitalDataBloc>().state.paymentType;
             final customer =
                 context.read<CustomerpartBloc>().state.selectedcustomer!;
-            selectedPaymentMethod = paymentType[0];
             return state.isLoading
                 ? const Center(
                     child: CircularProgressIndicator(),
@@ -347,12 +346,19 @@ class _BillPageState extends State<BillPage> {
                                             const EdgeInsets.symmetric(),
                                         title: const Text('Payment Method'),
                                         trailing: DropdownButton<String>(
-                                          value: selectedPaymentMethod ??
+                                          value: state.paytypeValue ??
                                               paymentType.first,
                                           onChanged: (value) {
-                                            setState(() {
-                                              selectedPaymentMethod = value!;
-                                            });
+                                            BlocProvider.of<
+                                                        BillSubmitPrintBloc>(
+                                                    context)
+                                                .add(BillSubmitPrintEvent
+                                                    .payType(
+                                                        paytypeValue: value!));
+
+                                            // setState(() {
+                                            //   selectedPaymentMethod = value!;
+                                            // });
                                           },
                                           items: paymentType
                                               .toSet() // Ensure unique values
@@ -449,46 +455,41 @@ class _BillPageState extends State<BillPage> {
                                                       if (widget.order
                                                           .billNumber.isEmpty) {
                                                         log('widget.order.billNumber.isEmpty');
-                                                        BlocProvider.of<BillSubmitPrintBloc>(
+                                                        BlocProvider.of<
+                                                                    BillSubmitPrintBloc>(
                                                                 context)
-                                                            .add(BillSubmitPrintEvent.billSubmitAndPrint(
-                                                                userID: context
-                                                                        .read<
-                                                                            LoginBloc>()
-                                                                        .state
-                                                                        .userId ??
-                                                                    '--',
-                                                                printer:
-                                                                    printer,
-                                                                paid: isPaid,
-                                                                paymentMethord:
-                                                                    isPaid
-                                                                        ? selectedPaymentMethod
-                                                                        : null));
+                                                            .add(BillSubmitPrintEvent
+                                                                .billSubmitAndPrint(
+                                                          userID: context
+                                                                  .read<
+                                                                      LoginBloc>()
+                                                                  .state
+                                                                  .userId ??
+                                                              '--',
+                                                          printer: printer,
+                                                          paid: isPaid,
+                                                        ));
                                                       } else {
                                                         // selectedPaymentMethod ??
                                                         //     paymentType.first;
                                                         // log(widget.order.billNumber);
 
-                                                        BlocProvider.of<BillSubmitPrintBloc>(
+                                                        BlocProvider.of<
+                                                                    BillSubmitPrintBloc>(
                                                                 context)
-                                                            .add(BillSubmitPrintEvent.billUpdateAndPrint(
-                                                                userId: context
-                                                                        .read<
-                                                                            LoginBloc>()
-                                                                        .state
-                                                                        .userId ??
-                                                                    '--',
-                                                                printer:
-                                                                    printer,
-                                                                invNo: widget
-                                                                    .order
-                                                                    .billNumber,
-                                                                paid: isPaid,
-                                                                paymentMethord:
-                                                                    isPaid
-                                                                        ? selectedPaymentMethod
-                                                                        : null));
+                                                            .add(BillSubmitPrintEvent
+                                                                .billUpdateAndPrint(
+                                                          userId: context
+                                                                  .read<
+                                                                      LoginBloc>()
+                                                                  .state
+                                                                  .userId ??
+                                                              '--',
+                                                          printer: printer,
+                                                          invNo: widget
+                                                              .order.billNumber,
+                                                          paid: isPaid,
+                                                        ));
                                                       }
                                                     } else {
                                                       BlocProvider.of<

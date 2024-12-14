@@ -18,6 +18,7 @@ class BillSubmitPrintState with _$BillSubmitPrintState {
     required bool trafic,
     required String invNo,
     required int printerstatus,
+   String? paytypeValue,
   }) = _KotSubmitPrintState;
   factory BillSubmitPrintState.initial() {
     return BillSubmitPrintState(

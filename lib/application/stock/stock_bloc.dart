@@ -101,7 +101,9 @@ class StockBloc extends Bloc<StockEvent, StockState> {
           );
 
           // Create kotItem object and add it to the appropriate category list
-          kotItem item = kotItem(cessAmt: 0.00,gstAmt: 0.00,
+          kotItem item = kotItem(
+            cessAmt: 0.00,
+            gstAmt: 0.00,
             kotno: 'null',
             stock: 0,
             qty: 0,
@@ -151,8 +153,6 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         log('Error fetching items: $e');
       }
     });
-
-
 
     on<TypeChange>((event, emit) async {
       log('TypeChange-------StockBloc');
@@ -227,7 +227,9 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
           double taxableAmount =
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
-          stocksnew.add(kotItem(cessAmt: 0.00,gstAmt: 0.00,
+          stocksnew.add(kotItem(
+            cessAmt: 0.00,
+            gstAmt: 0.00,
             kotno: 'null',
             stock: 0,
             qty: 0,
@@ -324,7 +326,9 @@ class StockBloc extends Bloc<StockEvent, StockState> {
           );
           double taxableAmount =
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
-          stocksnew.add(kotItem(cessAmt: 0.00,gstAmt: 0.00,
+          stocksnew.add(kotItem(
+            cessAmt: 0.00,
+            gstAmt: 0.00,
             kotno: 'null',
             stock: 0,
             qty: 0,

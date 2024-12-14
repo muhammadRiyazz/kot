@@ -85,8 +85,6 @@ class KotSubmitPrintBloc
         } else {
           // If stock management is not enabled
 
-
-
           var formattedDate = getDateTime();
           log("formattedDate ---- ---- ---- $formattedDate");
 
@@ -116,9 +114,6 @@ class KotSubmitPrintBloc
           kotitemslist.addAll(kotitems.where(
               (item) => !kotitemslist.any((b) => b.itemCode == item.itemCode)));
 
-         
-        
-
           // Add data to OrderMainDetails
           double totalAmountBeforeDisc = 0.0;
           double discount = 0.0;
@@ -134,8 +129,10 @@ class KotSubmitPrintBloc
                 element.unitTaxableAmountBeforeDiscount * qty;
             totalTaxableAmount += element.unitTaxableAmount * qty;
             totalAmount += element.basicRate * qty;
-            totalTaxAmount += totalTaxableAmount * (element.gstPer / 100);
-            totalCessAmount += totalTaxableAmount * (element.cessPer / 100);
+            totalTaxAmount +=
+                (element.unitTaxableAmount * qty) * (element.gstPer / 100);
+            totalCessAmount +=
+                (element.unitTaxableAmount * qty) * (element.cessPer / 100);
           }
 
           if (event.currentorderid != null && event.currentitems != null) {
@@ -451,8 +448,10 @@ class KotSubmitPrintBloc
                 element.unitTaxableAmountBeforeDiscount * qty;
             totalTaxableAmount += element.unitTaxableAmount * qty;
             totalAmount += element.basicRate * qty;
-            totalTaxAmount += totalTaxableAmount * (element.gstPer / 100);
-            totalCessAmount += totalTaxableAmount * (element.cessPer / 100);
+            totalTaxAmount =
+                (element.unitTaxableAmount * qty) * (element.gstPer / 100);
+            totalCessAmount =
+                (element.unitTaxableAmount * qty) * (element.cessPer / 100);
           }
 
           String updateQuery = '''

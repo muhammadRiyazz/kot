@@ -20,6 +20,9 @@ part 'bill_submit_print_bloc.freezed.dart';
 class BillSubmitPrintBloc
     extends Bloc<BillSubmitPrintEvent, BillSubmitPrintState> {
   BillSubmitPrintBloc() : super(BillSubmitPrintState.initial()) {
+    on<payType>((event, emit) {
+      emit(state.copyWith(paytypeValue: event.paytypeValue));
+    });
     on<BillPreview>((event, emit) {
       emit(state.copyWith(isLoading: true, billsubmission: false));
       List<kotItem> updatedbillItems = [];
@@ -354,7 +357,7 @@ class BillSubmitPrintBloc
         PayINVid, RootType, OrderNumber
     ) VALUES (
         '$payidno', '${customer.cusid}', '${customer.bussinessname}',
-        '$formattedDate', 'sale',  '${event.paymentMethord!}',  ${state.totalAmt!}, 'Cr', '$nextinvNo', 'Sale', '${state.orderid!}'
+        '$formattedDate', 'sale',  '${state.paytypeValue!}',  ${state.totalAmt!}, 'Cr', '$nextinvNo', 'Sale', '${state.orderid!}'
     )
 """;
 
@@ -414,7 +417,7 @@ class BillSubmitPrintBloc
             String updateQuery = '''
   UPDATE [Restaurant].[dbo].[OrderMainDetails]
   SET
-    CreditOrPaid = '${event.paymentMethord!}',
+    CreditOrPaid = '${state.paytypeValue!}',
     BillNumber = '$invno'
   WHERE
     OrderNumber = '${state.orderid}';
@@ -706,7 +709,7 @@ class BillSubmitPrintBloc
         PayINVid, RootType, OrderNumber
     ) VALUES (
         '$payidno', '${customer.cusid}', '${customer.bussinessname}',
-        '$formattedDate', 'sale',  '${event.paymentMethord!}',  ${state.totalAmt!}, 'Cr', '${event.invNo}', 'Sale', '${state.orderid!}'
+        '$formattedDate', 'sale',  '${state.paytypeValue!}',  ${state.totalAmt!}, 'Cr', '${event.invNo}', 'Sale', '${state.orderid!}'
     )
 """;
 
@@ -772,7 +775,7 @@ class BillSubmitPrintBloc
           String updateQuery = '''
   UPDATE [Restaurant].[dbo].[OrderMainDetails]
   SET
-    CreditOrPaid = '${event.paymentMethord!}'
+    CreditOrPaid = '${state.paytypeValue!}'
   WHERE
     OrderNumber = '${state.orderid}';
 ''';
