@@ -14,6 +14,10 @@ class BillSubmitPrintEvent with _$BillSubmitPrintEvent {
     required bool paid,
     String? paymentMethord,
   }) = BillSubmitAndPrint;
+    const factory BillSubmitPrintEvent.billRePrint({
+    required PrinterConfig printer,
+    
+  }) = BillRePrint;
   const factory BillSubmitPrintEvent.billUpdateAndPrint(
       {required PrinterConfig printer,
       required String userId,

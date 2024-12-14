@@ -27,6 +27,7 @@ mixin _$BillSubmitPrintEvent {
     required TResult Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)
         billSubmitAndPrint,
+    required TResult Function(PrinterConfig printer) billRePrint,
     required TResult Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)
         billUpdateAndPrint,
@@ -40,6 +41,7 @@ mixin _$BillSubmitPrintEvent {
     TResult? Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)?
         billSubmitAndPrint,
+    TResult? Function(PrinterConfig printer)? billRePrint,
     TResult? Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)?
         billUpdateAndPrint,
@@ -53,6 +55,7 @@ mixin _$BillSubmitPrintEvent {
     TResult Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)?
         billSubmitAndPrint,
+    TResult Function(PrinterConfig printer)? billRePrint,
     TResult Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)?
         billUpdateAndPrint,
@@ -63,6 +66,7 @@ mixin _$BillSubmitPrintEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(BillPreview value) billPreview,
     required TResult Function(BillSubmitAndPrint value) billSubmitAndPrint,
+    required TResult Function(BillRePrint value) billRePrint,
     required TResult Function(BillUpdateAndPrint value) billUpdateAndPrint,
   }) =>
       throw _privateConstructorUsedError;
@@ -70,6 +74,7 @@ mixin _$BillSubmitPrintEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BillPreview value)? billPreview,
     TResult? Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult? Function(BillRePrint value)? billRePrint,
     TResult? Function(BillUpdateAndPrint value)? billUpdateAndPrint,
   }) =>
       throw _privateConstructorUsedError;
@@ -77,6 +82,7 @@ mixin _$BillSubmitPrintEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BillPreview value)? billPreview,
     TResult Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult Function(BillRePrint value)? billRePrint,
     TResult Function(BillUpdateAndPrint value)? billUpdateAndPrint,
     required TResult orElse(),
   }) =>
@@ -228,6 +234,7 @@ class _$BillPreviewImpl implements BillPreview {
     required TResult Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)
         billSubmitAndPrint,
+    required TResult Function(PrinterConfig printer) billRePrint,
     required TResult Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)
         billUpdateAndPrint,
@@ -244,6 +251,7 @@ class _$BillPreviewImpl implements BillPreview {
     TResult? Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)?
         billSubmitAndPrint,
+    TResult? Function(PrinterConfig printer)? billRePrint,
     TResult? Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)?
         billUpdateAndPrint,
@@ -260,6 +268,7 @@ class _$BillPreviewImpl implements BillPreview {
     TResult Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)?
         billSubmitAndPrint,
+    TResult Function(PrinterConfig printer)? billRePrint,
     TResult Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)?
         billUpdateAndPrint,
@@ -276,6 +285,7 @@ class _$BillPreviewImpl implements BillPreview {
   TResult map<TResult extends Object?>({
     required TResult Function(BillPreview value) billPreview,
     required TResult Function(BillSubmitAndPrint value) billSubmitAndPrint,
+    required TResult Function(BillRePrint value) billRePrint,
     required TResult Function(BillUpdateAndPrint value) billUpdateAndPrint,
   }) {
     return billPreview(this);
@@ -286,6 +296,7 @@ class _$BillPreviewImpl implements BillPreview {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BillPreview value)? billPreview,
     TResult? Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult? Function(BillRePrint value)? billRePrint,
     TResult? Function(BillUpdateAndPrint value)? billUpdateAndPrint,
   }) {
     return billPreview?.call(this);
@@ -296,6 +307,7 @@ class _$BillPreviewImpl implements BillPreview {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BillPreview value)? billPreview,
     TResult Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult Function(BillRePrint value)? billRePrint,
     TResult Function(BillUpdateAndPrint value)? billUpdateAndPrint,
     required TResult orElse(),
   }) {
@@ -437,6 +449,7 @@ class _$BillSubmitAndPrintImpl implements BillSubmitAndPrint {
     required TResult Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)
         billSubmitAndPrint,
+    required TResult Function(PrinterConfig printer) billRePrint,
     required TResult Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)
         billUpdateAndPrint,
@@ -453,6 +466,7 @@ class _$BillSubmitAndPrintImpl implements BillSubmitAndPrint {
     TResult? Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)?
         billSubmitAndPrint,
+    TResult? Function(PrinterConfig printer)? billRePrint,
     TResult? Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)?
         billUpdateAndPrint,
@@ -469,6 +483,7 @@ class _$BillSubmitAndPrintImpl implements BillSubmitAndPrint {
     TResult Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)?
         billSubmitAndPrint,
+    TResult Function(PrinterConfig printer)? billRePrint,
     TResult Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)?
         billUpdateAndPrint,
@@ -485,6 +500,7 @@ class _$BillSubmitAndPrintImpl implements BillSubmitAndPrint {
   TResult map<TResult extends Object?>({
     required TResult Function(BillPreview value) billPreview,
     required TResult Function(BillSubmitAndPrint value) billSubmitAndPrint,
+    required TResult Function(BillRePrint value) billRePrint,
     required TResult Function(BillUpdateAndPrint value) billUpdateAndPrint,
   }) {
     return billSubmitAndPrint(this);
@@ -495,6 +511,7 @@ class _$BillSubmitAndPrintImpl implements BillSubmitAndPrint {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BillPreview value)? billPreview,
     TResult? Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult? Function(BillRePrint value)? billRePrint,
     TResult? Function(BillUpdateAndPrint value)? billUpdateAndPrint,
   }) {
     return billSubmitAndPrint?.call(this);
@@ -505,6 +522,7 @@ class _$BillSubmitAndPrintImpl implements BillSubmitAndPrint {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BillPreview value)? billPreview,
     TResult Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult Function(BillRePrint value)? billRePrint,
     TResult Function(BillUpdateAndPrint value)? billUpdateAndPrint,
     required TResult orElse(),
   }) {
@@ -531,6 +549,180 @@ abstract class BillSubmitAndPrint implements BillSubmitPrintEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BillSubmitAndPrintImplCopyWith<_$BillSubmitAndPrintImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BillRePrintImplCopyWith<$Res> {
+  factory _$$BillRePrintImplCopyWith(
+          _$BillRePrintImpl value, $Res Function(_$BillRePrintImpl) then) =
+      __$$BillRePrintImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({PrinterConfig printer});
+}
+
+/// @nodoc
+class __$$BillRePrintImplCopyWithImpl<$Res>
+    extends _$BillSubmitPrintEventCopyWithImpl<$Res, _$BillRePrintImpl>
+    implements _$$BillRePrintImplCopyWith<$Res> {
+  __$$BillRePrintImplCopyWithImpl(
+      _$BillRePrintImpl _value, $Res Function(_$BillRePrintImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BillSubmitPrintEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? printer = null,
+  }) {
+    return _then(_$BillRePrintImpl(
+      printer: null == printer
+          ? _value.printer
+          : printer // ignore: cast_nullable_to_non_nullable
+              as PrinterConfig,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BillRePrintImpl implements BillRePrint {
+  const _$BillRePrintImpl({required this.printer});
+
+  @override
+  final PrinterConfig printer;
+
+  @override
+  String toString() {
+    return 'BillSubmitPrintEvent.billRePrint(printer: $printer)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BillRePrintImpl &&
+            (identical(other.printer, printer) || other.printer == printer));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, printer);
+
+  /// Create a copy of BillSubmitPrintEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BillRePrintImplCopyWith<_$BillRePrintImpl> get copyWith =>
+      __$$BillRePrintImplCopyWithImpl<_$BillRePrintImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            List<kotItem> items,
+            CustomerDetails selectedcustomer,
+            TableInfo table,
+            String currentorderid)
+        billPreview,
+    required TResult Function(String userID, PrinterConfig printer, bool paid,
+            String? paymentMethord)
+        billSubmitAndPrint,
+    required TResult Function(PrinterConfig printer) billRePrint,
+    required TResult Function(PrinterConfig printer, String userId, bool paid,
+            String? paymentMethord, String invNo)
+        billUpdateAndPrint,
+  }) {
+    return billRePrint(printer);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<kotItem> items, CustomerDetails selectedcustomer,
+            TableInfo table, String currentorderid)?
+        billPreview,
+    TResult? Function(String userID, PrinterConfig printer, bool paid,
+            String? paymentMethord)?
+        billSubmitAndPrint,
+    TResult? Function(PrinterConfig printer)? billRePrint,
+    TResult? Function(PrinterConfig printer, String userId, bool paid,
+            String? paymentMethord, String invNo)?
+        billUpdateAndPrint,
+  }) {
+    return billRePrint?.call(printer);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<kotItem> items, CustomerDetails selectedcustomer,
+            TableInfo table, String currentorderid)?
+        billPreview,
+    TResult Function(String userID, PrinterConfig printer, bool paid,
+            String? paymentMethord)?
+        billSubmitAndPrint,
+    TResult Function(PrinterConfig printer)? billRePrint,
+    TResult Function(PrinterConfig printer, String userId, bool paid,
+            String? paymentMethord, String invNo)?
+        billUpdateAndPrint,
+    required TResult orElse(),
+  }) {
+    if (billRePrint != null) {
+      return billRePrint(printer);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BillPreview value) billPreview,
+    required TResult Function(BillSubmitAndPrint value) billSubmitAndPrint,
+    required TResult Function(BillRePrint value) billRePrint,
+    required TResult Function(BillUpdateAndPrint value) billUpdateAndPrint,
+  }) {
+    return billRePrint(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BillPreview value)? billPreview,
+    TResult? Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult? Function(BillRePrint value)? billRePrint,
+    TResult? Function(BillUpdateAndPrint value)? billUpdateAndPrint,
+  }) {
+    return billRePrint?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BillPreview value)? billPreview,
+    TResult Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult Function(BillRePrint value)? billRePrint,
+    TResult Function(BillUpdateAndPrint value)? billUpdateAndPrint,
+    required TResult orElse(),
+  }) {
+    if (billRePrint != null) {
+      return billRePrint(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BillRePrint implements BillSubmitPrintEvent {
+  const factory BillRePrint({required final PrinterConfig printer}) =
+      _$BillRePrintImpl;
+
+  PrinterConfig get printer;
+
+  /// Create a copy of BillSubmitPrintEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BillRePrintImplCopyWith<_$BillRePrintImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -656,6 +848,7 @@ class _$BillUpdateAndPrintImpl implements BillUpdateAndPrint {
     required TResult Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)
         billSubmitAndPrint,
+    required TResult Function(PrinterConfig printer) billRePrint,
     required TResult Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)
         billUpdateAndPrint,
@@ -672,6 +865,7 @@ class _$BillUpdateAndPrintImpl implements BillUpdateAndPrint {
     TResult? Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)?
         billSubmitAndPrint,
+    TResult? Function(PrinterConfig printer)? billRePrint,
     TResult? Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)?
         billUpdateAndPrint,
@@ -689,6 +883,7 @@ class _$BillUpdateAndPrintImpl implements BillUpdateAndPrint {
     TResult Function(String userID, PrinterConfig printer, bool paid,
             String? paymentMethord)?
         billSubmitAndPrint,
+    TResult Function(PrinterConfig printer)? billRePrint,
     TResult Function(PrinterConfig printer, String userId, bool paid,
             String? paymentMethord, String invNo)?
         billUpdateAndPrint,
@@ -705,6 +900,7 @@ class _$BillUpdateAndPrintImpl implements BillUpdateAndPrint {
   TResult map<TResult extends Object?>({
     required TResult Function(BillPreview value) billPreview,
     required TResult Function(BillSubmitAndPrint value) billSubmitAndPrint,
+    required TResult Function(BillRePrint value) billRePrint,
     required TResult Function(BillUpdateAndPrint value) billUpdateAndPrint,
   }) {
     return billUpdateAndPrint(this);
@@ -715,6 +911,7 @@ class _$BillUpdateAndPrintImpl implements BillUpdateAndPrint {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(BillPreview value)? billPreview,
     TResult? Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult? Function(BillRePrint value)? billRePrint,
     TResult? Function(BillUpdateAndPrint value)? billUpdateAndPrint,
   }) {
     return billUpdateAndPrint?.call(this);
@@ -725,6 +922,7 @@ class _$BillUpdateAndPrintImpl implements BillUpdateAndPrint {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(BillPreview value)? billPreview,
     TResult Function(BillSubmitAndPrint value)? billSubmitAndPrint,
+    TResult Function(BillRePrint value)? billRePrint,
     TResult Function(BillUpdateAndPrint value)? billUpdateAndPrint,
     required TResult orElse(),
   }) {
@@ -771,6 +969,7 @@ mixin _$BillSubmitPrintState {
   double? get cess => throw _privateConstructorUsedError;
   bool get billsubmission => throw _privateConstructorUsedError;
   bool get trafic => throw _privateConstructorUsedError;
+  String get invNo => throw _privateConstructorUsedError;
   int get printerstatus => throw _privateConstructorUsedError;
 
   /// Create a copy of BillSubmitPrintState
@@ -800,6 +999,7 @@ abstract class $BillSubmitPrintStateCopyWith<$Res> {
       double? cess,
       bool billsubmission,
       bool trafic,
+      String invNo,
       int printerstatus});
 }
 
@@ -832,6 +1032,7 @@ class _$BillSubmitPrintStateCopyWithImpl<$Res,
     Object? cess = freezed,
     Object? billsubmission = null,
     Object? trafic = null,
+    Object? invNo = null,
     Object? printerstatus = null,
   }) {
     return _then(_value.copyWith(
@@ -887,6 +1088,10 @@ class _$BillSubmitPrintStateCopyWithImpl<$Res,
           ? _value.trafic
           : trafic // ignore: cast_nullable_to_non_nullable
               as bool,
+      invNo: null == invNo
+          ? _value.invNo
+          : invNo // ignore: cast_nullable_to_non_nullable
+              as String,
       printerstatus: null == printerstatus
           ? _value.printerstatus
           : printerstatus // ignore: cast_nullable_to_non_nullable
@@ -917,6 +1122,7 @@ abstract class _$$KotSubmitPrintStateImplCopyWith<$Res>
       double? cess,
       bool billsubmission,
       bool trafic,
+      String invNo,
       int printerstatus});
 }
 
@@ -946,6 +1152,7 @@ class __$$KotSubmitPrintStateImplCopyWithImpl<$Res>
     Object? cess = freezed,
     Object? billsubmission = null,
     Object? trafic = null,
+    Object? invNo = null,
     Object? printerstatus = null,
   }) {
     return _then(_$KotSubmitPrintStateImpl(
@@ -1001,6 +1208,10 @@ class __$$KotSubmitPrintStateImplCopyWithImpl<$Res>
           ? _value.trafic
           : trafic // ignore: cast_nullable_to_non_nullable
               as bool,
+      invNo: null == invNo
+          ? _value.invNo
+          : invNo // ignore: cast_nullable_to_non_nullable
+              as String,
       printerstatus: null == printerstatus
           ? _value.printerstatus
           : printerstatus // ignore: cast_nullable_to_non_nullable
@@ -1026,6 +1237,7 @@ class _$KotSubmitPrintStateImpl implements _KotSubmitPrintState {
       this.cess,
       required this.billsubmission,
       required this.trafic,
+      required this.invNo,
       required this.printerstatus})
       : _billitems = billitems,
         _printitems = printitems;
@@ -1069,11 +1281,13 @@ class _$KotSubmitPrintStateImpl implements _KotSubmitPrintState {
   @override
   final bool trafic;
   @override
+  final String invNo;
+  @override
   final int printerstatus;
 
   @override
   String toString() {
-    return 'BillSubmitPrintState(isLoading: $isLoading, loading: $loading, billitems: $billitems, printitems: $printitems, selectedCustomer: $selectedCustomer, table: $table, orderid: $orderid, subTotal: $subTotal, totalAmt: $totalAmt, tax: $tax, cess: $cess, billsubmission: $billsubmission, trafic: $trafic, printerstatus: $printerstatus)';
+    return 'BillSubmitPrintState(isLoading: $isLoading, loading: $loading, billitems: $billitems, printitems: $printitems, selectedCustomer: $selectedCustomer, table: $table, orderid: $orderid, subTotal: $subTotal, totalAmt: $totalAmt, tax: $tax, cess: $cess, billsubmission: $billsubmission, trafic: $trafic, invNo: $invNo, printerstatus: $printerstatus)';
   }
 
   @override
@@ -1101,6 +1315,7 @@ class _$KotSubmitPrintStateImpl implements _KotSubmitPrintState {
             (identical(other.billsubmission, billsubmission) ||
                 other.billsubmission == billsubmission) &&
             (identical(other.trafic, trafic) || other.trafic == trafic) &&
+            (identical(other.invNo, invNo) || other.invNo == invNo) &&
             (identical(other.printerstatus, printerstatus) ||
                 other.printerstatus == printerstatus));
   }
@@ -1121,6 +1336,7 @@ class _$KotSubmitPrintStateImpl implements _KotSubmitPrintState {
       cess,
       billsubmission,
       trafic,
+      invNo,
       printerstatus);
 
   /// Create a copy of BillSubmitPrintState
@@ -1148,6 +1364,7 @@ abstract class _KotSubmitPrintState implements BillSubmitPrintState {
       final double? cess,
       required final bool billsubmission,
       required final bool trafic,
+      required final String invNo,
       required final int printerstatus}) = _$KotSubmitPrintStateImpl;
 
   @override
@@ -1176,6 +1393,8 @@ abstract class _KotSubmitPrintState implements BillSubmitPrintState {
   bool get billsubmission;
   @override
   bool get trafic;
+  @override
+  String get invNo;
   @override
   int get printerstatus;
 

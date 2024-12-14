@@ -138,9 +138,7 @@ class NetworkPrinter {
   }
 }
 
-void showErrorBottomSheet(
-  BuildContext context,dynamic onpress
-) {
+void showErrorBottomSheet(BuildContext context, dynamic onpress) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {

@@ -85,6 +85,8 @@ class KotSubmitPrintBloc
         } else {
           // If stock management is not enabled
 
+
+
           var formattedDate = getDateTime();
           log("formattedDate ---- ---- ---- $formattedDate");
 
@@ -114,13 +116,8 @@ class KotSubmitPrintBloc
           kotitemslist.addAll(kotitems.where(
               (item) => !kotitemslist.any((b) => b.itemCode == item.itemCode)));
 
-          for (var element in kotitemslist) {
-            log('${element.itemCode}-------${element.itemName}----------${element.quantity}');
-          }
-          log('-------------------');
-          for (var element in event.kotretunitems) {
-            log('${element.itemCode}-------${element.itemName}----------${element.quantity}');
-          }
+         
+        
 
           // Add data to OrderMainDetails
           double totalAmountBeforeDisc = 0.0;
@@ -137,8 +134,8 @@ class KotSubmitPrintBloc
                 element.unitTaxableAmountBeforeDiscount * qty;
             totalTaxableAmount += element.unitTaxableAmount * qty;
             totalAmount += element.basicRate * qty;
-            totalTaxAmount = totalTaxableAmount * (element.gstPer / 100);
-            totalCessAmount = totalTaxableAmount * (element.cessPer / 100);
+            totalTaxAmount += totalTaxableAmount * (element.gstPer / 100);
+            totalCessAmount += totalTaxableAmount * (element.cessPer / 100);
           }
 
           if (event.currentorderid != null && event.currentitems != null) {
@@ -454,8 +451,8 @@ class KotSubmitPrintBloc
                 element.unitTaxableAmountBeforeDiscount * qty;
             totalTaxableAmount += element.unitTaxableAmount * qty;
             totalAmount += element.basicRate * qty;
-            totalTaxAmount = totalTaxableAmount * (element.gstPer / 100);
-            totalCessAmount = totalTaxableAmount * (element.cessPer / 100);
+            totalTaxAmount += totalTaxableAmount * (element.gstPer / 100);
+            totalCessAmount += totalTaxableAmount * (element.cessPer / 100);
           }
 
           String updateQuery = '''

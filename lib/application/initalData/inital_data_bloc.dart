@@ -17,6 +17,8 @@ part 'inital_data_bloc.freezed.dart';
 class InitalDataBloc extends Bloc<InitalDataEvent, InitalDataState> {
   InitalDataBloc() : super(InitalDataState.initial()) {
     on<Addinitaldatas>((event, emit) async {
+              emit(state.copyWith(isloading: true));
+
       log('Addinitaldatas--pppppp');
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
@@ -41,7 +43,7 @@ class InitalDataBloc extends Bloc<InitalDataEvent, InitalDataState> {
           TaxtypeMng().addTaxtype(value: true);
         }
         infoCustomer = settingsList[0];
-        emit(state.copyWith(settingsData: settingsList[0]));
+        emit(state.copyWith(settingsData: settingsList[0],isloading: false));
       } catch (e) {
         log(e.toString());
       }

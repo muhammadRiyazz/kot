@@ -16,6 +16,7 @@ class BillSubmitPrintState with _$BillSubmitPrintState {
     double? cess,
     required bool billsubmission,
     required bool trafic,
+    required String invNo,
     required int printerstatus,
   }) = _KotSubmitPrintState;
   factory BillSubmitPrintState.initial() {
@@ -23,6 +24,7 @@ class BillSubmitPrintState with _$BillSubmitPrintState {
         printitems: [],
         billitems: [],
         loading: false,
+        invNo: 'INV--',
         printerstatus: 0,
         isLoading: false,
         billsubmission: false,

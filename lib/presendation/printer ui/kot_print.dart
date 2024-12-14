@@ -3,14 +3,13 @@ import 'package:intl/intl.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 
-Future<List<int>> kotPrintData({
-  required List<kotItem> items,
-  required String tableNo,
-  required String orderNo,
-  required String kotNo,
-  required String user,
-  required String note
-}) async {
+Future<List<int>> kotPrintData(
+    {required List<kotItem> items,
+    required String tableNo,
+    required String orderNo,
+    required String kotNo,
+    required String user,
+    required String note}) async {
   final profile = await CapabilityProfile.load();
   final generator = Generator(PaperSize.mm80, profile);
   List<int> bytes = [];
@@ -82,7 +81,7 @@ Future<List<int>> kotPrintData({
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
-      text: usernameA??'',
+      text: usernameA ?? '',
       width: 6,
       styles: const PosStyles(bold: true, align: PosAlign.right),
     ),
@@ -136,26 +135,21 @@ Future<List<int>> kotPrintData({
 
   bytes += generator.hr(len: 48);
 
-    note==''?null:bytes += generator.text(
-    note,
-    styles: const PosStyles(
-      align: PosAlign.center,
-      bold: false,
-    ),
-  );
+  note == ''
+      ? null
+      : bytes += generator.text(
+          note,
+          styles: const PosStyles(
+            align: PosAlign.center,
+            bold: false,
+          ),
+        );
 
- note==''?null: bytes += generator.hr(len: 48);
+  note == '' ? null : bytes += generator.hr(len: 48);
 
   // Footer Note
   bytes += generator.text(
-    'As per experts in food hygiene and safety,',
-    styles: const PosStyles(
-      align: PosAlign.center,
-      bold: true,
-    ),
-  );
-  bytes += generator.text(
-    'consume food products within 2 hours of purchase.',
+    infoCustomer!.kotFooterText,
     styles: const PosStyles(
       align: PosAlign.center,
       bold: true,

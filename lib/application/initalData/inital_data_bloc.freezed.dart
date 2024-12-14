@@ -560,6 +560,7 @@ abstract class FetchAppEnty implements InitalDataEvent {
 /// @nodoc
 mixin _$InitalDataState {
   List<String> get paymentType => throw _privateConstructorUsedError;
+  bool get isloading => throw _privateConstructorUsedError;
   Settings? get settingsData => throw _privateConstructorUsedError;
 
   /// Create a copy of InitalDataState
@@ -575,7 +576,7 @@ abstract class $InitalDataStateCopyWith<$Res> {
           InitalDataState value, $Res Function(InitalDataState) then) =
       _$InitalDataStateCopyWithImpl<$Res, InitalDataState>;
   @useResult
-  $Res call({List<String> paymentType, Settings? settingsData});
+  $Res call({List<String> paymentType, bool isloading, Settings? settingsData});
 }
 
 /// @nodoc
@@ -594,6 +595,7 @@ class _$InitalDataStateCopyWithImpl<$Res, $Val extends InitalDataState>
   @override
   $Res call({
     Object? paymentType = null,
+    Object? isloading = null,
     Object? settingsData = freezed,
   }) {
     return _then(_value.copyWith(
@@ -601,6 +603,10 @@ class _$InitalDataStateCopyWithImpl<$Res, $Val extends InitalDataState>
           ? _value.paymentType
           : paymentType // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isloading: null == isloading
+          ? _value.isloading
+          : isloading // ignore: cast_nullable_to_non_nullable
+              as bool,
       settingsData: freezed == settingsData
           ? _value.settingsData
           : settingsData // ignore: cast_nullable_to_non_nullable
@@ -617,7 +623,7 @@ abstract class _$$InitalDataStateImplCopyWith<$Res>
       __$$InitalDataStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<String> paymentType, Settings? settingsData});
+  $Res call({List<String> paymentType, bool isloading, Settings? settingsData});
 }
 
 /// @nodoc
@@ -634,6 +640,7 @@ class __$$InitalDataStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? paymentType = null,
+    Object? isloading = null,
     Object? settingsData = freezed,
   }) {
     return _then(_$InitalDataStateImpl(
@@ -641,6 +648,10 @@ class __$$InitalDataStateImplCopyWithImpl<$Res>
           ? _value._paymentType
           : paymentType // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isloading: null == isloading
+          ? _value.isloading
+          : isloading // ignore: cast_nullable_to_non_nullable
+              as bool,
       settingsData: freezed == settingsData
           ? _value.settingsData
           : settingsData // ignore: cast_nullable_to_non_nullable
@@ -653,7 +664,9 @@ class __$$InitalDataStateImplCopyWithImpl<$Res>
 
 class _$InitalDataStateImpl implements _InitalDataState {
   _$InitalDataStateImpl(
-      {required final List<String> paymentType, this.settingsData})
+      {required final List<String> paymentType,
+      required this.isloading,
+      this.settingsData})
       : _paymentType = paymentType;
 
   final List<String> _paymentType;
@@ -665,11 +678,13 @@ class _$InitalDataStateImpl implements _InitalDataState {
   }
 
   @override
+  final bool isloading;
+  @override
   final Settings? settingsData;
 
   @override
   String toString() {
-    return 'InitalDataState(paymentType: $paymentType, settingsData: $settingsData)';
+    return 'InitalDataState(paymentType: $paymentType, isloading: $isloading, settingsData: $settingsData)';
   }
 
   @override
@@ -679,13 +694,18 @@ class _$InitalDataStateImpl implements _InitalDataState {
             other is _$InitalDataStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._paymentType, _paymentType) &&
+            (identical(other.isloading, isloading) ||
+                other.isloading == isloading) &&
             (identical(other.settingsData, settingsData) ||
                 other.settingsData == settingsData));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_paymentType), settingsData);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_paymentType),
+      isloading,
+      settingsData);
 
   /// Create a copy of InitalDataState
   /// with the given fields replaced by the non-null parameter values.
@@ -700,10 +720,13 @@ class _$InitalDataStateImpl implements _InitalDataState {
 abstract class _InitalDataState implements InitalDataState {
   factory _InitalDataState(
       {required final List<String> paymentType,
+      required final bool isloading,
       final Settings? settingsData}) = _$InitalDataStateImpl;
 
   @override
   List<String> get paymentType;
+  @override
+  bool get isloading;
   @override
   Settings? get settingsData;
 

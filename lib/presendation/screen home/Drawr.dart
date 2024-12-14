@@ -10,7 +10,6 @@ import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dar
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/settings/stock_mng.dart';
-
 import '../../core/printer/network_printer.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -45,62 +44,68 @@ class _AppDrawerState extends State<AppDrawer> {
           //   ),
           // ),
 
-          Container(
-            color: mainclr, // Background color of the header
+          BlocBuilder<InitalDataBloc, InitalDataState>(
+            builder: (context, state) {
+              return Container(
+                color: mainclr, // Background color of the header
 
-            child: Padding(
-              padding:
-                  EdgeInsets.only(bottom: 20, top: 60, left: 20, right: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const CircleAvatar(
-                    radius: 35,
-                    backgroundImage: AssetImage(
-                        'assets/img/profile/profile.jpg'), // Replace with your asset or network image
-                    backgroundColor: Colors.white,
-                  ),
-                  const SizedBox(
-                    height: 18,
-                  ),
-                  Text(
-                    info.cmpname,
-                    style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    info.companyContactNo,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 20, top: 60, left: 20, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        ' User',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.white,
-                        ),
+                      const CircleAvatar(
+                        radius: 35,
+                        backgroundImage: AssetImage(
+                            'assets/img/profile/profile.jpg'), // Replace with your asset or network image
+                        backgroundColor: Colors.white,
+                      ),
+                      const SizedBox(
+                        height: 18,
                       ),
                       Text(
-                        '$userid ',
-                        style: TextStyle(
+                        state.isloading ? '--- --- --- --- ' : info.cmpname,
+                        style: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        state.isloading
+                            ? '--- --- --- '
+                            : info.companyContactNo,
+                        style: const TextStyle(
                           fontSize: 13,
                           color: Colors.white,
                         ),
                       ),
+                      const Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            ' User',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            '$userid ',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      )
+                      // Replace with dynamic data
                     ],
-                  )
-                  // Replace with dynamic data
-                ],
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
           ),
           // Navigation Options
           const SizedBox(

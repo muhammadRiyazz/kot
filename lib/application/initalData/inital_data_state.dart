@@ -4,9 +4,10 @@ part of 'inital_data_bloc.dart';
 class InitalDataState with _$InitalDataState {
   factory InitalDataState({
     required List<String> paymentType,
+    required bool isloading,
     Settings? settingsData,
   }) = _InitalDataState;
   factory InitalDataState.initial() {
-    return InitalDataState(paymentType: []);
+    return InitalDataState(paymentType: [],isloading: true);
   }
 }

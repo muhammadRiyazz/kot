@@ -7,6 +7,10 @@ Future<List<int>> billPrintData({
   required List<kotItem> items,
   required String tableNo,
   required String invoiceNo,
+  required double taxable,
+  required double netAmount,
+  required double cGst,
+  required double sGst,
 }) async {
   final profile = await CapabilityProfile.load();
   final generator = Generator(PaperSize.mm80, profile);
@@ -17,18 +21,18 @@ Future<List<int>> billPrintData({
     infoCustomer!.cmpname,
     styles: const PosStyles(align: PosAlign.center, bold: true),
   );
- 
+
   bytes += generator.text(
     infoCustomer!.cmpadd,
     styles: const PosStyles(align: PosAlign.center, bold: false),
   );
- 
+
   bytes += generator.text(
-infoCustomer!.companyContactNo,
+    infoCustomer!.companyContactNo,
     styles: const PosStyles(align: PosAlign.center),
   );
   bytes += generator.text(
-   infoCustomer!.cmpgstno,
+    infoCustomer!.cmpgstno,
     styles: const PosStyles(align: PosAlign.center, bold: true),
   );
   bytes += generator.hr(len: 48);
@@ -80,7 +84,7 @@ infoCustomer!.companyContactNo,
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
-      text: usernameA??'--',
+      text: usernameA ?? '--',
       width: 6,
       styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
@@ -95,17 +99,17 @@ infoCustomer!.companyContactNo,
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
-      text: 'Qty',
-      width: 2,
-      styles: const PosStyles(bold: true, align: PosAlign.right),
-    ),
-    PosColumn(
       text: 'Rate',
       width: 2,
       styles: const PosStyles(bold: true, align: PosAlign.right),
     ),
     PosColumn(
-      text: 'Total',
+      text: 'Qty',
+      width: 2,
+      styles: const PosStyles(bold: true, align: PosAlign.right),
+    ),
+    PosColumn(
+      text: 'Amount',
       width: 2,
       styles: const PosStyles(bold: true, align: PosAlign.right),
     ),
@@ -121,64 +125,71 @@ infoCustomer!.companyContactNo,
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
+        text: item.basicRate.toString(),
+        width: 2,
+        styles: const PosStyles(align: PosAlign.right),
+      ),
+      PosColumn(
         text: item.qty.toString(),
         width: 2,
         styles: const PosStyles(align: PosAlign.right),
       ),
       PosColumn(
-        text: item.basicRate.toStringAsFixed(2),
-        width: 2,
-        styles: const PosStyles(align: PosAlign.right),
-      ),
-      PosColumn(
-        text: (item.quantity * item.basicRate).toStringAsFixed(2),
+        text: (item.qty * item.basicRate).toStringAsFixed(2),
         width: 2,
         styles: const PosStyles(align: PosAlign.right),
       ),
     ]);
   }
   bytes += generator.hr(len: 48);
-
-  // Summary
-  double taxableAmount = items.fold(
-      0.0, (sum, item) => sum + (item.quantity * item.basicRate));
-  double cgst = taxableAmount * 0.025;
-  double sgst = taxableAmount * 0.025;
+  bytes += generator.feed(1);
 
   bytes += generator.row([
     PosColumn(
       text: 'Taxable Amount',
       width: 8,
-      styles: const PosStyles(align: PosAlign.left),
+      styles: const PosStyles(align: PosAlign.left, bold: true),
     ),
     PosColumn(
-      text: taxableAmount.toStringAsFixed(2),
+      text: taxable.toStringAsFixed(2),
       width: 4,
-      styles: const PosStyles(align: PosAlign.right),
+      styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
   ]);
   bytes += generator.row([
     PosColumn(
-      text: 'CGST (2.5%)',
+      text: 'Discount',
       width: 8,
-      styles: const PosStyles(align: PosAlign.left),
+      styles: const PosStyles(align: PosAlign.left, bold: true),
     ),
     PosColumn(
-      text: cgst.toStringAsFixed(2),
+      text: '0.00',
       width: 4,
-      styles: const PosStyles(align: PosAlign.right),
+      styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
   ]);
   bytes += generator.row([
     PosColumn(
-      text: 'SGST (2.5%)',
+      text: 'CGST',
       width: 8,
-      styles: const PosStyles(align: PosAlign.left),
+      styles: const PosStyles(align: PosAlign.left, bold: true),
     ),
     PosColumn(
-      text: sgst.toStringAsFixed(2),
+      text: cGst.toStringAsFixed(2),
       width: 4,
-      styles: const PosStyles(align: PosAlign.right),
+      styles: const PosStyles(align: PosAlign.right, bold: true),
+    ),
+  ]);
+  bytes += generator.row([
+    PosColumn(
+      text: 'SGST',
+      width: 8,
+      styles: const PosStyles(align: PosAlign.left, bold: true),
+    ),
+    PosColumn(
+      text: sGst.toStringAsFixed(2),
+      width: 4,
+      styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
   ]);
   bytes += generator.hr(len: 48);
@@ -187,24 +198,53 @@ infoCustomer!.companyContactNo,
     PosColumn(
       text: 'Net Amount',
       width: 8,
-      styles: const PosStyles(bold: true, align: PosAlign.left),
+      styles: const PosStyles(
+        bold: true,
+        align: PosAlign.left,
+        height: PosTextSize.size2, // Double height
+        width: PosTextSize.size2, // Double width
+      ),
     ),
     PosColumn(
-      text: (taxableAmount + cgst + sgst).toStringAsFixed(2),
+      text: netAmount.toStringAsFixed(2),
       width: 4,
-      styles: const PosStyles(bold: true, align: PosAlign.right),
+      styles: const PosStyles(
+        bold: true,
+        align: PosAlign.right,
+        height: PosTextSize.size2, // Double height
+        width: PosTextSize.size2, // Double width
+      ),
     ),
   ]);
+  // final sanitizedInvoiceNo = invoiceNo.replaceAll(
+  //     RegExp(r'[^A-Za-z0-9]'), ''); // Removes unsupported characters
+
+// Convert sanitized invoiceNo to ASCII codes
+  // final invoiceNoList = sanitizedInvoiceNo.codeUnits;
+
+// bytes += generator.barcode(
+//   Barcode.code128(invoiceNoList), // Convert to ASCII values
+//   width: BarcodeWidth.medium, // Adjust width as needed
+//   height: 50, // Adjust height as needed
+//   align: PosAlign.center, // Center the barcode
+// );
+
+// Optional: Add some text below the barcode
+  // bytes += generator.text(
+  //   'Invoice No: $invoiceNo',
+  //   styles: const PosStyles(align: PosAlign.center, bold: true),
+  // );
   bytes += generator.hr(len: 48);
 
   // Footer
+
+  bytes += generator.text(
+    infoCustomer!.billFooterText,
+    styles: const PosStyles(align: PosAlign.center),
+  );
   bytes += generator.text(
     'Thank You! Visit Again!',
     styles: const PosStyles(align: PosAlign.center, bold: true),
-  );
-  bytes += generator.text(
-    'Consume food within 2 hours of purchase.',
-    styles: const PosStyles(align: PosAlign.center),
   );
 
   // Feed and cut

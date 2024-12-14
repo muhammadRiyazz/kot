@@ -367,8 +367,8 @@ class SelectedProductsPage extends StatelessWidget {
                                                     top: 5),
                                                 child: Text(product.quantity ==
                                                         0
-                                                    ? '₹ ${product.basicRate} /-'
-                                                    : '₹ ${product.basicRate * product.quantity} /-'),
+                                                    ? '₹ ${product.basicRate.abs()} /-'
+                                                    : '₹ ${(product.basicRate * product.quantity).abs()} /-'),
                                               ),
                                               trailing: Text(
                                                 '${product.quantity.toString()}  ',
@@ -877,31 +877,35 @@ class SelectedProductsPage extends StatelessWidget {
                                                 ),
                                                 SizedBox(height: 10),
                                                 Divider(),
-                                                ListTile(
-                                                  title: const Text(
-                                                    'KOT Print',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  subtitle: Text(
-                                                    'Enable if you want to print the KOT.',
-                                                    style: TextStyle(
-                                                        fontSize: 13,
-                                                        color: Colors.grey),
-                                                  ),
-                                                  trailing: Checkbox(
-                                                    value: kotPrint,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        kotPrint =
-                                                            value ?? false;
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
+                                                state.toKOTitems.isNotEmpty
+                                                    ? ListTile(
+                                                        title: const Text(
+                                                          'KOT Print',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        subtitle: Text(
+                                                          'Enable if you want to print the KOT.',
+                                                          style: TextStyle(
+                                                              fontSize: 13,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
+                                                        trailing: Checkbox(
+                                                          value: kotPrint,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              kotPrint =
+                                                                  value ??
+                                                                      false;
+                                                            });
+                                                          },
+                                                        ),
+                                                      )
+                                                    : const SizedBox(),
                                                 state.cancelKOTitems.isNotEmpty
                                                     ? ListTile(
                                                         title: const Text(

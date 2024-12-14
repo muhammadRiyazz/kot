@@ -3,9 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.dart';
+import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
+import 'package:restaurant_kot/application/printing/printing_bloc.dart';
+import 'package:restaurant_kot/application/restore%20bill/restore_bill_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/invoice/inv_order_model.dart';
+import 'package:restaurant_kot/domain/item/kot_item_model.dart';
+import 'package:restaurant_kot/domain/printer/priter_config.dart';
+import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
 class FinishedOrderDetail extends StatelessWidget {
@@ -288,7 +294,7 @@ class FinishedOrderDetail extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text('Cess'),
+                                              const Text('Cess'),
                                               Text(
                                                   '₹ ${invoice.totalCessAmount!.toStringAsFixed(2)}'),
                                             ],
@@ -360,52 +366,165 @@ class FinishedOrderDetail extends StatelessWidget {
                                           ),
                                           Column(
                                             children: [
-                                              MainButton(
-                                                  label: 'Print Bill',
-                                                  onpress: () {
-                                                    // submitAndPrint();
-                                                  }),
+                                              BlocConsumer<PrintingBloc,
+                                                  PrintingState>(
+                                                listener: (context, state) {
+
+                                                  
+                                                },
+                                                builder: (context, sstate) {
+                                                  return sstate.isLoading
+                                                      ? const LinearProgressIndicator(
+                                                          color: mainclr,
+                                                        )
+                                                      : MainButton(
+                                                          label: 'Print Bill',
+                                                          onpress: () {
+                                                            PrinterConfig?
+                                                                printer =
+                                                                context
+                                                                    .read<
+                                                                        PrinterSetupBloc>()
+                                                                    .state
+                                                                    .billPrinterInfo;
+                                                            BlocProvider.of<PrintingBloc>(context).add(PrintBill(
+                                                                printer:
+                                                                    printer!,
+                                                                items: convert(
+                                                                    invList: state
+                                                                        .invoiceDetails!),
+                                                                invNo: invoice
+                                                                    .custominvno!,
+                                                                taxable: invoice
+                                                                    .subTotal!,
+                                                                netAmount: invoice
+                                                                    .totalHaveToPayAmount!,
+                                                                cGst: invoice
+                                                                    .totaltaxamount!,
+                                                                sGst: invoice
+                                                                    .totalCessAmount!,
+                                                                tableName: invoice
+                                                                    .tableNumber!));
+
+                                                            // submitAndPrint();
+                                                          });
+                                                },
+                                              ),
                                               SizedBox(
                                                 height: 12,
                                               ),
                                               billEdit!
-                                                  ? ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        backgroundColor: const Color
-                                                            .fromARGB(
-                                                            255,
-                                                            255,
-                                                            255,
-                                                            255), // Set the button background color
+                                                  ? BlocConsumer<
+                                                      RestoreBillBloc,
+                                                      RestoreBillState>(
+                                                      listener:
+                                                          (context, sstate) {
+                                                        if (sstate.updated) {
+                                                          Navigator.of(context)
+                                                              .pushAndRemoveUntil(
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const HomeScreen(
+                                                                      from: 1),
+                                                            ),
+                                                            (route) => false,
+                                                          );
 
-                                                        minimumSize: Size(
-                                                            double.infinity,
-                                                            55), // Full-width button
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          side: BorderSide(
-                                                              color: mainclr),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                  20), // Border radius of 10
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        // Navigator.push(context, MaterialPageRoute(
-                                                        //   builder: (context) {
-                                                        //     return BillPage();
-                                                        //   },
-                                                        // ));
+                                                          const snackBar =
+                                                              SnackBar(
+                                                            content: Row(
+                                                              children: [
+                                                                Icon(
+                                                                    Icons
+                                                                        .domain_verification,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    size: 24),
+                                                                SizedBox(
+                                                                    width: 10),
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    "Order has been restored ",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            16),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            backgroundColor:
+                                                                mainclr,
+                                                            behavior:
+                                                                SnackBarBehavior
+                                                                    .floating,
+                                                            margin:
+                                                                EdgeInsets.all(
+                                                                    16),
+                                                            duration: Duration(
+                                                                seconds: 3),
+                                                          );
+
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  snackBar);
+                                                        }
                                                       },
-                                                      child: Text(
-                                                        'Restore Order',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: mainclr),
-                                                      ))
-                                                  : SizedBox()
+                                                      builder:
+                                                          (context, sstate) {
+                                                        return !sstate.isLoading
+                                                            ? ElevatedButton(
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                  backgroundColor:
+                                                                      const Color
+                                                                          .fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255), // Set the button background color
+
+                                                                  minimumSize:
+                                                                      const Size(
+                                                                          double
+                                                                              .infinity,
+                                                                          55), // Full-width button
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    side: const BorderSide(
+                                                                        color:
+                                                                            mainclr),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20), // Border radius of 10
+                                                                  ),
+                                                                ),
+                                                                onPressed: () {
+                                                                  BlocProvider.of<RestoreBillBloc>(context).add(Restore(
+                                                                      ordNo: invoice
+                                                                          .orderNumber!,
+                                                                      invNo: invoice
+                                                                          .custominvno!,
+                                                                      amt: invoice
+                                                                          .totalHaveToPayAmount!
+                                                                          .toString()));
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                  'Restore Order',
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color:
+                                                                          mainclr),
+                                                                ))
+                                                            : const LinearProgressIndicator(
+                                                                color: mainclr,
+                                                              );
+                                                      },
+                                                    )
+                                                  : const SizedBox()
                                             ],
                                           ),
                                         ],
@@ -426,4 +545,27 @@ class FinishedOrderDetail extends StatelessWidget {
       ),
     );
   }
+}
+
+List<kotItem> convert({required List<InvoiceItem> invList}) {
+  List<kotItem> printItems = [];
+  for (var element in invList) {
+    printItems.add(kotItem(
+        gstAmt: element.gstAmount!,
+        cessAmt: element.cessAmount!,
+        kotno: '',
+        stock: 0,
+        qty: element.qty!.toInt(),
+        serOrGoods: '',
+        kitchenName: '',
+        itemName: element.pdtname!,
+        itemCode: element.pdtcode!,
+        quantity: 0,
+        basicRate: element.unitPrice!,
+        unitTaxableAmountBeforeDiscount: element.amount!,
+        unitTaxableAmount: element.amount!,
+        gstPer: 0,
+        cessPer: 0));
+  }
+  return printItems;
 }

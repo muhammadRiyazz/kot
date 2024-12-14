@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/BillSubmitPrint/bill_submit_print_bloc.dart';
 import 'package:restaurant_kot/application/KotSubmitPrint/kot_submit_print_bloc.dart';
 import 'package:restaurant_kot/application/customerpart/customerpart_bloc.dart';
-import 'package:restaurant_kot/application/items%20To%20Kot/items_to_kot_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
@@ -15,7 +14,6 @@ import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/check_printer_congiration.dart';
-import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/kot_submision_success.dart';
 import 'package:restaurant_kot/presendation/screen%20bill%20preview/screen_bill.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/table_view.dart';
@@ -478,21 +476,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                                   ),
                                                                   onPressed:
                                                                       () {
-                                                                    log(state
-                                                                        .orderitems[
-                                                                            index]
-                                                                        .quantity
-                                                                        .toString());
-                                                                    log(state
-                                                                        .orderitems[
-                                                                            index]
-                                                                        .qty
-                                                                        .toString());
                                                                     int value =
                                                                         state.orderitems[index].quantity -
                                                                             1;
-                                                                    log(value
-                                                                        .toString());
+
                                                                     if (value
                                                                             .abs() !=
                                                                         state
@@ -650,8 +637,6 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             BillSubmitedDone(onpress: () {
-                                          Navigator.pop(context);
-
                                           BlocProvider.of<KotSubmitPrintBloc>(
                                                   context)
                                               .add(KotSubmitPrintEvent.rePrint(
@@ -681,7 +666,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                               },
                               builder: (context, sstate) {
                                 return sstate.isLoading
-                                    ? const LinearProgressIndicator(color: mainclr,)
+                                    ? const LinearProgressIndicator(
+                                        color: mainclr,
+                                      )
                                     : state.toAddItems.isNotEmpty ||
                                             state.toCancelItems.isNotEmpty ||
                                             selectedItems.isNotEmpty
@@ -948,8 +935,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                   ));
                                                 },
                                                 child: const Text(
-                                                  'Print Bill',
+                                                  textAlign: TextAlign.center,
+                                                  'Add Bill',
                                                   style: TextStyle(
+                                                      fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: mainclr),

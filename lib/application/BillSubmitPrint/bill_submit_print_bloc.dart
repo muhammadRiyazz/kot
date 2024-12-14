@@ -235,6 +235,7 @@ class BillSubmitPrintBloc
             loading: false,
             billsubmission: true,
             printerstatus: 0,
+            invNo: invno,
           ));
           log('print section ----------');
 
@@ -243,6 +244,10 @@ class BillSubmitPrintBloc
           int printingStatus = 0;
 
           final List<int> test = await billPrintData(
+            cGst: state.tax!,
+            sGst: state.cess!,
+            netAmount: state.totalAmt!,
+            taxable: state.subTotal!,
             items: state.printitems,
             invoiceNo: invno,
             // orderNo: state.orderid!,
@@ -419,6 +424,7 @@ class BillSubmitPrintBloc
             emit(state.copyWith(
               loading: false,
               billsubmission: true,
+              invNo: invno,
               printerstatus: 0,
             ));
             log('emit done--');
@@ -430,6 +436,9 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
+              netAmount: state.totalAmt!, cGst: state.tax!,
+              sGst: state.cess!,
+              taxable: state.subTotal!,
               items: state.printitems,
               invoiceNo: invno,
               // orderNo: state.orderid!,
@@ -540,14 +549,14 @@ class BillSubmitPrintBloc
 
           await connection.writeData(query);
           log('case 1');
-   String deleteQueary = '''
+          String deleteQueary = '''
            DELETE FROM [Restaurant].[dbo].[invoicedetail]
             WHERE invoiceno = '${event.invNo}';
            ''';
 
           log(deleteQueary);
-       
-              await connection.writeData(deleteQueary);
+
+          await connection.writeData(deleteQueary);
           for (var element in billItems) {
             log('case 1');
             log(element.itemName);
@@ -556,7 +565,7 @@ class BillSubmitPrintBloc
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
 
-              String query3 = """INSERT INTO [Restaurant].[dbo].[invoicedetail] (
+            String query3 = """INSERT INTO [Restaurant].[dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
             pdtname, HSNCode, discp, pcs, qty, Freeqty, unitprice, itemMRP, Amount,
@@ -602,6 +611,7 @@ class BillSubmitPrintBloc
           emit(state.copyWith(
             loading: false,
             billsubmission: true,
+            invNo: event.invNo,
             printerstatus: 0,
           ));
           log('print section ----------');
@@ -611,6 +621,9 @@ class BillSubmitPrintBloc
           int printingStatus = 0;
 
           final List<int> test = await billPrintData(
+            netAmount: state.totalAmt!, cGst: state.tax!,
+            sGst: state.cess!,
+            taxable: state.subTotal!,
             items: state.printitems,
             invoiceNo: event.invNo,
             // orderNo: state.orderid!,
@@ -699,22 +712,21 @@ class BillSubmitPrintBloc
 
           await connection.writeData(query4);
           log('PayorEX done');
-String deleteQueary = '''
+          String deleteQueary = '''
            DELETE FROM [Restaurant].[dbo].[invoicedetail]
             WHERE invoiceno = '${event.invNo}';
            ''';
 
           log(deleteQueary);
-       
-              await connection.writeData(deleteQueary);
+
+          await connection.writeData(deleteQueary);
           for (var element in billItems) {
             final venCGST = element.gstPer / 2;
             final venCGSTamt = element.gstAmt / 2;
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
 
-              String query3 =
-                  """INSERT INTO [Restaurant].[dbo].[invoicedetail] (
+            String query3 = """INSERT INTO [Restaurant].[dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
             pdtname, HSNCode, discp, pcs, qty, Freeqty, unitprice, itemMRP, Amount,
@@ -769,6 +781,7 @@ String deleteQueary = '''
           emit(state.copyWith(
             loading: false,
             billsubmission: true,
+            invNo: event.invNo,
             printerstatus: 0,
           ));
 
@@ -779,9 +792,13 @@ String deleteQueary = '''
           int printingStatus = 0;
 
           final List<int> test = await billPrintData(
+            cGst: state.tax!,
+            sGst: state.cess!,
+            // cGst: ,netAmount: ,sGst: ,
+            netAmount: state.totalAmt!,
+            taxable: state.subTotal!,
             items: state.printitems,
             invoiceNo: event.invNo,
-            // orderNo: state.orderid!,
             tableNo: state.table!.tableName,
           );
 
@@ -813,6 +830,55 @@ String deleteQueary = '''
         emit(state.copyWith(
           loading: false,
         ));
+        log('Error: $e');
+      }
+    });
+
+    on<BillRePrint>((event, emit) async {
+      try {
+        emit(state.copyWith(
+          printerstatus: 0,
+        ));
+
+        PrinterConfig printer = event.printer;
+
+        int printingStatus = 0;
+
+        final List<int> test = await billPrintData(
+          cGst: state.tax!,
+          sGst: state.cess!,
+          netAmount: state.totalAmt!,
+          taxable: state.subTotal!,
+          items: state.printitems,
+          invoiceNo: state.invNo,
+          // orderNo: state.orderid!,
+          tableNo: state.table!.tableName,
+        );
+
+        printingStatus = await NetworkPrinter().printTicket(
+          test,
+          printer.printerName,
+        );
+
+        log('Printer response---$printingStatus');
+
+        if (printingStatus == 1) {
+          log('Printer status: 2---------');
+          emit(state.copyWith(
+            printerstatus: 2,
+          ));
+        } else {
+          log('Printer status: 1---------');
+          emit(state.copyWith(
+            printerstatus: 1,
+          ));
+        }
+      } catch (e) {
+        // Fluttertoast.showToast(msg: 'sorry Something went wrong');
+        emit(state.copyWith(
+          loading: false,
+        ));
+
         log('Error: $e');
       }
     });
