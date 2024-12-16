@@ -12,7 +12,6 @@ import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/check_printer_congiration.dart';
-import 'package:restaurant_kot/presendation/conn/bluetooth.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/kot_submision_success.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/re_print.dart';
 import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dart';
