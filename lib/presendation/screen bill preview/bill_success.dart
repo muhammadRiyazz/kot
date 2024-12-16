@@ -1,4 +1,4 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
+// import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -153,7 +153,7 @@ class BillPrintpage extends StatefulWidget {
     super.key,
   });
 
-  final AssetsAudioPlayer player = AssetsAudioPlayer();
+  // final AssetsAudioPlayer player = AssetsAudioPlayer();
 
   @override
   State<BillPrintpage> createState() => _BillPrintpageState();
@@ -164,10 +164,10 @@ class _BillPrintpageState extends State<BillPrintpage> {
   void initState() {
     super.initState();
 
-    widget.player.open(
-      Audio('assets/mp3/success-1-6297.mp3'),
-      autoStart: true,
-    );
+    // widget.player.open(
+    //   Audio('assets/mp3/success-1-6297.mp3'),
+    //   autoStart: true,
+    // );
 
     HapticFeedback.lightImpact();
   }

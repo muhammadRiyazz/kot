@@ -29,7 +29,6 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   flutter_esc_pos_network: ^1.0.3
   flutter_esc_pos_utils: ^1.0.1
-  assets_audio_player: ^3.1.1
 
 
 

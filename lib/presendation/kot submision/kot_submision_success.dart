@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:assets_audio_player/assets_audio_player.dart';
+// import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +16,7 @@ class BillSubmitedDone extends StatefulWidget {
 
   BillSubmitedDone({Key? key, required this.onpress}) : super(key: key);
 
-  final AssetsAudioPlayer player = AssetsAudioPlayer();
+  // final AssetsAudioPlayer player = AssetsAudioPlayer();
 
   @override
   State<BillSubmitedDone> createState() => _BillSubmitedDoneState();
@@ -27,10 +27,10 @@ class _BillSubmitedDoneState extends State<BillSubmitedDone> {
   void initState() {
     super.initState();
 
-    widget.player.open(
-      Audio('assets/mp3/success-1-6297.mp3'),
-      autoStart: true,
-    );
+    // widget.player.open(
+    //   Audio('assets/mp3/success-1-6297.mp3'),
+    //   autoStart: true,
+    // );
 
     HapticFeedback.lightImpact();
   }
