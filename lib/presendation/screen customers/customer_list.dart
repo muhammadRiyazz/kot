@@ -18,7 +18,7 @@ class CustomerView extends StatelessWidget {
             return state.isLoading
                 ? Center(
                     child: CircularProgressIndicator(),
-                  )
+                  )    
                 : Column(
                     children: [
                       Container(
