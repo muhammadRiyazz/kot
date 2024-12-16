@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_pos_printer_platform_image_3
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
