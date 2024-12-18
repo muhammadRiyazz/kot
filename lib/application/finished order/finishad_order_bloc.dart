@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/invoice/inv_order_model.dart';
 
 part 'finishad_order_event.dart';
@@ -57,17 +58,16 @@ class FinishadOrderBloc extends Bloc<FinishadOrderEvent, FinishadOrderState> {
       [UserID]
   FROM [Restaurant].[dbo].[InvoiceAccountDetail]
   WHERE CAST([Invoicedate] AS DATE) = '$dateOnly'
-        AND [CreditOrCleared] = 'Cleared';
+        AND [CreditOrCleared] = 'Cleared' AND [UserID] =$usernameA;
 """;
 
         String? result = await connection.getData(query);
         log(result);
         List<dynamic> jsonList = jsonDecode(result);
-List<InvoicesList> invoices = jsonList.map((e) => InvoicesList.fromJson(e)).toList();
+        List<InvoicesList> invoices =
+            jsonList.map((e) => InvoicesList.fromJson(e)).toList();
 
- emit(state.copyWith(
-          isLoading: false,invoices: invoices
-        ));
+        emit(state.copyWith(isLoading: false, invoices: invoices));
       } catch (e) {
         emit(state.copyWith(
           isLoading: false,
@@ -76,9 +76,7 @@ List<InvoicesList> invoices = jsonList.map((e) => InvoicesList.fromJson(e)).toLi
       }
     });
 
-
-
-     on<FetchDetails>((event, emit) async {
+    on<FetchDetails>((event, emit) async {
       log('FetchDetails called ---');
       try {
         emit(state.copyWith(
@@ -137,17 +135,15 @@ List<InvoicesList> invoices = jsonList.map((e) => InvoicesList.fromJson(e)).toLi
       ,[KOTNumber]
       ,[UserID]
   FROM [Restaurant].[dbo].[invoicedetail]
-  WHERE [invoiceno] = '${event.invNo}';
+  WHERE [invoiceno] = '${event.invNo}' ;
 """;
 
         String? result = await connection.getData(query);
         log(result);
- List<dynamic> jsonData = jsonDecode(result);
-  List<InvoiceItem> items =
-      jsonData.map((item) => InvoiceItem.fromJson(item)).toList();
- emit(state.copyWith(
-          isLoading: false,invoiceDetails: items
-        ));
+        List<dynamic> jsonData = jsonDecode(result);
+        List<InvoiceItem> items =
+            jsonData.map((item) => InvoiceItem.fromJson(item)).toList();
+        emit(state.copyWith(isLoading: false, invoiceDetails: items));
       } catch (e) {
         emit(state.copyWith(
           isLoading: false,

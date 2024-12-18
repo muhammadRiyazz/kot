@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/infrastructure/get_time.dart';
 
 import '../../domain/orders/order_model.dart';
@@ -49,7 +50,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [UserID]
     FROM [Restaurant].[dbo].[OrderMainDetails]
     WHERE CAST([EntryDate] AS DATE) = '$currentDate' 
-          AND [ActiveInnactive] = 'Active' AND [CreditOrPaid] ='Credit';
+          AND [ActiveInnactive] = 'Active' AND [CreditOrPaid] ='Credit' AND [UserID] =$usernameA;
 """;
 
         // String ordersQuery =
@@ -108,7 +109,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [BillNumber], 
            [UserID]
     FROM [Restaurant].[dbo].[OrderMainDetails]
- WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}' AND [CreditOrPaid] ='Credit';
+ WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}' AND [CreditOrPaid] ='Credit' AND [UserID] =$usernameA;
 """;
 
         String? ordersresult = await connection.getData(ordersQuery);
