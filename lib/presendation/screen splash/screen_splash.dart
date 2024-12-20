@@ -35,33 +35,46 @@ class _SplashScreenState extends State<SplashScreen> {
         prefs.getBool('login') ?? false; // Default to false if not set
 
     // Navigate to the appropriate screen after 3 seconds
-    Timer(const Duration(seconds: 5), () async {
+    Timer(const Duration(seconds: 0), () async {
       if (isLoggedIn) {
-               BlocProvider.of<LoginBloc>(context)
-            .add(const         FetchLogin
-());
+        BlocProvider.of<LoginBloc>(context).add(const FetchLogin());
+
+        ///////
         BlocProvider.of<InitalDataBloc>(context)
             .add(const InitalDataEvent.fetchAppEnty());
+
         BlocProvider.of<InitalDataBloc>(context).add(const FetchPaymentType());
+
         BlocProvider.of<InitalDataBloc>(context)
             .add(const InitalDataEvent.addinitaldatas());
-
         BlocProvider.of<PrinterSetupBloc>(context)
             .add(const PrinterSetupEvent.fetchKitchens());
+
         BlocProvider.of<PrinterSetupBloc>(context)
             .add(const PrinterSetupEvent.fetchPrinter());
         await StockMng().fetchstockmngGoods();
         await StockMng().fetchstockmngService();
-BlocProvider.of<CustomerpartBloc>(context)
+
+        BlocProvider.of<CustomerpartBloc>(context)
             .add(const CustomerpartEvent.cfetchlist());
+
+        BlocProvider.of<StockBloc>(context)
+            .add(const StockEvent.categoryFetch());
+        BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+        BlocProvider.of<FinishadOrderBloc>(context)
+            .add(const FinishadOrderEvent.fetchBills());
+        BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
+
+        Timer(const Duration(seconds: 8,), () async {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => const HomeScreen(
+                      from: 0,
+                    )),
+          );
+        });
+
         // If the user is logged in, navigate to the home screen
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => const HomeScreen(
-                    from: 0,
-                  )),
-        );
-        
       } else {
         // If the user is not logged in, navigate to the login screen
         Navigator.of(context).pushReplacement(
@@ -73,18 +86,6 @@ BlocProvider.of<CustomerpartBloc>(context)
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<InitalDataBloc>(context)
-          .add(const InitalDataEvent.fetchinitaldatas());
-
-      BlocProvider.of<StockBloc>(context).add(const StockEvent.categoryFetch());
-      BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
-      BlocProvider.of<FinishadOrderBloc>(context)
-          .add(const FinishadOrderEvent.fetchBills());
-      BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
-      // BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchStocksAndCategory());
-      // BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchCategory());
-    });
     return Scaffold(
       backgroundColor: const Color.fromARGB(
           255, 255, 255, 255), // Splash screen background color

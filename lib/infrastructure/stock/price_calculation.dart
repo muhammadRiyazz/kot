@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/stock/stock_model.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/taxtype.dart';
 
@@ -40,6 +41,53 @@ double calculateBasicRate({
   return basicRate;
 }
 
+double parcelRateclc({required kotItem item, required dynamic pickuprate}) {
+  double basicRate = 0.0;
+
+  if (item.serOrGoods == 'GOODS') {
+    log('GOODS---');
+    // For goods, directly use the sale amount with tax
+    basicRate = item.basicRate;
+  } else {
+    log(' non GOODS---');
+
+    // For services, check the tax type
+    if (inc!) {
+      log(' inc----');
+      basicRate = safeParseDouble(pickuprate);
+    } else {
+      log('non inc----');
+
+      basicRate = safeParseDouble(pickuprate);
+
+      // double gstPer = safeParseDouble(element.vendorIGST);
+      // double cessPer = safeParseDouble(element.cessRate);
+      // double totalTaxPer = gstPer + cessPer;
+
+      // if (isAc) {
+      //   // AC rate calculation
+      //   double acRate = safeParseDouble(element.dineInACRate);
+      //           log('dineInACRate--- ${element.dineInACRate.toString()}');
+
+      //   log('acRate--- ${acRate.toString()}');
+      //   double totalTaxAmount = (acRate * totalTaxPer) / 100;
+      //   basicRate = acRate + totalTaxAmount;
+      // } else {
+      //           double nonAcRate = safeParseDouble(element.dineInNonACRate);
+
+      //   log('dineInNonACRate--- ${element.dineInNonACRate.toString()}');
+
+      //   log('nonAcRate--- ${nonAcRate.toString()}');
+      //   // Non-AC rate calculation
+      //   double totalTaxAmount = (nonAcRate * totalTaxPer) / 100;
+      //   basicRate = nonAcRate + totalTaxAmount;
+      // }
+    }
+  }
+  // log(basicRate.toString());
+  return basicRate;
+}
+
 double basicRateclc({
   required Product element,
   required bool isAc,
@@ -62,6 +110,7 @@ double basicRateclc({
           : safeParseDouble(element.dineInNonACRate);
     } else {
       log('non inc----');
+
       basicRate = isAc
           ? safeParseDouble(element.dineInACRate)
           : safeParseDouble(element.dineInNonACRate);
@@ -125,6 +174,37 @@ double taxableAmountcalculation({
       taxableAmount = isAc
           ? safeParseDouble(element.dineInACRate)
           : safeParseDouble(element.dineInNonACRate);
+    }
+  }
+
+  return taxableAmount;
+}
+
+double parceltaxableAmountcalculation(
+    {required kotItem item, required dynamic pickuprate}) {
+  log('taxableAmountcalculation---');
+  double taxableAmount = 0.0;
+
+  if (item.serOrGoods == 'GOODS') {
+    // For goods, directly use the sale amount with tax
+    taxableAmount = item.basicRate;
+  } else {
+    // For services, check the tax type
+    if (inc!) {
+      double gstPer = safeParseDouble(item.gstPer);
+      double cessPer = safeParseDouble(item.gstPer);
+      log('gstPer--- $gstPer');
+      log('cessPer--- $cessPer');
+
+      double totalTaxPer = gstPer + cessPer;
+      log('totalTaxPer--- $totalTaxPer');
+
+      double rate = safeParseDouble(pickuprate);
+      taxableAmount = rate / (1 + (totalTaxPer / 100));
+      log(' rate---------------${rate.toString()}');
+      log('taxableAmount ---------------${taxableAmount.toString()}');
+    } else {
+      taxableAmount = safeParseDouble(pickuprate);
     }
   }
 

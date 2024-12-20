@@ -9,9 +9,12 @@ Future<List<int>> billPrintData({
   required String invoiceNo,
   required double taxable,
   required double netAmount,
-  required double cGst,
-  required double sGst,
+  required double tax,
+  required double cess,
 }) async {
+  final cGst = tax / 2;
+  final sGst = tax / 2;
+
   final profile = await CapabilityProfile.load();
   final generator = Generator(PaperSize.mm80, profile);
   List<int> bytes = [];
@@ -144,7 +147,7 @@ Future<List<int>> billPrintData({
   bytes += generator.hr(len: 48);
   bytes += generator.feed(1);
 
-  bytes += generator.row([
+   tax<1?null:  bytes += generator.row([
     PosColumn(
       text: 'Taxable Amount',
       width: 8,
@@ -168,7 +171,7 @@ Future<List<int>> billPrintData({
       styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
   ]);
-  bytes += generator.row([
+  tax<1?null:   bytes += generator.row([
     PosColumn(
       text: 'CGST',
       width: 8,
@@ -180,7 +183,7 @@ Future<List<int>> billPrintData({
       styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
   ]);
-  bytes += generator.row([
+  tax<1?null:   bytes += generator.row([
     PosColumn(
       text: 'SGST',
       width: 8,
@@ -188,6 +191,18 @@ Future<List<int>> billPrintData({
     ),
     PosColumn(
       text: sGst.toStringAsFixed(2),
+      width: 4,
+      styles: const PosStyles(align: PosAlign.right, bold: true),
+    ),
+  ]);
+  tax<1?null:   bytes += generator.row([
+    PosColumn(
+      text: 'Cess',
+      width: 8,
+      styles: const PosStyles(align: PosAlign.left, bold: true),
+    ),
+    PosColumn(
+      text: cess.toStringAsFixed(2),
       width: 4,
       styles: const PosStyles(align: PosAlign.right, bold: true),
     ),

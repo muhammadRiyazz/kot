@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
-import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'package:restaurant_kot/domain/resto%20info/hotel_info.dart';
-import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
 import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/settings/stock_mng.dart';
-import '../../core/printer/network_printer.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -22,191 +19,210 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
-    String userid = context.read<LoginBloc>().state.userId ?? '--';
-    Settings info = context.read<InitalDataBloc>().state.settingsData!;
-
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero, // Remove any default padding
-        children: <Widget>[
-          // Drawer Header with User Profile
-          // const UserAccountsDrawerHeader(
-          //   accountName: Text('John Doe'), // Replace with dynamic data
-          //   accountEmail:
-          //       Text('john.doe@example.com'), // Replace with dynamic data
-          //   currentAccountPicture: CircleAvatar(
-          //     backgroundImage: AssetImage(
-          //         'assets/img/profile/profile.jpg'), // Replace with your asset or network image
-          //     backgroundColor: Colors.white,
-          //   ),
-          //   decoration: BoxDecoration(
-          //     color: mainclr, // Background color of the header
-          //   ),
-          // ),
-
+      child: Column(
+        children: [
+          // Header Section
           BlocBuilder<InitalDataBloc, InitalDataState>(
             builder: (context, state) {
               return Container(
-                color: mainclr, // Background color of the header
-
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 20, top: 60, left: 20, right: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CircleAvatar(
-                        radius: 35,
-                        backgroundImage: AssetImage(
-                            'assets/img/profile/profile.jpg'), // Replace with your asset or network image
-                        backgroundColor: Colors.white,
-                      ),
-                      const SizedBox(
-                        height: 18,
-                      ),
-                      Text(
-                        state.isloading ? '--- --- --- --- ' : info.cmpname,
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        state.isloading
-                            ? '--- --- --- '
-                            : info.companyContactNo,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Divider(),
-                      Row(
+                color: mainclr,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 30,
+                    ),
+                    const CircleAvatar(
+                      radius: 35,
+                      backgroundImage:
+                          AssetImage('assets/img/profile/profile.jpg'),
+                      backgroundColor: Colors.white,
+                    ),
+                    const SizedBox(height: 15),
+                    state.isloading
+                        ? SizedBox()
+                        : Column(
+                            children: [
+                              Text(
+                                state.settingsData?.cmpname ?? '---',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                state.settingsData?.companyContactNo ?? '---',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
+                          ),
+                    state.isloading
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 5),
+                            child: LinearProgressIndicator(
+                              color: mainclr,
+                              minHeight: 1,
+                            ),
+                          )
+                        : Divider(color: Colors.white60, thickness: 1),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            ' User',
+                            'User ID:',
                             style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
+                              fontSize: 14,
+                              color: Colors.white70,
                             ),
                           ),
                           Text(
-                            '$userid ',
+                            context.read<LoginBloc>().state.userId ?? '--',
                             style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
+                              fontSize: 14,
+                              color: Colors.white70,
                             ),
                           ),
                         ],
-                      )
-                      // Replace with dynamic data
-                    ],
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
           ),
-          // Navigation Options
-          const SizedBox(
-            height: 40,
-          ),
 
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              '  Settings',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(
-            height: 13,
-          ),
-          ListTile(
-            leading: const Icon(Icons.stacked_bar_chart),
-            title: const Text('Stock Management'),
-            onTap: () {
-              // Handle navigation to Settings
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return MngStockPage();
-                },
-              ));
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.only(right: 55, left: 20),
-            child: Divider(
-              height: 5,
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.supervised_user_circle_outlined),
-            title: const Text('Customer Mangament'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return CustomerView();
-                },
-              ));
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.only(right: 55, left: 20),
-            child: Divider(
-              height: 5,
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.print_rounded),
-            title: const Text('Printer Mangament'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return const KitchensPage();
-                },
-              ));
-            },
-          ),
-
-          const SizedBox(
-            height: 50,
-          ),
-          Divider(),
-          // A divider between navigation and logout
-          ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
-            onTap: () {
-              // Handle logout logic here
-              Navigator.pop(context);
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Logout'),
-                  content: Text('Are you sure you want to logout?'),
-                  actions: [
-                    TextButton(
-                      child: Text('Cancel'),
-                      onPressed: () => Navigator.of(context).pop(),
+          // Navigation List
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+                  child: Text(
+                    'Settings',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
-                    TextButton(
-                      child: Text('Logout'),
-                      onPressed: () {
-                        // Dispatch logout event
-                        context
-                            .read<LoginBloc>()
-                            .add(const LoginEvent.logout());
-                        // Navigate to Login Screen after logout
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                              builder: (context) => ScreenLogin()),
-                        );
-                      },
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.stacked_bar_chart, color: mainclr),
+                  title: const Text('Stock Management'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MngStockPage()),
+                    );
+                  },
+                ),
+                _divider(),
+                ListTile(
+                  leading: const Icon(Icons.supervised_user_circle_outlined,
+                      color: mainclr),
+                  title: const Text('Customer Management'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CustomerView()),
+                    );
+                  },
+                ),
+                _divider(),
+                ListTile(
+                  leading: const Icon(Icons.print_rounded, color: mainclr),
+                  title: const Text('Printer Management'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => KitchensPage()),
+                    );
+                  },
+                ),
+                _divider(),
+                SizedBox(
+                  height: 30,
+                ),
+                ListTile(
+                  leading: const Icon(Icons.logout, color: Colors.red),
+                  title: const Text(
+                    'Logout',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  onTap: () {
+                    _showLogoutDialog(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          // Footer Section
+          Container(
+            width: double.infinity,
+            color: mainclr,
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            child: const Column(
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Powered by Eye2EyeTech',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Divider Widget for Consistency
+  Widget _divider() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      child: Divider(
+        height: 5,
+        color: Colors.grey,
+      ),
+    );
+  }
+
+  // Logout Confirmation Dialog
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          TextButton(
+            child: const Text('Logout'),
+            onPressed: () {
+              context.read<LoginBloc>().add(const LoginEvent.logout());
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => ScreenLogin()),
               );
             },
           ),
@@ -215,6 +231,3 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 }
- 
-              // Handle navigation to Settings
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));

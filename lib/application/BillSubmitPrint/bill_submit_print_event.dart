@@ -9,8 +9,10 @@ class BillSubmitPrintEvent with _$BillSubmitPrintEvent {
     required String currentorderid,
   }) = BillPreview;
   const factory BillSubmitPrintEvent.billSubmitAndPrint({
+        required bool billPrint,
+
     required String userID,
-    required PrinterConfig printer,
+     PrinterConfig? printer,
     required bool paid,
     // String? paymentMethord,
   }) = BillSubmitAndPrint;
@@ -23,9 +25,10 @@ class BillSubmitPrintEvent with _$BillSubmitPrintEvent {
     
   }) = payType;
   const factory BillSubmitPrintEvent.billUpdateAndPrint(
-      {required PrinterConfig printer,
+      { PrinterConfig? printer,
       required String userId,
-      required bool paid,
+      required bool paid,        required bool billPrint,
+
       // String? paymentMethord,
       required String invNo}) = BillUpdateAndPrint;
 }

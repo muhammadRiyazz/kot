@@ -7,8 +7,10 @@ Future<List<int>> kotPrintData(
     {required List<kotItem> items,
     required String tableNo,
     required String orderNo,
+    required bool parcel,
     required String kotNo,
     required String user,
+    required bool dlt,
     required String note}) async {
   final profile = await CapabilityProfile.load();
   final generator = Generator(PaperSize.mm80, profile);
@@ -16,7 +18,11 @@ Future<List<int>> kotPrintData(
 
   // Header
   bytes += generator.text(
-    'KOT',
+    parcel
+        ? 'Parcel KOT'
+        : kotNo == '--'
+            ? 'Cancel KOT'
+            : 'KOT',
     styles: const PosStyles(
       align: PosAlign.center,
       width: PosTextSize.size2,
@@ -62,18 +68,20 @@ Future<List<int>> kotPrintData(
       styles: const PosStyles(bold: true, align: PosAlign.right),
     ),
   ]);
-  bytes += generator.row([
-    PosColumn(
-      text: 'KOT',
-      width: 6,
-      styles: const PosStyles(bold: true),
-    ),
-    PosColumn(
-      text: kotNo == '--' ? 'Cancel KOT' : kotNo,
-      width: 6,
-      styles: const PosStyles(bold: true, align: PosAlign.right),
-    ),
-  ]);
+  kotNo == '--'
+      ? null
+      : bytes += generator.row([
+          PosColumn(
+            text: 'KOT',
+            width: 6,
+            styles: const PosStyles(bold: true),
+          ),
+          PosColumn(
+            text: kotNo == '--' ? 'Cancel KOT' : kotNo,
+            width: 6,
+            styles: const PosStyles(bold: true, align: PosAlign.right),
+          ),
+        ]);
   bytes += generator.row([
     PosColumn(
       text: 'Waiter',
@@ -126,7 +134,11 @@ Future<List<int>> kotPrintData(
         styles: const PosStyles(align: PosAlign.left),
       ),
       PosColumn(
-        text: item.quantity == 0 ? 'Cancel' : item.quantity.toString(),
+        text: dlt
+            ? item.qty.toString()
+            : item.quantity == 0
+                ? 'Cancel'
+                : item.quantity.abs().toString(),
         width: 4,
         styles: const PosStyles(align: PosAlign.right),
       ),

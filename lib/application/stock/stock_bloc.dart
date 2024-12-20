@@ -22,7 +22,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         MssqlConnection connection = await connectionManager.getConnection();
 
         String categoryQuery = """
-      SELECT * FROM [Restaurant].[dbo].[Category]
+      SELECT * FROM  [dbo].[Category]
        """;
 
         String? categoryQueryResult = await connection.getData(categoryQuery);
@@ -64,11 +64,11 @@ class StockBloc extends Bloc<StockEvent, StockState> {
               venSGST, venSGSTamnt, SerManDetails, CessPercentage,
               CessAmount, ItemUnitSaleRate,
               ROW_NUMBER() OVER(PARTITION BY pdtcode ORDER BY id DESC) AS row_num
-        FROM Restaurant.dbo.invoicedetail
+        FROM dbo.invoicedetail
     )
     SELECT ui.*, ms.PrinterName
     FROM UniqueItems ui
-    LEFT JOIN Restaurant.dbo.MainStock ms 
+    LEFT JOIN dbo.MainStock ms 
     ON ms.codeorSKU = ui.pdtcode
     WHERE ui.row_num = 1
     ORDER BY ui.id DESC;
@@ -206,7 +206,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
         String stockQuery = """
   SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
-  FROM [Restaurant].[dbo].[MainStock]
+  FROM  [dbo].[MainStock]
   WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}' 
     AND [category] = '${event.category.pdtFilter}';
 """;
@@ -303,7 +303,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
         String stockQuery = """
   SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
-  FROM [Restaurant].[dbo].[MainStock]
+  FROM  [dbo].[MainStock]
  WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}'
     AND LOWER([pdtname]) LIKE LOWER('%${event.searchQuary.trim()}%');
 """;
@@ -326,6 +326,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
           );
           double taxableAmount =
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
+
           stocksnew.add(kotItem(
             cessAmt: 0.00,
             gstAmt: 0.00,

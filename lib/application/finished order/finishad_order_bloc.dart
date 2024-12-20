@@ -56,9 +56,9 @@ class FinishadOrderBloc extends Bloc<FinishadOrderEvent, FinishadOrderState> {
       [BillAC],
       [OrderNumber],
       [UserID]
-  FROM [Restaurant].[dbo].[InvoiceAccountDetail]
+  FROM  [dbo].[InvoiceAccountDetail]
   WHERE CAST([Invoicedate] AS DATE) = '$dateOnly'
-        AND [CreditOrCleared] = 'Cleared' AND [UserID] =$usernameA;
+        AND [CreditOrCleared] = 'Cleared' AND [UserID] ='$usernameA';
 """;
 
         String? result = await connection.getData(query);
@@ -134,7 +134,7 @@ class FinishadOrderBloc extends Bloc<FinishadOrderEvent, FinishadOrderState> {
       ,[OrderNumber]
       ,[KOTNumber]
       ,[UserID]
-  FROM [Restaurant].[dbo].[invoicedetail]
+  FROM  [dbo].[invoicedetail]
   WHERE [invoiceno] = '${event.invNo}' ;
 """;
 

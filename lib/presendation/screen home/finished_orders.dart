@@ -9,7 +9,6 @@ import 'package:restaurant_kot/presendation/screen%20finished%20order/finished_o
 class FinishedOrders extends StatelessWidget {
   FinishedOrders({super.key});
 
-  // void mergeOrders() {
   @override
   Widget build(BuildContext context) {
     // Determine screen size for responsiveness
@@ -25,7 +24,6 @@ class FinishedOrders extends StatelessWidget {
 
     // Define dynamic text size and box size adjustments based on screen size
     double textSize = screenWidth < 600 ? 14 : 16; // Adjust for phone/tablet
-    // double boxImageSize = screenWidth < 600 ? 40 : 50; // Box image size
     double boxPadding =
         screenWidth < 600 ? 8 : 12; // Padding based on screen size
 
@@ -59,7 +57,6 @@ class FinishedOrders extends StatelessWidget {
           log('Page refreshed');
           BlocProvider.of<FinishadOrderBloc>(context)
               .add(const FinishadOrderEvent.fetchBills());
-          // Implement your refresh logic here
         },
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -71,11 +68,23 @@ class FinishedOrders extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       )
                     : state.invoices.isEmpty
-                        ? Container(
-                            // color: Colors.amberAccent,
-                            child: Center(
-                              child:
-                                  Image.asset('assets/img/no data/No_data.png'),
+                        ? RefreshIndicator(
+                            backgroundColor: mainclr,
+                            color: mainclrbg,
+                            onRefresh: () async {
+                              log('Refreshing empty state');
+                              BlocProvider.of<FinishadOrderBloc>(context)
+                                  .add(const FinishadOrderEvent.fetchBills());
+                            },
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: SizedBox(
+                                height: constraints.maxHeight,
+                                child: Center(
+                                  child: Image.asset(
+                                      'assets/img/no data/No_data.png'),
+                                ),
+                              ),
                             ),
                           )
                         : GridView.builder(
@@ -183,12 +192,10 @@ class FinishedOrders extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-
                                         const Divider(
                                           color: Color.fromARGB(
                                               255, 236, 236, 236),
                                         ),
-                                        // Order Time
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,

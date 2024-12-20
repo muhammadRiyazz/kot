@@ -27,6 +27,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
+
         String ordersQuery = """
     SELECT [Id], 
            [OrderNumber], 
@@ -48,9 +49,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [CreditOrPaid], 
            [BillNumber], 
            [UserID]
-    FROM [Restaurant].[dbo].[OrderMainDetails]
+    FROM  [dbo].[OrderMainDetails]
     WHERE CAST([EntryDate] AS DATE) = '$currentDate' 
-          AND [ActiveInnactive] = 'Active' AND [CreditOrPaid] ='Credit' AND [UserID] =$usernameA;
+          AND [ActiveInnactive] = 'Active' AND [CreditOrPaid] ='Credit' AND [UserID] = '$usernameA';
 """;
 
         // String ordersQuery =
@@ -58,7 +59,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         //     "[TableName], [FloorNumber], [StartDateTime], [ItemCode], [ItemName], [salePrice], "
         //     "[Qty], [TotalsalePrice], [GST], [GSTAmount], [inclusiceSaleprice], [ActiveInnactive], "
         //     "[KOTNo], [DeliveryQuantity], [BillNumber], [unitPricetaxnotaffect], [UserID] "
-        //     "FROM [Restaurant].[dbo].[OrderItemDetailsDetails] "
+        //     "FROM  [dbo].[OrderItemDetailsDetails] "
         //     "WHERE [EntryDate] = '2024-09-10 00:00:00.000' ";
         // "WHERE [EntryDate] = '2024-09-09 00:00:00.000'"
         // AND ActiveInnactive = 'Active'
@@ -108,8 +109,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [CreditOrPaid], 
            [BillNumber], 
            [UserID]
-    FROM [Restaurant].[dbo].[OrderMainDetails]
- WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}' AND [CreditOrPaid] ='Credit' AND [UserID] =$usernameA;
+    FROM  [dbo].[OrderMainDetails]
+ WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}' AND [CreditOrPaid] ='Credit' AND [UserID] = '$usernameA';
 """;
 
         String? ordersresult = await connection.getData(ordersQuery);

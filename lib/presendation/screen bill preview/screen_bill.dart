@@ -8,6 +8,7 @@ import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/presendation/screen%20bill%20preview/bill_success.dart';
@@ -31,10 +32,11 @@ class _BillPageState extends State<BillPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         title: const Center(
             child: Text(
           'Bill Preview',
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 18, color: Colors.white),
         )),
         backgroundColor: appbarbg,
         actions: const [
@@ -390,6 +392,12 @@ class _BillPageState extends State<BillPage> {
                                           setState(() {
                                             isPaid = value;
                                           });
+
+                                          BlocProvider.of<BillSubmitPrintBloc>(
+                                                  context)
+                                              .add(BillSubmitPrintEvent.payType(
+                                                  paytypeValue:
+                                                      paymentType.first));
                                         },
                                       ),
                                     ),
@@ -424,171 +432,171 @@ class _BillPageState extends State<BillPage> {
                                     ? const LinearProgressIndicator(
                                         color: mainclr,
                                       )
-                                    : Row(
-                                        children: [
-                                          Expanded(
-                                            // flex: 2,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 8),
-                                              child: MainButton(
-                                                  label: 'Submit Bill',
-                                                  onpress: () {
-                                                    if (selectedPaymentMethod !=
-                                                        null) {
-                                                      log(selectedPaymentMethod
-                                                          .toString());
+                                    : Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8),
+                                        child: MainButton(
+                                            label: 'Submit Bill',
+                                            onpress: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.vertical(
+                                                          top: Radius.circular(
+                                                              20)),
+                                                ),
+                                                builder:
+                                                    (BuildContext context) {
+                                                  bool billPrint = true;
 
-                                                      log(' selectedPaymentMethod not null');
-                                                    } else {
-                                                      log('selectedPaymentMethod null');
-                                                    }
-
-                                                    PrinterConfig? printer =
-                                                        context
-                                                            .read<
-                                                                PrinterSetupBloc>()
-                                                            .state
-                                                            .billPrinterInfo;
-
-                                                    if (printer != null) {
-                                                      if (widget.order
-                                                          .billNumber.isEmpty) {
-                                                        log('widget.order.billNumber.isEmpty');
-                                                        BlocProvider.of<
-                                                                    BillSubmitPrintBloc>(
-                                                                context)
-                                                            .add(BillSubmitPrintEvent
-                                                                .billSubmitAndPrint(
-                                                          userID: context
-                                                                  .read<
-                                                                      LoginBloc>()
-                                                                  .state
-                                                                  .userId ??
-                                                              '--',
-                                                          printer: printer,
-                                                          paid: isPaid,
-                                                        ));
-                                                      } else {
-                                                        // selectedPaymentMethod ??
-                                                        //     paymentType.first;
-                                                        // log(widget.order.billNumber);
-
-                                                        BlocProvider.of<
-                                                                    BillSubmitPrintBloc>(
-                                                                context)
-                                                            .add(BillSubmitPrintEvent
-                                                                .billUpdateAndPrint(
-                                                          userId: context
-                                                                  .read<
-                                                                      LoginBloc>()
-                                                                  .state
-                                                                  .userId ??
-                                                              '--',
-                                                          printer: printer,
-                                                          invNo: widget
-                                                              .order.billNumber,
-                                                          paid: isPaid,
-                                                        ));
-                                                      }
-                                                    } else {
-                                                      BlocProvider.of<
-                                                                  PrinterSetupBloc>(
-                                                              context)
-                                                          .add(const PrinterSetupEvent
-                                                              .fetchkitchenPrinter(
-                                                              kitchen: 'Bill'));
-
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                        builder: (context) {
-                                                          return const PrinterSetupPage(
-                                                            kitchen: 'Bill',
-                                                          );
-                                                        },
-                                                      ));
-
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                          content: Column(
-                                                            children: [
-                                                              Text(
-                                                                "Sorry",
+                                                  return StatefulBuilder(
+                                                    builder: (BuildContext
+                                                            context,
+                                                        StateSetter setState) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(16.0),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            const Text(
+                                                              'Preferences',
+                                                              style: TextStyle(
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 10),
+                                                            const Divider(),
+                                                            ListTile(
+                                                              title: const Text(
+                                                                'Bill Print',
                                                                 style:
                                                                     TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 15,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
                                                                 ),
                                                               ),
-                                                              Text(
-                                                                "Please Add Bill Printer",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 12,
-                                                                  // fontWeight: FontWeight.bold,
-                                                                ),
+                                                              subtitle:
+                                                                  const Text(
+                                                                'Enable if you want to print the Bill.',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        13,
+                                                                    color: Colors
+                                                                        .grey),
                                                               ),
-                                                            ],
-                                                          ),
-                                                          backgroundColor:
-                                                              mainclr,
-                                                          behavior:
-                                                              SnackBarBehavior
-                                                                  .floating,
-                                                          margin:
-                                                              EdgeInsets.all(
-                                                                  12),
-                                                          duration: Duration(
-                                                              seconds: 4),
+                                                              trailing:
+                                                                  Checkbox(
+                                                                value:
+                                                                    billPrint,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  setState(() {
+                                                                    billPrint =
+                                                                        value ??
+                                                                            false;
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 20),
+                                                            MainButton(
+                                                                label:
+                                                                    'Confirm',
+                                                                onpress: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  if (widget
+                                                                          .order
+                                                                          .billNumber ==
+                                                                      '') {
+                                                                    handlePrinterSetup(
+                                                                      billprint:
+                                                                          billPrint,
+                                                                      context:
+                                                                          context,
+                                                                      order: widget
+                                                                          .order,
+                                                                      isPaid:
+                                                                          isPaid, // or false based on your condition
+                                                                    );
+                                                                  } else {
+                                                                    if (isPaid &&
+                                                                            billEdit! ||
+                                                                        !isPaid) {
+                                                                      handlePrinterSetup(
+                                                                        billprint:
+                                                                            billPrint,
+                                                                        context:
+                                                                            context,
+                                                                        order: widget
+                                                                            .order,
+                                                                        isPaid:
+                                                                            isPaid, // or false based on your condition
+                                                                      );
+                                                                    } else {
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                        const SnackBar(
+                                                                          content:
+                                                                              Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              Text(
+                                                                                "Sorry",
+                                                                                style: TextStyle(
+                                                                                  color: Colors.white,
+                                                                                  fontSize: 15,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                "You have no permission to process the bill",
+                                                                                style: TextStyle(
+                                                                                  color: Colors.white,
+                                                                                  fontSize: 12,
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          backgroundColor:
+                                                                              mainclr,
+                                                                          behavior:
+                                                                              SnackBarBehavior.floating,
+                                                                          margin:
+                                                                              EdgeInsets.all(12),
+                                                                          duration:
+                                                                              Duration(seconds: 4),
+                                                                        ),
+                                                                      );
+                                                                    }
+                                                                  }
+                                                                })
+                                                          ],
                                                         ),
                                                       );
-                                                      log('Bill printer Not added ');
-                                                    }
-
-                                                    //   Navigator.push(context, MaterialPageRoute(
-                                                    //     builder: (context) {
-                                                    //       return BillPrintpage();
-                                                    //     },
-                                                    //   ));
-                                                  }),
-                                            ),
-                                          ),
-                                          // Expanded(
-                                          //   child: ElevatedButton(
-                                          //       style: ElevatedButton.styleFrom(
-                                          //         // backgroundColor: buttonclr, // Set the button background color
-
-                                          //         minimumSize: const Size(
-                                          //             double.infinity,
-                                          //             55), // Full-width button
-                                          //         shape: RoundedRectangleBorder(
-                                          //           side: const BorderSide(
-                                          //               color: mainclr),
-                                          //           borderRadius:
-                                          //               BorderRadius.circular(
-                                          //                   20), // Border radius of 10
-                                          //         ),
-                                          //       ),
-                                          //       onPressed: () {},
-                                          //       child: const Text(
-                                          //         textAlign: TextAlign.center,
-                                          //         'Print Bill',
-                                          //         style: TextStyle(
-                                          //             fontSize: 12,
-                                          //             fontWeight:
-                                          //                 FontWeight.bold,
-                                          //             color: mainclr),
-                                          //       )),
-                                          // ),
-                                        ],
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            }),
                                       );
                               },
                             ),
@@ -604,5 +612,106 @@ class _BillPageState extends State<BillPage> {
         ),
       ),
     );
+  }
+}
+
+void handlePrinterSetup(
+    {required BuildContext context,
+    required Order
+        order, // Replace 'Order' with the actual type of the order object.
+    required bool isPaid,
+    required bool billprint}) {
+  if (billprint) {
+    PrinterConfig? printer =
+        context.read<PrinterSetupBloc>().state.billPrinterInfo;
+
+    if (printer != null) {
+      if (order.billNumber.isEmpty) {
+        log('order.billNumber.isEmpty');
+        BlocProvider.of<BillSubmitPrintBloc>(context).add(
+          BillSubmitPrintEvent.billSubmitAndPrint(
+            billPrint: billprint,
+            userID: context.read<LoginBloc>().state.userId ?? '--',
+            printer: printer,
+            paid: isPaid,
+          ),
+        );
+      } else {
+        BlocProvider.of<BillSubmitPrintBloc>(context).add(
+          BillSubmitPrintEvent.billUpdateAndPrint(
+            billPrint: billprint,
+            userId: context.read<LoginBloc>().state.userId ?? '--',
+            printer: printer,
+            invNo: order.billNumber,
+            paid: isPaid,
+          ),
+        );
+      }
+    } else {
+      BlocProvider.of<PrinterSetupBloc>(context).add(
+        const PrinterSetupEvent.fetchkitchenPrinter(kitchen: 'Bill'),
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const PrinterSetupPage(kitchen: 'Bill'),
+        ),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Sorry",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "Please Add Bill Printer",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: mainclr,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(12),
+          duration: Duration(seconds: 4),
+        ),
+      );
+
+      log('Bill printer not added');
+    }
+  } else {
+    if (order.billNumber.isEmpty) {
+      log('order.billNumber.isEmpty');
+      BlocProvider.of<BillSubmitPrintBloc>(context).add(
+        BillSubmitPrintEvent.billSubmitAndPrint(
+          billPrint: billprint,
+          userID: context.read<LoginBloc>().state.userId ?? '--',
+          // printer: printer,
+          paid: isPaid,
+        ),
+      );
+    } else {
+      BlocProvider.of<BillSubmitPrintBloc>(context).add(
+        BillSubmitPrintEvent.billUpdateAndPrint(
+          billPrint: billprint,
+          userId: context.read<LoginBloc>().state.userId ?? '--',
+          // printer: printer,
+          invNo: order.billNumber,
+          paid: isPaid,
+        ),
+      );
+    }
   }
 }

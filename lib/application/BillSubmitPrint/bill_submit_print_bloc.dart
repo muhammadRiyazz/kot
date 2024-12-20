@@ -138,7 +138,7 @@ class BillSubmitPrintBloc
             DECLARE @Inserted INT = 0;
              IF NOT EXISTS (SELECT 1 FROM dbo.InvoiceAccountDetail WHERE custominvno = '$nextinvNo')
              BEGIN
-             INSERT INTO [Restaurant].[dbo].[InvoiceAccountDetail] (
+             INSERT INTO  [dbo].[InvoiceAccountDetail] (
              cusid, cusname, cusnameAddress, custorcontact,
              cusnameGSTNumber, custominvno, Invoicedate, description,
               totalamount, totaltaxamount, Discountamount,
@@ -178,7 +178,7 @@ class BillSubmitPrintBloc
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
 
-            String query3 = """INSERT INTO [Restaurant].[dbo].[invoicedetail] (
+            String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
             pdtname, HSNCode, discp, pcs, qty, Freeqty, unitprice, itemMRP, Amount,
@@ -222,7 +222,7 @@ class BillSubmitPrintBloc
             await connection.writeData(query3);
 
             String updateQuery = '''
-         UPDATE [Restaurant].[dbo].[OrderMainDetails]
+         UPDATE  [dbo].[OrderMainDetails]
         SET
             CreditOrPaid = 'Credit',
         BillNumber = '$invno'
@@ -242,37 +242,45 @@ class BillSubmitPrintBloc
           ));
           log('print section ----------');
 
-          PrinterConfig printer = event.printer;
+          if (event.billPrint) {
+            PrinterConfig printer = event.printer!;
 
-          int printingStatus = 0;
+            int printingStatus = 0;
 
-          final List<int> test = await billPrintData(
-            cGst: state.tax!,
-            sGst: state.cess!,
-            netAmount: state.totalAmt!,
-            taxable: state.subTotal!,
-            items: state.printitems,
-            invoiceNo: invno,
-            // orderNo: state.orderid!,
-            tableNo: state.table!.tableName,
-          );
+            final List<int> test = await billPrintData(
+              tax: state.tax!,
+              cess: state.cess!,
+              netAmount: state.totalAmt!,
+              taxable: state.subTotal!,
+              items: state.printitems,
+              invoiceNo: invno,
+              // orderNo: state.orderid!,
+              tableNo: state.table!.tableName,
+            );
 
-          printingStatus = await NetworkPrinter().printTicket(
-            test,
-            printer.printerName,
-          );
+            printingStatus = await NetworkPrinter().printTicket(
+              test,
+              printer.printerName,
+            );
 
-          log('Printer response---$printingStatus');
+            log('Printer response---$printingStatus');
 
-          if (printingStatus == 1) {
-            log('Printer status: 2---------');
-            emit(state.copyWith(
-              isLoading: false,
-              printerstatus: 2,
-              billsubmission: false,
-            ));
+            if (printingStatus == 1) {
+              log('Printer status: 2---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 2,
+                billsubmission: false,
+              ));
+            } else {
+              log('Printer status: 1---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 1,
+                billsubmission: false,
+              ));
+            }
           } else {
-            log('Printer status: 1---------');
             emit(state.copyWith(
               isLoading: false,
               printerstatus: 1,
@@ -305,9 +313,9 @@ class BillSubmitPrintBloc
 
           String query2 = """
           DECLARE @Inserted INT = 0;
-          IF NOT EXISTS (SELECT 1 FROM [Restaurant].[dbo].[InvoiceAccountDetail] WHERE custominvno = '$nextinvNo')
+          IF NOT EXISTS (SELECT 1 FROM  [dbo].[InvoiceAccountDetail] WHERE custominvno = '$nextinvNo')
           BEGIN
-          INSERT INTO [Restaurant].[dbo].[InvoiceAccountDetail] (
+          INSERT INTO  [dbo].[InvoiceAccountDetail] (
             cusid, cusname, cusnameAddress, custorcontact,
             cusnameGSTNumber, custominvno, Invoicedate, description,
             totalamount, totaltaxamount, Discountamount,
@@ -351,7 +359,7 @@ class BillSubmitPrintBloc
             log('queryPapayidnoyorEX ---------------$payidno');
 
             String query4 = """
-    INSERT INTO [Restaurant].[dbo].[PayorEX] (
+    INSERT INTO  [dbo].[PayorEX] (
         PayOrExpID, VendIDOreCusID, VendIDOreCusName, PayOrExpDate, CAT,
        paidby,   paidamount, PayCrDr,
         PayINVid, RootType, OrderNumber
@@ -370,8 +378,7 @@ class BillSubmitPrintBloc
               final venSGST = element.gstPer / 2;
               final venSGSTamt = element.gstAmt / 2;
 
-              String query3 =
-                  """INSERT INTO [Restaurant].[dbo].[invoicedetail] (
+              String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
             pdtname, HSNCode, discp, pcs, qty, Freeqty, unitprice, itemMRP, Amount,
@@ -415,7 +422,7 @@ class BillSubmitPrintBloc
               await connection.writeData(query3);
             }
             String updateQuery = '''
-  UPDATE [Restaurant].[dbo].[OrderMainDetails]
+  UPDATE  [dbo].[OrderMainDetails]
   SET
     CreditOrPaid = '${state.paytypeValue!}',
     BillNumber = '$invno'
@@ -431,39 +438,46 @@ class BillSubmitPrintBloc
               printerstatus: 0,
             ));
             log('emit done--');
+            if (event.billPrint) {
+              log('print section ----------');
 
-            log('print section ----------');
+              PrinterConfig printer = event.printer!;
 
-            PrinterConfig printer = event.printer;
+              int printingStatus = 0;
 
-            int printingStatus = 0;
+              final List<int> test = await billPrintData(
+                netAmount: state.totalAmt!, tax: state.tax!,
+                cess: state.cess!,
+                taxable: state.subTotal!,
+                items: state.printitems,
+                invoiceNo: invno,
+                // orderNo: state.orderid!,
+                tableNo: state.table!.tableName,
+              );
 
-            final List<int> test = await billPrintData(
-              netAmount: state.totalAmt!, cGst: state.tax!,
-              sGst: state.cess!,
-              taxable: state.subTotal!,
-              items: state.printitems,
-              invoiceNo: invno,
-              // orderNo: state.orderid!,
-              tableNo: state.table!.tableName,
-            );
+              printingStatus = await NetworkPrinter().printTicket(
+                test,
+                printer.printerName,
+              );
 
-            printingStatus = await NetworkPrinter().printTicket(
-              test,
-              printer.printerName,
-            );
+              log('Printer response---$printingStatus');
 
-            log('Printer response---$printingStatus');
-
-            if (printingStatus == 1) {
-              log('Printer status: 2---------');
-              emit(state.copyWith(
-                isLoading: false,
-                printerstatus: 2,
-                billsubmission: false,
-              ));
+              if (printingStatus == 1) {
+                log('Printer status: 2---------');
+                emit(state.copyWith(
+                  isLoading: false,
+                  printerstatus: 2,
+                  billsubmission: false,
+                ));
+              } else {
+                log('Printer status: 1---------');
+                emit(state.copyWith(
+                  isLoading: false,
+                  printerstatus: 1,
+                  billsubmission: false,
+                ));
+              }
             } else {
-              log('Printer status: 1---------');
               emit(state.copyWith(
                 isLoading: false,
                 printerstatus: 1,
@@ -522,7 +536,7 @@ class BillSubmitPrintBloc
           var creditOrCleared = 'Credit';
 
           String query = """
-          UPDATE [Restaurant].[dbo].[InvoiceAccountDetail]
+          UPDATE  [dbo].[InvoiceAccountDetail]
           SET
 
         Invoicedate = '$formattedDate',
@@ -553,7 +567,7 @@ class BillSubmitPrintBloc
           await connection.writeData(query);
           log('case 1');
           String deleteQueary = '''
-           DELETE FROM [Restaurant].[dbo].[invoicedetail]
+           DELETE FROM  [dbo].[invoicedetail]
             WHERE invoiceno = '${event.invNo}';
            ''';
 
@@ -568,7 +582,7 @@ class BillSubmitPrintBloc
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
 
-            String query3 = """INSERT INTO [Restaurant].[dbo].[invoicedetail] (
+            String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
             pdtname, HSNCode, discp, pcs, qty, Freeqty, unitprice, itemMRP, Amount,
@@ -618,37 +632,44 @@ class BillSubmitPrintBloc
             printerstatus: 0,
           ));
           log('print section ----------');
+          if (event.billPrint) {
+            PrinterConfig printer = event.printer!;
 
-          PrinterConfig printer = event.printer;
+            int printingStatus = 0;
 
-          int printingStatus = 0;
+            final List<int> test = await billPrintData(
+              netAmount: state.totalAmt!, tax: state.tax!,
+              cess: state.cess!,
+              taxable: state.subTotal!,
+              items: state.printitems,
+              invoiceNo: event.invNo,
+              // orderNo: state.orderid!,
+              tableNo: state.table!.tableName,
+            );
 
-          final List<int> test = await billPrintData(
-            netAmount: state.totalAmt!, cGst: state.tax!,
-            sGst: state.cess!,
-            taxable: state.subTotal!,
-            items: state.printitems,
-            invoiceNo: event.invNo,
-            // orderNo: state.orderid!,
-            tableNo: state.table!.tableName,
-          );
+            printingStatus = await NetworkPrinter().printTicket(
+              test,
+              printer.printerName,
+            );
 
-          printingStatus = await NetworkPrinter().printTicket(
-            test,
-            printer.printerName,
-          );
+            log('Printer response---$printingStatus');
 
-          log('Printer response---$printingStatus');
-
-          if (printingStatus == 1) {
-            log('Printer status: 2---------');
-            emit(state.copyWith(
-              isLoading: false,
-              printerstatus: 2,
-              billsubmission: false,
-            ));
+            if (printingStatus == 1) {
+              log('Printer status: 2---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 2,
+                billsubmission: false,
+              ));
+            } else {
+              log('Printer status: 1---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 1,
+                billsubmission: false,
+              ));
+            }
           } else {
-            log('Printer status: 1---------');
             emit(state.copyWith(
               isLoading: false,
               printerstatus: 1,
@@ -657,7 +678,7 @@ class BillSubmitPrintBloc
           }
         } else {
           String query = """
-    UPDATE [Restaurant].[dbo].[InvoiceAccountDetail]
+    UPDATE  [dbo].[InvoiceAccountDetail]
     SET
         cusid = '${customer.cusid}',
         cusname = '${customer.bussinessname}',
@@ -703,7 +724,7 @@ class BillSubmitPrintBloc
           log('queryPapayidnoyorEX ---------------$payidno');
 
           String query4 = """
-    INSERT INTO [Restaurant].[dbo].[PayorEX] (
+    INSERT INTO  [dbo].[PayorEX] (
         PayOrExpID, VendIDOreCusID, VendIDOreCusName, PayOrExpDate, CAT,
        paidby,   paidamount, PayCrDr,
         PayINVid, RootType, OrderNumber
@@ -716,7 +737,7 @@ class BillSubmitPrintBloc
           await connection.writeData(query4);
           log('PayorEX done');
           String deleteQueary = '''
-           DELETE FROM [Restaurant].[dbo].[invoicedetail]
+           DELETE FROM  [dbo].[invoicedetail]
             WHERE invoiceno = '${event.invNo}';
            ''';
 
@@ -729,7 +750,7 @@ class BillSubmitPrintBloc
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
 
-            String query3 = """INSERT INTO [Restaurant].[dbo].[invoicedetail] (
+            String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
             pdtname, HSNCode, discp, pcs, qty, Freeqty, unitprice, itemMRP, Amount,
@@ -773,7 +794,7 @@ class BillSubmitPrintBloc
             await connection.writeData(query3);
           }
           String updateQuery = '''
-  UPDATE [Restaurant].[dbo].[OrderMainDetails]
+  UPDATE  [dbo].[OrderMainDetails]
   SET
     CreditOrPaid = '${state.paytypeValue!}'
   WHERE
@@ -787,40 +808,47 @@ class BillSubmitPrintBloc
             invNo: event.invNo,
             printerstatus: 0,
           ));
+          if (event.billPrint) {
+            log('print section ----------');
 
-          log('print section ----------');
+            PrinterConfig printer = event.printer!;
 
-          PrinterConfig printer = event.printer;
+            int printingStatus = 0;
 
-          int printingStatus = 0;
+            final List<int> test = await billPrintData(
+              tax: state.tax!,
+              cess: state.cess!,
+              // cGst: ,netAmount: ,sGst: ,
+              netAmount: state.totalAmt!,
+              taxable: state.subTotal!,
+              items: state.printitems,
+              invoiceNo: event.invNo,
+              tableNo: state.table!.tableName,
+            );
 
-          final List<int> test = await billPrintData(
-            cGst: state.tax!,
-            sGst: state.cess!,
-            // cGst: ,netAmount: ,sGst: ,
-            netAmount: state.totalAmt!,
-            taxable: state.subTotal!,
-            items: state.printitems,
-            invoiceNo: event.invNo,
-            tableNo: state.table!.tableName,
-          );
+            printingStatus = await NetworkPrinter().printTicket(
+              test,
+              printer.printerName,
+            );
 
-          printingStatus = await NetworkPrinter().printTicket(
-            test,
-            printer.printerName,
-          );
+            log('Printer response---$printingStatus');
 
-          log('Printer response---$printingStatus');
-
-          if (printingStatus == 1) {
-            log('Printer status: 2---------');
-            emit(state.copyWith(
-              isLoading: false,
-              printerstatus: 2,
-              billsubmission: false,
-            ));
+            if (printingStatus == 1) {
+              log('Printer status: 2---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 2,
+                billsubmission: false,
+              ));
+            } else {
+              log('Printer status: 1---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 1,
+                billsubmission: false,
+              ));
+            }
           } else {
-            log('Printer status: 1---------');
             emit(state.copyWith(
               isLoading: false,
               printerstatus: 1,
@@ -848,8 +876,8 @@ class BillSubmitPrintBloc
         int printingStatus = 0;
 
         final List<int> test = await billPrintData(
-          cGst: state.tax!,
-          sGst: state.cess!,
+          tax: state.tax!,
+          cess: state.cess!,
           netAmount: state.totalAmt!,
           taxable: state.subTotal!,
           items: state.printitems,

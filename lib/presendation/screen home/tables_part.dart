@@ -16,9 +16,7 @@ class Tablespart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-     
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -47,7 +45,12 @@ class Tablespart extends StatelessWidget {
       child: BlocBuilder<TablesBloc, TablesState>(
         builder: (context, state) {
           return state.isLoading
-              ? buildShimmerGrid(crossAxisCount, childAspectRatio, boxPadding)
+              ? buildShimmerGrid(
+                  crossAxisCount: 2, // 2 columns
+                  childAspectRatio: 3 / 4, // Aspect ratio for grid items
+                  boxPadding: 10.0, // Padding between grid items
+                  itemCount: 8, // Number of shimmer boxes
+                )
               : SingleChildScrollView(
                   child: Column(
                     children: [
@@ -56,6 +59,9 @@ class Tablespart extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
+                          SizedBox(
+                            height: 12,
+                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 2),
                             child: Container(
@@ -130,13 +136,12 @@ class Tablespart extends StatelessWidget {
 
                       state.tables.isEmpty
                           ? Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 90),
-                            child: Center(
-                              child: Image.asset(
-                                  'assets/img/no data/No_data.png'),
-                            ),
-                          )
+                              padding: const EdgeInsets.symmetric(vertical: 90),
+                              child: Center(
+                                child: Image.asset(
+                                    'assets/img/no data/No_data.png'),
+                              ),
+                            )
                           : GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -159,17 +164,27 @@ class Tablespart extends StatelessWidget {
                                       const Color.fromARGB(255, 241, 241, 241),
                                   child: InkWell(
                                     onTap: () {
-                                   
- BlocProvider.of<StockBloc>(context)
-          .add( StockEvent.itemInitalFetch(acOrNonAc: state.tables[index].tableType==''?true:false));
+                                      BlocProvider.of<StockBloc>(context).add(
+                                          StockEvent.itemInitalFetch(
+                                              acOrNonAc: state.tables[index]
+                                                          .tableType ==
+                                                      ''
+                                                  ? true
+                                                  : false));
                                       if (state.tables[index].isEmpty) {
-                                        
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                           builder: (context) {
-                                            return ProductChoosingPage(tableinfo: 
-                                              TableInfo(acOrNonAc: state.tables[index].tableType,floor: state.tables[index].floorName,tableName: state.tables[index].tableName)
-                                            );
+                                            return ProductChoosingPage(
+                                                tableinfo: TableInfo(
+                                                    acOrNonAc: state
+                                                        .tables[index]
+                                                        .tableType,
+                                                    floor: state.tables[index]
+                                                        .floorName,
+                                                    tableName: state
+                                                        .tables[index]
+                                                        .tableName));
                                           },
                                         ));
                                       } else {
@@ -187,7 +202,7 @@ class Tablespart extends StatelessWidget {
                                           },
                                         ));
                                       }
-                                        BlocProvider.of<StockBloc>(context).add(
+                                      BlocProvider.of<StockBloc>(context).add(
                                           const StockEvent.clearSelection());
                                     },
                                     child: Container(

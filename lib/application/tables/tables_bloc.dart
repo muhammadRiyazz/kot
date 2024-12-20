@@ -24,7 +24,6 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
         String? result = await connection.getData(query);
-
         if (result.isEmpty) {
           throw Exception("No data found for query: $query");
         }
@@ -40,7 +39,8 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
     on<TableData>((event, emit) async {
       String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
       log('TableData');
-      emit(state.copyWith(isLoading: true, selectedFloor: null, changed: false));
+      emit(
+          state.copyWith(isLoading: true, selectedFloor: null, changed: false));
 
       try {
         // Fetching table configuration data
@@ -110,44 +110,39 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
     });
 
     on<Change>((event, emit) async {
-  try {
-    emit(state.copyWith(isLoading: true, changed: false));
+      try {
+        emit(state.copyWith(isLoading: true, changed: false));
 
-    MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
-    MssqlConnection connection = await connectionManager.getConnection();
+        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+        MssqlConnection connection = await connectionManager.getConnection();
 
-    String updateQuery = '''
-      UPDATE [Restaurant].[dbo].[OrderMainDetails]
+        String updateQuery = '''
+      UPDATE  [dbo].[OrderMainDetails]
       SET TableName = '${event.tablename}'
       WHERE OrderNumber = '${event.orderNo}';
     ''';
 
-    await connection.writeData(updateQuery);
+        await connection.writeData(updateQuery);
 
-    String itemUpdateQuery = '''
-      UPDATE [Restaurant].[dbo].[OrderItemDetailsDetails]
+        String itemUpdateQuery = '''
+      UPDATE  [dbo].[OrderItemDetailsDetails]
       SET TableName = '${event.tablename}'
       WHERE OrderNumber = '${event.orderNo}';
     ''';
 
-    log(itemUpdateQuery);
-    await connection.writeData(itemUpdateQuery);
+        log(itemUpdateQuery);
+        await connection.writeData(itemUpdateQuery);
 
-    emit(state.copyWith(isLoading: false, changed: true));
-  } catch (e) {
-    emit(state.copyWith(isLoading: false, changed: false));
-    log(e.toString());
-  }
-});
+        emit(state.copyWith(isLoading: false, changed: true));
+      } catch (e) {
+        emit(state.copyWith(isLoading: false, changed: false));
+        log(e.toString());
+      }
+    });
 
     on<Select>((event, emit) async {
-
-
-
-
-        emit(state.copyWith(selectedtable: event.tablename));
-        // emit(state.copyWith(isLoading: false, changed: false));
-
+      emit(state.copyWith(selectedtable: event.tablename));
+      // emit(state.copyWith(isLoading: false, changed: false));
     });
   }
 }

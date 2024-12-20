@@ -31,28 +31,73 @@ class HomeScreen extends StatelessWidget {
     return DefaultTabController(
       length: 3, // Number of tabs
       child: Scaffold(
-        drawer: AppDrawer(), // Add the Drawer here
+        drawer: const AppDrawer(), // Add the Drawer here
 
         backgroundColor: mainclrbg,
-        appBar: AppBar(
-          backgroundColor: appbarbg,
-          title: const Center(
-              child: Text(
-            'Home',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 15, color: mainclr),
-          )),
-          actions: const [
-            SizedBox(
-                // color: Colors.blue,
-                height: 50,
-                width: 50,
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  // child: Image.asset('assets/img/logo/logoa.png'),
-                )),
-          ],
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(72), // Adjust height here
+          child: AppBar(
+            iconTheme: IconThemeData(
+                color: Colors.white, size: 34, applyTextScaling: true),
+            // elevation: 5,
+            backgroundColor: mainclr,
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 6,
+                ),
+                const Text(
+                  'Restaurant KOT',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Billing & Printing System',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    color: Colors.grey[300], // Subtle subtitle color
+                  ),
+                ),
+              ],
+            ),
+            actions: const [
+              Padding(
+                padding: EdgeInsets.only(right: 16, top: 10, bottom: 10),
+                child: Icon(
+                  Icons.restaurant_menu,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  size: 25,
+                ),
+              ),
+            ],
+            // leading: Padding(
+            //   padding: const EdgeInsets.only(left: 10),
+            //   child: C
+            // ircleAvatar(
+            //     radius: 22,
+            //     backgroundColor: Colors.white,
+            //     child: Icon(
+            //       Icons.restaurant_menu,
+            //       color: mainclr,
+            //       size: 24,
+            //     ),
+            //   ),
+            // ),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                  // bottom: Radius.circular(20),
+                  ),
+            ),
+          ),
         ),
+
         body: Padding(
           padding: const EdgeInsets.only(top: 12, right: 5, left: 5),
           child: Column(
@@ -71,10 +116,11 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                   color: boxbgwhite,
-                  borderRadius: BorderRadius.circular(15.0), // Rounded corners
+                  // borderRadius: BorderRadius.circular(15.0), // Rounded corners
                 ),
                 child: Padding(
-                    padding: const EdgeInsets.all(5.0),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
                     child: TabBar(
                       dividerHeight: 0,
                       indicator: BoxDecoration(
@@ -104,10 +150,13 @@ class HomeScreen extends StatelessWidget {
                       ],
                     )),
               ),
-              const SizedBox(
-                height: 12,
-              ),
 
+              // SizedBox(
+              //   height: 12,
+              // ),
+              Divider(
+                height: 0,
+              ),
               Expanded(
                 child: TabBarView(
                   children: [

@@ -151,159 +151,306 @@ class _OrderPageState extends State<OrderPage> {
           BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
           // Implement your refresh logic here
         },
-        child: BlocBuilder<OrdersBloc, OrdersState>(
-          builder: (context, state) {
-            return state.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : state.orders.isEmpty
-                    ? Container(
-                        // color: Colors.amberAccent,
-                        child: Center(
-                          child: Image.asset('assets/img/no data/No_data.png'),
-                        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return BlocBuilder<OrdersBloc, OrdersState>(
+              builder: (context, state) {
+                return state.isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
                       )
-                    : LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Column(
-                            children: [
-                              Expanded(
-                                child: GridView.builder(
-                                  padding: const EdgeInsets.all(3),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: crossAxisCount,
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10,
-                                    childAspectRatio: childAspectRatio,
-                                  ),
-                                  itemCount: state.orders.length,
-                                  itemBuilder: (context, index) {
-                                    return Card(
-                                      margin: EdgeInsets.zero,
-                                      elevation: 5,
-                                      shadowColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                    : state.orders.isEmpty
+                        ? RefreshIndicator(
+                            onRefresh: () async {
+                              BlocProvider.of<OrdersBloc>(context)
+                                  .add(const AllOrders());
+                            },
+                            child: SingleChildScrollView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              child: SizedBox(
+                                height: constraints.maxHeight,
+                                child: Center(
+                                  child: Image.asset(
+                                      'assets/img/no data/No_data.png'),
+                                ),
+                              ),
+                            ),
+                          )
+                        : LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Column(
+                                children: [
+                                  Expanded(
+                                    child: GridView.builder(
+                                      padding: const EdgeInsets.all(3),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: crossAxisCount,
+                                        crossAxisSpacing: 10,
+                                        mainAxisSpacing: 10,
+                                        childAspectRatio: childAspectRatio,
                                       ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          final List<TableInfo> tablelist =
-                                              context
-                                                  .read<TablesBloc>()
-                                                  .state
-                                                  .tablesinfolist;
-
-// Find the specific table with the name 'tb1'
-                                          TableInfo table =
-                                              tablelist.firstWhere(
-                                            (table) =>
-                                                table.tableName ==
-                                                state.orders[index].tableName,
-                                            orElse: () {
-                                              throw Exception(
-                                                  'Table not found');
-                                            }, // Handle if table is not found
-                                          );
-                                          BlocProvider.of<StockBloc>(context)
-                                              .add(const ClearSelection());
-                                          BlocProvider.of<OrderDetailsBloc>(
-                                                  context)
-                                              .add(OrderDetailsEvent.orderItems(
-                                                  orderNo: state.orders[index]
-                                                      .orderNumber));
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return OrderDetailsPage(
-                                                table: table,
-                                                order: state.orders[index],
-                                              );
-                                            },
-                                          ));
-                                        },
-                                        onLongPress: () => _onLongPress(index),
-                                        child: Container(
-                                          padding:
-                                              EdgeInsets.all(boxPadding + 5),
-                                          decoration: BoxDecoration(
-                                            color: boxbgwhite,
+                                      itemCount: state.orders.length,
+                                      itemBuilder: (context, index) {
+                                        return Card(
+                                          margin: EdgeInsets.zero,
+                                          elevation: 5,
+                                          shadowColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Row(
+                                          child: InkWell(
+                                            onTap: () {
+                                              BlocProvider.of<StockBloc>(
+                                                      context)
+                                                  .add(const StockEvent
+                                                      .clearSelection());
+                                              BlocProvider.of<OrderDetailsBloc>(
+                                                      context)
+                                                  .add(const OrderDetailsEvent
+                                                      .clearItemSelection());
+                                              final List<TableInfo> tablelist =
+                                                  context
+                                                      .read<TablesBloc>()
+                                                      .state
+                                                      .tablesinfolist;
+
+                                              // Find the specific table with the name 'tb1'
+                                              TableInfo table =
+                                                  tablelist.firstWhere(
+                                                (table) =>
+                                                    table.tableName ==
+                                                    state.orders[index]
+                                                        .tableName,
+                                                orElse: () {
+                                                  throw Exception(
+                                                      'Table not found');
+                                                }, // Handle if table is not found
+                                              );
+
+                                              BlocProvider.of<OrderDetailsBloc>(
+                                                      context)
+                                                  .add(OrderDetailsEvent
+                                                      .orderItems(
+                                                          orderNo: state
+                                                              .orders[index]
+                                                              .orderNumber));
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                builder: (context) {
+                                                  return OrderDetailsPage(
+                                                    table: table,
+                                                    order: state.orders[index],
+                                                  );
+                                                },
+                                              ));
+                                            },
+                                            onLongPress: () =>
+                                                _onLongPress(index),
+                                            child: Container(
+                                              padding: EdgeInsets.all(
+                                                  boxPadding + 5),
+                                              decoration: BoxDecoration(
+                                                color: boxbgwhite,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
                                                 children: [
-                                                  isMultiSelectMode
-                                                      ? Checkbox(
-                                                          activeColor: mainclr,
-                                                          value:
-                                                              isSelected[index],
-                                                          onChanged:
-                                                              (bool? value) {
-                                                            setState(() {
-                                                              isSelected[
-                                                                      index] =
-                                                                  value!;
-                                                            });
-                                                          },
-                                                        )
-                                                      : Container(
-                                                          decoration: BoxDecoration(
-                                                              color: state.orders[index].billNumber !=
-                                                                          '' &&
-                                                                      state.orders[index].creditOrPaid ==
-                                                                          'Credit'
-                                                                  ? Colors.red
-                                                                  : mainclr,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10)),
-                                                          child: const Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    10.0),
-                                                            child: Icon(
-                                                              Icons.restaurant,
-                                                              color:
-                                                                  Colors.white,
+                                                  Row(
+                                                    children: [
+                                                      isMultiSelectMode
+                                                          ? Checkbox(
+                                                              activeColor:
+                                                                  mainclr,
+                                                              value: isSelected[
+                                                                  index],
+                                                              onChanged: (bool?
+                                                                  value) {
+                                                                setState(() {
+                                                                  isSelected[
+                                                                          index] =
+                                                                      value!;
+                                                                });
+                                                              },
+                                                            )
+                                                          : Container(
+                                                              decoration: BoxDecoration(
+                                                                  color: state.orders[index].billNumber !=
+                                                                              '' &&
+                                                                          state.orders[index].creditOrPaid ==
+                                                                              'Credit'
+                                                                      ? Colors
+                                                                          .red
+                                                                      : mainclr,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10)),
+                                                              child:
+                                                                  const Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            10.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .restaurant,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            '${state.orders[index].orderNumber}',
+                                                            style: TextStyle(
+                                                              fontSize:
+                                                                  textSize,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
                                                             ),
                                                           ),
-                                                        ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        '${state.orders[index].orderNumber}',
-                                                        style: TextStyle(
-                                                          fontSize: textSize,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
+                                                          Text(
+                                                            'Total: ₹${state.orders[index].totalAmount.toStringAsFixed(1)}',
+                                                            style: TextStyle(
+                                                              fontSize:
+                                                                  textSize - 2,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      Text(
-                                                        'Total: ₹${state.orders[index].totalAmount.toStringAsFixed(1)}',
-                                                        style: TextStyle(
-                                                          fontSize:
-                                                              textSize - 2,
+                                                      Spacer(),
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: state
+                                                                          .orders[
+                                                                              index]
+                                                                          .billNumber !=
+                                                                      '' &&
+                                                                  state.orders[index]
+                                                                          .creditOrPaid ==
+                                                                      'Credit'
+                                                              ? Colors.red
+                                                              : mainclr,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(10.0),
+                                                          child: Text(
+                                                            state.orders[index]
+                                                                        .tableName ==
+                                                                    ''
+                                                                ? '- -'
+                                                                : state
+                                                                    .orders[
+                                                                        index]
+                                                                    .tableName,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize:
+                                                                  textSize - 4,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                  Spacer(),
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      color: state.orders[index]
+                                                  // Order Header
+                                                  // ListTile(
+                                                  //   isThreeLine: true,
+                                                  //   contentPadding: EdgeInsets.symmetric(
+                                                  //       vertical: 0, horizontal: 3),
+                                                  //   splashColor: Colors.transparent,
+                                                  //   tileColor: Colors.transparent,
+                                                  //   onTap: () => _onTap(index),
+                                                  //   leading: isMultiSelectMode
+                                                  //       ? Checkbox(
+                                                  //           activeColor: mainclr,
+                                                  //           value: isSelected[index],
+                                                  //           onChanged: (bool? value) {
+                                                  //             setState(() {
+                                                  //               isSelected[index] = value!;
+                                                  //             });
+                                                  //           },
+                                                  //         )
+                                                  //       : Container(
+                                                  //           decoration: BoxDecoration(
+                                                  //               color: mainclr,
+                                                  //               borderRadius:
+                                                  //                   BorderRadius.circular(10)),
+                                                  //           child: const Padding(
+                                                  //             padding: EdgeInsets.all(10.0),
+                                                  //             child: Icon(
+                                                  //               Icons.restaurant,
+                                                  //               color: Colors.white,
+                                                  //             ),
+                                                  //           ),
+                                                  //         ),
+                                                  //   title: Text(
+                                                  //     'Order ID: ${orders[index].id}',
+                                                  //     style: TextStyle(
+                                                  //       fontSize: textSize,
+                                                  //       fontWeight: FontWeight.bold,
+                                                  //     ),
+                                                  //   ),
+                                                  //   subtitle: Text(
+                                                  //     'Total: ₹${orders[index].totalPrice}',
+                                                  //     style: TextStyle(
+                                                  //       fontSize: textSize - 2,
+                                                  //     ),
+                                                  //   ),
+                                                  //   trailing: Container(
+                                                  //     decoration: BoxDecoration(
+                                                  //       color: mainclr,
+                                                  //       borderRadius: BorderRadius.circular(10),
+                                                  //     ),
+                                                  //     child: Padding(
+                                                  //       padding: const EdgeInsets.all(10.0),
+                                                  //       child: Text(
+                                                  //         'Table 1',
+                                                  //         style: TextStyle(
+                                                  //           color: Colors.white,
+                                                  //           fontWeight: FontWeight.bold,
+                                                  //           fontSize: textSize - 4,
+                                                  //         ),
+                                                  //       ),
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
+                                                  // const Text('data')
+                                                  const Divider(
+                                                    color: Color.fromARGB(
+                                                        255, 236, 236, 236),
+                                                  ),
+                                                  // Order Time
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      state.orders[index]
                                                                       .billNumber !=
                                                                   '' &&
                                                               state
@@ -311,188 +458,87 @@ class _OrderPageState extends State<OrderPage> {
                                                                           index]
                                                                       .creditOrPaid ==
                                                                   'Credit'
-                                                          ? Colors.red
-                                                          : mainclr,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10.0),
-                                                      child: Text(
-                                                        state.orders[index]
-                                                                    .tableName ==
-                                                                ''
-                                                            ? '- -'
-                                                            : state
-                                                                .orders[index]
-                                                                .tableName,
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize:
-                                                              textSize - 4,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                          ? Text(
+                                                              'UnPaid',
+                                                              style: TextStyle(
+                                                                  // fontSize: 12,
+                                                                  color: Colors
+                                                                      .red),
+                                                            )
+                                                          : const SizedBox(),
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.timer_sharp,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    204,
+                                                                    204,
+                                                                    204),
+                                                            size: 18,
+                                                          ),
+                                                          SizedBox(width: 6),
+                                                          Text(
+                                                            time(DateTime.parse(
+                                                                state
+                                                                    .orders[
+                                                                        index]
+                                                                    .startTime)),
+                                                            style: TextStyle(
+                                                              fontSize:
+                                                                  textSize - 3,
+                                                              color: const Color
+                                                                  .fromARGB(
+                                                                  255, 0, 0, 0),
+                                                            ),
+                                                          ),
+                                                          // Text(
+                                                          //   time(DateFormat(
+                                                          //           "dd/MM/yyyy HH:mm:ss")
+                                                          //       .parse(state
+                                                          //           .orders[index]
+                                                          //           .startDateTime)),
+                                                          //   style: TextStyle(
+                                                          //     fontSize: textSize - 3,
+                                                          //     color:
+                                                          //         const Color.fromARGB(
+                                                          //             255, 0, 0, 0),
+                                                          //   ),
+                                                          // ),
+                                                        ],
+                                                      )
+                                                    ],
                                                   ),
                                                 ],
                                               ),
-                                              // Order Header
-                                              // ListTile(
-                                              //   isThreeLine: true,
-                                              //   contentPadding: EdgeInsets.symmetric(
-                                              //       vertical: 0, horizontal: 3),
-                                              //   splashColor: Colors.transparent,
-                                              //   tileColor: Colors.transparent,
-                                              //   onTap: () => _onTap(index),
-                                              //   leading: isMultiSelectMode
-                                              //       ? Checkbox(
-                                              //           activeColor: mainclr,
-                                              //           value: isSelected[index],
-                                              //           onChanged: (bool? value) {
-                                              //             setState(() {
-                                              //               isSelected[index] = value!;
-                                              //             });
-                                              //           },
-                                              //         )
-                                              //       : Container(
-                                              //           decoration: BoxDecoration(
-                                              //               color: mainclr,
-                                              //               borderRadius:
-                                              //                   BorderRadius.circular(10)),
-                                              //           child: const Padding(
-                                              //             padding: EdgeInsets.all(10.0),
-                                              //             child: Icon(
-                                              //               Icons.restaurant,
-                                              //               color: Colors.white,
-                                              //             ),
-                                              //           ),
-                                              //         ),
-                                              //   title: Text(
-                                              //     'Order ID: ${orders[index].id}',
-                                              //     style: TextStyle(
-                                              //       fontSize: textSize,
-                                              //       fontWeight: FontWeight.bold,
-                                              //     ),
-                                              //   ),
-                                              //   subtitle: Text(
-                                              //     'Total: ₹${orders[index].totalPrice}',
-                                              //     style: TextStyle(
-                                              //       fontSize: textSize - 2,
-                                              //     ),
-                                              //   ),
-                                              //   trailing: Container(
-                                              //     decoration: BoxDecoration(
-                                              //       color: mainclr,
-                                              //       borderRadius: BorderRadius.circular(10),
-                                              //     ),
-                                              //     child: Padding(
-                                              //       padding: const EdgeInsets.all(10.0),
-                                              //       child: Text(
-                                              //         'Table 1',
-                                              //         style: TextStyle(
-                                              //           color: Colors.white,
-                                              //           fontWeight: FontWeight.bold,
-                                              //           fontSize: textSize - 4,
-                                              //         ),
-                                              //       ),
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                              // const Text('data')
-                                              const Divider(
-                                                color: Color.fromARGB(
-                                                    255, 236, 236, 236),
-                                              ),
-                                              // Order Time
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  state.orders[index]
-                                                                  .billNumber !=
-                                                              '' &&
-                                                          state.orders[index]
-                                                                  .creditOrPaid ==
-                                                              'Credit'
-                                                      ? Text(
-                                                          'UnPaid',
-                                                          style: TextStyle(
-                                                              // fontSize: 12,
-                                                              color:
-                                                                  Colors.red),
-                                                        )
-                                                      : const SizedBox(),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.timer_sharp,
-                                                        color: Color.fromARGB(
-                                                            255, 204, 204, 204),
-                                                        size: 18,
-                                                      ),
-                                                      SizedBox(width: 6),
-                                                      Text(
-                                                        time(DateTime.parse(
-                                                            state.orders[index]
-                                                                .startTime)),
-                                                        style: TextStyle(
-                                                          fontSize:
-                                                              textSize - 3,
-                                                          color: const Color
-                                                              .fromARGB(
-                                                              255, 0, 0, 0),
-                                                        ),
-                                                      ),
-                                                      // Text(
-                                                      //   time(DateFormat(
-                                                      //           "dd/MM/yyyy HH:mm:ss")
-                                                      //       .parse(state
-                                                      //           .orders[index]
-                                                      //           .startDateTime)),
-                                                      //   style: TextStyle(
-                                                      //     fontSize: textSize - 3,
-                                                      //     color:
-                                                      //         const Color.fromARGB(
-                                                      //             255, 0, 0, 0),
-                                                      //   ),
-                                                      // ),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              if (isMultiSelectMode &&
-                                  isSelected
-                                          .where((selected) => selected)
-                                          .length >=
-                                      2)
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  child: MainButton(
-                                    label: 'Merge & Print',
-                                    onpress: () {
-                                      // mergeOrders();
-                                    },
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                            ],
+                                  if (isMultiSelectMode &&
+                                      isSelected
+                                              .where((selected) => selected)
+                                              .length >=
+                                          2)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: MainButton(
+                                        label: 'Merge & Print',
+                                        onpress: () {
+                                          // mergeOrders();
+                                        },
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
                           );
-                        },
-                      );
+              },
+            );
           },
         ),
       ),

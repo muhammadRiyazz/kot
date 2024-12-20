@@ -46,17 +46,19 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     });
   }
 
+  bool _isSnackBarVisible = false;
   // void initState() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: mainclrbg,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: appbarbg,
         title: const Center(
           child: Text(
             'Order Details',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 18, color: Colors.white),
           ),
         ),
         actions: const [
@@ -89,6 +91,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: ListView(
                             children: [
+                              SizedBox(
+                                height: 10,
+                              ),
                               Container(
                                 decoration: BoxDecoration(
                                     color: boxbgwhite,
@@ -103,59 +108,86 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                           0, 255, 255, 255),
                                       tileColor: const Color.fromARGB(
                                           0, 255, 255, 255),
-                                      title: Text(
-                                        widget.order.orderNumber,
-                                        style: const TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      trailing: billEdit!
-                                          ? ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  side: const BorderSide(
-                                                      color: mainclr),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20), // Border radius of 10
-                                                ),
+                                      title: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: widget.order.orderNumber
+                                                  .substring(
+                                                      0, 3), // First 3 letters
+                                              style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255,
+                                                    184,
+                                                    12,
+                                                    0), // Change this to your desired color
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w600,
                                               ),
-                                              onPressed: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                  builder: (context) {
-                                                    return ProductChoosingPage(
-                                                      tableinfo: widget.table,
-                                                      order: widget
-                                                          .order.orderNumber,
-                                                    );
-                                                  },
-                                                ));
-
-                                                for (var element
-                                                    in state.toAddItems) {
-                                                  log('${element.itemName}  -----  ${element.qty}---${element.quantity}');
-                                                }
-                                                BlocProvider.of<StockBloc>(
-                                                        context)
-                                                    .add(ListFromOrder(
-                                                        cancelItemslist:
-                                                            state.toCancelItems,
-                                                        itemslist:
-                                                            state.toAddItems));
+                                            ),
+                                            TextSpan(
+                                              text: widget.order.orderNumber
+                                                  .substring(
+                                                      3), // Remaining part
+                                              style: const TextStyle(
+                                                color: Colors
+                                                    .black, // Change this to your desired color
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      trailing: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: mainclr,
+                                            shape: RoundedRectangleBorder(
+                                              side: const BorderSide(
+                                                  color: mainclr),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      20), // Border radius of 10
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                              builder: (context) {
+                                                return ProductChoosingPage(
+                                                  tableinfo: widget.table,
+                                                  order:
+                                                      widget.order.orderNumber,
+                                                );
                                               },
-                                              child: const Text(
-                                                'Add New Item',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: mainclr,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ))
-                                          : SizedBox(),
+                                            ));
+
+                                            for (var element
+                                                in state.toAddItems) {
+                                              log('${element.itemName}  -----  ${element.qty}---${element.quantity}');
+                                            }
+                                            BlocProvider.of<StockBloc>(context)
+                                                .add(ListFromOrder(
+                                                    cancelItemslist:
+                                                        state.toCancelItems,
+                                                    itemslist:
+                                                        state.toAddItems));
+                                          },
+                                          child: const Text(
+                                            'Add New Item',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color.fromARGB(
+                                                    255, 255, 255, 255),
+                                                fontWeight: FontWeight.bold),
+                                          )),
                                       subtitle: Text(
-                                          'Total: ₹ ${widget.order.totalAmount}'),
+                                        'Total: ₹ ${widget.order.totalAmount}',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: mainclr,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                     ListTile(
                                       contentPadding:
@@ -201,70 +233,80 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                             ],
                                           )),
                                     ),
-                                    Divider(
+                                    const Divider(
                                       height: 0,
                                     )
                                   ],
                                 ),
                               ),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 0,
-                                    vertical: state.toAddItems.isNotEmpty ||
-                                            state.toCancelItems.isNotEmpty ||
-                                            selectedItems.isNotEmpty
-                                        ? 0
-                                        : 12),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '   ${state.orderitems.length} Items',
-                                      style: const TextStyle(fontSize: 16),
+                              state.orderitems.isEmpty
+                                  ? Center(
+                                      child: Image.asset(
+                                          'assets/img/no data/No_data.png'),
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 0,
+                                          vertical:
+                                              state.toAddItems.isNotEmpty ||
+                                                      state.toCancelItems
+                                                          .isNotEmpty ||
+                                                      selectedItems.isNotEmpty
+                                                  ? 0
+                                                  : 12),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '   ${state.orderitems.length} Items',
+                                            style:
+                                                const TextStyle(fontSize: 16),
+                                          ),
+                                          state.toAddItems.isNotEmpty ||
+                                                  state.toCancelItems
+                                                      .isNotEmpty ||
+                                                  selectedItems.isNotEmpty
+                                              ? TextButton(
+                                                  onPressed: () {
+                                                    BlocProvider.of<StockBloc>(
+                                                            context)
+                                                        .add(const StockEvent
+                                                            .clearSelection());
+                                                    BlocProvider.of<
+                                                                OrderDetailsBloc>(
+                                                            context)
+                                                        .add(const OrderDetailsEvent
+                                                            .clearItemSelection());
+                                                    setState(() {
+                                                      selectedItems.clear();
+                                                    });
+                                                  },
+                                                  child: const Row(
+                                                    children: [
+                                                      Text(
+                                                        'Clear Selection',
+                                                        style: TextStyle(
+                                                            color: Colors.blue,
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Icon(
+                                                        Icons.close,
+                                                        size: 22,
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ],
+                                                  ))
+                                              : SizedBox()
+                                        ],
+                                      ),
                                     ),
-                                    state.toAddItems.isNotEmpty ||
-                                            state.toCancelItems.isNotEmpty ||
-                                            selectedItems.isNotEmpty
-                                        ? TextButton(
-                                            onPressed: () {
-                                              BlocProvider.of<StockBloc>(
-                                                      context)
-                                                  .add(const StockEvent
-                                                      .clearSelection());
-                                              BlocProvider.of<OrderDetailsBloc>(
-                                                      context)
-                                                  .add(const OrderDetailsEvent
-                                                      .clearItemSelection());
-                                              setState(() {
-                                                selectedItems.clear();
-                                              });
-                                            },
-                                            child: const Row(
-                                              children: [
-                                                Text(
-                                                  'Clear Selection',
-                                                  style: TextStyle(
-                                                      color: Colors.blue,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Icon(
-                                                  Icons.close,
-                                                  size: 22,
-                                                  color: Colors.blue,
-                                                ),
-                                              ],
-                                            ))
-                                        : SizedBox()
-                                  ],
-                                ),
-                              ),
                               // Item List
 
                               Padding(
@@ -474,6 +516,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                                               17),
                                                                     ),
                                                                   ),
+                                                                  // Add this at the top of your widget class
+
                                                                   onPressed:
                                                                       () {
                                                                     int value =
@@ -511,31 +555,45 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                                               .orderitems[index]
                                                                               .itemCode));
                                                                     } else {
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                        const SnackBar(
-                                                                          content:
-                                                                              Text(
-                                                                            "⚠️ To delete an item from the order, please long-press the tile, select the item, and then delete it",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontSize: 12,
-                                                                              // fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                          ),
-                                                                          backgroundColor:
-                                                                              mainclr,
-                                                                          behavior:
-                                                                              SnackBarBehavior.floating,
-                                                                          margin:
-                                                                              EdgeInsets.all(12),
-                                                                          duration:
-                                                                              Duration(seconds: 4),
-                                                                        ),
-                                                                      );
-                                                                      log('------');
+                                                                      if (!_isSnackBarVisible) {
+                                                                        // Check if a SnackBar is already visible
+                                                                        _isSnackBarVisible =
+                                                                            true;
+
+                                                                        ScaffoldMessenger.of(context)
+                                                                            .showSnackBar(
+                                                                              SnackBar(
+                                                                                content: const Text(
+                                                                                  "⚠️ To delete an item from the order, please long-press the tile, select the item, and then delete it",
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.white,
+                                                                                    fontSize: 12,
+                                                                                  ),
+                                                                                ),
+                                                                                backgroundColor: mainclr,
+                                                                                behavior: SnackBarBehavior.floating,
+                                                                                margin: const EdgeInsets.all(12),
+                                                                                duration: const Duration(seconds: 4),
+                                                                                action: SnackBarAction(
+                                                                                  label: '✖', // Close icon as a label
+                                                                                  textColor: Colors.white, // Color of the icon
+                                                                                  onPressed: () {
+                                                                                    // Dismiss the SnackBar and reset the flag
+                                                                                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                                                                    _isSnackBarVisible = false;
+                                                                                  },
+                                                                                ),
+                                                                              ),
+                                                                            )
+                                                                            .closed
+                                                                            .then((_) {
+                                                                          // Reset the flag when the SnackBar is dismissed
+                                                                          _isSnackBarVisible =
+                                                                              false;
+                                                                        });
+
+                                                                        log('------');
+                                                                      }
                                                                     }
                                                                   }),
                                                               Text(
@@ -627,326 +685,321 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                         ),
                       ),
 
-                      billEdit!
-                          ? BlocConsumer<KotSubmitPrintBloc,
-                              KotSubmitPrintState>(
-                              listener: (context, state) {
-                                if (state.submitstatus == 1) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BillSubmitedDone(onpress: () {
-                                          BlocProvider.of<KotSubmitPrintBloc>(
-                                                  context)
-                                              .add(KotSubmitPrintEvent.rePrint(
-                                                  cancel: true,
-                                                  cancellist: selectedItems,
-                                                  kotitems: [],
-                                                  kotretunitems: [],
-                                                  userId: context
-                                                          .read<LoginBloc>()
+                      BlocConsumer<KotSubmitPrintBloc, KotSubmitPrintState>(
+                        listener: (context, state) {
+                          if (state.submitstatus == 1) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BillSubmitedDone(onpress: () {
+                                    BlocProvider.of<KotSubmitPrintBloc>(context)
+                                        .add(KotSubmitPrintEvent.rePrint(
+                                            cancel: true,
+                                            cancellist: selectedItems,
+                                            kotitems: [],
+                                            kotretunitems: [],
+                                            userId: context
+                                                    .read<LoginBloc>()
+                                                    .state
+                                                    .userId ??
+                                                '--',
+                                            printers: context
+                                                .read<PrinterSetupBloc>()
+                                                .state
+                                                .priterlist,
+                                            table: widget.table,
+                                            currentorderid:
+                                                widget.order.orderNumber,
+                                            currentitems: context
+                                                .read<OrderDetailsBloc>()
+                                                .state
+                                                .orderitems));
+                                  }),
+                                ));
+                          }
+                        },
+                        builder: (context, sstate) {
+                          return sstate.isLoading
+                              ? const LinearProgressIndicator(
+                                  color: mainclr,
+                                )
+                              : state.toAddItems.isNotEmpty ||
+                                      state.toCancelItems.isNotEmpty ||
+                                      selectedItems.isNotEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: MainButton(
+                                          label: selectedItems.isEmpty
+                                              ? 'KOT'
+                                              : 'Proceed Cancel KOT',
+                                          onpress: () {
+                                            if (selectedItems.isEmpty) {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                builder: (context) {
+                                                  return SelectedProductsPage(
+                                                    orderNo: widget
+                                                        .order.orderNumber,
+                                                    table: widget.table,
+                                                  );
+                                                },
+                                              ));
+                                              log('--${state.toAddItems.length.toString()}');
+                                              BlocProvider.of<StockBloc>(
+                                                      context)
+                                                  .add(ListFromOrder(
+                                                cancelItemslist:
+                                                    state.toCancelItems,
+                                                itemslist: state.toAddItems,
+                                              ));
+                                            } else {
+                                              bool iSAdded = context
+                                                          .read<
+                                                              PrinterSetupBloc>()
                                                           .state
-                                                          .userId ??
-                                                      '--',
-                                                  printers: context
-                                                      .read<PrinterSetupBloc>()
-                                                      .state
-                                                      .priterlist,
-                                                  table: widget.table,
-                                                  currentorderid:
-                                                      widget.order.orderNumber,
-                                                  currentitems: context
-                                                      .read<OrderDetailsBloc>()
-                                                      .state
-                                                      .orderitems));
-                                        }),
-                                      ));
-                                }
-                              },
-                              builder: (context, sstate) {
-                                return sstate.isLoading
-                                    ? const LinearProgressIndicator(
-                                        color: mainclr,
-                                      )
-                                    : state.toAddItems.isNotEmpty ||
-                                            state.toCancelItems.isNotEmpty ||
-                                            selectedItems.isNotEmpty
-                                        ? Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: MainButton(
-                                                label: selectedItems.isEmpty
-                                                    ? 'KOT'
-                                                    : 'Proceed Cancel KOT',
-                                                onpress: () {
-                                                  if (selectedItems.isEmpty) {
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                      builder: (context) {
-                                                        return SelectedProductsPage(
-                                                          orderNo: widget.order
-                                                              .orderNumber,
-                                                          table: widget.table,
-                                                        );
-                                                      },
-                                                    ));
-                                                    log('--${state.toAddItems.length.toString()}');
-                                                    BlocProvider.of<StockBloc>(
-                                                            context)
-                                                        .add(ListFromOrder(
-                                                      cancelItemslist:
-                                                          state.toCancelItems,
-                                                      itemslist:
-                                                          state.toAddItems,
-                                                    ));
-                                                  } else {
-                                                    bool iSAdded = context
-                                                                .read<
-                                                                    PrinterSetupBloc>()
-                                                                .state
-                                                                .priterlist ==
-                                                            null
-                                                        ? false
-                                                        : checkPrinters(
-                                                            cancelKotItems:
-                                                                selectedItems,
-                                                            printers: context
-                                                                .read<
-                                                                    PrinterSetupBloc>()
-                                                                .state
-                                                                .priterlist!,
-                                                            kotItems: [],
-                                                          );
+                                                          .priterlist ==
+                                                      null
+                                                  ? false
+                                                  : checkPrinters(
+                                                      cancelKotItems:
+                                                          selectedItems,
+                                                      printers: context
+                                                          .read<
+                                                              PrinterSetupBloc>()
+                                                          .state
+                                                          .priterlist!,
+                                                      kotItems: [],
+                                                    );
 
-                                                    if (iSAdded) {
-                                                      // Navigator.pop(context);
-                                                      showModalBottomSheet(
-                                                        context: context,
-                                                        shape:
-                                                            const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.vertical(
-                                                                  top: Radius
-                                                                      .circular(
-                                                                          20)),
-                                                        ),
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          bool cancelKotPrint =
-                                                              true;
+                                              if (iSAdded) {
+                                                // Navigator.pop(context);
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    20)),
+                                                  ),
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    bool cancelKotPrint = true;
 
-                                                          return StatefulBuilder(
-                                                            builder: (BuildContext
-                                                                    context,
-                                                                StateSetter
-                                                                    setState) {
-                                                              return Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        16.0),
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    const Text(
-                                                                      'Preferences',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            15,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        color: Colors
-                                                                            .black,
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                            10),
-                                                                    const Divider(),
-                                                                    ListTile(
-                                                                      title:
-                                                                          const Text(
-                                                                        'Cancel KOT Print',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                        ),
-                                                                      ),
-                                                                      subtitle:
-                                                                          const Text(
-                                                                        'Enable if you want to cancel the KOT print.',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                13,
-                                                                            color:
-                                                                                Colors.grey),
-                                                                      ),
-                                                                      trailing:
-                                                                          Checkbox(
-                                                                        value:
-                                                                            cancelKotPrint,
-                                                                        onChanged:
-                                                                            (value) {
-                                                                          setState(
-                                                                              () {
-                                                                            cancelKotPrint =
-                                                                                value ?? false;
-                                                                          });
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                            20),
-                                                                    MainButton(
-                                                                        label:
-                                                                            'Confirm',
-                                                                        onpress:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.cancelKOT(
-                                                                              cancelKotPrint: cancelKotPrint,
-                                                                              userId: context.read<LoginBloc>().state.userId ?? '--',
-                                                                              printers: context.read<PrinterSetupBloc>().state.priterlist,
-                                                                              selectedcustomer: context.read<CustomerpartBloc>().state.selectedcustomer!,
-                                                                              table: widget.table,
-                                                                              cancelkotitems: selectedItems,
-                                                                              currentorderid: widget.order.orderNumber,
-                                                                              currentitems: context.read<OrderDetailsBloc>().state.orderitems));
-                                                                        })
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                      );
-                                                    } else {
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                        builder: (context) {
-                                                          return const KitchensPage();
-                                                        },
-                                                      ));
-
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                          content: Column(
+                                                    return StatefulBuilder(
+                                                      builder:
+                                                          (BuildContext context,
+                                                              StateSetter
+                                                                  setState) {
+                                                        return Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(16.0),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
                                                             children: [
-                                                              Text(
-                                                                "Sorry",
+                                                              const Text(
+                                                                'Preferences',
                                                                 style:
                                                                     TextStyle(
-                                                                  color: Colors
-                                                                      .white,
                                                                   fontSize: 15,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                "Please Add KOT Printers",
-                                                                style:
-                                                                    TextStyle(
                                                                   color: Colors
-                                                                      .white,
-                                                                  fontSize: 12,
-                                                                  // fontWeight: FontWeight.bold,
+                                                                      .black,
                                                                 ),
                                                               ),
+                                                              const SizedBox(
+                                                                  height: 10),
+                                                              const Divider(),
+                                                              ListTile(
+                                                                title:
+                                                                    const Text(
+                                                                  'Cancel KOT Print',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                                subtitle:
+                                                                    const Text(
+                                                                  'Enable if you want to cancel the KOT print.',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          13,
+                                                                      color: Colors
+                                                                          .grey),
+                                                                ),
+                                                                trailing:
+                                                                    Checkbox(
+                                                                  value:
+                                                                      cancelKotPrint,
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    setState(
+                                                                        () {
+                                                                      cancelKotPrint =
+                                                                          value ??
+                                                                              false;
+                                                                    });
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                  height: 20),
+                                                              MainButton(
+                                                                  label:
+                                                                      'Confirm',
+                                                                  onpress: () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.cancelKOT(
+                                                                        cancelKotPrint:
+                                                                            cancelKotPrint,
+                                                                        userId: context.read<LoginBloc>().state.userId ??
+                                                                            '--',
+                                                                        printers: context
+                                                                            .read<
+                                                                                PrinterSetupBloc>()
+                                                                            .state
+                                                                            .priterlist,
+                                                                        selectedcustomer: context
+                                                                            .read<
+                                                                                CustomerpartBloc>()
+                                                                            .state
+                                                                            .selectedcustomer!,
+                                                                        table: widget
+                                                                            .table,
+                                                                        cancelkotitems:
+                                                                            selectedItems,
+                                                                        currentorderid: widget
+                                                                            .order
+                                                                            .orderNumber,
+                                                                        currentitems: context
+                                                                            .read<OrderDetailsBloc>()
+                                                                            .state
+                                                                            .orderitems));
+                                                                  })
                                                             ],
                                                           ),
-                                                          backgroundColor:
-                                                              mainclr,
-                                                          behavior:
-                                                              SnackBarBehavior
-                                                                  .floating,
-                                                          margin:
-                                                              EdgeInsets.all(
-                                                                  12),
-                                                          duration: Duration(
-                                                              seconds: 4),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              } else {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return const KitchensPage();
+                                                  },
+                                                ));
+
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Column(
+                                                      children: [
+                                                        Text(
+                                                          "Sorry",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
-                                                      );
-                                                    }
-
-                                                    log('message');
-                                                  }
-                                                }),
-                                          )
-                                        : Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 10,
-                                                right: 12,
-                                                left: 12),
-                                            child: ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  // backgroundColor: buttonclr, // Set the button background color
-
-                                                  minimumSize: const Size(
-                                                      double.infinity,
-                                                      55), // Full-width button
-                                                  shape: RoundedRectangleBorder(
-                                                    side: const BorderSide(
-                                                        color: mainclr),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20), // Border radius of 10
+                                                        Text(
+                                                          "Please Add KOT Printers",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12,
+                                                            // fontWeight: FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    backgroundColor: mainclr,
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    margin: EdgeInsets.all(12),
+                                                    duration:
+                                                        Duration(seconds: 4),
                                                   ),
-                                                ),
-                                                onPressed: () {
-                                                  if (widget.order.billNumber
-                                                      .isNotEmpty) {
-                                                  } else {}
+                                                );
+                                              }
 
-                                                  BlocProvider.of<
-                                                              BillSubmitPrintBloc>(
-                                                          context)
-                                                      .add(BillPreview(
-                                                          selectedcustomer: context
-                                                              .read<
-                                                                  CustomerpartBloc>()
-                                                              .state
-                                                              .selectedcustomer!,
-                                                          table: widget.table,
-                                                          currentorderid: widget
-                                                              .order
-                                                              .orderNumber,
-                                                          items: state
-                                                              .orderitems));
+                                              log('message');
+                                            }
+                                          }),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 10, right: 12, left: 12),
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            // backgroundColor: buttonclr, // Set the button background color
 
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return BillPage(
-                                                        order: widget.order,
-                                                      );
-                                                    },
-                                                  ));
-                                                },
-                                                child: const Text(
-                                                  textAlign: TextAlign.center,
-                                                  'Add Bill',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: mainclr),
-                                                )),
-                                          );
-                              },
-                            )
-                          : SizedBox(),
+                                            minimumSize: const Size(
+                                                double.infinity,
+                                                55), // Full-width button
+                                            shape: RoundedRectangleBorder(
+                                              side: const BorderSide(
+                                                  color: mainclr),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      20), // Border radius of 10
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            if (widget
+                                                .order.billNumber.isNotEmpty) {
+                                            } else {}
+
+                                            BlocProvider
+                                                    .of<
+                                                            BillSubmitPrintBloc>(
+                                                        context)
+                                                .add(BillPreview(
+                                                    selectedcustomer: context
+                                                        .read<
+                                                            CustomerpartBloc>()
+                                                        .state
+                                                        .selectedcustomer!,
+                                                    table: widget.table,
+                                                    currentorderid: widget
+                                                        .order.orderNumber,
+                                                    items: state.orderitems));
+
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                              builder: (context) {
+                                                return BillPage(
+                                                  order: widget.order,
+                                                );
+                                              },
+                                            ));
+                                          },
+                                          child: const Text(
+                                            textAlign: TextAlign.center,
+                                            'Add Bill',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: mainclr),
+                                          )),
+                                    );
+                        },
+                      )
                       // // Print KOT Button
                       // ElevatedButton(
                       //   onPressed: _isPrintKOTEnabled ? _printKOT : null,

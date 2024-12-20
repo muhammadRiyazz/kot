@@ -31,7 +31,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
          [UnitTaxableAmountBeforeDiscount], [Discount], [UnitTaxableAmount], [TotalTaxableAmount], [GSTPer],
          [CessPer], [TotalTaxAmount], [TotalCessAmount], [TotalAmount], [DineInOrOther], [Delivery],
          [BillNumber], [KitchenName], [UserID]
-          FROM [Restaurant].[dbo].[OrderItemDetailsDetails]
+          FROM  [dbo].[OrderItemDetailsDetails]
           WHERE CAST(EntryDate AS DATE) = '$currentDate' AND [OrderNumber] = '${event.orderNo}';
            """;
 
@@ -45,7 +45,9 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
             .toList();
         List<kotItem> neworderItems = [];
         for (var element in items) {
-          neworderItems.add(kotItem(cessAmt: element.totalCessAmount,gstAmt: element.totalTaxAmount,
+          neworderItems.add(kotItem(
+            cessAmt: element.totalCessAmount,
+            gstAmt: element.totalTaxAmount,
             kotno: element.kotNumber,
             stock: 0,
             qty: element.quantity.toInt(),

@@ -18,11 +18,12 @@ class ScreenOrdersList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: appbarbg,
         title: Center(
             child: Text(
           'Orders Of ${table.tableName}',
-          style: const TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18, color: Colors.white),
         )),
         actions: const [
           SizedBox(
@@ -46,6 +47,9 @@ class ScreenOrdersList extends StatelessWidget {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(
+                        height: 10,
+                      ),
                       Container(
                         decoration: BoxDecoration(
                             color: boxbgwhite,
@@ -65,7 +69,7 @@ class ScreenOrdersList extends StatelessWidget {
                               ),
                               trailing: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: mainclr,
                                     shape: RoundedRectangleBorder(
                                       side: const BorderSide(color: mainclr),
                                       borderRadius: BorderRadius.circular(
@@ -88,7 +92,8 @@ class ScreenOrdersList extends StatelessWidget {
                                     'Add New Order',
                                     style: TextStyle(
                                         fontSize: 10,
-                                        color: mainclr,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
                                         fontWeight: FontWeight.bold),
                                   )),
                               subtitle:
@@ -191,10 +196,6 @@ class ScreenOrdersList extends StatelessWidget {
                                                         const Color.fromARGB(
                                                             0, 255, 255, 255),
                                                     onTap: () {
-                                                    
-
-                                                      
-
                                                       BlocProvider.of<
                                                                   StockBloc>(
                                                               context)
@@ -301,7 +302,7 @@ class ScreenOrdersList extends StatelessWidget {
                                                                 .parse(state
                                                                     .tableOrders[
                                                                         index]
-                                                                    .entryDate))),
+                                                                    .startTime))),
                                                           ],
                                                         ),
                                                         state.tableOrders[index]

@@ -24,7 +24,7 @@ class RestoreBillBloc extends Bloc<RestoreBillEvent, RestoreBillState> {
           await connectionManager.getConnection();
 
       final String invQuery = """
-        UPDATE [Restaurant].[dbo].[InvoiceAccountDetail]
+        UPDATE  [dbo].[InvoiceAccountDetail]
         SET
           totalpaidamount = 0.00,
           balance = ${event.amt},
@@ -33,7 +33,7 @@ class RestoreBillBloc extends Bloc<RestoreBillEvent, RestoreBillState> {
       """;
 
       final String orderQuery = """
-        UPDATE [Restaurant].[dbo].[OrderMainDetails]
+        UPDATE  [dbo].[OrderMainDetails]
         SET
           CreditOrPaid = 'Credit'
         WHERE OrderNumber = '${event.ordNo}';

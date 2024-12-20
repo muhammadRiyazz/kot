@@ -21,7 +21,7 @@ class PrinterSetupBloc extends Bloc<PrinterSetupEvent, PrinterSetupState> {
         MssqlConnection connection = await connectionManager.getConnection();
         String kitchenNameQuery = """
   SELECT [KitchenName]
-          FROM [Restaurant].[dbo].[KitchenNames];
+          FROM  [dbo].[KitchenNames];
            """;
         String? kitchenNameresult = await connection.getData(kitchenNameQuery);
         log(kitchenNameresult);
@@ -55,7 +55,7 @@ class PrinterSetupBloc extends Bloc<PrinterSetupEvent, PrinterSetupState> {
 
         String getPrintersQuery = '''
     SELECT [PrinterName], [KitchenName], [ComputerName]
-    FROM [Restaurant].[dbo].[KitchenPrinterConfig]
+    FROM  [dbo].[KitchenPrinterConfig]
     WHERE ComputerName ='Mob-II01' 
 ''';
 
@@ -139,7 +139,7 @@ class PrinterSetupBloc extends Bloc<PrinterSetupEvent, PrinterSetupState> {
         MssqlConnection connection = await connectionManager.getConnection();
 
         String addQuery = '''
-       MERGE INTO [Restaurant].[dbo].[KitchenPrinterConfig] AS target
+       MERGE INTO  [dbo].[KitchenPrinterConfig] AS target
        USING (SELECT 'Mob-II01' AS ComputerName, '${event.kitchen}' AS KitchenName, '${event.ip}' AS PrinterName) AS source
       ON target.ComputerName = source.ComputerName AND target.KitchenName = source.KitchenName
     WHEN MATCHED THEN

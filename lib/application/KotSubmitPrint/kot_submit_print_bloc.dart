@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mssql_connection/mssql_connection.dart';
+import 'package:restaurant_kot/application/BillSubmitPrint/bill_submit_print_bloc.dart';
 import 'package:restaurant_kot/core/conn.dart';
 import 'package:restaurant_kot/core/printer/network_printer.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
@@ -11,6 +12,7 @@ import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/get_time.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
+import 'package:restaurant_kot/infrastructure/stock/price_calculation.dart';
 import 'package:restaurant_kot/presendation/printer%20ui/kot_print.dart';
 part 'kot_submit_print_event.dart';
 part 'kot_submit_print_state.dart';
@@ -32,11 +34,46 @@ class KotSubmitPrintBloc
           isLoading: true, stockout: false, printerstatus: 0, submitstatus: 0));
 
       try {
-        List<kotItem> kotitems = event.kotitems;
-
         // Initialize and establish the MSSQL connection
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
+        List<kotItem> kotitems = [];
+
+        if (state.parcel) {
+          List<kotItem> updatedutems = [];
+
+          for (var element in event.kotitems) {
+            String query = '''
+              SELECT 
+                     [pickuprate]
+              FROM  [dbo].[MainStock]
+              WHERE [codeorSKU] = '${element.itemCode}' 
+              ''';
+
+            var result = await connection.getData(query);
+            log(result);
+            List<dynamic> jsonList = json.decode(result);
+            // Ensure totalstock is treated as an integer, even if it is a double
+
+            double basicRate = parcelRateclc(
+                item: element, pickuprate: jsonList[0]['pickuprate']);
+            double taxableAmount = parceltaxableAmountcalculation(
+              item: element,
+              pickuprate: jsonList[0]['pickuprate'],
+            );
+
+            updatedutems.add(element.copyWith(
+              basicRate: basicRate,
+              unitTaxableAmountBeforeDiscount: taxableAmount,
+              unitTaxableAmount: taxableAmount,
+            ));
+          }
+
+          kotitems = updatedutems;
+        } else {
+          kotitems = event.kotitems;
+        }
+
         List<kotItem> outofStock = [];
 
         // Out of stock section ----- (if enabled)
@@ -57,7 +94,7 @@ class KotSubmitPrintBloc
                      [codeorSKU],
                      [pdtname],
                      [totalstock]
-              FROM [Restaurant].[dbo].[MainStock]
+              FROM  [dbo].[MainStock]
               WHERE [codeorSKU] = '$productId' AND [totalstock] < $qty
               ''';
 
@@ -86,7 +123,7 @@ class KotSubmitPrintBloc
           // If stock management is not enabled
 
           var formattedDate = getDateTime();
-          log("formattedDate ---- ---- ---- $formattedDate");
+          var entrydata = entyDateTime();
 
           //         // Fetch KOT ID
           String kotId = await _fetchKotId(connection);
@@ -96,8 +133,6 @@ class KotSubmitPrintBloc
 
           List<kotItem> kotitemslist = [];
           if (event.currentorderid != null && event.currentitems != null) {
-            log('event.currentorderid != null');
-            log(event.currentitems!.length.toString());
             for (var product in event.currentitems!) {
               if (product.quantity > 0) {
                 kotitemslist.add(
@@ -137,9 +172,9 @@ class KotSubmitPrintBloc
 
           if (event.currentorderid != null && event.currentitems != null) {
             String updateQuery = '''
-  UPDATE [Restaurant].[dbo].[OrderMainDetails]
+  UPDATE  [dbo].[OrderMainDetails]
   SET
-    EntryDate = '$formattedDate',
+    EntryDate = '$entrydata',
     CustomerId = '${event.selectedcustomer.cusid}',
     CustomerName = '${event.selectedcustomer.bussinessname}',
     TableName = '${event.table.tableName}',
@@ -161,19 +196,17 @@ class KotSubmitPrintBloc
     OrderNumber = '$orderId';
 ''';
 
-            log(updateQuery);
-
             final resultIfUpdate = await connection.writeData(updateQuery);
             log(resultIfUpdate);
           } else {
             String insertQuery = '''
-          INSERT INTO [Restaurant].[dbo].[OrderMainDetails] (
+          INSERT INTO  [dbo].[OrderMainDetails] (
           OrderNumber, EntryDate, CustomerId, CustomerName, TableName,
           FloorNumber, TotalAmountBeforeDisc, Discount, TotalTaxableAmount,
           TotalTaxAmount, TotalCessAmount, TotalAmount, StartTime, EndTime,
           ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
           ) VALUES (
-          '$orderId', '$formattedDate', '${event.selectedcustomer.cusid}', '${event.selectedcustomer.bussinessname}', '${event.table.tableName}',
+          '$orderId', '$entrydata', '${event.selectedcustomer.cusid}', '${event.selectedcustomer.bussinessname}', '${event.table.tableName}',
           '${event.table.floor}', $totalAmountBeforeDisc, $discount, $totalTaxableAmount,
           $totalTaxAmount, $totalCessAmount, $totalAmount, '$formattedDate', '$formattedDate',
            'Active', 'Dining', 'Credit', '', '${event.userId}'
@@ -197,14 +230,14 @@ class KotSubmitPrintBloc
               final double totalAmount = qty * element.basicRate;
 
               String itemInsertQuery = '''
-            INSERT INTO [Restaurant].[dbo].[OrderItemDetailsDetails] (
+            INSERT INTO  [dbo].[OrderItemDetailsDetails] (
             OrderNumber, KOTNumber, EntryDate, StartTime, EndTime, CustomerId, CustomerName,
             TableName, FloorNumber, Description, ItemCode, ItemName, Quantity, BasicRate,
              UnitTaxableAmountBeforeDiscount, Discount, DiscountPer, UnitTaxableAmount,
                TotalTaxableAmount, GSTPer, CessPer, TotalTaxAmount, TotalCessAmount, TotalAmount,
                 DineInOrOther, Delivery,ParcelOrNot, BillNumber, KitchenName, UserID
             ) VALUES (
-            '$orderId', '$kotId', '$formattedDate', '$formattedDate', '$formattedDate', '${event.selectedcustomer.cusid}',
+            '$orderId', '$kotId', '$entrydata', '$formattedDate', '$formattedDate', '${event.selectedcustomer.cusid}',
            '${event.selectedcustomer.bussinessname}', '${event.table.tableName}', '${event.table.floor}',
            '${event.note ?? ""}', '${element.itemCode}', '${element.itemName}', ${element.quantity}, ${element.basicRate},
             ${element.unitTaxableAmountBeforeDiscount}, 0.0, 0.0, ${element.unitTaxableAmount}, $totalTaxableAmount,
@@ -220,10 +253,8 @@ class KotSubmitPrintBloc
           // Insert Order Item Details
 
           if (event.kotretunitems.isNotEmpty) {
-            log('event.kotretunitems.isNotEmpty====');
             for (var element in event.kotretunitems) {
               int qty = element.qty - element.quantity.abs();
-              log('$qty  ----- element.quantity');
               final double totalTaxableAmount = qty * element.unitTaxableAmount;
               final double totalTaxAmount =
                   totalTaxableAmount * (element.gstPer / 100);
@@ -232,10 +263,10 @@ class KotSubmitPrintBloc
               final double totalAmount = qty * element.basicRate;
 
               String itemUpdateQuery = '''
-    UPDATE [Restaurant].[dbo].[OrderItemDetailsDetails]
+    UPDATE  [dbo].[OrderItemDetailsDetails]
     SET 
         OrderNumber = '$orderId',
-        EntryDate = '$formattedDate',
+        EntryDate = '$entrydata',
         StartTime = '$formattedDate',
         EndTime = '$formattedDate',
         CustomerId = '${event.selectedcustomer.cusid}',
@@ -265,7 +296,6 @@ class KotSubmitPrintBloc
         KOTNumber = '${element.kotno}' AND ItemCode = '${element.itemCode}';
         ''';
 
-              log(itemUpdateQuery);
               final resultitemUpdateQuery =
                   await connection.writeData(itemUpdateQuery);
               log(resultitemUpdateQuery.toString());
@@ -307,6 +337,8 @@ class KotSubmitPrintBloc
 
               // Print the ticket and await the result
               final List<int> test = await kotPrintData(
+                parcel: state.parcel,
+                dlt: false,
                 note: event.note ?? '',
                 items: groupedItems[kitchen]!,
                 kotNo: kotId,
@@ -336,8 +368,6 @@ class KotSubmitPrintBloc
             for (var kitchen in groupedcancelItems.keys) {
               PrinterConfig? printer;
 
-              log('Kitchen: $kitchen');
-
               // Find the printer for the kitchen
               for (var element in printers!) {
                 if (element!.kitchenName == kitchen) {
@@ -347,6 +377,8 @@ class KotSubmitPrintBloc
 
               // Print the ticket and await the result
               final List<int> test = await kotPrintData(
+                parcel: state.parcel,
+                dlt: false,
                 note: event.note ?? '',
                 items: groupedcancelItems[kitchen]!,
                 kotNo: '--',
@@ -411,10 +443,11 @@ class KotSubmitPrintBloc
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
         var formattedDate = getDateTime();
+        var entrydata = entyDateTime();
 
         if (currentkotitems.length == cancelkotitems.length) {
           String deleteQueary = '''
-           DELETE FROM [Restaurant].[dbo].[OrderMainDetails]
+           DELETE FROM  [dbo].[OrderMainDetails]
             WHERE OrderNumber = '${event.currentorderid}';
            ''';
 
@@ -455,9 +488,9 @@ class KotSubmitPrintBloc
           }
 
           String updateQuery = '''
-  UPDATE [Restaurant].[dbo].[OrderMainDetails]
+  UPDATE  [dbo].[OrderMainDetails]
   SET
-    EntryDate = '$formattedDate',
+    EntryDate = '$entrydata',
     CustomerId = '${event.selectedcustomer.cusid}',
     CustomerName = '${event.selectedcustomer.bussinessname}',
     TableName = '${event.table.tableName}',
@@ -487,7 +520,7 @@ class KotSubmitPrintBloc
 
         for (var element in cancelkotitems) {
           String itemUpdateQuery = '''
-      DELETE FROM [Restaurant].[dbo].[OrderItemDetailsDetails]
+      DELETE FROM  [dbo].[OrderItemDetailsDetails]
       WHERE KOTNumber = '${element.kotno}' AND ItemCode = '${element.itemCode}';
     ''';
 
@@ -529,6 +562,8 @@ class KotSubmitPrintBloc
 
             // Print the ticket and await the result
             final List<int> test = await kotPrintData(
+              parcel: false,
+              dlt: true,
               note: '',
               items: groupedItems[kitchen]!,
               kotNo: '--',
@@ -609,6 +644,8 @@ class KotSubmitPrintBloc
 
           // Print the ticket and await the result
           final List<int> test = await kotPrintData(
+            parcel: state.parcel,
+            dlt: false,
             note: event.note ?? '',
             items: groupedItems[kitchen]!,
             kotNo: state.kotNo,
@@ -647,6 +684,8 @@ class KotSubmitPrintBloc
 
           // Print the ticket and await the result
           final List<int> test = await kotPrintData(
+            parcel: state.parcel,
+            dlt: false,
             note: event.note ?? '',
             items: groupedcancelItems[kitchen]!,
             kotNo: '--',
@@ -707,6 +746,8 @@ class KotSubmitPrintBloc
 
           // Print the ticket and await the result
           final List<int> test = await kotPrintData(
+            parcel: state.parcel,
+            dlt: false,
             note: '',
             items: groupedItems[kitchen]!,
             kotNo: '--',
@@ -744,27 +785,37 @@ class KotSubmitPrintBloc
 }
 
 Future<String> _fetchKotId(MssqlConnection connection) async {
-  String query = '''
+  log('_fetchKotId cll ---------');
+  try {
+    String query = '''
     SELECT ISNULL(
       'KOT' + CAST((1 + MAX(CONVERT(INT, RIGHT(KOTNo, LEN(KOTNo) - 3)))) AS VARCHAR),
       'KOT100'
     ) AS KOT FROM KOTNo
     ''';
-  var result = await connection.getData(query);
-  if (result == '[]') throw Exception("Failed to fetch KOT ID");
+    var result = await connection.getData(query);
+    log('_fetchKotId cll ---------$result');
 
-  List<dynamic> jsonList = json.decode(result);
-  String kotId = jsonList[0]['KOT'];
+    if (result == '[]') throw Exception("Failed to fetch KOT ID");
 
-  // Insert new KOT ID into database
-  String insertQuery = '''
+    List<dynamic> jsonList = json.decode(result);
+    String kotId = jsonList[0]['KOT'];
+    log('_fetchKotId cll ---------$kotId');
+
+    // Insert new KOT ID into database
+    String insertQuery = '''
     INSERT INTO KOTNo (KOTNo, KOTDate) VALUES ('$kotId', '${getDateTime()}')
     ''';
-  await connection.writeData(insertQuery);
-  return kotId;
+    await connection.writeData(insertQuery);
+    return kotId;
+  } catch (e) {
+    log(e.toString());
+    return '';
+  }
 }
 
 Future<String> _fetchOrderId(MssqlConnection connection) async {
+  logWithTime('_fetchOrderId  called --------');
   String query = '''
     SELECT ISNULL(
       'ORD' + CAST((1 + MAX(CONVERT(INT, RIGHT(OrderNumber, LEN(OrderNumber) - 3)))) AS VARCHAR),
@@ -772,6 +823,8 @@ Future<String> _fetchOrderId(MssqlConnection connection) async {
     ) AS ORD FROM OrderMainDetails
     ''';
   var result = await connection.getData(query);
+  logWithTime('_fetchOrderId  called --------$result');
+
   if (result == '[]') throw Exception("Failed to fetch Order ID");
 
   List<dynamic> jsonList = json.decode(result);

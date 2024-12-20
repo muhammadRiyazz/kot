@@ -29,7 +29,8 @@ class _MyAppState extends State<MyApp> {
       GlobalKey<ScaffoldMessengerState>();
   @override
   void initState() {
-    super.initState();   MSSQLConnectionManager().reconnect();
+    super.initState(); 
+      MSSQLConnectionManager().getConnection();
 
     // initConnectivity();
   //   _connectivitySubscription =
