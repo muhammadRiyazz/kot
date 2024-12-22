@@ -190,7 +190,7 @@ class KotSubmitPrintBloc
     ActiveInnactive = 'Active',
     DineInOrOther = 'Dining',
     CreditOrPaid = 'Credit',
-    BillNumber = '',
+    BillNumber = '${event.billNumber}',
     UserID = '${event.userId}'
   WHERE
     OrderNumber = '$orderId';
@@ -199,24 +199,34 @@ class KotSubmitPrintBloc
             final resultIfUpdate = await connection.writeData(updateQuery);
             log(resultIfUpdate);
           } else {
-            String insertQuery = '''
-          INSERT INTO  [dbo].[OrderMainDetails] (
-          OrderNumber, EntryDate, CustomerId, CustomerName, TableName,
-          FloorNumber, TotalAmountBeforeDisc, Discount, TotalTaxableAmount,
-          TotalTaxAmount, TotalCessAmount, TotalAmount, StartTime, EndTime,
-          ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
-          ) VALUES (
-          '$orderId', '$entrydata', '${event.selectedcustomer.cusid}', '${event.selectedcustomer.bussinessname}', '${event.table.tableName}',
-          '${event.table.floor}', $totalAmountBeforeDisc, $discount, $totalTaxableAmount,
-          $totalTaxAmount, $totalCessAmount, $totalAmount, '$formattedDate', '$formattedDate',
-           'Active', 'Dining', 'Credit', '', '${event.userId}'
-           )
-           ''';
+            String updateQuery = '''
+  UPDATE [dbo].[OrderMainDetails]
+  SET
+    EntryDate = '$entrydata',
+    CustomerId = '${event.selectedcustomer.cusid}',
+    CustomerName = '${event.selectedcustomer.bussinessname}',
+    TableName = '${event.table.tableName}',
+    FloorNumber = '${event.table.floor}',
+    TotalAmountBeforeDisc = $totalAmountBeforeDisc,
+    Discount = $discount,
+    TotalTaxableAmount = $totalTaxableAmount,
+    TotalTaxAmount = $totalTaxAmount,
+    TotalCessAmount = $totalCessAmount,
+    TotalAmount = $totalAmount,
+    StartTime = '$formattedDate',
+    EndTime = '$formattedDate',
+    ActiveInnactive = 'Active',
+    DineInOrOther = 'Dining',
+    CreditOrPaid = 'Credit',
+    BillNumber = '',
+    UserID = '${event.userId}'
+  WHERE OrderNumber = '$orderId'
+''';
 
-            // log(insertQuery);
+// log(updateQuery);
 
-            final resultIfInsertion = await connection.writeData(insertQuery);
-            log(resultIfInsertion.toString());
+            final resultIfUpdate = await connection.writeData(updateQuery);
+            log(resultIfUpdate.toString());
           }
           if (kotitems.isNotEmpty) {
             for (var element in kotitems) {
@@ -506,7 +516,7 @@ class KotSubmitPrintBloc
     ActiveInnactive = 'Active',
     DineInOrOther = 'Dining',
     CreditOrPaid = 'Credit',
-    BillNumber = '',
+    BillNumber ='${event.billNumber}',
     UserID ='${event.userId}'
   WHERE
     OrderNumber = '${event.currentorderid}';
@@ -815,18 +825,43 @@ Future<String> _fetchKotId(MssqlConnection connection) async {
 }
 
 Future<String> _fetchOrderId(MssqlConnection connection) async {
-  logWithTime('_fetchOrderId  called --------');
+  logWithTime('_insertAndFetchOrderId called --------');
   String query = '''
-    SELECT ISNULL(
-      'ORD' + CAST((1 + MAX(CONVERT(INT, RIGHT(OrderNumber, LEN(OrderNumber) - 3)))) AS VARCHAR),
-      'ORD100'
-    ) AS ORD FROM OrderMainDetails
-    ''';
-  var result = await connection.getData(query);
-  logWithTime('_fetchOrderId  called --------$result');
+    INSERT INTO OrderMainDetails (OrderNumber)
+    OUTPUT Inserted.OrderNumber
+    VALUES (
+      (
+        SELECT ISNULL(
+          'ORD' + CAST((1 + MAX(CONVERT(INT, RIGHT(OrderNumber, LEN(OrderNumber) - 3)))) AS VARCHAR),
+          'ORD100'
+        )
+        FROM OrderMainDetails
+      )
+    )
+  ''';
 
-  if (result == '[]') throw Exception("Failed to fetch Order ID");
+  var result = await connection.getData(query);
+  logWithTime('_insertAndFetchOrderId result -------- $result');
+
+  if (result == '[]') throw Exception("Failed to insert and fetch Order ID");
 
   List<dynamic> jsonList = json.decode(result);
-  return jsonList[0]['ORD'];
+  return jsonList[0]['OrderNumber'];
 }
+
+// Future<String> _fetchOrderId(MssqlConnection connection) async {
+//   logWithTime('_fetchOrderId  called --------');
+//   String query = '''
+//     SELECT ISNULL(
+//       'ORD' + CAST((1 + MAX(CONVERT(INT, RIGHT(OrderNumber, LEN(OrderNumber) - 3)))) AS VARCHAR),
+//       'ORD100'
+//     ) AS ORD FROM OrderMainDetails
+//     ''';
+//   var result = await connection.getData(query);
+//   logWithTime('_fetchOrderId  called --------$result');
+
+//   if (result == '[]') throw Exception("Failed to fetch Order ID");
+
+//   List<dynamic> jsonList = json.decode(result);
+//   return jsonList[0]['ORD'];
+// }

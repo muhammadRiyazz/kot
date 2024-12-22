@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
@@ -9,10 +9,10 @@ import 'package:restaurant_kot/core/printer/network_printer.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
+import 'package:restaurant_kot/infrastructure/next%20id/appentydata.dart';
 import 'package:restaurant_kot/infrastructure/next%20id/invoice_no_next.dart';
 import 'package:restaurant_kot/infrastructure/next%20id/pay_id_next.dart';
 import 'package:restaurant_kot/presendation/printer%20ui/bill_print.dart';
-
 part 'bill_submit_print_event.dart';
 part 'bill_submit_print_state.dart';
 part 'bill_submit_print_bloc.freezed.dart';
@@ -124,53 +124,52 @@ class BillSubmitPrintBloc
 
           var creditOrCleared = 'Credit';
 
-          String query1 =
-              "SELECT MAX(CONVERT(INT, RIGHT(custominvno, LEN(custominvno)-3)))  FROM dbo.InvoiceAccountDetail WHERE CustomerTYPE='${customer.customerType}'";
-          String? result1 = await connection.getData(query1);
+          // String query1 =
+          //     "SELECT MAX(CONVERT(INT, RIGHT(custominvno, LEN(custominvno)-3)))  FROM dbo.InvoiceAccountDetail WHERE CustomerTYPE='${customer.customerType}'";
+          // String? result1 = await connection.getData(query1);
 
-          String nextinvNo =
-              nextinvoiceNo(result: result1, selectCustomer: customer);
-          invno = nextinvNo;
-          // for (var element in collection) {
+          // String nextinvNo =
+          //     nextinvoiceNo(result: result1, selectCustomer: customer);
+          // invno = nextinvNo;
+          invno = await _fetchAndInsertInvoiceNumber(connection, customer);
 
-          // }
           String query2 = """
-            DECLARE @Inserted INT = 0;
-             IF NOT EXISTS (SELECT 1 FROM dbo.InvoiceAccountDetail WHERE custominvno = '$nextinvNo')
-             BEGIN
-             INSERT INTO  [dbo].[InvoiceAccountDetail] (
-             cusid, cusname, cusnameAddress, custorcontact,
-             cusnameGSTNumber, custominvno, Invoicedate, description,
-              totalamount, totaltaxamount, Discountamount,
-             TotalHavetoPayamount, totalpaidamount, balance,
-             CustomerTYPE, CreditOrCleared,
-             INVtypeState, ShipmenttoAddName, ShipmenttoAddress,
-             TableNumber, SubTotal,
-            BillDiscPER, BillDiscTotal, INVnetAmount, INVtotalTAXAmnt,
-            TotalCessAmount, ParcelOrNot,
-            BillAC, OrderNumber, UserID
-             ) VALUES (
-            '${customer.cusid}', '${customer.bussinessname}', '${customer.bussinessaddr}', '--',
-            '${customer.gstno}', '$invno', '$formattedDate', '--',
-            ${state.subTotal!}, ${state.tax!}, 0.00,
-            ${state.totalAmt!}, 0.00, ${state.totalAmt!},
-            '${customer.customerType}', '$creditOrCleared',
-            'Kerala', '--', '--',
-           '${state.table!.tableName}',${state.subTotal!} ,
-            0.00, 0.00, ${state.subTotal!}, ${state.tax!},
-             ${state.cess!}, 'parcelOrNot',
-            '--', '${state.orderid!}', '${event.userID}'
-          );
-           SET @Inserted = 1;
-             END
-           SELECT @Inserted AS InsertedStatus;
-          """;
+  UPDATE [dbo].[InvoiceAccountDetail]
+  SET 
+    cusid = '${customer.cusid}',
+    cusname = '${customer.bussinessname}',
+    cusnameAddress = '${customer.bussinessaddr}',
+    custorcontact = '--',
+    cusnameGSTNumber = '${customer.gstno}',
+    Invoicedate = '$formattedDate',
+    description = '--',
+    totalamount = ${state.subTotal!},
+    totaltaxamount = ${state.tax!},
+    Discountamount = 0.00,
+    TotalHavetoPayamount = ${state.totalAmt!},
+    totalpaidamount = 0.00,
+    balance = ${state.totalAmt!},
+    CustomerTYPE = '${customer.customerType}',
+    CreditOrCleared = '$creditOrCleared',
+    INVtypeState = 'Kerala',
+    ShipmenttoAddName = '--',
+    ShipmenttoAddress = '--',
+    TableNumber = '${state.table!.tableName}',
+    SubTotal = ${state.subTotal!},
+    BillDiscPER = 0.00,
+    BillDiscTotal = 0.00,
+    INVnetAmount = ${state.subTotal!},
+    INVtotalTAXAmnt = ${state.tax!},
+    TotalCessAmount = ${state.cess!},
+    ParcelOrNot = 'parcelOrNot',
+    BillAC = '--',
+    OrderNumber = '${state.orderid!}',
+    UserID = '${event.userID}'
+  WHERE custominvno = '$invno';
+""";
 
-          logWithTime("Executing query2 to insert invoice data...");
-
-          String result = await connection.getData(query2);
-
-          log(result);
+          logWithTime("Executing query2 to update invoice data...");
+          await connection.writeData(query2);
 
           for (var element in billItems) {
             final venCGST = element.gstPer / 2;
@@ -254,7 +253,7 @@ class BillSubmitPrintBloc
               taxable: state.subTotal!,
               items: state.printitems,
               invoiceNo: invno,
-              // orderNo: state.orderid!,
+              orderNo: state.orderid!,
               tableNo: state.table!.tableName,
             );
 
@@ -288,97 +287,104 @@ class BillSubmitPrintBloc
             ));
           }
         } else {
-          logWithTime("Starting database operation");
+//           logWithTime("Starting database operation");
 
-          // 1. Start logging for query1
-          logWithTime("Executing query1 to get MAX custom invoice number...");
+//           // 1. Start logging for query1
+//           logWithTime("Executing query1 to get MAX custom invoice number...");
 
-          String query1 =
-              "SELECT MAX(CONVERT(INT, RIGHT(custominvno, LEN(custominvno)-3)))  FROM dbo.InvoiceAccountDetail where CustomerTYPE='${customer.customerType}' ";
-          String? result1 = await connection.getData(query1);
-          log(result1.toString());
+//           // String query1 =
+//           //     "SELECT MAX(CONVERT(INT, RIGHT(custominvno, LEN(custominvno)-3)))  FROM dbo.InvoiceAccountDetail where CustomerTYPE='${customer.customerType}' ";
+//           // String? result1 = await connection.getData(query1);
+//           // log(result1.toString());
 
-          logWithTime("Received result from query1: $result1");
+//           // logWithTime("Received result from query1: $result1");
 
-          // 2. Calculate next invoice number
-          logWithTime("Calculating next invoice number...");
+//           // // 2. Calculate next invoice number
+//           // logWithTime("Calculating next invoice number...");
 
-          String nextinvNo = nextinvoiceNo(
-              result: result1, selectCustomer: state.selectedCustomer!);
+//           // String nextinvNo = nextinvoiceNo(
+//           //     result: result1, selectCustomer: state.selectedCustomer!);
+          // invno = nextinvNo;
+          String nextinvNo = await _fetchAndInsertInvoiceNumber(
+              connection, state.selectedCustomer!);
           invno = nextinvNo;
+
           logWithTime("Next invoice number calculated: $nextinvNo");
 
           // 3. Start logging for query2
           logWithTime("Preparing query2 for inserting invoice data...");
-
           String query2 = """
-          DECLARE @Inserted INT = 0;
-          IF NOT EXISTS (SELECT 1 FROM  [dbo].[InvoiceAccountDetail] WHERE custominvno = '$nextinvNo')
-          BEGIN
-          INSERT INTO  [dbo].[InvoiceAccountDetail] (
-            cusid, cusname, cusnameAddress, custorcontact,
-            cusnameGSTNumber, custominvno, Invoicedate, description,
-            totalamount, totaltaxamount, Discountamount,
-            TotalHavetoPayamount, totalpaidamount, balance,
-            CustomerTYPE, CreditOrCleared,
-            INVtypeState, ShipmenttoAddName, ShipmenttoAddress,
-            TableNumber, SubTotal,
-            BillDiscPER, BillDiscTotal, INVnetAmount, INVtotalTAXAmnt,
-            TotalCessAmount, ParcelOrNot,
-            BillAC, OrderNumber, UserID
-            ) VALUES (
-            '${customer.cusid}', '${customer.bussinessname}', '${customer.bussinessaddr}', '--',
-            '${customer.gstno}', '$invno', '$formattedDate', '--',
-            ${state.subTotal!}, ${state.tax!}, 0.00,
-            ${state.totalAmt!}, ${state.totalAmt!}, 0.00,
-            '${customer.customerType}', 'Cleared',
-            'Kerala', '--', '--',
-           '${state.table!.tableName}',${state.subTotal!} ,
-            0.00, 0.00, ${state.subTotal!}, ${state.tax!},
-             ${state.cess!}, 'parcelOrNot',
-            '--', '${state.orderid!}', '${event.userID}'
-        );
-        SET @Inserted = 1;
-       END
-       SELECT @Inserted AS InsertedStatus;
-       """;
-
-          logWithTime("Executing query2 to insert invoice data...");
-
-          var result = await connection.getData(query2);
-          log(result);
-          if (result.isNotEmpty &&
-              result.toString() == '[{"InsertedStatus":1}]') {
-            logWithTime("Insertion successful for query2 --------------------");
-
-            String queryPayorEX =
-                "SELECT MAX(CONVERT(INT, RIGHT(PayOrExpID, LEN(PayOrExpID)-3)))  FROM dbo.PayorEX  ";
-            String? result2 = await connection.getData(queryPayorEX);
-            log('queryPayorEX ---------------$result2');
-            String payidno = nextpayNo(result: result2);
-            log('queryPapayidnoyorEX ---------------$payidno');
-
-            String query4 = """
-    INSERT INTO  [dbo].[PayorEX] (
-        PayOrExpID, VendIDOreCusID, VendIDOreCusName, PayOrExpDate, CAT,
-       paidby,   paidamount, PayCrDr,
-        PayINVid, RootType, OrderNumber
-    ) VALUES (
-        '$payidno', '${customer.cusid}', '${customer.bussinessname}',
-        '$formattedDate', 'sale',  '${state.paytypeValue!}',  ${state.totalAmt!}, 'Cr', '$nextinvNo', 'Sale', '${state.orderid!}'
-    )
+  UPDATE [dbo].[InvoiceAccountDetail]
+  SET 
+    cusid = '${customer.cusid}',
+    cusname = '${customer.bussinessname}',
+    cusnameAddress = '${customer.bussinessaddr}',
+    custorcontact = '--',
+    cusnameGSTNumber = '${customer.gstno}',
+    Invoicedate = '$formattedDate',
+    description = '--',
+    totalamount = ${state.subTotal!},
+    totaltaxamount = ${state.tax!},
+    Discountamount = 0.00,
+    TotalHavetoPayamount = ${state.totalAmt!},
+    totalpaidamount = ${state.totalAmt!},
+    balance = 0.00,
+    CustomerTYPE = '${customer.customerType}',
+    CreditOrCleared = 'Cleared',
+    INVtypeState = 'Kerala',
+    ShipmenttoAddName = '--',
+    ShipmenttoAddress = '--',
+    TableNumber = '${state.table!.tableName}',
+    SubTotal = ${state.subTotal!},
+    BillDiscPER = 0.00,
+    BillDiscTotal = 0.00,
+    INVnetAmount = ${state.subTotal!},
+    INVtotalTAXAmnt = ${state.tax!},
+    TotalCessAmount = ${state.cess!},
+    ParcelOrNot = 'parcelOrNot',
+    BillAC = '--',
+    OrderNumber = '${state.orderid!}',
+    UserID = '${event.userID}'
+  WHERE custominvno = '$nextinvNo';
 """;
 
-            await connection.writeData(query4);
-            log('PayorEX done');
+          logWithTime("Executing query2 to update invoice data...");
+          await connection.writeData(query2);
 
-            for (var element in billItems) {
-              final venCGST = element.gstPer / 2;
-              final venCGSTamt = element.gstAmt / 2;
-              final venSGST = element.gstPer / 2;
-              final venSGSTamt = element.gstAmt / 2;
+          // String queryPayorEX =
+          //     "SELECT MAX(CONVERT(INT, RIGHT(PayOrExpID, LEN(PayOrExpID)-3)))  FROM dbo.PayorEX  ";
+          // String? result2 = await connection.getData(queryPayorEX);
+          // log('queryPayorEX ---------------$result2');
+          String payidno =await fetchAndInsertPayOrExpID(connection);
+          log('queryPapayidnoyorEX ---------------$payidno');
 
-              String query3 = """INSERT INTO  [dbo].[invoicedetail] (
+    String query4 = """
+    UPDATE [dbo].[PayorEX]
+    SET 
+        VendIDOreCusID = '${customer.cusid}', 
+        VendIDOreCusName = '${customer.bussinessname}', 
+        PayOrExpDate = '$formattedDate', 
+        CAT = 'sale', 
+        paidby = '${state.paytypeValue!}', 
+        paidamount = ${state.totalAmt!}, 
+        PayCrDr = 'Cr', 
+        PayINVid = '$nextinvNo', 
+        RootType = 'Sale', 
+        OrderNumber = '${state.orderid!}'
+    WHERE PayOrExpID = '$payidno'
+""";
+
+
+          await connection.writeData(query4);
+          log('PayorEX done');
+
+          for (var element in billItems) {
+            final venCGST = element.gstPer / 2;
+            final venCGSTamt = element.gstAmt / 2;
+            final venSGST = element.gstPer / 2;
+            final venSGSTamt = element.gstAmt / 2;
+
+            String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
             pdtname, HSNCode, discp, pcs, qty, Freeqty, unitprice, itemMRP, Amount,
@@ -419,9 +425,9 @@ class BillSubmitPrintBloc
   ) WHERE codeorSKU = '${element.itemCode}';
 """;
 
-              await connection.writeData(query3);
-            }
-            String updateQuery = '''
+            await connection.writeData(query3);
+          }
+          String updateQuery = '''
   UPDATE  [dbo].[OrderMainDetails]
   SET
     CreditOrPaid = '${state.paytypeValue!}',
@@ -429,55 +435,49 @@ class BillSubmitPrintBloc
   WHERE
     OrderNumber = '${state.orderid}';
 ''';
-            await connection.writeData(updateQuery);
-            log('emit calling--');
-            emit(state.copyWith(
-              loading: false,
-              billsubmission: true,
-              invNo: invno,
-              printerstatus: 0,
-            ));
-            log('emit done--');
-            if (event.billPrint) {
-              log('print section ----------');
+          await connection.writeData(updateQuery);
+          log('emit calling--');
+          emit(state.copyWith(
+            loading: false,
+            billsubmission: true,
+            invNo: invno,
+            printerstatus: 0,
+          ));
+          log('emit done--');
+          if (event.billPrint) {
+            log('print section ----------');
 
-              PrinterConfig printer = event.printer!;
+            PrinterConfig printer = event.printer!;
 
-              int printingStatus = 0;
+            int printingStatus = 0;
 
-              final List<int> test = await billPrintData(
-                netAmount: state.totalAmt!, tax: state.tax!,
-                cess: state.cess!,
-                taxable: state.subTotal!,
-                items: state.printitems,
-                invoiceNo: invno,
-                // orderNo: state.orderid!,
-                tableNo: state.table!.tableName,
-              );
+            final List<int> test = await billPrintData(
+              netAmount: state.totalAmt!,
+              tax: state.tax!,
+              cess: state.cess!,
+              taxable: state.subTotal!,
+              items: state.printitems,
+              invoiceNo: invno,
+              orderNo: state.orderid!,
+              tableNo: state.table!.tableName,
+            );
 
-              printingStatus = await NetworkPrinter().printTicket(
-                test,
-                printer.printerName,
-              );
+            printingStatus = await NetworkPrinter().printTicket(
+              test,
+              printer.printerName,
+            );
 
-              log('Printer response---$printingStatus');
+            log('Printer response---$printingStatus');
 
-              if (printingStatus == 1) {
-                log('Printer status: 2---------');
-                emit(state.copyWith(
-                  isLoading: false,
-                  printerstatus: 2,
-                  billsubmission: false,
-                ));
-              } else {
-                log('Printer status: 1---------');
-                emit(state.copyWith(
-                  isLoading: false,
-                  printerstatus: 1,
-                  billsubmission: false,
-                ));
-              }
+            if (printingStatus == 1) {
+              log('Printer status: 2---------');
+              emit(state.copyWith(
+                isLoading: false,
+                printerstatus: 2,
+                billsubmission: false,
+              ));
             } else {
+              log('Printer status: 1---------');
               emit(state.copyWith(
                 isLoading: false,
                 printerstatus: 1,
@@ -485,10 +485,11 @@ class BillSubmitPrintBloc
               ));
             }
           } else {
-            emit(state.copyWith(loading: false, trafic: true));
-
-            logWithTime(
-                "Insertion was not executed, record with nextinvNo already exists-----------------------------------------------.");
+            emit(state.copyWith(
+              isLoading: false,
+              printerstatus: 1,
+              billsubmission: false,
+            ));
           }
         }
       } catch (e) {
@@ -638,12 +639,13 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
-              netAmount: state.totalAmt!, tax: state.tax!,
+              netAmount: state.totalAmt!,
+              tax: state.tax!,
               cess: state.cess!,
               taxable: state.subTotal!,
               items: state.printitems,
               invoiceNo: event.invNo,
-              // orderNo: state.orderid!,
+              orderNo: state.orderid!,
               tableNo: state.table!.tableName,
             );
 
@@ -716,11 +718,11 @@ class BillSubmitPrintBloc
 
           logWithTime("Insertion successful for query2 --------------------");
 
-          String queryPayorEX =
-              "SELECT MAX(CONVERT(INT, RIGHT(PayOrExpID, LEN(PayOrExpID)-3)))  FROM dbo.PayorEX  ";
-          String? result2 = await connection.getData(queryPayorEX);
-          log('queryPayorEX ---------------$result2');
-          String payidno = nextpayNo(result: result2);
+          // String queryPayorEX =
+          //     "SELECT MAX(CONVERT(INT, RIGHT(PayOrExpID, LEN(PayOrExpID)-3)))  FROM dbo.PayorEX  ";
+          // String? result2 = await connection.getData(queryPayorEX);
+          // log('queryPayorEX ---------------$result2');
+          String payidno =await fetchAndInsertPayOrExpID(connection);
           log('queryPapayidnoyorEX ---------------$payidno');
 
           String query4 = """
@@ -816,6 +818,7 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
+              orderNo: state.orderid!,
               tax: state.tax!,
               cess: state.cess!,
               // cGst: ,netAmount: ,sGst: ,
@@ -882,7 +885,7 @@ class BillSubmitPrintBloc
           taxable: state.subTotal!,
           items: state.printitems,
           invoiceNo: state.invNo,
-          // orderNo: state.orderid!,
+          orderNo: state.orderid!,
           tableNo: state.table!.tableName,
         );
 
@@ -920,4 +923,41 @@ void logWithTime(String message) {
   final String formattedTime =
       DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(DateTime.now());
   log("[$formattedTime] $message");
+}
+
+Future<String> _fetchAndInsertInvoiceNumber(
+    MssqlConnection connection, CustomerDetails customer) async {
+  logWithTime('_fetchAndInsertInvoiceNumber called --------');
+
+  String prefix = customer.customerType == 'BtoB'
+      ? appentydataresult[0].invoiceNumberBtoB
+      : appentydataresult[0].invoiceNumberBtoC;
+
+  String query = '''
+    DECLARE @NextInvNo VARCHAR(50);
+
+    INSERT INTO InvoiceAccountDetail (CustomInvNo, CustomerType)
+    OUTPUT Inserted.CustomInvNo
+    VALUES (
+      (
+        SELECT ISNULL(
+          '$prefix' + CAST((1 + MAX(CONVERT(INT, RIGHT(CustomInvNo, LEN(CustomInvNo) - LEN('$prefix'))))) AS VARCHAR),
+          '${prefix}1'
+        )
+        FROM InvoiceAccountDetail
+        WHERE CustomerType = '${customer.customerType}'
+      ),
+      '${customer.customerType}'
+    )
+  ''';
+
+  var result = await connection.getData(query);
+  logWithTime('_fetchAndInsertInvoiceNumber result -------- $result');
+
+  if (result == '[]') {
+    throw Exception("Failed to insert and fetch Invoice Number");
+  }
+
+  List<dynamic> jsonList = json.decode(result);
+  return jsonList[0]['CustomInvNo'];
 }

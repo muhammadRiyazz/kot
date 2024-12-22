@@ -22,7 +22,7 @@ dependencies:
   shimmer: ^3.0.0
   http: ^1.2.1
   sunmi_printer_plus: ^2.1.2
-  # connectivity_plus: ^6.0.3
+  connectivity_plus: ^6.0.3
   flutter_screenutil: ^5.9.3
   bloc: ^8.1.4
   mssql_connection: ^1.1.3

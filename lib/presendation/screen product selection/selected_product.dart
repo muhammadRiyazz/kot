@@ -21,10 +21,11 @@ import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 class SelectedProductsPage extends StatelessWidget {
   final TableInfo table;
   final String? orderNo;
+  final String billNo;
 
   SelectedProductsPage({
     super.key,
-    required this.table,
+    required this.table, required this.billNo,
     this.orderNo,
   });
   TextEditingController noteController = TextEditingController();
@@ -933,7 +934,7 @@ class SelectedProductsPage extends StatelessWidget {
                                                                 FontWeight.bold,
                                                           ),
                                                         ),
-                                                        subtitle: Text(
+                                                        subtitle: const Text(
                                                           'Enable if you want to cancel the KOT print.',
                                                           style: TextStyle(
                                                               fontSize: 13,
@@ -976,7 +977,7 @@ class SelectedProductsPage extends StatelessWidget {
                                                                   .toKOTitems,
                                                             );
                                                       if (iSAdded) {
-                                                        BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.submitAndPrint(
+                                                        BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.submitAndPrint(billNumber: billNo,
                                                             cancelKotPrint:
                                                                 cancelKotPrint,
                                                             kotPrint: kotPrint,

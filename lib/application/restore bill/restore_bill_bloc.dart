@@ -38,10 +38,16 @@ class RestoreBillBloc extends Bloc<RestoreBillEvent, RestoreBillState> {
           CreditOrPaid = 'Credit'
         WHERE OrderNumber = '${event.ordNo}';
       """;
+   String deleteQueary = '''
+           DELETE FROM  [dbo].[PayorEX]
+            WHERE OrderNumber = '${event.ordNo}';
+           ''';
 
-      // Execute queries
+          log(deleteQueary);
+
       await connection.writeData(invQuery);
       await connection.writeData(orderQuery);
+       await connection.writeData(deleteQueary);
 
       emit(state.copyWith(isLoading: false, updated: true));
     } catch (error, stackTrace) {

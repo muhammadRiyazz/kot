@@ -7,6 +7,7 @@ Future<List<int>> billPrintData({
   required List<kotItem> items,
   required String tableNo,
   required String invoiceNo,
+  required String orderNo,
   required double taxable,
   required double netAmount,
   required double tax,
@@ -19,15 +20,25 @@ Future<List<int>> billPrintData({
   final generator = Generator(PaperSize.mm80, profile);
   List<int> bytes = [];
 
-  // Header
+// Header with increased font size
   bytes += generator.text(
     infoCustomer!.cmpname,
-    styles: const PosStyles(align: PosAlign.center, bold: true),
+    styles: const PosStyles(
+      align: PosAlign.center,
+      bold: true,
+      height: PosTextSize.size2, // Increase font height
+      width: PosTextSize.size2, // Increase font width
+    ),
   );
 
   bytes += generator.text(
     infoCustomer!.cmpadd,
-    styles: const PosStyles(align: PosAlign.center, bold: false),
+    styles: const PosStyles(
+      align: PosAlign.center,
+      bold: false,
+      height: PosTextSize.size1, // Default font size
+      width: PosTextSize.size1, // Default font size
+    ),
   );
 
   bytes += generator.text(
@@ -64,6 +75,19 @@ Future<List<int>> billPrintData({
     ),
     PosColumn(
       text: invoiceNo,
+      width: 6,
+      styles: const PosStyles(align: PosAlign.right, bold: true),
+    ),
+  ]);
+
+  bytes += generator.row([
+    PosColumn(
+      text: 'Order No',
+      width: 6,
+      styles: const PosStyles(bold: true),
+    ),
+    PosColumn(
+      text: orderNo,
       width: 6,
       styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
@@ -147,18 +171,20 @@ Future<List<int>> billPrintData({
   bytes += generator.hr(len: 48);
   bytes += generator.feed(1);
 
-   tax<1?null:  bytes += generator.row([
-    PosColumn(
-      text: 'Taxable Amount',
-      width: 8,
-      styles: const PosStyles(align: PosAlign.left, bold: true),
-    ),
-    PosColumn(
-      text: taxable.toStringAsFixed(2),
-      width: 4,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
-    ),
-  ]);
+  tax < 1
+      ? null
+      : bytes += generator.row([
+          PosColumn(
+            text: 'Taxable Amount',
+            width: 8,
+            styles: const PosStyles(align: PosAlign.left, bold: true),
+          ),
+          PosColumn(
+            text: taxable.toStringAsFixed(2),
+            width: 4,
+            styles: const PosStyles(align: PosAlign.right, bold: true),
+          ),
+        ]);
   bytes += generator.row([
     PosColumn(
       text: 'Discount',
@@ -171,42 +197,48 @@ Future<List<int>> billPrintData({
       styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
   ]);
-  tax<1?null:   bytes += generator.row([
-    PosColumn(
-      text: 'CGST',
-      width: 8,
-      styles: const PosStyles(align: PosAlign.left, bold: true),
-    ),
-    PosColumn(
-      text: cGst.toStringAsFixed(2),
-      width: 4,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
-    ),
-  ]);
-  tax<1?null:   bytes += generator.row([
-    PosColumn(
-      text: 'SGST',
-      width: 8,
-      styles: const PosStyles(align: PosAlign.left, bold: true),
-    ),
-    PosColumn(
-      text: sGst.toStringAsFixed(2),
-      width: 4,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
-    ),
-  ]);
-  tax<1?null:   bytes += generator.row([
-    PosColumn(
-      text: 'Cess',
-      width: 8,
-      styles: const PosStyles(align: PosAlign.left, bold: true),
-    ),
-    PosColumn(
-      text: cess.toStringAsFixed(2),
-      width: 4,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
-    ),
-  ]);
+  tax < 1
+      ? null
+      : bytes += generator.row([
+          PosColumn(
+            text: 'CGST',
+            width: 8,
+            styles: const PosStyles(align: PosAlign.left, bold: true),
+          ),
+          PosColumn(
+            text: cGst.toStringAsFixed(2),
+            width: 4,
+            styles: const PosStyles(align: PosAlign.right, bold: true),
+          ),
+        ]);
+  tax < 1
+      ? null
+      : bytes += generator.row([
+          PosColumn(
+            text: 'SGST',
+            width: 8,
+            styles: const PosStyles(align: PosAlign.left, bold: true),
+          ),
+          PosColumn(
+            text: sGst.toStringAsFixed(2),
+            width: 4,
+            styles: const PosStyles(align: PosAlign.right, bold: true),
+          ),
+        ]);
+  tax < 1
+      ? null
+      : bytes += generator.row([
+          PosColumn(
+            text: 'Cess',
+            width: 8,
+            styles: const PosStyles(align: PosAlign.left, bold: true),
+          ),
+          PosColumn(
+            text: cess.toStringAsFixed(2),
+            width: 4,
+            styles: const PosStyles(align: PosAlign.right, bold: true),
+          ),
+        ]);
   bytes += generator.hr(len: 48);
 
   bytes += generator.row([

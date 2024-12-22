@@ -3,6 +3,8 @@ part of 'kot_submit_print_bloc.dart';
 @freezed
 class KotSubmitPrintEvent with _$KotSubmitPrintEvent {
   const factory KotSubmitPrintEvent.submitAndPrint({
+        required String billNumber,
+
     required List<kotItem> kotitems,
     required List<kotItem> kotretunitems,
     required CustomerDetails selectedcustomer,
@@ -17,6 +19,7 @@ class KotSubmitPrintEvent with _$KotSubmitPrintEvent {
   }) = SubmitAndPrint;
   const factory KotSubmitPrintEvent.cancelKOT({
         required bool cancelKotPrint,
+        required String billNumber,
 
     required List<kotItem> cancelkotitems,
     required CustomerDetails selectedcustomer,

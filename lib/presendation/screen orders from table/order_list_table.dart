@@ -79,7 +79,7 @@ class ScreenOrdersList extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return ProductChoosingPage(
+                                        return ProductChoosingPage(billNo:'',
                                           tableinfo: TableInfo(
                                               acOrNonAc: table.tableType,
                                               floor: table.floorName,

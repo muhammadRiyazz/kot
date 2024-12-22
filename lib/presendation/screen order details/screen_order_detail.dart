@@ -10,7 +10,6 @@ import 'package:restaurant_kot/application/order%20details/order_details_bloc.da
 import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/check_printer_congiration.dart';
@@ -53,7 +52,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     return Scaffold(
       backgroundColor: mainclrbg,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: appbarbg,
         title: const Center(
           child: Text(
@@ -91,7 +90,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: ListView(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Container(
@@ -154,7 +153,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                               builder: (context) {
-                                                return ProductChoosingPage(
+                                                return ProductChoosingPage(billNo: widget.order.billNumber,
                                                   tableinfo: widget.table,
                                                   order:
                                                       widget.order.orderNumber,
@@ -738,7 +737,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                 builder: (context) {
-                                                  return SelectedProductsPage(
+                                                  return SelectedProductsPage(billNo: widget.order.billNumber,
                                                     orderNo: widget
                                                         .order.orderNumber,
                                                     table: widget.table,
@@ -862,7 +861,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                                   onpress: () {
                                                                     Navigator.pop(
                                                                         context);
-                                                                    BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.cancelKOT(
+                                                                    BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.cancelKOT(billNumber: widget.order.billNumber,
                                                                         cancelKotPrint:
                                                                             cancelKotPrint,
                                                                         userId: context.read<LoginBloc>().state.userId ??

@@ -24,6 +24,7 @@ class PrintingBloc extends Bloc<PrintingEvent, PrintingState> {
         int printingStatus = 0;
 
         final List<int> test = await billPrintData(
+          orderNo:event.orderID,
           tax: event.cGst,
           cess: event.sGst,
           netAmount: event.netAmount,

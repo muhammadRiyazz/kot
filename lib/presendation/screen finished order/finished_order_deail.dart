@@ -387,7 +387,7 @@ class FinishedOrderDetail extends StatelessWidget {
                                                                         PrinterSetupBloc>()
                                                                     .state
                                                                     .billPrinterInfo;
-                                                            BlocProvider.of<PrintingBloc>(context).add(PrintBill(
+                                                            BlocProvider.of<PrintingBloc>(context).add(PrintBill(orderID: invoice.orderNumber!,
                                                                 printer:
                                                                     printer!,
                                                                 items: convert(

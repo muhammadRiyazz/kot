@@ -23,6 +23,7 @@ mixin _$PrintingEvent {
   double get netAmount => throw _privateConstructorUsedError;
   double get cGst => throw _privateConstructorUsedError;
   double get sGst => throw _privateConstructorUsedError;
+  String get orderID => throw _privateConstructorUsedError;
   String get tableName => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
@@ -34,6 +35,7 @@ mixin _$PrintingEvent {
             double netAmount,
             double cGst,
             double sGst,
+            String orderID,
             String tableName)
         printBill,
   }) =>
@@ -48,6 +50,7 @@ mixin _$PrintingEvent {
             double netAmount,
             double cGst,
             double sGst,
+            String orderID,
             String tableName)?
         printBill,
   }) =>
@@ -62,6 +65,7 @@ mixin _$PrintingEvent {
             double netAmount,
             double cGst,
             double sGst,
+            String orderID,
             String tableName)?
         printBill,
     required TResult orElse(),
@@ -105,6 +109,7 @@ abstract class $PrintingEventCopyWith<$Res> {
       double netAmount,
       double cGst,
       double sGst,
+      String orderID,
       String tableName});
 }
 
@@ -130,6 +135,7 @@ class _$PrintingEventCopyWithImpl<$Res, $Val extends PrintingEvent>
     Object? netAmount = null,
     Object? cGst = null,
     Object? sGst = null,
+    Object? orderID = null,
     Object? tableName = null,
   }) {
     return _then(_value.copyWith(
@@ -161,6 +167,10 @@ class _$PrintingEventCopyWithImpl<$Res, $Val extends PrintingEvent>
           ? _value.sGst
           : sGst // ignore: cast_nullable_to_non_nullable
               as double,
+      orderID: null == orderID
+          ? _value.orderID
+          : orderID // ignore: cast_nullable_to_non_nullable
+              as String,
       tableName: null == tableName
           ? _value.tableName
           : tableName // ignore: cast_nullable_to_non_nullable
@@ -185,6 +195,7 @@ abstract class _$$PrintBillImplCopyWith<$Res>
       double netAmount,
       double cGst,
       double sGst,
+      String orderID,
       String tableName});
 }
 
@@ -208,6 +219,7 @@ class __$$PrintBillImplCopyWithImpl<$Res>
     Object? netAmount = null,
     Object? cGst = null,
     Object? sGst = null,
+    Object? orderID = null,
     Object? tableName = null,
   }) {
     return _then(_$PrintBillImpl(
@@ -239,6 +251,10 @@ class __$$PrintBillImplCopyWithImpl<$Res>
           ? _value.sGst
           : sGst // ignore: cast_nullable_to_non_nullable
               as double,
+      orderID: null == orderID
+          ? _value.orderID
+          : orderID // ignore: cast_nullable_to_non_nullable
+              as String,
       tableName: null == tableName
           ? _value.tableName
           : tableName // ignore: cast_nullable_to_non_nullable
@@ -258,6 +274,7 @@ class _$PrintBillImpl implements PrintBill {
       required this.netAmount,
       required this.cGst,
       required this.sGst,
+      required this.orderID,
       required this.tableName})
       : _items = items;
 
@@ -282,11 +299,13 @@ class _$PrintBillImpl implements PrintBill {
   @override
   final double sGst;
   @override
+  final String orderID;
+  @override
   final String tableName;
 
   @override
   String toString() {
-    return 'PrintingEvent.printBill(printer: $printer, items: $items, invNo: $invNo, taxable: $taxable, netAmount: $netAmount, cGst: $cGst, sGst: $sGst, tableName: $tableName)';
+    return 'PrintingEvent.printBill(printer: $printer, items: $items, invNo: $invNo, taxable: $taxable, netAmount: $netAmount, cGst: $cGst, sGst: $sGst, orderID: $orderID, tableName: $tableName)';
   }
 
   @override
@@ -302,6 +321,7 @@ class _$PrintBillImpl implements PrintBill {
                 other.netAmount == netAmount) &&
             (identical(other.cGst, cGst) || other.cGst == cGst) &&
             (identical(other.sGst, sGst) || other.sGst == sGst) &&
+            (identical(other.orderID, orderID) || other.orderID == orderID) &&
             (identical(other.tableName, tableName) ||
                 other.tableName == tableName));
   }
@@ -316,6 +336,7 @@ class _$PrintBillImpl implements PrintBill {
       netAmount,
       cGst,
       sGst,
+      orderID,
       tableName);
 
   /// Create a copy of PrintingEvent
@@ -337,11 +358,12 @@ class _$PrintBillImpl implements PrintBill {
             double netAmount,
             double cGst,
             double sGst,
+            String orderID,
             String tableName)
         printBill,
   }) {
-    return printBill(
-        printer, items, invNo, taxable, netAmount, cGst, sGst, tableName);
+    return printBill(printer, items, invNo, taxable, netAmount, cGst, sGst,
+        orderID, tableName);
   }
 
   @override
@@ -355,11 +377,12 @@ class _$PrintBillImpl implements PrintBill {
             double netAmount,
             double cGst,
             double sGst,
+            String orderID,
             String tableName)?
         printBill,
   }) {
-    return printBill?.call(
-        printer, items, invNo, taxable, netAmount, cGst, sGst, tableName);
+    return printBill?.call(printer, items, invNo, taxable, netAmount, cGst,
+        sGst, orderID, tableName);
   }
 
   @override
@@ -373,13 +396,14 @@ class _$PrintBillImpl implements PrintBill {
             double netAmount,
             double cGst,
             double sGst,
+            String orderID,
             String tableName)?
         printBill,
     required TResult orElse(),
   }) {
     if (printBill != null) {
-      return printBill(
-          printer, items, invNo, taxable, netAmount, cGst, sGst, tableName);
+      return printBill(printer, items, invNo, taxable, netAmount, cGst, sGst,
+          orderID, tableName);
     }
     return orElse();
   }
@@ -422,6 +446,7 @@ abstract class PrintBill implements PrintingEvent {
       required final double netAmount,
       required final double cGst,
       required final double sGst,
+      required final String orderID,
       required final String tableName}) = _$PrintBillImpl;
 
   @override
@@ -438,6 +463,8 @@ abstract class PrintBill implements PrintingEvent {
   double get cGst;
   @override
   double get sGst;
+  @override
+  String get orderID;
   @override
   String get tableName;
 

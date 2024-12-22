@@ -175,7 +175,7 @@ class Tablespart extends StatelessWidget {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                           builder: (context) {
-                                            return ProductChoosingPage(
+                                            return ProductChoosingPage(billNo: '',
                                                 tableinfo: TableInfo(
                                                     acOrNonAc: state
                                                         .tables[index]

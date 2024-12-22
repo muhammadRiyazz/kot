@@ -19,6 +19,7 @@ mixin _$KotSubmitPrintEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -33,6 +34,7 @@ mixin _$KotSubmitPrintEvent {
         submitAndPrint,
     required TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -59,6 +61,7 @@ mixin _$KotSubmitPrintEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -73,6 +76,7 @@ mixin _$KotSubmitPrintEvent {
         submitAndPrint,
     TResult? Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -99,6 +103,7 @@ mixin _$KotSubmitPrintEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -113,6 +118,7 @@ mixin _$KotSubmitPrintEvent {
         submitAndPrint,
     TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -192,7 +198,8 @@ abstract class _$$SubmitAndPrintImplCopyWith<$Res> {
       __$$SubmitAndPrintImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {List<kotItem> kotitems,
+      {String billNumber,
+      List<kotItem> kotitems,
       List<kotItem> kotretunitems,
       CustomerDetails selectedcustomer,
       bool kotPrint,
@@ -218,6 +225,7 @@ class __$$SubmitAndPrintImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? billNumber = null,
     Object? kotitems = null,
     Object? kotretunitems = null,
     Object? selectedcustomer = null,
@@ -231,6 +239,10 @@ class __$$SubmitAndPrintImplCopyWithImpl<$Res>
     Object? note = freezed,
   }) {
     return _then(_$SubmitAndPrintImpl(
+      billNumber: null == billNumber
+          ? _value.billNumber
+          : billNumber // ignore: cast_nullable_to_non_nullable
+              as String,
       kotitems: null == kotitems
           ? _value._kotitems
           : kotitems // ignore: cast_nullable_to_non_nullable
@@ -283,7 +295,8 @@ class __$$SubmitAndPrintImplCopyWithImpl<$Res>
 
 class _$SubmitAndPrintImpl implements SubmitAndPrint {
   const _$SubmitAndPrintImpl(
-      {required final List<kotItem> kotitems,
+      {required this.billNumber,
+      required final List<kotItem> kotitems,
       required final List<kotItem> kotretunitems,
       required this.selectedcustomer,
       required this.kotPrint,
@@ -299,6 +312,8 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
         _currentitems = currentitems,
         _printers = printers;
 
+  @override
+  final String billNumber;
   final List<kotItem> _kotitems;
   @override
   List<kotItem> get kotitems {
@@ -352,7 +367,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
 
   @override
   String toString() {
-    return 'KotSubmitPrintEvent.submitAndPrint(kotitems: $kotitems, kotretunitems: $kotretunitems, selectedcustomer: $selectedcustomer, kotPrint: $kotPrint, cancelKotPrint: $cancelKotPrint, table: $table, currentorderid: $currentorderid, currentitems: $currentitems, printers: $printers, userId: $userId, note: $note)';
+    return 'KotSubmitPrintEvent.submitAndPrint(billNumber: $billNumber, kotitems: $kotitems, kotretunitems: $kotretunitems, selectedcustomer: $selectedcustomer, kotPrint: $kotPrint, cancelKotPrint: $cancelKotPrint, table: $table, currentorderid: $currentorderid, currentitems: $currentitems, printers: $printers, userId: $userId, note: $note)';
   }
 
   @override
@@ -360,6 +375,8 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SubmitAndPrintImpl &&
+            (identical(other.billNumber, billNumber) ||
+                other.billNumber == billNumber) &&
             const DeepCollectionEquality().equals(other._kotitems, _kotitems) &&
             const DeepCollectionEquality()
                 .equals(other._kotretunitems, _kotretunitems) &&
@@ -382,6 +399,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      billNumber,
       const DeepCollectionEquality().hash(_kotitems),
       const DeepCollectionEquality().hash(_kotretunitems),
       selectedcustomer,
@@ -407,6 +425,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -421,6 +440,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
         submitAndPrint,
     required TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -444,6 +464,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
         rePrint,
   }) {
     return submitAndPrint(
+        billNumber,
         kotitems,
         kotretunitems,
         selectedcustomer,
@@ -461,6 +482,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -475,6 +497,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
         submitAndPrint,
     TResult? Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -498,6 +521,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
         rePrint,
   }) {
     return submitAndPrint?.call(
+        billNumber,
         kotitems,
         kotretunitems,
         selectedcustomer,
@@ -515,6 +539,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -529,6 +554,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
         submitAndPrint,
     TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -554,6 +580,7 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
   }) {
     if (submitAndPrint != null) {
       return submitAndPrint(
+          billNumber,
           kotitems,
           kotretunitems,
           selectedcustomer,
@@ -609,7 +636,8 @@ class _$SubmitAndPrintImpl implements SubmitAndPrint {
 
 abstract class SubmitAndPrint implements KotSubmitPrintEvent {
   const factory SubmitAndPrint(
-      {required final List<kotItem> kotitems,
+      {required final String billNumber,
+      required final List<kotItem> kotitems,
       required final List<kotItem> kotretunitems,
       required final CustomerDetails selectedcustomer,
       required final bool kotPrint,
@@ -621,6 +649,7 @@ abstract class SubmitAndPrint implements KotSubmitPrintEvent {
       required final String userId,
       final String? note}) = _$SubmitAndPrintImpl;
 
+  String get billNumber;
   List<kotItem> get kotitems;
   List<kotItem> get kotretunitems;
   CustomerDetails get selectedcustomer;
@@ -648,6 +677,7 @@ abstract class _$$CancelKOTImplCopyWith<$Res> {
   @useResult
   $Res call(
       {bool cancelKotPrint,
+      String billNumber,
       List<kotItem> cancelkotitems,
       CustomerDetails selectedcustomer,
       TableInfo table,
@@ -671,6 +701,7 @@ class __$$CancelKOTImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? cancelKotPrint = null,
+    Object? billNumber = null,
     Object? cancelkotitems = null,
     Object? selectedcustomer = null,
     Object? table = null,
@@ -684,6 +715,10 @@ class __$$CancelKOTImplCopyWithImpl<$Res>
           ? _value.cancelKotPrint
           : cancelKotPrint // ignore: cast_nullable_to_non_nullable
               as bool,
+      billNumber: null == billNumber
+          ? _value.billNumber
+          : billNumber // ignore: cast_nullable_to_non_nullable
+              as String,
       cancelkotitems: null == cancelkotitems
           ? _value._cancelkotitems
           : cancelkotitems // ignore: cast_nullable_to_non_nullable
@@ -721,6 +756,7 @@ class __$$CancelKOTImplCopyWithImpl<$Res>
 class _$CancelKOTImpl implements CancelKOT {
   const _$CancelKOTImpl(
       {required this.cancelKotPrint,
+      required this.billNumber,
       required final List<kotItem> cancelkotitems,
       required this.selectedcustomer,
       required this.table,
@@ -734,6 +770,8 @@ class _$CancelKOTImpl implements CancelKOT {
 
   @override
   final bool cancelKotPrint;
+  @override
+  final String billNumber;
   final List<kotItem> _cancelkotitems;
   @override
   List<kotItem> get cancelkotitems {
@@ -770,7 +808,7 @@ class _$CancelKOTImpl implements CancelKOT {
 
   @override
   String toString() {
-    return 'KotSubmitPrintEvent.cancelKOT(cancelKotPrint: $cancelKotPrint, cancelkotitems: $cancelkotitems, selectedcustomer: $selectedcustomer, table: $table, currentorderid: $currentorderid, userId: $userId, currentitems: $currentitems, printers: $printers)';
+    return 'KotSubmitPrintEvent.cancelKOT(cancelKotPrint: $cancelKotPrint, billNumber: $billNumber, cancelkotitems: $cancelkotitems, selectedcustomer: $selectedcustomer, table: $table, currentorderid: $currentorderid, userId: $userId, currentitems: $currentitems, printers: $printers)';
   }
 
   @override
@@ -780,6 +818,8 @@ class _$CancelKOTImpl implements CancelKOT {
             other is _$CancelKOTImpl &&
             (identical(other.cancelKotPrint, cancelKotPrint) ||
                 other.cancelKotPrint == cancelKotPrint) &&
+            (identical(other.billNumber, billNumber) ||
+                other.billNumber == billNumber) &&
             const DeepCollectionEquality()
                 .equals(other._cancelkotitems, _cancelkotitems) &&
             (identical(other.selectedcustomer, selectedcustomer) ||
@@ -797,6 +837,7 @@ class _$CancelKOTImpl implements CancelKOT {
   int get hashCode => Object.hash(
       runtimeType,
       cancelKotPrint,
+      billNumber,
       const DeepCollectionEquality().hash(_cancelkotitems),
       selectedcustomer,
       table,
@@ -817,6 +858,7 @@ class _$CancelKOTImpl implements CancelKOT {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -831,6 +873,7 @@ class _$CancelKOTImpl implements CancelKOT {
         submitAndPrint,
     required TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -853,14 +896,23 @@ class _$CancelKOTImpl implements CancelKOT {
             String? note)
         rePrint,
   }) {
-    return cancelKOT(cancelKotPrint, cancelkotitems, selectedcustomer, table,
-        currentorderid, userId, currentitems, printers);
+    return cancelKOT(
+        cancelKotPrint,
+        billNumber,
+        cancelkotitems,
+        selectedcustomer,
+        table,
+        currentorderid,
+        userId,
+        currentitems,
+        printers);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -875,6 +927,7 @@ class _$CancelKOTImpl implements CancelKOT {
         submitAndPrint,
     TResult? Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -897,14 +950,23 @@ class _$CancelKOTImpl implements CancelKOT {
             String? note)?
         rePrint,
   }) {
-    return cancelKOT?.call(cancelKotPrint, cancelkotitems, selectedcustomer,
-        table, currentorderid, userId, currentitems, printers);
+    return cancelKOT?.call(
+        cancelKotPrint,
+        billNumber,
+        cancelkotitems,
+        selectedcustomer,
+        table,
+        currentorderid,
+        userId,
+        currentitems,
+        printers);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -919,6 +981,7 @@ class _$CancelKOTImpl implements CancelKOT {
         submitAndPrint,
     TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -943,8 +1006,16 @@ class _$CancelKOTImpl implements CancelKOT {
     required TResult orElse(),
   }) {
     if (cancelKOT != null) {
-      return cancelKOT(cancelKotPrint, cancelkotitems, selectedcustomer, table,
-          currentorderid, userId, currentitems, printers);
+      return cancelKOT(
+          cancelKotPrint,
+          billNumber,
+          cancelkotitems,
+          selectedcustomer,
+          table,
+          currentorderid,
+          userId,
+          currentitems,
+          printers);
     }
     return orElse();
   }
@@ -990,6 +1061,7 @@ class _$CancelKOTImpl implements CancelKOT {
 abstract class CancelKOT implements KotSubmitPrintEvent {
   const factory CancelKOT(
       {required final bool cancelKotPrint,
+      required final String billNumber,
       required final List<kotItem> cancelkotitems,
       required final CustomerDetails selectedcustomer,
       required final TableInfo table,
@@ -999,6 +1071,7 @@ abstract class CancelKOT implements KotSubmitPrintEvent {
       final List<PrinterConfig?>? printers}) = _$CancelKOTImpl;
 
   bool get cancelKotPrint;
+  String get billNumber;
   List<kotItem> get cancelkotitems;
   CustomerDetails get selectedcustomer;
   TableInfo get table;
@@ -1083,6 +1156,7 @@ class _$ParcelImpl implements Parcel {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -1097,6 +1171,7 @@ class _$ParcelImpl implements Parcel {
         submitAndPrint,
     required TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -1126,6 +1201,7 @@ class _$ParcelImpl implements Parcel {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -1140,6 +1216,7 @@ class _$ParcelImpl implements Parcel {
         submitAndPrint,
     TResult? Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -1169,6 +1246,7 @@ class _$ParcelImpl implements Parcel {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -1183,6 +1261,7 @@ class _$ParcelImpl implements Parcel {
         submitAndPrint,
     TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -1477,6 +1556,7 @@ class _$rePrintImpl implements rePrint {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -1491,6 +1571,7 @@ class _$rePrintImpl implements rePrint {
         submitAndPrint,
     required TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -1521,6 +1602,7 @@ class _$rePrintImpl implements rePrint {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -1535,6 +1617,7 @@ class _$rePrintImpl implements rePrint {
         submitAndPrint,
     TResult? Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,
@@ -1565,6 +1648,7 @@ class _$rePrintImpl implements rePrint {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
+            String billNumber,
             List<kotItem> kotitems,
             List<kotItem> kotretunitems,
             CustomerDetails selectedcustomer,
@@ -1579,6 +1663,7 @@ class _$rePrintImpl implements rePrint {
         submitAndPrint,
     TResult Function(
             bool cancelKotPrint,
+            String billNumber,
             List<kotItem> cancelkotitems,
             CustomerDetails selectedcustomer,
             TableInfo table,

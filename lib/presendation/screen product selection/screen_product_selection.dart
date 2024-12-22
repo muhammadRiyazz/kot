@@ -12,11 +12,12 @@ import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets
 import 'package:shimmer/shimmer.dart';
 
 class ProductChoosingPage extends StatelessWidget {
-  ProductChoosingPage({super.key, this.order, required this.tableinfo});
+  ProductChoosingPage({super.key, this.order, required this.tableinfo,required this.billNo,});
 
   // // Selected products
   String? order;
   final TableInfo tableinfo;
+  final String billNo;
 
   TextEditingController searchController = TextEditingController();
 
@@ -807,7 +808,7 @@ Item quantity : ${product.quantity}
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                 builder: (context) {
-                                                  return SelectedProductsPage(
+                                                  return SelectedProductsPage(billNo: billNo,
                                                     orderNo: order,
                                                     table: tableinfo,
                                                   );
