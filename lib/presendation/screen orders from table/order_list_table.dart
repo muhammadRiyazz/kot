@@ -79,7 +79,8 @@ class ScreenOrdersList extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return ProductChoosingPage(billNo:'',
+                                        return ProductChoosingPage(
+                                          billNo: '',
                                           tableinfo: TableInfo(
                                               acOrNonAc: table.tableType,
                                               floor: table.floorName,
@@ -278,7 +279,7 @@ class ScreenOrdersList extends StatelessWidget {
                                                               .spaceAround,
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
-                                                              .center,
+                                                              .end,
                                                       children: [
                                                         SizedBox(),
                                                         Row(
@@ -314,31 +315,27 @@ class ScreenOrdersList extends StatelessWidget {
                                                                         .creditOrPaid ==
                                                                     'Credit'
                                                             ? Container(
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                8),
-                                                                    color: Colors
-                                                                        .red),
-                                                                child:
-                                                                    const Padding(
-                                                                  padding: EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal:
-                                                                              10,
-                                                                          vertical:
-                                                                              3),
-                                                                  child: Text(
-                                                                    'UnPaid',
-                                                                    style: TextStyle(
-                                                                        color: Color.fromARGB(
-                                                                            255,
-                                                                            255,
-                                                                            255,
-                                                                            255)),
-                                                                  ),
-                                                                ))
+                                                                // decoration: BoxDecoration(
+                                                                //     borderRadius:
+                                                                //         BorderRadius
+                                                                //             .circular(
+                                                                //                 8),
+                                                                //     color: Colors
+                                                                //         .red),
+                                                                child: Text(
+                                                                state
+                                                                    .tableOrders[
+                                                                        index]
+                                                                    .billNumber,
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color:
+                                                                        mainclr),
+                                                              ))
                                                             : const SizedBox(),
                                                       ],
                                                     ),

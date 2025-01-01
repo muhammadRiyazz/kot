@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
+import 'package:restaurant_kot/infrastructure/img.dart';
+import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../consts/colors.dart';
 
 class CategoryBottomSheet extends StatelessWidget {
-  const CategoryBottomSheet({super.key ,required this.ac});
+  const CategoryBottomSheet({super.key, required this.ac});
   final bool ac;
   @override
   Widget build(BuildContext context) {
@@ -43,56 +46,96 @@ class CategoryBottomSheet extends StatelessWidget {
                     crossAxisCount: 3,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    childAspectRatio: .9,
+                    childAspectRatio: 0.8, // Adjust for more height
                   ),
                   itemCount: state.category.length,
                   itemBuilder: (context, index) {
-                         state.category[index];
                     return GestureDetector(
                       onTap: () {
-                        BlocProvider.of<StockBloc>(context)
-                            .add(StockEvent.categorySelection( acOrNonAc: ac,
-                          category:state.category[index] ,
-                        ));
+                        BlocProvider.of<StockBloc>(context).add(
+                          StockEvent.categorySelection(
+                            acOrNonAc: ac,
+                            category: state.category[index],
+                          ),
+                        );
 
-                        // Return the selected category and close bottom sheet
+                        // Close the bottom sheet
                         Navigator.pop(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            color:  state.selectedcategory != null &&
-                                            state.category[index] ==
-                                                state.selectedcategory
-                                        ? mainclr
-                                        : boxbgwhite
-                                  ,
-                            borderRadius: BorderRadius.circular(12)),
+                          border: Border.all(
+                              width: 2,
+                              color: state.selectedcategory != null &&
+                                      state.category[index] ==
+                                          state.selectedcategory
+                                  ? mainclr
+                                  : boxbgwhite),
+                          color: boxbgwhite,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              // Padding(
-                              //   padding: const EdgeInsets.symmetric(
-                              //       horizontal: 10, vertical: 6),
-                              //   child: ClipRRect(
-                              //     borderRadius: BorderRadius.circular(12),
-                              //     child: Image.network(category.image,
-                              //         height: 80, fit: BoxFit.fill),
-                              //   ),
-                              // ),
+                              Container(
+                                height: 70,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  color: boxbgclr,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: FutureBuilder(
+                                    future:
+                                        fetchImageUrl(state.category[index]),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Shimmer.fromColors(
+                                          baseColor: Colors.grey[300]!,
+                                          highlightColor: Colors.grey[100]!,
+                                          child: Container(
+                                            color: Colors.white,
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError ||
+                                          !snapshot.hasData) {
+                                        return Image.asset(
+                                          'assets/img/no data/noimg.png',
+                                          fit: BoxFit.cover,
+                                        );
+                                      } else {
+                                        return Image.network(
+                                          snapshot.data!,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                              'assets/img/no data/noimg.png',
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
                               const SizedBox(height: 8),
-                              Text(
-                                state.category[
-                                                            index].pdtFilter,
-                                style: TextStyle(
-                                    color: state.selectedcategory != null &&
-                                                    state.category[
-                                                            index] ==
-                                                        state.selectedcategory
-                                                ? boxbgwhite
-                                                : mainclr
-                                            ),
+                              Flexible(
+                                child: Text(
+                                  state.category[index],
+                                  textAlign: TextAlign.center,
+                                  maxLines:
+                                      2, // Allow for up to 2 lines of text
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: mainclr,
+                                  ),
+                                ),
                               ),
                             ],
                           ),

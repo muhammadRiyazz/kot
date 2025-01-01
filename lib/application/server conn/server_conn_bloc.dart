@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 
@@ -95,6 +96,7 @@ class ServerConnBloc extends Bloc<ServerConnEvent, ServerConnState> {
           };
           await prefs.setString('serverconn', json.encode(jsonData));
           await prefs.setBool('server', true);
+    ipid = event.ip;
 
           log('Connection details saved: $jsonData');
           emit(state.copyWith(isLoading: false, conn: true));

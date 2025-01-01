@@ -71,14 +71,15 @@ class _MyAppState extends State<MyApp> {
     _scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         elevation: 60,
-        closeIconColor: mainclr,
+        closeIconColor: const Color.fromARGB(255, 255, 255, 255),
         dismissDirection: DismissDirection.horizontal,
         showCloseIcon: true,
-        backgroundColor: const Color.fromARGB(255, 244, 244, 244),
+        backgroundColor: Colors.red,
         content: Row(
           children: [
-            const Icon(Icons.network_check_rounded, color: mainclr, size: 30),
-            const SizedBox(width: 6),
+            const Icon(Icons.network_check_rounded,
+                color: Color.fromARGB(255, 255, 255, 255), size: 30),
+            const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -86,13 +87,17 @@ class _MyAppState extends State<MyApp> {
                 const Text(
                   'No Internet',
                   style: TextStyle(
-                    color: mainclr,
+                    fontSize: 15,
+                    color: Color.fromARGB(255, 255, 255, 255),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(
                     height: 2), // Add some space between title and message
-                Text(message, style: const TextStyle(color: Colors.grey)),
+                Text(message,
+                    style: const TextStyle(
+                        fontSize: 10,
+                        color: Color.fromARGB(255, 240, 240, 240))),
               ],
             ),
           ],

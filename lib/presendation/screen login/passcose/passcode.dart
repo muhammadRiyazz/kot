@@ -17,6 +17,7 @@ class PasscodePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: mainclrbg,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: appbarbg,
       ),
       body: Padding(
@@ -31,11 +32,11 @@ class PasscodePage extends StatelessWidget {
                   color: boxbgwhite,
                   boxShadow: [
                     BoxShadow(
-                      color: const Color.fromARGB(255, 225, 225, 225)
+                      color: const Color.fromARGB(255, 184, 184, 184)
                           .withOpacity(0.3),
                       blurRadius: 15,
                       spreadRadius: 5,
-                      offset: Offset(0, 5),
+                      offset: const Offset(0, 5),
                     ),
                   ],
                 ),
@@ -160,4 +161,3 @@ class PasscodePage extends StatelessWidget {
     );
   }
 }
-

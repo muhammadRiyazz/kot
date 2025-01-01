@@ -14,36 +14,56 @@ part 'stock_bloc.freezed.dart';
 
 class StockBloc extends Bloc<StockEvent, StockState> {
   StockBloc() : super(StockState.initial()) {
-    on<CategoryFetch>((event, emit) async {
-      log('CategoryFetch-------StockBloc');
+on<CategoryFetch>((event, emit) async {
+  log('CategoryFetch-------StockBloc');
 
-      try {
-        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
-        MssqlConnection connection = await connectionManager.getConnection();
+  try {
+    MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+    MssqlConnection connection = await connectionManager.getConnection();
 
-        String categoryQuery = """
-      SELECT * FROM  [dbo].[Category]
-       """;
+    // SQL query to fetch category and SERorGOODS
+    String categoryQuery = """
+      SELECT category, SERorGOODS 
+      FROM [dbo].[MainStock]
+    """;
 
-        String? categoryQueryResult = await connection.getData(categoryQuery);
 
-        // Process category query result
-        List<dynamic> categoryJsonResponse = jsonDecode(categoryQueryResult);
-        List<Category> allCategory = categoryJsonResponse
-            .map((data) => Category.fromJson(data))
-            .toList();
-        List<Category> serCategory = allCategory
-            .where((category) => category.serOrGoods == 'SER')
-            .toList();
-        List<Category> goodsCategory = allCategory
-            .where((category) => category.serOrGoods == 'GOODS')
-            .toList();
-        emit(state.copyWith(
-            goodsCategory: goodsCategory, serCategory: serCategory));
-      } catch (e) {
-        log(e.toString());
+String rawResult = await connection.getData(categoryQuery);
+List<Map<String, dynamic>> categoryQueryResult = List<Map<String, dynamic>>.from(jsonDecode(rawResult));
+
+    // Use Sets to handle duplicates
+    Set<String> goodsCategorySet = {};
+    Set<String> serCategorySet = {};
+
+    for (var row in categoryQueryResult) {
+      // Ensure correct extraction of category and SERorGOODS
+      String? category = row['category'] as String?;
+      String? serOrGoods = row['SERorGOODS'] as String?;
+
+      if (category != null && serOrGoods != null) {
+        if (serOrGoods == 'GOODS') {
+          goodsCategorySet.add(category); // Add category to goods set
+        } else if (serOrGoods == 'SER') {
+          serCategorySet.add(category); // Add category to services set
+        }
       }
-    });
+    }
+
+    // Convert Sets to Lists for final state
+    List<String> goodsCategory = goodsCategorySet.toList();
+    List<String> serCategory = serCategorySet.toList();
+
+    // Emit the state with the grouped and unique categories
+    emit(state.copyWith(
+      goodsCategory: goodsCategory,
+      serCategory: serCategory,
+    ));
+  } catch (e) {
+    log('Error: ${e.toString()}');
+  }
+});
+
+
     on<ItemInitalFetch>((event, emit) async {
       log('ItemInitalFetch-------StockBloc');
       emit(state.copyWith(isLoading: true));
@@ -160,7 +180,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
       try {
         // Select items and category based on type (Goods/Service)
         List<kotItem> items = [];
-        List<Category> category = [];
+        List<String> category = [];
 
         if (event.type == 'Goods') {
           items = state.goodsitems;
@@ -208,7 +228,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
   SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
   FROM  [dbo].[MainStock]
   WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}' 
-    AND [category] = '${event.category.pdtFilter}';
+    AND [category] = '${event.category}';
 """;
 
         String stockQueryResult = await connection.getData(stockQuery);
@@ -552,3 +572,14 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     });
   }
 }
+  // // Process category query result
+  //       List<dynamic> categoryJsonResponse = jsonDecode(categoryQueryResult);
+  //       List<Category> allCategory = categoryJsonResponse
+  //           .map((data) => Category.fromJson(data))
+  //           .toList();
+  //       List<Category> serCategory = allCategory
+  //           .where((category) => category.serOrGoods == 'SER')
+  //           .toList();
+  //       List<Category> goodsCategory = allCategory
+  //           .where((category) => category.serOrGoods == 'GOODS')
+  //           .toList();

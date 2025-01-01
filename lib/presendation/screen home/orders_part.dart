@@ -450,25 +450,48 @@ class _OrderPageState extends State<OrderPage> {
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      state.orders[index]
-                                                                      .billNumber !=
-                                                                  '' &&
-                                                              state
-                                                                      .orders[
-                                                                          index]
-                                                                      .creditOrPaid ==
-                                                                  'Credit'
-                                                          ? Text(
-                                                              'UnPaid',
-                                                              style: TextStyle(
-                                                                  // fontSize: 12,
-                                                                  color: Colors
-                                                                      .red),
-                                                            )
-                                                          : const SizedBox(),
                                                       Row(
                                                         children: [
-                                                          Icon(
+                                                          state.orders[index]
+                                                                          .billNumber !=
+                                                                      '' &&
+                                                                  state.orders[index]
+                                                                          .creditOrPaid ==
+                                                                      'Credit'
+                                                              ? Text(
+                                                                  state
+                                                                      .orders[
+                                                                          index]
+                                                                      .billNumber,
+                                                                  style: const TextStyle(
+                                                                      // fontSize: 12,
+                                                                      fontWeight: FontWeight.w600,
+                                                                      color: Colors.black),
+                                                                )
+                                                              : const SizedBox(),
+                                                          state.orders[index]
+                                                                          .billNumber !=
+                                                                      '' &&
+                                                                  state.orders[index]
+                                                                          .creditOrPaid ==
+                                                                      'Credit'
+                                                              ? const Text(
+                                                                  '  (UnPaid)',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal,
+                                                                      color: Colors
+                                                                          .red),
+                                                                )
+                                                              : const SizedBox(),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          const Icon(
                                                             Icons.timer_sharp,
                                                             color:
                                                                 Color.fromARGB(

@@ -134,8 +134,8 @@ class BillSubmitPrintBloc
           invno = await _fetchAndInsertInvoiceNumber(connection, customer);
 
           String query2 = """
-  UPDATE [dbo].[InvoiceAccountDetail]
-  SET 
+    UPDATE [dbo].[InvoiceAccountDetail]
+    SET 
     cusid = '${customer.cusid}',
     cusname = '${customer.bussinessname}',
     cusnameAddress = '${customer.bussinessaddr}',
@@ -165,8 +165,8 @@ class BillSubmitPrintBloc
     BillAC = '--',
     OrderNumber = '${state.orderid!}',
     UserID = '${event.userID}'
-  WHERE custominvno = '$invno';
-""";
+    WHERE custominvno = '$invno';
+    """;
 
           logWithTime("Executing query2 to update invoice data...");
           await connection.writeData(query2);
@@ -355,10 +355,10 @@ class BillSubmitPrintBloc
           //     "SELECT MAX(CONVERT(INT, RIGHT(PayOrExpID, LEN(PayOrExpID)-3)))  FROM dbo.PayorEX  ";
           // String? result2 = await connection.getData(queryPayorEX);
           // log('queryPayorEX ---------------$result2');
-          String payidno =await fetchAndInsertPayOrExpID(connection);
+          String payidno = await fetchAndInsertPayOrExpID(connection);
           log('queryPapayidnoyorEX ---------------$payidno');
 
-    String query4 = """
+          String query4 = """
     UPDATE [dbo].[PayorEX]
     SET 
         VendIDOreCusID = '${customer.cusid}', 
@@ -373,7 +373,6 @@ class BillSubmitPrintBloc
         OrderNumber = '${state.orderid!}'
     WHERE PayOrExpID = '$payidno'
 """;
-
 
           await connection.writeData(query4);
           log('PayorEX done');
@@ -635,9 +634,7 @@ class BillSubmitPrintBloc
           log('print section ----------');
           if (event.billPrint) {
             PrinterConfig printer = event.printer!;
-
             int printingStatus = 0;
-
             final List<int> test = await billPrintData(
               netAmount: state.totalAmt!,
               tax: state.tax!,
@@ -722,7 +719,7 @@ class BillSubmitPrintBloc
           //     "SELECT MAX(CONVERT(INT, RIGHT(PayOrExpID, LEN(PayOrExpID)-3)))  FROM dbo.PayorEX  ";
           // String? result2 = await connection.getData(queryPayorEX);
           // log('queryPayorEX ---------------$result2');
-          String payidno =await fetchAndInsertPayOrExpID(connection);
+          String payidno = await fetchAndInsertPayOrExpID(connection);
           log('queryPapayidnoyorEX ---------------$payidno');
 
           String query4 = """
@@ -744,7 +741,6 @@ class BillSubmitPrintBloc
            ''';
 
           log(deleteQueary);
-
           await connection.writeData(deleteQueary);
           for (var element in billItems) {
             final venCGST = element.gstPer / 2;

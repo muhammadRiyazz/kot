@@ -25,7 +25,8 @@ class SelectedProductsPage extends StatelessWidget {
 
   SelectedProductsPage({
     super.key,
-    required this.table, required this.billNo,
+    required this.table,
+    required this.billNo,
     this.orderNo,
   });
   TextEditingController noteController = TextEditingController();
@@ -64,7 +65,9 @@ class SelectedProductsPage extends StatelessWidget {
               },
               child: const Text(
                 'Clear All  ',
-                style: TextStyle(color: Colors.white,),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             )
           ],
@@ -340,7 +343,7 @@ class SelectedProductsPage extends StatelessWidget {
                                                 );
                                               },
                                               contentPadding:
-                                                  EdgeInsets.symmetric(
+                                                  const EdgeInsets.symmetric(
                                                       horizontal: 8),
                                               leading: Container(
                                                 height: 60,
@@ -977,7 +980,8 @@ class SelectedProductsPage extends StatelessWidget {
                                                                   .toKOTitems,
                                                             );
                                                       if (iSAdded) {
-                                                        BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.submitAndPrint(billNumber: billNo,
+                                                        BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.submitAndPrint(
+                                                            billNumber: billNo,
                                                             cancelKotPrint:
                                                                 cancelKotPrint,
                                                             kotPrint: kotPrint,

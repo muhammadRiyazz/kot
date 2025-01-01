@@ -13,6 +13,7 @@ import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/check_printer_congiration.dart';
+import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/kot_submision_success.dart';
 import 'package:restaurant_kot/presendation/screen%20bill%20preview/screen_bill.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/table_view.dart';
@@ -20,6 +21,7 @@ import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_
 import 'package:restaurant_kot/presendation/screen%20product%20selection/selected_product.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
+import 'package:shimmer/shimmer.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   const OrderDetailsPage({super.key, required this.order, required this.table});
@@ -153,7 +155,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                               builder: (context) {
-                                                return ProductChoosingPage(billNo: widget.order.billNumber,
+                                                return ProductChoosingPage(
+                                                  billNo:
+                                                      widget.order.billNumber,
                                                   tableinfo: widget.table,
                                                   order:
                                                       widget.order.orderNumber,
@@ -376,24 +380,83 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                 Row(
                                                   children: [
                                                     Container(
-                                                      height: 60,
-                                                      width: 60,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey[200],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        child: Image.network(
-                                                          'https://www.shutterstock.com/shutterstock/photos/2468105649/display_1500/stock-photo--chicken-biryani-quick-and-tasty-chicken-biryani-chicken-dum-biryani-plan-background-2468105649.jpg',
-                                                          fit: BoxFit.fill,
+                                                        height: 55,
+                                                        width: 55,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: boxbgclr,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
                                                         ),
-                                                      ),
-                                                    ),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          child: FutureBuilder(
+                                                            future: fetchImageUrl(
+                                                                item.itemCode),
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                      .connectionState ==
+                                                                  ConnectionState
+                                                                      .waiting) {
+                                                                // Show shimmer effect while loading
+                                                                return Shimmer
+                                                                    .fromColors(
+                                                                  baseColor:
+                                                                      Colors.grey[
+                                                                          300]!,
+                                                                  highlightColor:
+                                                                      Colors.grey[
+                                                                          100]!,
+                                                                  child:
+                                                                      Container(
+                                                                    height:
+                                                                        150, // Adjust height as needed
+                                                                    width: double
+                                                                        .infinity, // Adjust width as needed
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                );
+                                                              } else if (snapshot
+                                                                      .hasError ||
+                                                                  !snapshot
+                                                                      .hasData) {
+                                                                // Show an error image if all attempts fail
+                                                                return Image
+                                                                    .asset(
+                                                                  'assets/img/no data/noimg.png',
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                );
+                                                              } else {
+                                                                // Load the resolved image URL
+                                                                return Image
+                                                                    .network(
+                                                                  snapshot
+                                                                      .data!,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                  errorBuilder:
+                                                                      (context,
+                                                                          error,
+                                                                          stackTrace) {
+                                                                    // Fallback error image
+                                                                    return Image
+                                                                        .asset(
+                                                                      'assets/img/no data/noimg.png',
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                    );
+                                                                  },
+                                                                );
+                                                              }
+                                                            },
+                                                          ),
+                                                        )),
                                                     const SizedBox(width: 8),
                                                     Expanded(
                                                       child: Column(
@@ -520,14 +583,23 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                                   onPressed:
                                                                       () {
                                                                     int value =
-                                                                        state.orderitems[index].quantity -
-                                                                            1;
-
-                                                                    if (value
-                                                                            .abs() !=
-                                                                        state
+                                                                        0;
+                                                                    if (state
                                                                             .orderitems[index]
-                                                                            .qty) {
+                                                                            .quantity <
+                                                                        0) {
+                                                                      value = state
+                                                                              .orderitems[
+                                                                                  index]
+                                                                              .qty -
+                                                                          state
+                                                                              .orderitems[index]
+                                                                              .quantity
+                                                                              .abs();
+                                                                    }
+
+                                                                    if (value !=
+                                                                        1) {
                                                                       if (state
                                                                               .orderitems[index]
                                                                               .quantity >
@@ -737,7 +809,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                 builder: (context) {
-                                                  return SelectedProductsPage(billNo: widget.order.billNumber,
+                                                  return SelectedProductsPage(
+                                                    billNo:
+                                                        widget.order.billNumber,
                                                     orderNo: widget
                                                         .order.orderNumber,
                                                     table: widget.table,
@@ -861,7 +935,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                                   onpress: () {
                                                                     Navigator.pop(
                                                                         context);
-                                                                    BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.cancelKOT(billNumber: widget.order.billNumber,
+                                                                    BlocProvider.of<KotSubmitPrintBloc>(context).add(KotSubmitPrintEvent.cancelKOT(
+                                                                        billNumber: widget
+                                                                            .order
+                                                                            .billNumber,
                                                                         cancelKotPrint:
                                                                             cancelKotPrint,
                                                                         userId: context.read<LoginBloc>().state.userId ??

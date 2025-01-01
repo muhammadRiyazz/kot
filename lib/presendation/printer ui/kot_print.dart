@@ -137,7 +137,7 @@ Future<List<int>> kotPrintData(
         text: dlt
             ? item.qty.toString()
             : item.quantity == 0
-                ? 'Cancel'
+                ? item.qty.toString()
                 : item.quantity.abs().toString(),
         width: 4,
         styles: const PosStyles(align: PosAlign.right),

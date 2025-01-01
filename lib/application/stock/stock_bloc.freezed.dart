@@ -32,7 +32,7 @@ mixin _$StockEvent {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) =>
       throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ mixin _$StockEvent {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -69,7 +69,7 @@ mixin _$StockEvent {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -201,7 +201,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return fetchStocksAndCategory();
@@ -223,7 +223,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return fetchStocksAndCategory?.call();
   }
@@ -244,7 +244,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (fetchStocksAndCategory != null) {
@@ -372,7 +372,7 @@ class _$ClearcategoryImpl implements Clearcategory {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return clearcategory();
@@ -394,7 +394,7 @@ class _$ClearcategoryImpl implements Clearcategory {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return clearcategory?.call();
   }
@@ -415,7 +415,7 @@ class _$ClearcategoryImpl implements Clearcategory {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (clearcategory != null) {
@@ -623,7 +623,7 @@ class _$AddImpl implements Add {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return add(qty, update, amount, item, productid, isIncrement);
@@ -645,7 +645,7 @@ class _$AddImpl implements Add {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return add?.call(qty, update, amount, item, productid, isIncrement);
   }
@@ -666,7 +666,7 @@ class _$AddImpl implements Add {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (add != null) {
@@ -868,7 +868,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return listFromOrder(itemslist, cancelItemslist);
@@ -890,7 +890,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return listFromOrder?.call(itemslist, cancelItemslist);
   }
@@ -911,7 +911,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (listFromOrder != null) {
@@ -1050,7 +1050,7 @@ class _$ClearSelectionImpl implements ClearSelection {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return clearSelection();
@@ -1072,7 +1072,7 @@ class _$ClearSelectionImpl implements ClearSelection {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return clearSelection?.call();
   }
@@ -1093,7 +1093,7 @@ class _$ClearSelectionImpl implements ClearSelection {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (clearSelection != null) {
@@ -1258,7 +1258,7 @@ class _$SearchImpl implements Search {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return search(searchQuary, acOrNonAc);
@@ -1280,7 +1280,7 @@ class _$SearchImpl implements Search {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return search?.call(searchQuary, acOrNonAc);
   }
@@ -1301,7 +1301,7 @@ class _$SearchImpl implements Search {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (search != null) {
@@ -1469,7 +1469,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return itemInitalFetch(acOrNonAc);
@@ -1491,7 +1491,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return itemInitalFetch?.call(acOrNonAc);
   }
@@ -1512,7 +1512,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (itemInitalFetch != null) {
@@ -1676,7 +1676,7 @@ class _$TypeChangeImpl implements TypeChange {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return typeChange(type);
@@ -1698,7 +1698,7 @@ class _$TypeChangeImpl implements TypeChange {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return typeChange?.call(type);
   }
@@ -1719,7 +1719,7 @@ class _$TypeChangeImpl implements TypeChange {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (typeChange != null) {
@@ -1890,7 +1890,7 @@ class _$ItemActionImpl implements ItemAction {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return itemAction(from, item);
@@ -1912,7 +1912,7 @@ class _$ItemActionImpl implements ItemAction {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return itemAction?.call(from, item);
   }
@@ -1933,7 +1933,7 @@ class _$ItemActionImpl implements ItemAction {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (itemAction != null) {
@@ -2072,7 +2072,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return categoryFetch();
@@ -2094,7 +2094,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return categoryFetch?.call();
   }
@@ -2115,7 +2115,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (categoryFetch != null) {
@@ -2194,7 +2194,7 @@ abstract class _$$CategorySelectionImplCopyWith<$Res> {
           $Res Function(_$CategorySelectionImpl) then) =
       __$$CategorySelectionImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Category category, bool acOrNonAc});
+  $Res call({String category, bool acOrNonAc});
 }
 
 /// @nodoc
@@ -2217,7 +2217,7 @@ class __$$CategorySelectionImplCopyWithImpl<$Res>
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as Category,
+              as String,
       acOrNonAc: null == acOrNonAc
           ? _value.acOrNonAc
           : acOrNonAc // ignore: cast_nullable_to_non_nullable
@@ -2233,7 +2233,7 @@ class _$CategorySelectionImpl implements CategorySelection {
       {required this.category, required this.acOrNonAc});
 
   @override
-  final Category category;
+  final String category;
   @override
   final bool acOrNonAc;
 
@@ -2282,7 +2282,7 @@ class _$CategorySelectionImpl implements CategorySelection {
     required TResult Function(String type) typeChange,
     required TResult Function(String from, kotItem item) itemAction,
     required TResult Function() categoryFetch,
-    required TResult Function(Category category, bool acOrNonAc)
+    required TResult Function(String category, bool acOrNonAc)
         categorySelection,
   }) {
     return categorySelection(category, acOrNonAc);
@@ -2304,7 +2304,7 @@ class _$CategorySelectionImpl implements CategorySelection {
     TResult? Function(String type)? typeChange,
     TResult? Function(String from, kotItem item)? itemAction,
     TResult? Function()? categoryFetch,
-    TResult? Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
   }) {
     return categorySelection?.call(category, acOrNonAc);
   }
@@ -2325,7 +2325,7 @@ class _$CategorySelectionImpl implements CategorySelection {
     TResult Function(String type)? typeChange,
     TResult Function(String from, kotItem item)? itemAction,
     TResult Function()? categoryFetch,
-    TResult Function(Category category, bool acOrNonAc)? categorySelection,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
     required TResult orElse(),
   }) {
     if (categorySelection != null) {
@@ -2396,10 +2396,10 @@ class _$CategorySelectionImpl implements CategorySelection {
 
 abstract class CategorySelection implements StockEvent {
   const factory CategorySelection(
-      {required final Category category,
+      {required final String category,
       required final bool acOrNonAc}) = _$CategorySelectionImpl;
 
-  Category get category;
+  String get category;
   bool get acOrNonAc;
 
   /// Create a copy of StockEvent
@@ -2412,7 +2412,7 @@ abstract class CategorySelection implements StockEvent {
 /// @nodoc
 mixin _$StockState {
   String get goodsOrSER => throw _privateConstructorUsedError;
-  Category? get selectedcategory => throw _privateConstructorUsedError;
+  String? get selectedcategory => throw _privateConstructorUsedError;
   List<kotItem> get stocklist => throw _privateConstructorUsedError;
   List<kotItem> get seritems => throw _privateConstructorUsedError;
   List<kotItem> get goodsitems => throw _privateConstructorUsedError;
@@ -2420,9 +2420,9 @@ mixin _$StockState {
   bool get hasReachedMax => throw _privateConstructorUsedError;
   List<kotItem> get toKOTitems => throw _privateConstructorUsedError;
   List<kotItem> get cancelKOTitems => throw _privateConstructorUsedError;
-  List<Category> get goodsCategory => throw _privateConstructorUsedError;
-  List<Category> get serCategory => throw _privateConstructorUsedError;
-  List<Category> get category => throw _privateConstructorUsedError;
+  List<String> get goodsCategory => throw _privateConstructorUsedError;
+  List<String> get serCategory => throw _privateConstructorUsedError;
+  List<String> get category => throw _privateConstructorUsedError;
 
   /// Create a copy of StockState
   /// with the given fields replaced by the non-null parameter values.
@@ -2439,7 +2439,7 @@ abstract class $StockStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String goodsOrSER,
-      Category? selectedcategory,
+      String? selectedcategory,
       List<kotItem> stocklist,
       List<kotItem> seritems,
       List<kotItem> goodsitems,
@@ -2447,9 +2447,9 @@ abstract class $StockStateCopyWith<$Res> {
       bool hasReachedMax,
       List<kotItem> toKOTitems,
       List<kotItem> cancelKOTitems,
-      List<Category> goodsCategory,
-      List<Category> serCategory,
-      List<Category> category});
+      List<String> goodsCategory,
+      List<String> serCategory,
+      List<String> category});
 }
 
 /// @nodoc
@@ -2488,7 +2488,7 @@ class _$StockStateCopyWithImpl<$Res, $Val extends StockState>
       selectedcategory: freezed == selectedcategory
           ? _value.selectedcategory
           : selectedcategory // ignore: cast_nullable_to_non_nullable
-              as Category?,
+              as String?,
       stocklist: null == stocklist
           ? _value.stocklist
           : stocklist // ignore: cast_nullable_to_non_nullable
@@ -2520,15 +2520,15 @@ class _$StockStateCopyWithImpl<$Res, $Val extends StockState>
       goodsCategory: null == goodsCategory
           ? _value.goodsCategory
           : goodsCategory // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
+              as List<String>,
       serCategory: null == serCategory
           ? _value.serCategory
           : serCategory // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
+              as List<String>,
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
+              as List<String>,
     ) as $Val);
   }
 }
@@ -2543,7 +2543,7 @@ abstract class _$$StockStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {String goodsOrSER,
-      Category? selectedcategory,
+      String? selectedcategory,
       List<kotItem> stocklist,
       List<kotItem> seritems,
       List<kotItem> goodsitems,
@@ -2551,9 +2551,9 @@ abstract class _$$StockStateImplCopyWith<$Res>
       bool hasReachedMax,
       List<kotItem> toKOTitems,
       List<kotItem> cancelKOTitems,
-      List<Category> goodsCategory,
-      List<Category> serCategory,
-      List<Category> category});
+      List<String> goodsCategory,
+      List<String> serCategory,
+      List<String> category});
 }
 
 /// @nodoc
@@ -2590,7 +2590,7 @@ class __$$StockStateImplCopyWithImpl<$Res>
       selectedcategory: freezed == selectedcategory
           ? _value.selectedcategory
           : selectedcategory // ignore: cast_nullable_to_non_nullable
-              as Category?,
+              as String?,
       stocklist: null == stocklist
           ? _value._stocklist
           : stocklist // ignore: cast_nullable_to_non_nullable
@@ -2622,15 +2622,15 @@ class __$$StockStateImplCopyWithImpl<$Res>
       goodsCategory: null == goodsCategory
           ? _value._goodsCategory
           : goodsCategory // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
+              as List<String>,
       serCategory: null == serCategory
           ? _value._serCategory
           : serCategory // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
+              as List<String>,
       category: null == category
           ? _value._category
           : category // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
+              as List<String>,
     ));
   }
 }
@@ -2648,9 +2648,9 @@ class _$StockStateImpl implements _StockState {
       required this.hasReachedMax,
       required final List<kotItem> toKOTitems,
       required final List<kotItem> cancelKOTitems,
-      required final List<Category> goodsCategory,
-      required final List<Category> serCategory,
-      required final List<Category> category})
+      required final List<String> goodsCategory,
+      required final List<String> serCategory,
+      required final List<String> category})
       : _stocklist = stocklist,
         _seritems = seritems,
         _goodsitems = goodsitems,
@@ -2663,7 +2663,7 @@ class _$StockStateImpl implements _StockState {
   @override
   final String goodsOrSER;
   @override
-  final Category? selectedcategory;
+  final String? selectedcategory;
   final List<kotItem> _stocklist;
   @override
   List<kotItem> get stocklist {
@@ -2708,25 +2708,25 @@ class _$StockStateImpl implements _StockState {
     return EqualUnmodifiableListView(_cancelKOTitems);
   }
 
-  final List<Category> _goodsCategory;
+  final List<String> _goodsCategory;
   @override
-  List<Category> get goodsCategory {
+  List<String> get goodsCategory {
     if (_goodsCategory is EqualUnmodifiableListView) return _goodsCategory;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_goodsCategory);
   }
 
-  final List<Category> _serCategory;
+  final List<String> _serCategory;
   @override
-  List<Category> get serCategory {
+  List<String> get serCategory {
     if (_serCategory is EqualUnmodifiableListView) return _serCategory;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_serCategory);
   }
 
-  final List<Category> _category;
+  final List<String> _category;
   @override
-  List<Category> get category {
+  List<String> get category {
     if (_category is EqualUnmodifiableListView) return _category;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_category);
@@ -2794,7 +2794,7 @@ class _$StockStateImpl implements _StockState {
 abstract class _StockState implements StockState {
   factory _StockState(
       {required final String goodsOrSER,
-      final Category? selectedcategory,
+      final String? selectedcategory,
       required final List<kotItem> stocklist,
       required final List<kotItem> seritems,
       required final List<kotItem> goodsitems,
@@ -2802,14 +2802,14 @@ abstract class _StockState implements StockState {
       required final bool hasReachedMax,
       required final List<kotItem> toKOTitems,
       required final List<kotItem> cancelKOTitems,
-      required final List<Category> goodsCategory,
-      required final List<Category> serCategory,
-      required final List<Category> category}) = _$StockStateImpl;
+      required final List<String> goodsCategory,
+      required final List<String> serCategory,
+      required final List<String> category}) = _$StockStateImpl;
 
   @override
   String get goodsOrSER;
   @override
-  Category? get selectedcategory;
+  String? get selectedcategory;
   @override
   List<kotItem> get stocklist;
   @override
@@ -2825,11 +2825,11 @@ abstract class _StockState implements StockState {
   @override
   List<kotItem> get cancelKOTitems;
   @override
-  List<Category> get goodsCategory;
+  List<String> get goodsCategory;
   @override
-  List<Category> get serCategory;
+  List<String> get serCategory;
   @override
-  List<Category> get category;
+  List<String> get category;
 
   /// Create a copy of StockState
   /// with the given fields replaced by the non-null parameter values.

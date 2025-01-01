@@ -4,7 +4,7 @@ part of 'stock_bloc.dart';
 class StockState with _$StockState {
   factory StockState({
     required String goodsOrSER,
-    Category? selectedcategory,
+    String? selectedcategory,
     required List<kotItem> stocklist,
     required List<kotItem> seritems,
     required List<kotItem> goodsitems,
@@ -12,9 +12,9 @@ class StockState with _$StockState {
     required bool hasReachedMax,
     required List<kotItem> toKOTitems,
     required List<kotItem> cancelKOTitems,
-    required List<Category> goodsCategory,
-    required List<Category> serCategory,
-    required List<Category> category,
+    required List<String> goodsCategory,
+    required List<String> serCategory,
+    required List<String> category,
   }) = _StockState;
   factory StockState.initial() {
     return StockState(
@@ -32,5 +32,3 @@ class StockState with _$StockState {
         hasReachedMax: false);
   }
 }
-
-   

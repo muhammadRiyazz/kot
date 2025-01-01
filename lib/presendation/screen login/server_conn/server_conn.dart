@@ -51,7 +51,7 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
         port: _portController.text.trim(),
         databaseName: _databaseController.text.trim(),
         username: _usernameController.text.trim(),
-        password: _passwordController.text,
+        password: _passwordController.text.trim(),
       ));
     }
   }
@@ -72,30 +72,46 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
     return Scaffold(
       backgroundColor: mainclrbg,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: appbarbg,
         title: const Center(
           child: Text(
             'Server Connection',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(
+                fontSize: 16, color: Color.fromARGB(255, 255, 255, 255)),
           ),
         ),
         actions: const [SizedBox(width: 60)],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Form(
           key: _serverFormKey,
           child: ListView(
             children: [
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   color: boxbgwhite,
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 184, 184, 184)
+                          .withOpacity(0.3),
+                      blurRadius: 15,
+                      spreadRadius: 5,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 18),
                 child: Column(
                   children: [
                     // IP Address
+
                     _buildTextField(
                       controller: _ipController,
                       labelText: 'IP Address',
@@ -220,7 +236,7 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
                         if (state.isLoading) {
                           return const Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
-                            child:  Loading(),
+                            child: Loading(),
                           );
                         }
 

@@ -5,14 +5,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
+import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/category_selection.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/selected_product.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/update.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProductChoosingPage extends StatelessWidget {
-  ProductChoosingPage({super.key, this.order, required this.tableinfo,required this.billNo,});
+  ProductChoosingPage({
+    super.key,
+    this.order,
+    required this.tableinfo,
+    required this.billNo,
+  });
 
   // // Selected products
   String? order;
@@ -315,8 +322,7 @@ class ProductChoosingPage extends StatelessWidget {
                                           Text(
                                             state.selectedcategory == null
                                                 ? 'All Category'
-                                                : state.selectedcategory!
-                                                    .pdtFilter,
+                                                : state.selectedcategory!,
                                             style: const TextStyle(
                                                 color: mainclr,
                                                 fontSize: 14,
@@ -540,74 +546,96 @@ class ProductChoosingPage extends StatelessWidget {
                                                             BorderRadius
                                                                 .circular(10)),
                                                     child: ListTile(
-                                                      onTap: () {
-                                                        String dialogContent =
-                                                            '''
-Item quantity : ${product.quantity}
-                                                Item qty : ${product.qty}
-                                                
-                                                Item Name: ${product.itemName}
-                                                Kitchen Name: ${product.kitchenName}
-                                                Service or Goods: ${product.serOrGoods}
-                                                Basic Rate: ${product.basicRate.toString()}
-                                                Unit Taxable Amount Before Discount: ${product.unitTaxableAmountBeforeDiscount.toString()}
-                                                Unit Taxable Amount: ${product.unitTaxableAmount.toString()}
-                                                Cess Percentage: ${product.cessPer.toString()}
-                                                GST Percentage: ${product.gstPer.toString()}
-                                                ''';
+                                                      // onTap: () {
 
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AlertDialog(
-                                                              title: const Text(
-                                                                  'Product Details'),
-                                                              content:
-                                                                  SingleChildScrollView(
-                                                                child: Text(
-                                                                    dialogContent),
-                                                              ),
-                                                              actions: [
-                                                                TextButton(
-                                                                  onPressed: () =>
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop(),
-                                                                  child:
-                                                                      const Text(
-                                                                          'OK'),
-                                                                ),
-                                                              ],
-                                                            );
-                                                          },
-                                                        );
-                                                      },
+                                                      // },
                                                       contentPadding:
                                                           const EdgeInsets.only(
                                                               left: 8,
                                                               top: 5,
                                                               bottom: 5),
                                                       leading: Container(
-                                                        height: 100,
-                                                        width: 60,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: boxbgclr,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          child: Image.network(
-                                                            'https://www.shutterstock.com/shutterstock/photos/2468105649/display_1500/stock-photo--chicken-biryani-quick-and-tasty-chicken-biryani-chicken-dum-biryani-plan-background-2468105649.jpg',
-                                                            fit: BoxFit.fill,
+                                                          height: 100,
+                                                          width: 60,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: boxbgclr,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
                                                           ),
-                                                        ),
-                                                      ),
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            child:
+                                                                FutureBuilder(
+                                                              future: fetchImageUrl(
+                                                                  product
+                                                                      .itemCode),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot
+                                                                        .connectionState ==
+                                                                    ConnectionState
+                                                                        .waiting) {
+                                                                  // Show shimmer effect while loading
+                                                                  return Shimmer
+                                                                      .fromColors(
+                                                                    baseColor:
+                                                                        Colors.grey[
+                                                                            300]!,
+                                                                    highlightColor:
+                                                                        Colors.grey[
+                                                                            100]!,
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          150, // Adjust height as needed
+                                                                      width: double
+                                                                          .infinity, // Adjust width as needed
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  );
+                                                                } else if (snapshot
+                                                                        .hasError ||
+                                                                    !snapshot
+                                                                        .hasData) {
+                                                                  // Show an error image if all attempts fail
+                                                                  return Image
+                                                                      .asset(
+                                                                    'assets/img/no data/noimg.png',
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  );
+                                                                } else {
+                                                                  // Load the resolved image URL
+                                                                  return Image
+                                                                      .network(
+                                                                    snapshot
+                                                                        .data!,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                    errorBuilder:
+                                                                        (context,
+                                                                            error,
+                                                                            stackTrace) {
+                                                                      // Fallback error image
+                                                                      return Image
+                                                                          .asset(
+                                                                        'assets/img/no data/noimg.png',
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      );
+                                                                    },
+                                                                  );
+                                                                }
+                                                              },
+                                                            ),
+                                                          )),
                                                       title: Text(
                                                         product.itemName,
                                                         style: const TextStyle(
@@ -808,7 +836,8 @@ Item quantity : ${product.quantity}
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                 builder: (context) {
-                                                  return SelectedProductsPage(billNo: billNo,
+                                                  return SelectedProductsPage(
+                                                    billNo: billNo,
                                                     orderNo: order,
                                                     table: tableinfo,
                                                   );
@@ -955,3 +984,4 @@ Item quantity : ${product.quantity}
     );
   }
 }
+

@@ -11,9 +11,11 @@ import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
+import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/screen%20bill%20preview/bill_success.dart';
 import 'package:restaurant_kot/presendation/settings/printer/printer_page.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BillPage extends StatefulWidget {
   const BillPage({super.key, required this.order});
@@ -172,24 +174,76 @@ class _BillPageState extends State<BillPage> {
                                             Row(
                                               children: [
                                                 Container(
-                                                  height: 60,
-                                                  width: 60,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey[200],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Image.network(
-                                                      'https://www.shutterstock.com/shutterstock/photos/2468105649/display_1500/stock-photo--chicken-biryani-quick-and-tasty-chicken-biryani-chicken-dum-biryani-plan-background-2468105649.jpg',
-                                                      fit: BoxFit.fill,
+                                                    height: 60,
+                                                    width: 60,
+                                                    decoration: BoxDecoration(
+                                                      color: boxbgclr,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                     ),
-                                                  ),
-                                                ),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: FutureBuilder(
+                                                        future: fetchImageUrl(
+                                                            item.itemCode),
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          if (snapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .waiting) {
+                                                            // Show shimmer effect while loading
+                                                            return Shimmer
+                                                                .fromColors(
+                                                              baseColor: Colors
+                                                                  .grey[300]!,
+                                                              highlightColor:
+                                                                  Colors.grey[
+                                                                      100]!,
+                                                              child: Container(
+                                                                height:
+                                                                    150, // Adjust height as needed
+                                                                width: double
+                                                                    .infinity, // Adjust width as needed
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            );
+                                                          } else if (snapshot
+                                                                  .hasError ||
+                                                              !snapshot
+                                                                  .hasData) {
+                                                            // Show an error image if all attempts fail
+                                                            return Image.asset(
+                                                              'assets/img/no data/noimg.png',
+                                                              fit: BoxFit.fill,
+                                                            );
+                                                          } else {
+                                                            // Load the resolved image URL
+                                                            return Image
+                                                                .network(
+                                                              snapshot.data!,
+                                                              fit: BoxFit.fill,
+                                                              errorBuilder:
+                                                                  (context,
+                                                                      error,
+                                                                      stackTrace) {
+                                                                // Fallback error image
+                                                                return Image
+                                                                    .asset(
+                                                                  'assets/img/no data/noimg.png',
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                );
+                                                              },
+                                                            );
+                                                          }
+                                                        },
+                                                      ),
+                                                    )),
                                                 const SizedBox(width: 8),
                                                 Expanded(
                                                   child: Column(

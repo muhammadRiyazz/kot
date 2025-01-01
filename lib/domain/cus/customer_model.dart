@@ -40,4 +40,5 @@ class CustomerDetails {
 Settings? infoCustomer;
 String? usernameA;
 bool? billEdit;
+String? ipid;
 

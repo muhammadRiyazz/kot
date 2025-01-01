@@ -9,7 +9,7 @@ List<InvoiceItem>? invoiceDetails
 
   }) = _OrdersState;
   factory FinishadOrderState.initial() {
-    return FinishadOrderState(
+    return FinishadOrderState(invoiceDetails: [],
   invoices: [],
       isLoading: false,
     );

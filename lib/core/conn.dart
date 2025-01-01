@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:mssql_connection/mssql_connection.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MSSQLConnectionManager {
@@ -30,6 +31,7 @@ class MSSQLConnectionManager {
 
     if (serverData != null) {
       Map<String, dynamic> connectionDetails = json.decode(serverData);
+    ipid = connectionDetails['ip'];
 
       _connection = MssqlConnection.getInstance();
       await _connection!.connect(

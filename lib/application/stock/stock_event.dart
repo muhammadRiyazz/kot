@@ -41,6 +41,6 @@ class StockEvent with _$StockEvent {
   const factory StockEvent.categoryFetch() = CategoryFetch;
 
   const factory StockEvent.categorySelection({
-    required Category category,required  bool acOrNonAc
+    required String category,required  bool acOrNonAc
   }) = CategorySelection;
 }
