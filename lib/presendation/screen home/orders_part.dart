@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
@@ -12,82 +11,41 @@ import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart
 import 'package:restaurant_kot/presendation/screen%20order%20details/screen_order_detail.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
-class OrderPage extends StatefulWidget {
+class OrderPage extends StatelessWidget {
   const OrderPage({super.key});
 
-  @override
-  _OrderPageState createState() => _OrderPageState();
-}
-
-class _OrderPageState extends State<OrderPage> {
-  List<bool> isSelected = [];
-  bool isMultiSelectMode = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // isSelected = List<bool>.filled(orders.length, false);
-  }
-
-  void _onLongPress(int index) {
-    setState(() {
-      isMultiSelectMode = true;
-      isSelected[index] = !isSelected[index];
-    });
-  }
-
-  void _onTap(int index) {
-    if (isMultiSelectMode) {
-      setState(() {
-        isSelected[index] = !isSelected[index];
-        if (!isSelected.contains(true)) {
-          isMultiSelectMode = false;
-        }
-      });
+  _onTap(int index, OrdersState state, BuildContext context) {
+    if (state.isMultiSelectMode) {
+      BlocProvider.of<OrdersBloc>(context)
+          .add(OrdersEvent.ontap(item: state.orders[index]));
     } else {
-      // Navigate to order details page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => OrderDetailsPage(
-      //       order: Orderr(
-      //         id: orders[index].id,
-      //         time: orders[index].time,
-      //         items: [
-      //           OrderItem(
-      //             name: 'Biriyani',
-      //             image:
-      //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      //             quantity: 5,
-      //           ),
-      //           OrderItem(
-      //             name: 'Chicken Periperi Mandhi',
-      //             image:
-      //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      //             quantity: 5,
-      //           ),
-      //           OrderItem(
-      //             name: 'Chicken Biriyani',
-      //             image:
-      //                 'https://t3.ftcdn.net/jpg/04/41/20/18/360_F_441201852_XQqp1wbAQj9udOC3iT7D0ahKgaf71bns.jpg',
-      //             quantity: 5,
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // );
-    }
-  }
+      BlocProvider.of<StockBloc>(context)
+          .add(const StockEvent.clearSelection());
+      BlocProvider.of<OrderDetailsBloc>(context)
+          .add(const OrderDetailsEvent.clearItemSelection());
+      final List<TableInfo> tablelist =
+          context.read<TablesBloc>().state.tablesinfolist;
 
-  void mergeOrders() {
-    // final selectedOrders = orders
-    //     .asMap()
-    //     .entries
-    //     .where((entry) => isSelected[entry.key])
-    //     .map((entry) => entry.value)
-    //     .toList();
-    // log('Merging Orders: ${selectedOrders.map((o) => o.id).join(', ')}');
+      // Find the specific table with the name 'tb1'
+      TableInfo table = tablelist.firstWhere(
+        (table) => table.tableName == state.orders[index].tableName,
+        orElse: () {
+          throw Exception('Table not found');
+        }, // Handle if table is not found
+      );
+
+      BlocProvider.of<OrderDetailsBloc>(context).add(
+          OrderDetailsEvent.orderItems(
+              orderNo: state.orders[index].orderNumber));
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) {
+          return OrderDetailsPage(
+            table: table,
+            order: state.orders[index],
+          );
+        },
+      ));
+    }
   }
 
   @override
@@ -125,36 +83,34 @@ class _OrderPageState extends State<OrderPage> {
         childAspectRatio = 2.5;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Running Orders',
-          style: TextStyle(fontSize: 19),
-        ),
-        actions: [
-          if (isMultiSelectMode)
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                setState(() {
-                  isMultiSelectMode = false;
-                  // isSelected = List<bool>.filled(st orders.length, false);
-                });
-              },
+    return BlocBuilder<OrdersBloc, OrdersState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Running Orders',
+              style: TextStyle(fontSize: 19),
             ),
-        ],
-      ),
-      body: RefreshIndicator(
-        backgroundColor: mainclr,
-        color: mainclrbg,
-        onRefresh: () async {
-          BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
-          // Implement your refresh logic here
-        },
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return BlocBuilder<OrdersBloc, OrdersState>(
-              builder: (context, state) {
+            actions: [
+              if (state.isMultiSelectMode)
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    BlocProvider.of<OrdersBloc>(context)
+                        .add(const OrdersEvent.clearitem());
+                  },
+                ),
+            ],
+          ),
+          body: RefreshIndicator(
+            backgroundColor: mainclr,
+            color: mainclrbg,
+            onRefresh: () async {
+              BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
+              // Implement your refresh logic here
+            },
+            child: LayoutBuilder(
+              builder: (context, constraints) {
                 return state.isLoading
                     ? const Center(
                         child: CircularProgressIndicator(),
@@ -201,53 +157,15 @@ class _OrderPageState extends State<OrderPage> {
                                                 BorderRadius.circular(10),
                                           ),
                                           child: InkWell(
-                                            onTap: () {
-                                              BlocProvider.of<StockBloc>(
+                                            onTap: () =>
+                                                _onTap(index, state, context),
+                                            onLongPress: () {
+                                              BlocProvider.of<OrdersBloc>(
                                                       context)
-                                                  .add(const StockEvent
-                                                      .clearSelection());
-                                              BlocProvider.of<OrderDetailsBloc>(
-                                                      context)
-                                                  .add(const OrderDetailsEvent
-                                                      .clearItemSelection());
-                                              final List<TableInfo> tablelist =
-                                                  context
-                                                      .read<TablesBloc>()
-                                                      .state
-                                                      .tablesinfolist;
-
-                                              // Find the specific table with the name 'tb1'
-                                              TableInfo table =
-                                                  tablelist.firstWhere(
-                                                (table) =>
-                                                    table.tableName ==
-                                                    state.orders[index]
-                                                        .tableName,
-                                                orElse: () {
-                                                  throw Exception(
-                                                      'Table not found');
-                                                }, // Handle if table is not found
-                                              );
-
-                                              BlocProvider.of<OrderDetailsBloc>(
-                                                      context)
-                                                  .add(OrderDetailsEvent
-                                                      .orderItems(
-                                                          orderNo: state
-                                                              .orders[index]
-                                                              .orderNumber));
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                builder: (context) {
-                                                  return OrderDetailsPage(
-                                                    table: table,
-                                                    order: state.orders[index],
-                                                  );
-                                                },
-                                              ));
+                                                  .add(OrdersEvent.longpress(
+                                                      item:
+                                                          state.orders[index]));
                                             },
-                                            onLongPress: () =>
-                                                _onLongPress(index),
                                             child: Container(
                                               padding: EdgeInsets.all(
                                                   boxPadding + 5),
@@ -263,19 +181,23 @@ class _OrderPageState extends State<OrderPage> {
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      isMultiSelectMode
+                                                      state.isMultiSelectMode
                                                           ? Checkbox(
                                                               activeColor:
                                                                   mainclr,
-                                                              value: isSelected[
-                                                                  index],
+                                                              value: state
+                                                                  .isSelected
+                                                                  .contains(state
+                                                                          .orders[
+                                                                      index]),
                                                               onChanged: (bool?
                                                                   value) {
-                                                                setState(() {
-                                                                  isSelected[
-                                                                          index] =
-                                                                      value!;
-                                                                });
+                                                                BlocProvider.of<
+                                                                            OrdersBloc>(
+                                                                        context)
+                                                                    .add(OrdersEvent.ontap(
+                                                                        item: state
+                                                                            .orders[index]));
                                                               },
                                                             )
                                                           : Container(
@@ -377,69 +299,7 @@ class _OrderPageState extends State<OrderPage> {
                                                       ),
                                                     ],
                                                   ),
-                                                  // Order Header
-                                                  // ListTile(
-                                                  //   isThreeLine: true,
-                                                  //   contentPadding: EdgeInsets.symmetric(
-                                                  //       vertical: 0, horizontal: 3),
-                                                  //   splashColor: Colors.transparent,
-                                                  //   tileColor: Colors.transparent,
-                                                  //   onTap: () => _onTap(index),
-                                                  //   leading: isMultiSelectMode
-                                                  //       ? Checkbox(
-                                                  //           activeColor: mainclr,
-                                                  //           value: isSelected[index],
-                                                  //           onChanged: (bool? value) {
-                                                  //             setState(() {
-                                                  //               isSelected[index] = value!;
-                                                  //             });
-                                                  //           },
-                                                  //         )
-                                                  //       : Container(
-                                                  //           decoration: BoxDecoration(
-                                                  //               color: mainclr,
-                                                  //               borderRadius:
-                                                  //                   BorderRadius.circular(10)),
-                                                  //           child: const Padding(
-                                                  //             padding: EdgeInsets.all(10.0),
-                                                  //             child: Icon(
-                                                  //               Icons.restaurant,
-                                                  //               color: Colors.white,
-                                                  //             ),
-                                                  //           ),
-                                                  //         ),
-                                                  //   title: Text(
-                                                  //     'Order ID: ${orders[index].id}',
-                                                  //     style: TextStyle(
-                                                  //       fontSize: textSize,
-                                                  //       fontWeight: FontWeight.bold,
-                                                  //     ),
-                                                  //   ),
-                                                  //   subtitle: Text(
-                                                  //     'Total: ₹${orders[index].totalPrice}',
-                                                  //     style: TextStyle(
-                                                  //       fontSize: textSize - 2,
-                                                  //     ),
-                                                  //   ),
-                                                  //   trailing: Container(
-                                                  //     decoration: BoxDecoration(
-                                                  //       color: mainclr,
-                                                  //       borderRadius: BorderRadius.circular(10),
-                                                  //     ),
-                                                  //     child: Padding(
-                                                  //       padding: const EdgeInsets.all(10.0),
-                                                  //       child: Text(
-                                                  //         'Table 1',
-                                                  //         style: TextStyle(
-                                                  //           color: Colors.white,
-                                                  //           fontWeight: FontWeight.bold,
-                                                  //           fontSize: textSize - 4,
-                                                  //         ),
-                                                  //       ),
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
-                                                  // const Text('data')
+
                                                   const Divider(
                                                     color: Color.fromARGB(
                                                         255, 236, 236, 236),
@@ -516,19 +376,6 @@ class _OrderPageState extends State<OrderPage> {
                                                                   255, 0, 0, 0),
                                                             ),
                                                           ),
-                                                          // Text(
-                                                          //   time(DateFormat(
-                                                          //           "dd/MM/yyyy HH:mm:ss")
-                                                          //       .parse(state
-                                                          //           .orders[index]
-                                                          //           .startDateTime)),
-                                                          //   style: TextStyle(
-                                                          //     fontSize: textSize - 3,
-                                                          //     color:
-                                                          //         const Color.fromARGB(
-                                                          //             255, 0, 0, 0),
-                                                          //   ),
-                                                          // ),
                                                         ],
                                                       )
                                                     ],
@@ -541,11 +388,8 @@ class _OrderPageState extends State<OrderPage> {
                                       },
                                     ),
                                   ),
-                                  if (isMultiSelectMode &&
-                                      isSelected
-                                              .where((selected) => selected)
-                                              .length >=
-                                          2)
+                                  if (state.isMultiSelectMode &&
+                                      state.isSelected.length >= 2)
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 10),
@@ -561,10 +405,10 @@ class _OrderPageState extends State<OrderPage> {
                             },
                           );
               },
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -20,18 +20,27 @@ mixin _$OrdersEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() allorders,
     required TResult Function(String tableNo) tableOrders,
+    required TResult Function() clearitem,
+    required TResult Function(Order item) longpress,
+    required TResult Function(Order item) ontap,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? allorders,
     TResult? Function(String tableNo)? tableOrders,
+    TResult? Function()? clearitem,
+    TResult? Function(Order item)? longpress,
+    TResult? Function(Order item)? ontap,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? allorders,
     TResult Function(String tableNo)? tableOrders,
+    TResult Function()? clearitem,
+    TResult Function(Order item)? longpress,
+    TResult Function(Order item)? ontap,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -39,18 +48,27 @@ mixin _$OrdersEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(AllOrders value) allorders,
     required TResult Function(TableOrders value) tableOrders,
+    required TResult Function(Clearitem value) clearitem,
+    required TResult Function(Longpress value) longpress,
+    required TResult Function(Ontap value) ontap,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AllOrders value)? allorders,
     TResult? Function(TableOrders value)? tableOrders,
+    TResult? Function(Clearitem value)? clearitem,
+    TResult? Function(Longpress value)? longpress,
+    TResult? Function(Ontap value)? ontap,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AllOrders value)? allorders,
     TResult Function(TableOrders value)? tableOrders,
+    TResult Function(Clearitem value)? clearitem,
+    TResult Function(Longpress value)? longpress,
+    TResult Function(Ontap value)? ontap,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -120,6 +138,9 @@ class _$AllOrdersImpl implements AllOrders {
   TResult when<TResult extends Object?>({
     required TResult Function() allorders,
     required TResult Function(String tableNo) tableOrders,
+    required TResult Function() clearitem,
+    required TResult Function(Order item) longpress,
+    required TResult Function(Order item) ontap,
   }) {
     return allorders();
   }
@@ -129,6 +150,9 @@ class _$AllOrdersImpl implements AllOrders {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? allorders,
     TResult? Function(String tableNo)? tableOrders,
+    TResult? Function()? clearitem,
+    TResult? Function(Order item)? longpress,
+    TResult? Function(Order item)? ontap,
   }) {
     return allorders?.call();
   }
@@ -138,6 +162,9 @@ class _$AllOrdersImpl implements AllOrders {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? allorders,
     TResult Function(String tableNo)? tableOrders,
+    TResult Function()? clearitem,
+    TResult Function(Order item)? longpress,
+    TResult Function(Order item)? ontap,
     required TResult orElse(),
   }) {
     if (allorders != null) {
@@ -151,6 +178,9 @@ class _$AllOrdersImpl implements AllOrders {
   TResult map<TResult extends Object?>({
     required TResult Function(AllOrders value) allorders,
     required TResult Function(TableOrders value) tableOrders,
+    required TResult Function(Clearitem value) clearitem,
+    required TResult Function(Longpress value) longpress,
+    required TResult Function(Ontap value) ontap,
   }) {
     return allorders(this);
   }
@@ -160,6 +190,9 @@ class _$AllOrdersImpl implements AllOrders {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AllOrders value)? allorders,
     TResult? Function(TableOrders value)? tableOrders,
+    TResult? Function(Clearitem value)? clearitem,
+    TResult? Function(Longpress value)? longpress,
+    TResult? Function(Ontap value)? ontap,
   }) {
     return allorders?.call(this);
   }
@@ -169,6 +202,9 @@ class _$AllOrdersImpl implements AllOrders {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AllOrders value)? allorders,
     TResult Function(TableOrders value)? tableOrders,
+    TResult Function(Clearitem value)? clearitem,
+    TResult Function(Longpress value)? longpress,
+    TResult Function(Ontap value)? ontap,
     required TResult orElse(),
   }) {
     if (allorders != null) {
@@ -252,6 +288,9 @@ class _$TableOrdersImpl implements TableOrders {
   TResult when<TResult extends Object?>({
     required TResult Function() allorders,
     required TResult Function(String tableNo) tableOrders,
+    required TResult Function() clearitem,
+    required TResult Function(Order item) longpress,
+    required TResult Function(Order item) ontap,
   }) {
     return tableOrders(tableNo);
   }
@@ -261,6 +300,9 @@ class _$TableOrdersImpl implements TableOrders {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? allorders,
     TResult? Function(String tableNo)? tableOrders,
+    TResult? Function()? clearitem,
+    TResult? Function(Order item)? longpress,
+    TResult? Function(Order item)? ontap,
   }) {
     return tableOrders?.call(tableNo);
   }
@@ -270,6 +312,9 @@ class _$TableOrdersImpl implements TableOrders {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? allorders,
     TResult Function(String tableNo)? tableOrders,
+    TResult Function()? clearitem,
+    TResult Function(Order item)? longpress,
+    TResult Function(Order item)? ontap,
     required TResult orElse(),
   }) {
     if (tableOrders != null) {
@@ -283,6 +328,9 @@ class _$TableOrdersImpl implements TableOrders {
   TResult map<TResult extends Object?>({
     required TResult Function(AllOrders value) allorders,
     required TResult Function(TableOrders value) tableOrders,
+    required TResult Function(Clearitem value) clearitem,
+    required TResult Function(Longpress value) longpress,
+    required TResult Function(Ontap value) ontap,
   }) {
     return tableOrders(this);
   }
@@ -292,6 +340,9 @@ class _$TableOrdersImpl implements TableOrders {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AllOrders value)? allorders,
     TResult? Function(TableOrders value)? tableOrders,
+    TResult? Function(Clearitem value)? clearitem,
+    TResult? Function(Longpress value)? longpress,
+    TResult? Function(Ontap value)? ontap,
   }) {
     return tableOrders?.call(this);
   }
@@ -301,6 +352,9 @@ class _$TableOrdersImpl implements TableOrders {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AllOrders value)? allorders,
     TResult Function(TableOrders value)? tableOrders,
+    TResult Function(Clearitem value)? clearitem,
+    TResult Function(Longpress value)? longpress,
+    TResult Function(Ontap value)? ontap,
     required TResult orElse(),
   }) {
     if (tableOrders != null) {
@@ -324,10 +378,451 @@ abstract class TableOrders implements OrdersEvent {
 }
 
 /// @nodoc
+abstract class _$$ClearitemImplCopyWith<$Res> {
+  factory _$$ClearitemImplCopyWith(
+          _$ClearitemImpl value, $Res Function(_$ClearitemImpl) then) =
+      __$$ClearitemImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ClearitemImplCopyWithImpl<$Res>
+    extends _$OrdersEventCopyWithImpl<$Res, _$ClearitemImpl>
+    implements _$$ClearitemImplCopyWith<$Res> {
+  __$$ClearitemImplCopyWithImpl(
+      _$ClearitemImpl _value, $Res Function(_$ClearitemImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$ClearitemImpl implements Clearitem {
+  const _$ClearitemImpl();
+
+  @override
+  String toString() {
+    return 'OrdersEvent.clearitem()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$ClearitemImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() allorders,
+    required TResult Function(String tableNo) tableOrders,
+    required TResult Function() clearitem,
+    required TResult Function(Order item) longpress,
+    required TResult Function(Order item) ontap,
+  }) {
+    return clearitem();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? allorders,
+    TResult? Function(String tableNo)? tableOrders,
+    TResult? Function()? clearitem,
+    TResult? Function(Order item)? longpress,
+    TResult? Function(Order item)? ontap,
+  }) {
+    return clearitem?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? allorders,
+    TResult Function(String tableNo)? tableOrders,
+    TResult Function()? clearitem,
+    TResult Function(Order item)? longpress,
+    TResult Function(Order item)? ontap,
+    required TResult orElse(),
+  }) {
+    if (clearitem != null) {
+      return clearitem();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AllOrders value) allorders,
+    required TResult Function(TableOrders value) tableOrders,
+    required TResult Function(Clearitem value) clearitem,
+    required TResult Function(Longpress value) longpress,
+    required TResult Function(Ontap value) ontap,
+  }) {
+    return clearitem(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AllOrders value)? allorders,
+    TResult? Function(TableOrders value)? tableOrders,
+    TResult? Function(Clearitem value)? clearitem,
+    TResult? Function(Longpress value)? longpress,
+    TResult? Function(Ontap value)? ontap,
+  }) {
+    return clearitem?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AllOrders value)? allorders,
+    TResult Function(TableOrders value)? tableOrders,
+    TResult Function(Clearitem value)? clearitem,
+    TResult Function(Longpress value)? longpress,
+    TResult Function(Ontap value)? ontap,
+    required TResult orElse(),
+  }) {
+    if (clearitem != null) {
+      return clearitem(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Clearitem implements OrdersEvent {
+  const factory Clearitem() = _$ClearitemImpl;
+}
+
+/// @nodoc
+abstract class _$$LongpressImplCopyWith<$Res> {
+  factory _$$LongpressImplCopyWith(
+          _$LongpressImpl value, $Res Function(_$LongpressImpl) then) =
+      __$$LongpressImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({Order item});
+}
+
+/// @nodoc
+class __$$LongpressImplCopyWithImpl<$Res>
+    extends _$OrdersEventCopyWithImpl<$Res, _$LongpressImpl>
+    implements _$$LongpressImplCopyWith<$Res> {
+  __$$LongpressImplCopyWithImpl(
+      _$LongpressImpl _value, $Res Function(_$LongpressImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? item = null,
+  }) {
+    return _then(_$LongpressImpl(
+      item: null == item
+          ? _value.item
+          : item // ignore: cast_nullable_to_non_nullable
+              as Order,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LongpressImpl implements Longpress {
+  const _$LongpressImpl({required this.item});
+
+  @override
+  final Order item;
+
+  @override
+  String toString() {
+    return 'OrdersEvent.longpress(item: $item)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LongpressImpl &&
+            (identical(other.item, item) || other.item == item));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, item);
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LongpressImplCopyWith<_$LongpressImpl> get copyWith =>
+      __$$LongpressImplCopyWithImpl<_$LongpressImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() allorders,
+    required TResult Function(String tableNo) tableOrders,
+    required TResult Function() clearitem,
+    required TResult Function(Order item) longpress,
+    required TResult Function(Order item) ontap,
+  }) {
+    return longpress(item);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? allorders,
+    TResult? Function(String tableNo)? tableOrders,
+    TResult? Function()? clearitem,
+    TResult? Function(Order item)? longpress,
+    TResult? Function(Order item)? ontap,
+  }) {
+    return longpress?.call(item);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? allorders,
+    TResult Function(String tableNo)? tableOrders,
+    TResult Function()? clearitem,
+    TResult Function(Order item)? longpress,
+    TResult Function(Order item)? ontap,
+    required TResult orElse(),
+  }) {
+    if (longpress != null) {
+      return longpress(item);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AllOrders value) allorders,
+    required TResult Function(TableOrders value) tableOrders,
+    required TResult Function(Clearitem value) clearitem,
+    required TResult Function(Longpress value) longpress,
+    required TResult Function(Ontap value) ontap,
+  }) {
+    return longpress(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AllOrders value)? allorders,
+    TResult? Function(TableOrders value)? tableOrders,
+    TResult? Function(Clearitem value)? clearitem,
+    TResult? Function(Longpress value)? longpress,
+    TResult? Function(Ontap value)? ontap,
+  }) {
+    return longpress?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AllOrders value)? allorders,
+    TResult Function(TableOrders value)? tableOrders,
+    TResult Function(Clearitem value)? clearitem,
+    TResult Function(Longpress value)? longpress,
+    TResult Function(Ontap value)? ontap,
+    required TResult orElse(),
+  }) {
+    if (longpress != null) {
+      return longpress(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Longpress implements OrdersEvent {
+  const factory Longpress({required final Order item}) = _$LongpressImpl;
+
+  Order get item;
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LongpressImplCopyWith<_$LongpressImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$OntapImplCopyWith<$Res> {
+  factory _$$OntapImplCopyWith(
+          _$OntapImpl value, $Res Function(_$OntapImpl) then) =
+      __$$OntapImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({Order item});
+}
+
+/// @nodoc
+class __$$OntapImplCopyWithImpl<$Res>
+    extends _$OrdersEventCopyWithImpl<$Res, _$OntapImpl>
+    implements _$$OntapImplCopyWith<$Res> {
+  __$$OntapImplCopyWithImpl(
+      _$OntapImpl _value, $Res Function(_$OntapImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? item = null,
+  }) {
+    return _then(_$OntapImpl(
+      item: null == item
+          ? _value.item
+          : item // ignore: cast_nullable_to_non_nullable
+              as Order,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$OntapImpl implements Ontap {
+  const _$OntapImpl({required this.item});
+
+  @override
+  final Order item;
+
+  @override
+  String toString() {
+    return 'OrdersEvent.ontap(item: $item)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$OntapImpl &&
+            (identical(other.item, item) || other.item == item));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, item);
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$OntapImplCopyWith<_$OntapImpl> get copyWith =>
+      __$$OntapImplCopyWithImpl<_$OntapImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() allorders,
+    required TResult Function(String tableNo) tableOrders,
+    required TResult Function() clearitem,
+    required TResult Function(Order item) longpress,
+    required TResult Function(Order item) ontap,
+  }) {
+    return ontap(item);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? allorders,
+    TResult? Function(String tableNo)? tableOrders,
+    TResult? Function()? clearitem,
+    TResult? Function(Order item)? longpress,
+    TResult? Function(Order item)? ontap,
+  }) {
+    return ontap?.call(item);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? allorders,
+    TResult Function(String tableNo)? tableOrders,
+    TResult Function()? clearitem,
+    TResult Function(Order item)? longpress,
+    TResult Function(Order item)? ontap,
+    required TResult orElse(),
+  }) {
+    if (ontap != null) {
+      return ontap(item);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AllOrders value) allorders,
+    required TResult Function(TableOrders value) tableOrders,
+    required TResult Function(Clearitem value) clearitem,
+    required TResult Function(Longpress value) longpress,
+    required TResult Function(Ontap value) ontap,
+  }) {
+    return ontap(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AllOrders value)? allorders,
+    TResult? Function(TableOrders value)? tableOrders,
+    TResult? Function(Clearitem value)? clearitem,
+    TResult? Function(Longpress value)? longpress,
+    TResult? Function(Ontap value)? ontap,
+  }) {
+    return ontap?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AllOrders value)? allorders,
+    TResult Function(TableOrders value)? tableOrders,
+    TResult Function(Clearitem value)? clearitem,
+    TResult Function(Longpress value)? longpress,
+    TResult Function(Ontap value)? ontap,
+    required TResult orElse(),
+  }) {
+    if (ontap != null) {
+      return ontap(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class Ontap implements OrdersEvent {
+  const factory Ontap({required final Order item}) = _$OntapImpl;
+
+  Order get item;
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$OntapImplCopyWith<_$OntapImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$OrdersState {
   bool get isLoading => throw _privateConstructorUsedError;
   List<Order> get tableOrders => throw _privateConstructorUsedError;
   List<Order> get orders => throw _privateConstructorUsedError;
+  List<Order> get isSelected => throw _privateConstructorUsedError;
+  bool get isMultiSelectMode => throw _privateConstructorUsedError;
 
   /// Create a copy of OrdersState
   /// with the given fields replaced by the non-null parameter values.
@@ -342,7 +837,12 @@ abstract class $OrdersStateCopyWith<$Res> {
           OrdersState value, $Res Function(OrdersState) then) =
       _$OrdersStateCopyWithImpl<$Res, OrdersState>;
   @useResult
-  $Res call({bool isLoading, List<Order> tableOrders, List<Order> orders});
+  $Res call(
+      {bool isLoading,
+      List<Order> tableOrders,
+      List<Order> orders,
+      List<Order> isSelected,
+      bool isMultiSelectMode});
 }
 
 /// @nodoc
@@ -363,6 +863,8 @@ class _$OrdersStateCopyWithImpl<$Res, $Val extends OrdersState>
     Object? isLoading = null,
     Object? tableOrders = null,
     Object? orders = null,
+    Object? isSelected = null,
+    Object? isMultiSelectMode = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -377,6 +879,14 @@ class _$OrdersStateCopyWithImpl<$Res, $Val extends OrdersState>
           ? _value.orders
           : orders // ignore: cast_nullable_to_non_nullable
               as List<Order>,
+      isSelected: null == isSelected
+          ? _value.isSelected
+          : isSelected // ignore: cast_nullable_to_non_nullable
+              as List<Order>,
+      isMultiSelectMode: null == isMultiSelectMode
+          ? _value.isMultiSelectMode
+          : isMultiSelectMode // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -389,7 +899,12 @@ abstract class _$$OrdersStateImplCopyWith<$Res>
       __$$OrdersStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, List<Order> tableOrders, List<Order> orders});
+  $Res call(
+      {bool isLoading,
+      List<Order> tableOrders,
+      List<Order> orders,
+      List<Order> isSelected,
+      bool isMultiSelectMode});
 }
 
 /// @nodoc
@@ -408,6 +923,8 @@ class __$$OrdersStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? tableOrders = null,
     Object? orders = null,
+    Object? isSelected = null,
+    Object? isMultiSelectMode = null,
   }) {
     return _then(_$OrdersStateImpl(
       isLoading: null == isLoading
@@ -422,6 +939,14 @@ class __$$OrdersStateImplCopyWithImpl<$Res>
           ? _value._orders
           : orders // ignore: cast_nullable_to_non_nullable
               as List<Order>,
+      isSelected: null == isSelected
+          ? _value._isSelected
+          : isSelected // ignore: cast_nullable_to_non_nullable
+              as List<Order>,
+      isMultiSelectMode: null == isMultiSelectMode
+          ? _value.isMultiSelectMode
+          : isMultiSelectMode // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -432,9 +957,12 @@ class _$OrdersStateImpl implements _OrdersState {
   _$OrdersStateImpl(
       {required this.isLoading,
       required final List<Order> tableOrders,
-      required final List<Order> orders})
+      required final List<Order> orders,
+      required final List<Order> isSelected,
+      required this.isMultiSelectMode})
       : _tableOrders = tableOrders,
-        _orders = orders;
+        _orders = orders,
+        _isSelected = isSelected;
 
   @override
   final bool isLoading;
@@ -454,9 +982,20 @@ class _$OrdersStateImpl implements _OrdersState {
     return EqualUnmodifiableListView(_orders);
   }
 
+  final List<Order> _isSelected;
+  @override
+  List<Order> get isSelected {
+    if (_isSelected is EqualUnmodifiableListView) return _isSelected;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_isSelected);
+  }
+
+  @override
+  final bool isMultiSelectMode;
+
   @override
   String toString() {
-    return 'OrdersState(isLoading: $isLoading, tableOrders: $tableOrders, orders: $orders)';
+    return 'OrdersState(isLoading: $isLoading, tableOrders: $tableOrders, orders: $orders, isSelected: $isSelected, isMultiSelectMode: $isMultiSelectMode)';
   }
 
   @override
@@ -468,7 +1007,11 @@ class _$OrdersStateImpl implements _OrdersState {
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality()
                 .equals(other._tableOrders, _tableOrders) &&
-            const DeepCollectionEquality().equals(other._orders, _orders));
+            const DeepCollectionEquality().equals(other._orders, _orders) &&
+            const DeepCollectionEquality()
+                .equals(other._isSelected, _isSelected) &&
+            (identical(other.isMultiSelectMode, isMultiSelectMode) ||
+                other.isMultiSelectMode == isMultiSelectMode));
   }
 
   @override
@@ -476,7 +1019,9 @@ class _$OrdersStateImpl implements _OrdersState {
       runtimeType,
       isLoading,
       const DeepCollectionEquality().hash(_tableOrders),
-      const DeepCollectionEquality().hash(_orders));
+      const DeepCollectionEquality().hash(_orders),
+      const DeepCollectionEquality().hash(_isSelected),
+      isMultiSelectMode);
 
   /// Create a copy of OrdersState
   /// with the given fields replaced by the non-null parameter values.
@@ -491,7 +1036,9 @@ abstract class _OrdersState implements OrdersState {
   factory _OrdersState(
       {required final bool isLoading,
       required final List<Order> tableOrders,
-      required final List<Order> orders}) = _$OrdersStateImpl;
+      required final List<Order> orders,
+      required final List<Order> isSelected,
+      required final bool isMultiSelectMode}) = _$OrdersStateImpl;
 
   @override
   bool get isLoading;
@@ -499,6 +1046,10 @@ abstract class _OrdersState implements OrdersState {
   List<Order> get tableOrders;
   @override
   List<Order> get orders;
+  @override
+  List<Order> get isSelected;
+  @override
+  bool get isMultiSelectMode;
 
   /// Create a copy of OrdersState
   /// with the given fields replaced by the non-null parameter values.

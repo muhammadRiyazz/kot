@@ -12,11 +12,13 @@ import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/check_printer_congiration.dart';
+import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/kot_submision_success.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/re_print.dart';
 import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SelectedProductsPage extends StatelessWidget {
   final TableInfo table;
@@ -238,153 +240,220 @@ class SelectedProductsPage extends StatelessWidget {
                                         final product =
                                             state.cancelKOTitems[index];
 
-                                        return Card(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 5),
-                                          elevation: 6,
-                                          borderOnForeground: true,
-                                          shadowColor: const Color.fromARGB(
-                                              255, 244, 244, 244),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            child: ListTile(
-                                              onLongPress: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                      ),
-                                                      title: const Text(
-                                                          'Remove Item',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      22)),
-                                                      content: Text(
-                                                        'You want to remove "${product.itemName}" from the list?',
-                                                        style: const TextStyle(
-                                                            fontSize: 14),
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop(),
-                                                          child: const Text(
-                                                            'Cancel',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .grey),
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                child: ListTile(
+                                                  onLongPress: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
                                                           ),
-                                                        ),
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            if (state.cancelKOTitems
-                                                                        .length ==
-                                                                    1 &&
-                                                                state.toKOTitems
-                                                                    .isEmpty) {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            } else {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            }
-                                                            BlocProvider.of<
-                                                                        OrderDetailsBloc>(
-                                                                    context)
-                                                                .add(OrderDetailsEvent
-                                                                    .itemAction(
+                                                          title: const Text(
+                                                              'Remove Item',
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          22)),
+                                                          content: Text(
+                                                            'You want to remove "${product.itemName}" from the list?',
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        14),
+                                                          ),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(),
+                                                              child: const Text(
+                                                                'Cancel',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey),
+                                                              ),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                if (state.cancelKOTitems
+                                                                            .length ==
+                                                                        1 &&
+                                                                    state
+                                                                        .toKOTitems
+                                                                        .isEmpty) {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                } else {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                }
+                                                                BlocProvider.of<
+                                                                            OrderDetailsBloc>(
+                                                                        context)
+                                                                    .add(OrderDetailsEvent.itemAction(
                                                                         from:
                                                                             'cancellist',
                                                                         item:
                                                                             product));
-                                                            BlocProvider.of<
-                                                                        StockBloc>(
-                                                                    context)
-                                                                .add(StockEvent
-                                                                    .itemAction(
+                                                                BlocProvider.of<
+                                                                            StockBloc>(
+                                                                        context)
+                                                                    .add(StockEvent.itemAction(
                                                                         from:
                                                                             'cancellist',
                                                                         item:
                                                                             product));
-                                                            BlocProvider.of<
-                                                                        StockBloc>(
-                                                                    context)
-                                                                .add(const StockEvent
-                                                                    .typeChange(
-                                                                    type:
-                                                                        'Service'));
-                                                          },
-                                                          child: const Text(
-                                                            'Remove',
-                                                            style: TextStyle(
-                                                                color: mainclr),
-                                                          ),
-                                                        ),
-                                                      ],
+                                                                BlocProvider.of<
+                                                                            StockBloc>(
+                                                                        context)
+                                                                    .add(const StockEvent
+                                                                        .typeChange(
+                                                                        type:
+                                                                            'Service'));
+                                                              },
+                                                              child: const Text(
+                                                                'Remove',
+                                                                style: TextStyle(
+                                                                    color:
+                                                                        mainclr),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
                                                     );
                                                   },
-                                                );
-                                              },
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8),
-                                              leading: Container(
-                                                height: 60,
-                                                width: 60,
-                                                decoration: BoxDecoration(
-                                                  color: boxbgclr,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    'https://www.shutterstock.com/shutterstock/photos/2468105649/display_1500/stock-photo--chicken-biryani-quick-and-tasty-chicken-biryani-chicken-dum-biryani-plan-background-2468105649.jpg',
-                                                    fit: BoxFit.fill,
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 8),
+                                                  leading: Container(
+                                                      height: 55,
+                                                      width: 55,
+                                                      decoration: BoxDecoration(
+                                                        color: boxbgclr,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: FutureBuilder(
+                                                          future: fetchImageUrl(
+                                                              product.itemCode),
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            if (snapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .waiting) {
+                                                              // Show shimmer effect while loading
+                                                              return Shimmer
+                                                                  .fromColors(
+                                                                baseColor:
+                                                                    Colors.grey[
+                                                                        300]!,
+                                                                highlightColor:
+                                                                    Colors.grey[
+                                                                        100]!,
+                                                                child:
+                                                                    Container(
+                                                                  height:
+                                                                      150, // Adjust height as needed
+                                                                  width: double
+                                                                      .infinity, // Adjust width as needed
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              );
+                                                            } else if (snapshot
+                                                                    .hasError ||
+                                                                !snapshot
+                                                                    .hasData) {
+                                                              // Show an error image if all attempts fail
+                                                              return Image
+                                                                  .asset(
+                                                                'assets/img/no data/noimg.png',
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              );
+                                                            } else {
+                                                              // Load the resolved image URL
+                                                              return Image
+                                                                  .network(
+                                                                snapshot.data!,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                errorBuilder:
+                                                                    (context,
+                                                                        error,
+                                                                        stackTrace) {
+                                                                  // Fallback error image
+                                                                  return Image
+                                                                      .asset(
+                                                                    'assets/img/no data/noimg.png',
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  );
+                                                                },
+                                                              );
+                                                            }
+                                                          },
+                                                        ),
+                                                      )),
+                                                  title: Text(
+                                                    product.itemName,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                  subtitle: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 5),
+                                                    child: Text(product
+                                                                .quantity ==
+                                                            0
+                                                        ? '₹ ${product.basicRate.abs()} /-'
+                                                        : '₹ ${(product.basicRate * product.quantity).abs()} /-'),
+                                                  ),
+                                                  trailing: Text(
+                                                    '${product.quantity.toString()}  ',
+                                                    style: const TextStyle(
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
                                               ),
-                                              title: Text(
-                                                product.itemName,
-                                                style: const TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              subtitle: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 5),
-                                                child: Text(product.quantity ==
-                                                        0
-                                                    ? '₹ ${product.basicRate.abs()} /-'
-                                                    : '₹ ${(product.basicRate * product.quantity).abs()} /-'),
-                                              ),
-                                              trailing: Text(
-                                                '${product.quantity.toString()}  ',
-                                                style: const TextStyle(
-                                                    fontSize: 17,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
+                                              Divider()
+                                            ],
                                           ),
                                         );
                                       },
@@ -475,120 +544,112 @@ class SelectedProductsPage extends StatelessWidget {
                                       (index) {
                                         final product = state.toKOTitems[index];
 
-                                        return Card(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 5),
-                                          elevation: 0,
-                                          borderOnForeground: true,
-                                          shadowColor: const Color.fromARGB(
-                                              255, 244, 244, 244),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            child: Column(
-                                              children: [
-                                                ListTile(
-                                                  onLongPress: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return AlertDialog(
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                          ),
-                                                          title: const Text(
-                                                              'Remove Item',
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                onLongPress: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                        ),
+                                                        title: const Text(
+                                                            'Remove Item',
+                                                            style: TextStyle(
+                                                                fontSize: 22)),
+                                                        content: Text(
+                                                          'You want to remove "${product.itemName}" from the list?',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 14),
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(),
+                                                            child: const Text(
+                                                              'Cancel',
                                                               style: TextStyle(
-                                                                  fontSize:
-                                                                      22)),
-                                                          content: Text(
-                                                            'You want to remove "${product.itemName}" from the list?',
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        14),
+                                                                  color: Colors
+                                                                      .grey),
+                                                            ),
                                                           ),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () =>
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop(),
-                                                              child: const Text(
-                                                                'Cancel',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                              ),
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              if (state.toKOTitems
+                                                                          .length ==
+                                                                      1 &&
+                                                                  state
+                                                                      .cancelKOTitems
+                                                                      .isEmpty) {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              } else {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              }
+
+                                                              BlocProvider.of<
+                                                                          OrderDetailsBloc>(
+                                                                      context)
+                                                                  .add(OrderDetailsEvent
+                                                                      .itemAction(
+                                                                          from:
+                                                                              'kotlist',
+                                                                          item:
+                                                                              product));
+
+                                                              BlocProvider.of<
+                                                                          StockBloc>(
+                                                                      context)
+                                                                  .add(StockEvent
+                                                                      .itemAction(
+                                                                          from:
+                                                                              'kotlist',
+                                                                          item:
+                                                                              product));
+
+                                                              BlocProvider.of<
+                                                                          StockBloc>(
+                                                                      context)
+                                                                  .add(const StockEvent
+                                                                      .typeChange(
+                                                                      type:
+                                                                          'Service'));
+                                                            },
+                                                            child: const Text(
+                                                              'Remove',
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      mainclr),
                                                             ),
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                if (state.toKOTitems
-                                                                            .length ==
-                                                                        1 &&
-                                                                    state
-                                                                        .cancelKOTitems
-                                                                        .isEmpty) {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                } else {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                }
-
-                                                                BlocProvider.of<
-                                                                            OrderDetailsBloc>(
-                                                                        context)
-                                                                    .add(OrderDetailsEvent.itemAction(
-                                                                        from:
-                                                                            'kotlist',
-                                                                        item:
-                                                                            product));
-
-                                                                BlocProvider.of<
-                                                                            StockBloc>(
-                                                                        context)
-                                                                    .add(StockEvent.itemAction(
-                                                                        from:
-                                                                            'kotlist',
-                                                                        item:
-                                                                            product));
-
-                                                                BlocProvider.of<
-                                                                            StockBloc>(
-                                                                        context)
-                                                                    .add(const StockEvent
-                                                                        .typeChange(
-                                                                        type:
-                                                                            'Service'));
-                                                              },
-                                                              child: const Text(
-                                                                'Remove',
-                                                                style: TextStyle(
-                                                                    color:
-                                                                        mainclr),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                  leading: Container(
-                                                    height: 60,
-                                                    width: 60,
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                leading: Container(
+                                                    height: 55,
+                                                    width: 55,
                                                     decoration: BoxDecoration(
                                                       color: boxbgclr,
                                                       borderRadius:
@@ -599,47 +660,307 @@ class SelectedProductsPage extends StatelessWidget {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               10),
-                                                      child: Image.network(
-                                                        'https://www.shutterstock.com/shutterstock/photos/2468105649/display_1500/stock-photo--chicken-biryani-quick-and-tasty-chicken-biryani-chicken-dum-biryani-plan-background-2468105649.jpg',
-                                                        fit: BoxFit.fill,
+                                                      child: FutureBuilder(
+                                                        future: fetchImageUrl(
+                                                            product.itemCode),
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          if (snapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .waiting) {
+                                                            // Show shimmer effect while loading
+                                                            return Shimmer
+                                                                .fromColors(
+                                                              baseColor: Colors
+                                                                  .grey[300]!,
+                                                              highlightColor:
+                                                                  Colors.grey[
+                                                                      100]!,
+                                                              child: Container(
+                                                                height:
+                                                                    150, // Adjust height as needed
+                                                                width: double
+                                                                    .infinity, // Adjust width as needed
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            );
+                                                          } else if (snapshot
+                                                                  .hasError ||
+                                                              !snapshot
+                                                                  .hasData) {
+                                                            // Show an error image if all attempts fail
+                                                            return Image.asset(
+                                                              'assets/img/no data/noimg.png',
+                                                              fit: BoxFit.fill,
+                                                            );
+                                                          } else {
+                                                            // Load the resolved image URL
+                                                            return Image
+                                                                .network(
+                                                              snapshot.data!,
+                                                              fit: BoxFit.fill,
+                                                              errorBuilder:
+                                                                  (context,
+                                                                      error,
+                                                                      stackTrace) {
+                                                                // Fallback error image
+                                                                return Image
+                                                                    .asset(
+                                                                  'assets/img/no data/noimg.png',
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                );
+                                                              },
+                                                            );
+                                                          }
+                                                        },
+                                                      ),
+                                                    )),
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        left: 10,
+                                                        top: 8,
+                                                        bottom: 8),
+                                                title: Text(
+                                                  product.itemName,
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                subtitle: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 5),
+                                                  child: Text(product
+                                                              .quantity ==
+                                                          0
+                                                      ? '₹ ${product.basicRate} /-'
+                                                      : '₹ ${product.basicRate * product.quantity} /-'),
+                                                ),
+                                                trailing: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    IconButton(
+                                                        icon: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: const Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    5),
+                                                            child: Icon(
+                                                                Icons.remove,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: 17),
+                                                          ),
+                                                        ),
+                                                        // Add this at the top of your widget class
+
+                                                        onPressed: () {
+                                                          // int value = 0;
+                                                          // if (state
+                                                          //         .orderitems[
+                                                          //             index]
+                                                          //         .quantity <
+                                                          //     0) {
+                                                          //   value = state
+                                                          //           .orderitems[
+                                                          //               index]
+                                                          //           .qty -
+                                                          //       state
+                                                          //           .orderitems[
+                                                          //               index]
+                                                          //           .quantity
+                                                          //           .abs();
+                                                          // }
+
+                                                          if (product
+                                                                  .quantity !=
+                                                              1) {
+                                                            log('calling ---');
+                                                            BlocProvider.of<
+                                                                        StockBloc>(
+                                                                    context)
+                                                                .add(StockEvent.add(
+                                                                    item:
+                                                                        product,
+                                                                    isIncrement:
+                                                                        false,
+                                                                    productid:
+                                                                        product
+                                                                            .itemCode,
+                                                                    qty: 1));
+
+                                                            // Your code here
+
+                                                            BlocProvider.of<
+                                                                        OrderDetailsBloc>(
+                                                                    context)
+                                                                .add(OrderDetailsEvent.cancelQty(
+                                                                    kotno: product
+                                                                        .kotno,
+                                                                    currentItemid:
+                                                                        product
+                                                                            .itemCode));
+                                                          } else {
+                                                            log('remove ---');
+                                                            showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                return AlertDialog(
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            15),
+                                                                  ),
+                                                                  title: const Text(
+                                                                      'Remove Item',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              22)),
+                                                                  content: Text(
+                                                                    'You want to remove "${product.itemName}" from the list?',
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () =>
+                                                                              Navigator.of(context).pop(),
+                                                                      child:
+                                                                          const Text(
+                                                                        'Cancel',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.grey),
+                                                                      ),
+                                                                    ),
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        if (state.toKOTitems.length ==
+                                                                                1 &&
+                                                                            state.cancelKOTitems.isEmpty) {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        } else {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        }
+
+                                                                        BlocProvider.of<OrderDetailsBloc>(context).add(OrderDetailsEvent.itemAction(
+                                                                            from:
+                                                                                'kotlist',
+                                                                            item:
+                                                                                product));
+
+                                                                        BlocProvider.of<StockBloc>(context).add(StockEvent.itemAction(
+                                                                            from:
+                                                                                'kotlist',
+                                                                            item:
+                                                                                product));
+
+                                                                        BlocProvider.of<StockBloc>(context).add(const StockEvent
+                                                                            .typeChange(
+                                                                            type:
+                                                                                'Service'));
+                                                                      },
+                                                                      child:
+                                                                          const Text(
+                                                                        'Remove',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                mainclr),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              },
+                                                            );
+                                                          }
+                                                        }),
+                                                    Text(
+                                                      product.quantity
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 15,
                                                       ),
                                                     ),
-                                                  ),
-                                                  contentPadding:
-                                                      const EdgeInsets.only(
-                                                          left: 10,
-                                                          top: 8,
-                                                          bottom: 8),
-                                                  title: Text(
-                                                    product.itemName,
-                                                    style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  subtitle: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 5),
-                                                    child: Text(product
-                                                                .quantity ==
-                                                            0
-                                                        ? '₹ ${product.basicRate} /-'
-                                                        : '₹ ${product.basicRate * product.quantity} /-'),
-                                                  ),
-                                                  trailing: Text(
-                                                    'Qty : ${product.quantity.toString()}    ',
-                                                    style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
+                                                    IconButton(
+                                                        icon: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.green,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: const Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    5),
+                                                            child: Icon(
+                                                                Icons.add,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: 17),
+                                                          ),
+                                                        ),
+                                                        onPressed: () {
+                                                          // if (product
+                                                          //         .quantity !=
+                                                          //     1) {
+                                                          BlocProvider.of<
+                                                                      StockBloc>(
+                                                                  context)
+                                                              .add(StockEvent.add(
+                                                                  item: product,
+                                                                  isIncrement:
+                                                                      true,
+                                                                  productid: product
+                                                                      .itemCode,
+                                                                  qty: 1));
+                                                          // }
+
+                                                          BlocProvider.of<
+                                                                      OrderDetailsBloc>(
+                                                                  context)
+                                                              .add(OrderDetailsEvent.addQty(
+                                                                  kotno: product
+                                                                      .kotno,
+                                                                  currentItemid:
+                                                                      product
+                                                                          .itemCode));
+                                                        }),
+                                                  ],
                                                 ),
-                                                const Divider(
-                                                  height: 0,
-                                                )
-                                              ],
-                                            ),
+                                              ),
+                                              const Divider(
+                                                height: 0,
+                                              )
+                                            ],
                                           ),
                                         );
                                       },

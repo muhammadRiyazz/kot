@@ -571,6 +571,12 @@ class _BillPageState extends State<BillPage> {
                                                                 label:
                                                                     'Confirm',
                                                                 onpress: () {
+
+
+
+
+
+                                                                  
                                                                   Navigator.pop(
                                                                       context);
                                                                   if (widget

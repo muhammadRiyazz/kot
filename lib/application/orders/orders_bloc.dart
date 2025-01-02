@@ -127,5 +127,49 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         log(e.toString());
       }
     });
+
+    on<Longpress>((event, emit) async {
+      try {
+        // Create a mutable copy of the list
+        List<Order> items = List.from(state.isSelected);
+
+        if (!items.contains(event.item)) {
+          items.add(event.item);
+        }
+        emit(state.copyWith(isMultiSelectMode: true, isSelected: items));
+        log(' length ---${items.length}');
+      } catch (e) {
+        log(e.toString());
+      }
+    });
+
+    on<Clearitem>((event, emit) async {
+      try {
+        emit(state.copyWith(isMultiSelectMode: false, isSelected: []));
+      } catch (e) {
+        log(e.toString());
+      }
+    });
+
+    on<Ontap>((event, emit) async {
+      try {
+        // Create a mutable copy of the list
+        List<Order> items = List.from(state.isSelected);
+
+        if (items.contains(event.item)) {
+          items.remove(event.item);
+        } else {
+          items.add(event.item);
+        }
+        emit(state.copyWith(
+          isMultiSelectMode: items.isEmpty ? false : true,
+          isSelected: items,
+        ));
+
+        log(' length ---${items.length}');
+      } catch (e) {
+        log(e.toString());
+      }
+    });
   }
 }

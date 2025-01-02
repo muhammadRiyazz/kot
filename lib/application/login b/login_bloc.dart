@@ -52,13 +52,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               usernameA = jsonResponse[0]['username'];
               String roles = jsonResponse[0]['role'].toString();
               String targetRole = "B1";
+              String billRole = "X1";
 
               // Check if the target role is included in the roles string
               bool billEditt = roles.split(',').contains(targetRole);
+              bool addbillrole = roles.split(',').contains(billRole);
+
               await prefs.setBool('billEdit', billEditt); // Save login status
+              await prefs.setBool('addbill', addbillrole); // Save login status
 
               billEdit = billEditt;
-
+              addBill = addbillrole;
               log('Login successful');
               emit(state.copyWith(
                   isLoading: false,
@@ -97,11 +101,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<FetchLogin>((event, emit) async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       String? userid = prefs.getString('userID');
-    bool? billEditt=  prefs.getBool('billEdit'); // Save login status
+      bool? billEditt = prefs.getBool('billEdit'); // Save login status
+      bool? addbillp = prefs.getBool('addbill'); // Save login status
+
       // Clear login status
       usernameA = userid;
 
       billEdit = billEditt;
+      addBill = addbillp;
       emit(state.copyWith(userId: userid)); // Update state if needed
     });
   }

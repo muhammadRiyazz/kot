@@ -10,6 +10,7 @@ import 'package:restaurant_kot/application/order%20details/order_details_bloc.da
 import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/check_printer_congiration.dart';
@@ -1037,33 +1038,72 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                             ),
                                           ),
                                           onPressed: () {
-                                            if (widget
-                                                .order.billNumber.isNotEmpty) {
-                                            } else {}
+                                            // if (widget
+                                            //     .order.billNumber.isNotEmpty) {
+                                            // } else {}
 
-                                            BlocProvider
-                                                    .of<
-                                                            BillSubmitPrintBloc>(
-                                                        context)
-                                                .add(BillPreview(
-                                                    selectedcustomer: context
-                                                        .read<
-                                                            CustomerpartBloc>()
-                                                        .state
-                                                        .selectedcustomer!,
-                                                    table: widget.table,
-                                                    currentorderid: widget
-                                                        .order.orderNumber,
-                                                    items: state.orderitems));
+                                            if (addBill != null &&
+                                                addBill == true) {
+                                              BlocProvider.of<
+                                                          BillSubmitPrintBloc>(
+                                                      context)
+                                                  .add(BillPreview(
+                                                      selectedcustomer: context
+                                                          .read<
+                                                              CustomerpartBloc>()
+                                                          .state
+                                                          .selectedcustomer!,
+                                                      table: widget.table,
+                                                      currentorderid: widget
+                                                          .order.orderNumber,
+                                                      items: state.orderitems));
 
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                              builder: (context) {
-                                                return BillPage(
-                                                  order: widget.order,
-                                                );
-                                              },
-                                            ));
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                builder: (context) {
+                                                  return BillPage(
+                                                    order: widget.order,
+                                                  );
+                                                },
+                                              ));
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        "Sorry",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "You have no permission to process the bill",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  backgroundColor: mainclr,
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  margin: EdgeInsets.all(12),
+                                                  duration:
+                                                      Duration(seconds: 4),
+                                                ),
+                                              );
+                                            }
                                           },
                                           child: const Text(
                                             textAlign: TextAlign.center,
