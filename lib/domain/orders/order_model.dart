@@ -1,4 +1,3 @@
-
 // // Model class for OrderItem
 // class OrderItem {
 //   final int id;
@@ -123,6 +122,8 @@
 //   }
 // }
 
+import 'package:restaurant_kot/domain/item/item_model.dart';
+
 class Order {
   final int id;
   final String orderNumber;
@@ -177,9 +178,11 @@ class Order {
       customerName: json['CustomerName'] ?? '',
       tableName: json['TableName'] ?? '',
       floorNumber: json['FloorNumber'] ?? '',
-      totalAmountBeforeDisc: (json['TotalAmountBeforeDisc'] as num?)?.toDouble() ?? 0.0,
+      totalAmountBeforeDisc:
+          (json['TotalAmountBeforeDisc'] as num?)?.toDouble() ?? 0.0,
       discount: (json['Discount'] as num?)?.toDouble() ?? 0.0,
-      totalTaxableAmount: (json['TotalTaxableAmount'] as num?)?.toDouble() ?? 0.0,
+      totalTaxableAmount:
+          (json['TotalTaxableAmount'] as num?)?.toDouble() ?? 0.0,
       totalTaxAmount: (json['TotalTaxAmount'] as num?)?.toDouble() ?? 0.0,
       totalCessAmount: (json['TotalCessAmount'] as num?)?.toDouble() ?? 0.0,
       totalAmount: (json['TotalAmount'] as num?)?.toDouble() ?? 0.0,
@@ -217,4 +220,16 @@ class Order {
       'UserID': userId,
     };
   }
+}
+
+class Orders {
+  final Order order;
+  final List<OrderItem> itemList;
+
+  Orders({
+    required this.order,
+    required this.itemList,
+  });
+
+  
 }

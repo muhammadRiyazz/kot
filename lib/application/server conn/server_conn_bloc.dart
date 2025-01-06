@@ -96,7 +96,7 @@ class ServerConnBloc extends Bloc<ServerConnEvent, ServerConnState> {
           };
           await prefs.setString('serverconn', json.encode(jsonData));
           await prefs.setBool('server', true);
-    ipid = event.ip;
+          ipid = event.ip;
 
           log('Connection details saved: $jsonData');
           emit(state.copyWith(isLoading: false, conn: true));

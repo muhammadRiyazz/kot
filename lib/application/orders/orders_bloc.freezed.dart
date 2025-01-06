@@ -23,6 +23,7 @@ mixin _$OrdersEvent {
     required TResult Function() clearitem,
     required TResult Function(Order item) longpress,
     required TResult Function(Order item) ontap,
+    required TResult Function(PrinterConfig printer) mergeAndprint,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -32,6 +33,7 @@ mixin _$OrdersEvent {
     TResult? Function()? clearitem,
     TResult? Function(Order item)? longpress,
     TResult? Function(Order item)? ontap,
+    TResult? Function(PrinterConfig printer)? mergeAndprint,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -41,6 +43,7 @@ mixin _$OrdersEvent {
     TResult Function()? clearitem,
     TResult Function(Order item)? longpress,
     TResult Function(Order item)? ontap,
+    TResult Function(PrinterConfig printer)? mergeAndprint,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -51,6 +54,7 @@ mixin _$OrdersEvent {
     required TResult Function(Clearitem value) clearitem,
     required TResult Function(Longpress value) longpress,
     required TResult Function(Ontap value) ontap,
+    required TResult Function(MergeAndprint value) mergeAndprint,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -60,6 +64,7 @@ mixin _$OrdersEvent {
     TResult? Function(Clearitem value)? clearitem,
     TResult? Function(Longpress value)? longpress,
     TResult? Function(Ontap value)? ontap,
+    TResult? Function(MergeAndprint value)? mergeAndprint,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -69,6 +74,7 @@ mixin _$OrdersEvent {
     TResult Function(Clearitem value)? clearitem,
     TResult Function(Longpress value)? longpress,
     TResult Function(Ontap value)? ontap,
+    TResult Function(MergeAndprint value)? mergeAndprint,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -141,6 +147,7 @@ class _$AllOrdersImpl implements AllOrders {
     required TResult Function() clearitem,
     required TResult Function(Order item) longpress,
     required TResult Function(Order item) ontap,
+    required TResult Function(PrinterConfig printer) mergeAndprint,
   }) {
     return allorders();
   }
@@ -153,6 +160,7 @@ class _$AllOrdersImpl implements AllOrders {
     TResult? Function()? clearitem,
     TResult? Function(Order item)? longpress,
     TResult? Function(Order item)? ontap,
+    TResult? Function(PrinterConfig printer)? mergeAndprint,
   }) {
     return allorders?.call();
   }
@@ -165,6 +173,7 @@ class _$AllOrdersImpl implements AllOrders {
     TResult Function()? clearitem,
     TResult Function(Order item)? longpress,
     TResult Function(Order item)? ontap,
+    TResult Function(PrinterConfig printer)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (allorders != null) {
@@ -181,6 +190,7 @@ class _$AllOrdersImpl implements AllOrders {
     required TResult Function(Clearitem value) clearitem,
     required TResult Function(Longpress value) longpress,
     required TResult Function(Ontap value) ontap,
+    required TResult Function(MergeAndprint value) mergeAndprint,
   }) {
     return allorders(this);
   }
@@ -193,6 +203,7 @@ class _$AllOrdersImpl implements AllOrders {
     TResult? Function(Clearitem value)? clearitem,
     TResult? Function(Longpress value)? longpress,
     TResult? Function(Ontap value)? ontap,
+    TResult? Function(MergeAndprint value)? mergeAndprint,
   }) {
     return allorders?.call(this);
   }
@@ -205,6 +216,7 @@ class _$AllOrdersImpl implements AllOrders {
     TResult Function(Clearitem value)? clearitem,
     TResult Function(Longpress value)? longpress,
     TResult Function(Ontap value)? ontap,
+    TResult Function(MergeAndprint value)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (allorders != null) {
@@ -291,6 +303,7 @@ class _$TableOrdersImpl implements TableOrders {
     required TResult Function() clearitem,
     required TResult Function(Order item) longpress,
     required TResult Function(Order item) ontap,
+    required TResult Function(PrinterConfig printer) mergeAndprint,
   }) {
     return tableOrders(tableNo);
   }
@@ -303,6 +316,7 @@ class _$TableOrdersImpl implements TableOrders {
     TResult? Function()? clearitem,
     TResult? Function(Order item)? longpress,
     TResult? Function(Order item)? ontap,
+    TResult? Function(PrinterConfig printer)? mergeAndprint,
   }) {
     return tableOrders?.call(tableNo);
   }
@@ -315,6 +329,7 @@ class _$TableOrdersImpl implements TableOrders {
     TResult Function()? clearitem,
     TResult Function(Order item)? longpress,
     TResult Function(Order item)? ontap,
+    TResult Function(PrinterConfig printer)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (tableOrders != null) {
@@ -331,6 +346,7 @@ class _$TableOrdersImpl implements TableOrders {
     required TResult Function(Clearitem value) clearitem,
     required TResult Function(Longpress value) longpress,
     required TResult Function(Ontap value) ontap,
+    required TResult Function(MergeAndprint value) mergeAndprint,
   }) {
     return tableOrders(this);
   }
@@ -343,6 +359,7 @@ class _$TableOrdersImpl implements TableOrders {
     TResult? Function(Clearitem value)? clearitem,
     TResult? Function(Longpress value)? longpress,
     TResult? Function(Ontap value)? ontap,
+    TResult? Function(MergeAndprint value)? mergeAndprint,
   }) {
     return tableOrders?.call(this);
   }
@@ -355,6 +372,7 @@ class _$TableOrdersImpl implements TableOrders {
     TResult Function(Clearitem value)? clearitem,
     TResult Function(Longpress value)? longpress,
     TResult Function(Ontap value)? ontap,
+    TResult Function(MergeAndprint value)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (tableOrders != null) {
@@ -423,6 +441,7 @@ class _$ClearitemImpl implements Clearitem {
     required TResult Function() clearitem,
     required TResult Function(Order item) longpress,
     required TResult Function(Order item) ontap,
+    required TResult Function(PrinterConfig printer) mergeAndprint,
   }) {
     return clearitem();
   }
@@ -435,6 +454,7 @@ class _$ClearitemImpl implements Clearitem {
     TResult? Function()? clearitem,
     TResult? Function(Order item)? longpress,
     TResult? Function(Order item)? ontap,
+    TResult? Function(PrinterConfig printer)? mergeAndprint,
   }) {
     return clearitem?.call();
   }
@@ -447,6 +467,7 @@ class _$ClearitemImpl implements Clearitem {
     TResult Function()? clearitem,
     TResult Function(Order item)? longpress,
     TResult Function(Order item)? ontap,
+    TResult Function(PrinterConfig printer)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (clearitem != null) {
@@ -463,6 +484,7 @@ class _$ClearitemImpl implements Clearitem {
     required TResult Function(Clearitem value) clearitem,
     required TResult Function(Longpress value) longpress,
     required TResult Function(Ontap value) ontap,
+    required TResult Function(MergeAndprint value) mergeAndprint,
   }) {
     return clearitem(this);
   }
@@ -475,6 +497,7 @@ class _$ClearitemImpl implements Clearitem {
     TResult? Function(Clearitem value)? clearitem,
     TResult? Function(Longpress value)? longpress,
     TResult? Function(Ontap value)? ontap,
+    TResult? Function(MergeAndprint value)? mergeAndprint,
   }) {
     return clearitem?.call(this);
   }
@@ -487,6 +510,7 @@ class _$ClearitemImpl implements Clearitem {
     TResult Function(Clearitem value)? clearitem,
     TResult Function(Longpress value)? longpress,
     TResult Function(Ontap value)? ontap,
+    TResult Function(MergeAndprint value)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (clearitem != null) {
@@ -573,6 +597,7 @@ class _$LongpressImpl implements Longpress {
     required TResult Function() clearitem,
     required TResult Function(Order item) longpress,
     required TResult Function(Order item) ontap,
+    required TResult Function(PrinterConfig printer) mergeAndprint,
   }) {
     return longpress(item);
   }
@@ -585,6 +610,7 @@ class _$LongpressImpl implements Longpress {
     TResult? Function()? clearitem,
     TResult? Function(Order item)? longpress,
     TResult? Function(Order item)? ontap,
+    TResult? Function(PrinterConfig printer)? mergeAndprint,
   }) {
     return longpress?.call(item);
   }
@@ -597,6 +623,7 @@ class _$LongpressImpl implements Longpress {
     TResult Function()? clearitem,
     TResult Function(Order item)? longpress,
     TResult Function(Order item)? ontap,
+    TResult Function(PrinterConfig printer)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (longpress != null) {
@@ -613,6 +640,7 @@ class _$LongpressImpl implements Longpress {
     required TResult Function(Clearitem value) clearitem,
     required TResult Function(Longpress value) longpress,
     required TResult Function(Ontap value) ontap,
+    required TResult Function(MergeAndprint value) mergeAndprint,
   }) {
     return longpress(this);
   }
@@ -625,6 +653,7 @@ class _$LongpressImpl implements Longpress {
     TResult? Function(Clearitem value)? clearitem,
     TResult? Function(Longpress value)? longpress,
     TResult? Function(Ontap value)? ontap,
+    TResult? Function(MergeAndprint value)? mergeAndprint,
   }) {
     return longpress?.call(this);
   }
@@ -637,6 +666,7 @@ class _$LongpressImpl implements Longpress {
     TResult Function(Clearitem value)? clearitem,
     TResult Function(Longpress value)? longpress,
     TResult Function(Ontap value)? ontap,
+    TResult Function(MergeAndprint value)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (longpress != null) {
@@ -731,6 +761,7 @@ class _$OntapImpl implements Ontap {
     required TResult Function() clearitem,
     required TResult Function(Order item) longpress,
     required TResult Function(Order item) ontap,
+    required TResult Function(PrinterConfig printer) mergeAndprint,
   }) {
     return ontap(item);
   }
@@ -743,6 +774,7 @@ class _$OntapImpl implements Ontap {
     TResult? Function()? clearitem,
     TResult? Function(Order item)? longpress,
     TResult? Function(Order item)? ontap,
+    TResult? Function(PrinterConfig printer)? mergeAndprint,
   }) {
     return ontap?.call(item);
   }
@@ -755,6 +787,7 @@ class _$OntapImpl implements Ontap {
     TResult Function()? clearitem,
     TResult Function(Order item)? longpress,
     TResult Function(Order item)? ontap,
+    TResult Function(PrinterConfig printer)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (ontap != null) {
@@ -771,6 +804,7 @@ class _$OntapImpl implements Ontap {
     required TResult Function(Clearitem value) clearitem,
     required TResult Function(Longpress value) longpress,
     required TResult Function(Ontap value) ontap,
+    required TResult Function(MergeAndprint value) mergeAndprint,
   }) {
     return ontap(this);
   }
@@ -783,6 +817,7 @@ class _$OntapImpl implements Ontap {
     TResult? Function(Clearitem value)? clearitem,
     TResult? Function(Longpress value)? longpress,
     TResult? Function(Ontap value)? ontap,
+    TResult? Function(MergeAndprint value)? mergeAndprint,
   }) {
     return ontap?.call(this);
   }
@@ -795,6 +830,7 @@ class _$OntapImpl implements Ontap {
     TResult Function(Clearitem value)? clearitem,
     TResult Function(Longpress value)? longpress,
     TResult Function(Ontap value)? ontap,
+    TResult Function(MergeAndprint value)? mergeAndprint,
     required TResult orElse(),
   }) {
     if (ontap != null) {
@@ -817,12 +853,178 @@ abstract class Ontap implements OrdersEvent {
 }
 
 /// @nodoc
+abstract class _$$MergeAndprintImplCopyWith<$Res> {
+  factory _$$MergeAndprintImplCopyWith(
+          _$MergeAndprintImpl value, $Res Function(_$MergeAndprintImpl) then) =
+      __$$MergeAndprintImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({PrinterConfig printer});
+}
+
+/// @nodoc
+class __$$MergeAndprintImplCopyWithImpl<$Res>
+    extends _$OrdersEventCopyWithImpl<$Res, _$MergeAndprintImpl>
+    implements _$$MergeAndprintImplCopyWith<$Res> {
+  __$$MergeAndprintImplCopyWithImpl(
+      _$MergeAndprintImpl _value, $Res Function(_$MergeAndprintImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? printer = null,
+  }) {
+    return _then(_$MergeAndprintImpl(
+      printer: null == printer
+          ? _value.printer
+          : printer // ignore: cast_nullable_to_non_nullable
+              as PrinterConfig,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$MergeAndprintImpl implements MergeAndprint {
+  const _$MergeAndprintImpl({required this.printer});
+
+  @override
+  final PrinterConfig printer;
+
+  @override
+  String toString() {
+    return 'OrdersEvent.mergeAndprint(printer: $printer)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MergeAndprintImpl &&
+            (identical(other.printer, printer) || other.printer == printer));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, printer);
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MergeAndprintImplCopyWith<_$MergeAndprintImpl> get copyWith =>
+      __$$MergeAndprintImplCopyWithImpl<_$MergeAndprintImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() allorders,
+    required TResult Function(String tableNo) tableOrders,
+    required TResult Function() clearitem,
+    required TResult Function(Order item) longpress,
+    required TResult Function(Order item) ontap,
+    required TResult Function(PrinterConfig printer) mergeAndprint,
+  }) {
+    return mergeAndprint(printer);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? allorders,
+    TResult? Function(String tableNo)? tableOrders,
+    TResult? Function()? clearitem,
+    TResult? Function(Order item)? longpress,
+    TResult? Function(Order item)? ontap,
+    TResult? Function(PrinterConfig printer)? mergeAndprint,
+  }) {
+    return mergeAndprint?.call(printer);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? allorders,
+    TResult Function(String tableNo)? tableOrders,
+    TResult Function()? clearitem,
+    TResult Function(Order item)? longpress,
+    TResult Function(Order item)? ontap,
+    TResult Function(PrinterConfig printer)? mergeAndprint,
+    required TResult orElse(),
+  }) {
+    if (mergeAndprint != null) {
+      return mergeAndprint(printer);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AllOrders value) allorders,
+    required TResult Function(TableOrders value) tableOrders,
+    required TResult Function(Clearitem value) clearitem,
+    required TResult Function(Longpress value) longpress,
+    required TResult Function(Ontap value) ontap,
+    required TResult Function(MergeAndprint value) mergeAndprint,
+  }) {
+    return mergeAndprint(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AllOrders value)? allorders,
+    TResult? Function(TableOrders value)? tableOrders,
+    TResult? Function(Clearitem value)? clearitem,
+    TResult? Function(Longpress value)? longpress,
+    TResult? Function(Ontap value)? ontap,
+    TResult? Function(MergeAndprint value)? mergeAndprint,
+  }) {
+    return mergeAndprint?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AllOrders value)? allorders,
+    TResult Function(TableOrders value)? tableOrders,
+    TResult Function(Clearitem value)? clearitem,
+    TResult Function(Longpress value)? longpress,
+    TResult Function(Ontap value)? ontap,
+    TResult Function(MergeAndprint value)? mergeAndprint,
+    required TResult orElse(),
+  }) {
+    if (mergeAndprint != null) {
+      return mergeAndprint(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class MergeAndprint implements OrdersEvent {
+  const factory MergeAndprint({required final PrinterConfig printer}) =
+      _$MergeAndprintImpl;
+
+  PrinterConfig get printer;
+
+  /// Create a copy of OrdersEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MergeAndprintImplCopyWith<_$MergeAndprintImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$OrdersState {
   bool get isLoading => throw _privateConstructorUsedError;
   List<Order> get tableOrders => throw _privateConstructorUsedError;
   List<Order> get orders => throw _privateConstructorUsedError;
   List<Order> get isSelected => throw _privateConstructorUsedError;
   bool get isMultiSelectMode => throw _privateConstructorUsedError;
+  int get printerstatus => throw _privateConstructorUsedError;
 
   /// Create a copy of OrdersState
   /// with the given fields replaced by the non-null parameter values.
@@ -842,7 +1044,8 @@ abstract class $OrdersStateCopyWith<$Res> {
       List<Order> tableOrders,
       List<Order> orders,
       List<Order> isSelected,
-      bool isMultiSelectMode});
+      bool isMultiSelectMode,
+      int printerstatus});
 }
 
 /// @nodoc
@@ -865,6 +1068,7 @@ class _$OrdersStateCopyWithImpl<$Res, $Val extends OrdersState>
     Object? orders = null,
     Object? isSelected = null,
     Object? isMultiSelectMode = null,
+    Object? printerstatus = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -887,6 +1091,10 @@ class _$OrdersStateCopyWithImpl<$Res, $Val extends OrdersState>
           ? _value.isMultiSelectMode
           : isMultiSelectMode // ignore: cast_nullable_to_non_nullable
               as bool,
+      printerstatus: null == printerstatus
+          ? _value.printerstatus
+          : printerstatus // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -904,7 +1112,8 @@ abstract class _$$OrdersStateImplCopyWith<$Res>
       List<Order> tableOrders,
       List<Order> orders,
       List<Order> isSelected,
-      bool isMultiSelectMode});
+      bool isMultiSelectMode,
+      int printerstatus});
 }
 
 /// @nodoc
@@ -925,6 +1134,7 @@ class __$$OrdersStateImplCopyWithImpl<$Res>
     Object? orders = null,
     Object? isSelected = null,
     Object? isMultiSelectMode = null,
+    Object? printerstatus = null,
   }) {
     return _then(_$OrdersStateImpl(
       isLoading: null == isLoading
@@ -947,6 +1157,10 @@ class __$$OrdersStateImplCopyWithImpl<$Res>
           ? _value.isMultiSelectMode
           : isMultiSelectMode // ignore: cast_nullable_to_non_nullable
               as bool,
+      printerstatus: null == printerstatus
+          ? _value.printerstatus
+          : printerstatus // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -959,7 +1173,8 @@ class _$OrdersStateImpl implements _OrdersState {
       required final List<Order> tableOrders,
       required final List<Order> orders,
       required final List<Order> isSelected,
-      required this.isMultiSelectMode})
+      required this.isMultiSelectMode,
+      required this.printerstatus})
       : _tableOrders = tableOrders,
         _orders = orders,
         _isSelected = isSelected;
@@ -992,10 +1207,12 @@ class _$OrdersStateImpl implements _OrdersState {
 
   @override
   final bool isMultiSelectMode;
+  @override
+  final int printerstatus;
 
   @override
   String toString() {
-    return 'OrdersState(isLoading: $isLoading, tableOrders: $tableOrders, orders: $orders, isSelected: $isSelected, isMultiSelectMode: $isMultiSelectMode)';
+    return 'OrdersState(isLoading: $isLoading, tableOrders: $tableOrders, orders: $orders, isSelected: $isSelected, isMultiSelectMode: $isMultiSelectMode, printerstatus: $printerstatus)';
   }
 
   @override
@@ -1011,7 +1228,9 @@ class _$OrdersStateImpl implements _OrdersState {
             const DeepCollectionEquality()
                 .equals(other._isSelected, _isSelected) &&
             (identical(other.isMultiSelectMode, isMultiSelectMode) ||
-                other.isMultiSelectMode == isMultiSelectMode));
+                other.isMultiSelectMode == isMultiSelectMode) &&
+            (identical(other.printerstatus, printerstatus) ||
+                other.printerstatus == printerstatus));
   }
 
   @override
@@ -1021,7 +1240,8 @@ class _$OrdersStateImpl implements _OrdersState {
       const DeepCollectionEquality().hash(_tableOrders),
       const DeepCollectionEquality().hash(_orders),
       const DeepCollectionEquality().hash(_isSelected),
-      isMultiSelectMode);
+      isMultiSelectMode,
+      printerstatus);
 
   /// Create a copy of OrdersState
   /// with the given fields replaced by the non-null parameter values.
@@ -1038,7 +1258,8 @@ abstract class _OrdersState implements OrdersState {
       required final List<Order> tableOrders,
       required final List<Order> orders,
       required final List<Order> isSelected,
-      required final bool isMultiSelectMode}) = _$OrdersStateImpl;
+      required final bool isMultiSelectMode,
+      required final int printerstatus}) = _$OrdersStateImpl;
 
   @override
   bool get isLoading;
@@ -1050,6 +1271,8 @@ abstract class _OrdersState implements OrdersState {
   List<Order> get isSelected;
   @override
   bool get isMultiSelectMode;
+  @override
+  int get printerstatus;
 
   /// Create a copy of OrdersState
   /// with the given fields replaced by the non-null parameter values.

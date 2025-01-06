@@ -106,30 +106,56 @@ class ScreenOrdersList extends StatelessWidget {
                           ],
                         ),
                       ),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 14),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${state.tableOrders.length} Orders',
-                              style: const TextStyle(fontSize: 20),
+                      state.tableOrders.isEmpty
+                          ? SingleChildScrollView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 50,
+                                    ),
+                                    Image.asset(
+                                        'assets/img/no data/No_data.png'),
+                                    const Text(
+                                      'No Orders Assigned Specifically\nfor You',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize:
+                                            13, // Adjusted for readability
+                                        fontWeight: FontWeight
+                                            .normal, // Semi-bold for emphasis
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 14),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${state.tableOrders.length} Orders',
+                                    style: const TextStyle(fontSize: 20),
+                                  ),
+                                  // if (isMultiSelectMode)
+                                  //   IconButton(
+                                  //     icon: Icon(Icons.close),
+                                  //     onPressed: () {
+                                  //       setState(() {
+                                  //         isMultiSelectMode = false;
+                                  //         isSelected = List<bool>.filled(orders.length, false);
+                                  //       });
+                                  //     },
+                                  //   ),`
+                                ],
+                              ),
                             ),
-                            // if (isMultiSelectMode)
-                            //   IconButton(
-                            //     icon: Icon(Icons.close),
-                            //     onPressed: () {
-                            //       setState(() {
-                            //         isMultiSelectMode = false;
-                            //         isSelected = List<bool>.filled(orders.length, false);
-                            //       });
-                            //     },
-                            //   ),`
-                          ],
-                        ),
-                      ),
                       // Item List
                       Expanded(
                         child: Padding(

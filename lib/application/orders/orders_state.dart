@@ -8,11 +8,14 @@ class OrdersState with _$OrdersState {
     required List<Order> orders,
     required List<Order> isSelected,
     required bool isMultiSelectMode,
+        required int printerstatus,
+
+    
   }) = _OrdersState;
   factory OrdersState.initial() {
     return OrdersState(
         tableOrders: [],
-        orders: [],
+        orders: [],printerstatus: 0,
         isLoading: false,
         isMultiSelectMode: false,
         isSelected: []);

@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
+import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
+import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/screen_order_detail.dart';
+import 'package:restaurant_kot/presendation/settings/printer/printer_page.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
 class OrderPage extends StatelessWidget {
@@ -396,6 +399,71 @@ class OrderPage extends StatelessWidget {
                                       child: MainButton(
                                         label: 'Merge & Print',
                                         onpress: () {
+                                          PrinterConfig? printer = context
+                                              .read<PrinterSetupBloc>()
+                                              .state
+                                              .billPrinterInfo;
+
+                                          if (printer != null) {
+                                            BlocProvider.of<OrdersBloc>(context)
+                                                .add(OrdersEvent.mergeAndprint(
+                                                    printer: printer));
+                                          } else {
+                                            BlocProvider.of<PrinterSetupBloc>(
+                                                    context)
+                                                .add(
+                                              const PrinterSetupEvent
+                                                  .fetchkitchenPrinter(
+                                                  kitchen: 'Bill'),
+                                            );
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const PrinterSetupPage(
+                                                        kitchen: 'Bill'),
+                                              ),
+                                            );
+
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      "Sorry",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "Please Add Bill Printer",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                backgroundColor: mainclr,
+                                                behavior:
+                                                    SnackBarBehavior.floating,
+                                                margin: EdgeInsets.all(12),
+                                                duration: Duration(seconds: 4),
+                                              ),
+                                            );
+
+                                            log('Bill printer not added');
+                                          }
+
                                           // mergeOrders();
                                         },
                                       ),

@@ -6,8 +6,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
+import 'package:restaurant_kot/core/printer/network_printer.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
+import 'package:restaurant_kot/domain/item/item_model.dart';
+import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/get_time.dart';
+import 'package:restaurant_kot/presendation/printer%20ui/bill_print.dart';
+import 'package:restaurant_kot/presendation/printer%20ui/merge_bill_print.dart';
 
 import '../../domain/orders/order_model.dart';
 
@@ -167,6 +172,91 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         ));
 
         log(' length ---${items.length}');
+      } catch (e) {
+        log(e.toString());
+      }
+    });
+
+    on<MergeAndprint>((event, emit) async {
+      log('MergeAndprint---- calling');
+      try {
+        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+        MssqlConnection connection = await connectionManager.getConnection();
+        // Create a mutable copy of the list
+        List<Order> orders = List.from(state.isSelected);
+
+        List<Orders> orderslist = [];
+
+        for (var element in orders) {
+          String ordersitemQuery = """
+         SELECT [Id], [OrderNumber], [KOTNumber], [EntryDate], [StartTime], [EndTime], [CustomerId], [CustomerName],
+         [TableName], [FloorNumber], [Description], [ItemCode], [ItemName], [Quantity], [BasicRate],
+         [UnitTaxableAmountBeforeDiscount], [Discount], [UnitTaxableAmount], [TotalTaxableAmount], [GSTPer],
+         [CessPer], [TotalTaxAmount], [TotalCessAmount], [TotalAmount], [DineInOrOther], [Delivery],
+         [BillNumber], [KitchenName], [UserID]
+         FROM  [dbo].[OrderItemDetailsDetails]
+         WHERE [OrderNumber] = '${element.orderNumber}';
+         """;
+
+          String? ordersitemresult = await connection.getData(ordersitemQuery);
+          log(ordersitemresult);
+          List<dynamic> ordersitemresultjson = jsonDecode(ordersitemresult);
+
+          // // Map the JSON to a list of Order objects
+          List<OrderItem> items = ordersitemresultjson
+              .map((data) => OrderItem.fromJson(data))
+              .toList();
+
+          orderslist.add(Orders(itemList: items, order: element));
+
+        }
+
+
+          double tax = 0.00;
+
+          double cess = 0.00;
+          double netAmount = 0.00;
+          double taxable = 0.00;
+
+          for (var element in orderslist) {
+            tax = tax + element.order.totalTaxAmount;
+            cess = cess + element.order.totalCessAmount;
+            netAmount = netAmount + element.order.totalAmount;
+            taxable = taxable + element.order.totalTaxableAmount;
+          }
+
+          PrinterConfig printer = event.printer;
+
+          int printingStatus = 0;
+
+          final List<int> test = await mergebillPrintData(
+              tax: tax,
+              cess: cess,
+              netAmount: netAmount,
+              taxable: taxable,
+              orders: orderslist);
+
+          printingStatus = await NetworkPrinter().printTicket(
+            test,
+            printer.printerName,
+          );
+
+          log('Printer response---$printingStatus');
+
+          if (printingStatus == 1) {
+            log('Printer status: 2---------');
+            emit(state.copyWith(
+              isLoading: false,
+              printerstatus: 2,
+            ));
+          } else {
+            log('Printer status: 1---------');
+            emit(state.copyWith(
+              isLoading: false,
+              printerstatus: 1,
+            ));
+          }
+        log(' length ---${orders.length}');
       } catch (e) {
         log(e.toString());
       }
