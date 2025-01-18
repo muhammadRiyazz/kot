@@ -14,55 +14,146 @@ part 'stock_bloc.freezed.dart';
 
 class StockBloc extends Bloc<StockEvent, StockState> {
   StockBloc() : super(StockState.initial()) {
-on<CategoryFetch>((event, emit) async {
-  log('CategoryFetch-------StockBloc');
+    on<FetchAllItems>((event, emit) async {
+      log('allFetch-------StockBloc -------------------------------------');
+      emit(state.copyWith(isLoading: true));
 
-  try {
-    MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
-    MssqlConnection connection = await connectionManager.getConnection();
+      try {
+        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+        MssqlConnection connection = await connectionManager.getConnection();
 
-    // SQL query to fetch category and SERorGOODS
-    String categoryQuery = """
+        String stockQuery = """
+  SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
+  FROM  [dbo].[MainStock]
+  ;
+""";
+
+        String stockQueryResult = await connection.getData(stockQuery);
+        List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
+
+        List<Product> stocks =
+            stockJsonResponse.map((data) => Product.fromJson(data)).toList();
+        log('--- all list----${stocks.length.toString()} --------------------------------');
+        // final List<kotItem> stocksnew = [];
+
+        // for (var element in stocks) {
+        //   double basicRate = basicRateclc(
+        //     element: element,
+        //     isAc: event.acOrNonAc,
+        //   );
+
+        //   double taxableAmount =
+        //       taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
+        //   stocksnew.add(kotItem(
+        //     cessAmt: 0.00,
+        //     gstAmt: 0.00,
+        //     kotno: 'null',
+        //     stock: 0,
+        //     qty: 0,
+        //     serOrGoods: getCategory(element.codeOrSKU),
+        //     kitchenName: element.printerName,
+        //     itemName: element.productName,
+        //     itemCode: element.codeOrSKU,
+        //     quantity: 0,
+        //     basicRate: basicRate,
+        //     unitTaxableAmountBeforeDiscount: taxableAmount,
+        //     unitTaxableAmount: taxableAmount,
+        //     gstPer: double.parse(element.vendorIGST.toString()),
+        //     cessPer: double.parse(element.cessRate.toString()),
+        //   ));
+        // }
+
+//         for (var element in stocks) {
+//           double basicRate = basicRateclc(
+//             element: element,
+//             isAc: true,
+//           );
+
+//           double taxableAmount =
+//               taxableAmountcalculation(element: element, isAc: true);
+//           stocksnew.add(kotItem(
+//             cessAmt: 0.00,
+//             gstAmt: 0.00,
+//             kotno: 'null',
+//             stock: 0,
+//             qty: 0,
+//             serOrGoods: getCategory(element.codeOrSKU),
+//             kitchenName: element.printerName,
+//             itemName: element.productName,
+//             itemCode: element.codeOrSKU,
+//             quantity: 0,
+//             basicRate: basicRate,
+//             unitTaxableAmountBeforeDiscount: taxableAmount,
+//             unitTaxableAmount: taxableAmount,
+//             gstPer: double.parse(element.vendorIGST.toString()),
+//             cessPer: double.parse(element.cessRate.toString()),
+//           ));
+//         }
+
+//         var toKOTMap = {
+//           for (var element in state.toKOTitems)
+//             element.itemCode: element.quantity
+//         };
+
+// // Iterate through items and update quantity
+//         for (var item in stocksnew) {
+//           item.quantity = toKOTMap[item.itemCode] ?? 0;
+//         }
+        emit(state.copyWith(isLoading: false, allList: stocks));
+      } catch (e) {
+        log('Error during category selection: ${e.toString()}');
+        emit(state.copyWith(isLoading: false));
+      }
+    });
+
+    on<CategoryFetch>((event, emit) async {
+      log('CategoryFetch-------StockBloc');
+
+      try {
+        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+        MssqlConnection connection = await connectionManager.getConnection();
+
+        // SQL query to fetch category and SERorGOODS
+        String categoryQuery = """
       SELECT category, SERorGOODS 
       FROM [dbo].[MainStock]
     """;
 
+        String rawResult = await connection.getData(categoryQuery);
+        List<Map<String, dynamic>> categoryQueryResult =
+            List<Map<String, dynamic>>.from(jsonDecode(rawResult));
 
-String rawResult = await connection.getData(categoryQuery);
-List<Map<String, dynamic>> categoryQueryResult = List<Map<String, dynamic>>.from(jsonDecode(rawResult));
+        // Use Sets to handle duplicates
+        Set<String> goodsCategorySet = {};
+        Set<String> serCategorySet = {};
 
-    // Use Sets to handle duplicates
-    Set<String> goodsCategorySet = {};
-    Set<String> serCategorySet = {};
+        for (var row in categoryQueryResult) {
+          // Ensure correct extraction of category and SERorGOODS
+          String? category = row['category'] as String?;
+          String? serOrGoods = row['SERorGOODS'] as String?;
 
-    for (var row in categoryQueryResult) {
-      // Ensure correct extraction of category and SERorGOODS
-      String? category = row['category'] as String?;
-      String? serOrGoods = row['SERorGOODS'] as String?;
-
-      if (category != null && serOrGoods != null) {
-        if (serOrGoods == 'GOODS') {
-          goodsCategorySet.add(category); // Add category to goods set
-        } else if (serOrGoods == 'SER') {
-          serCategorySet.add(category); // Add category to services set
+          if (category != null && serOrGoods != null) {
+            if (serOrGoods == 'GOODS') {
+              goodsCategorySet.add(category); // Add category to goods set
+            } else if (serOrGoods == 'SER') {
+              serCategorySet.add(category); // Add category to services set
+            }
+          }
         }
+
+        // Convert Sets to Lists for final state
+        List<String> goodsCategory = goodsCategorySet.toList();
+        List<String> serCategory = serCategorySet.toList();
+
+        // Emit the state with the grouped and unique categories
+        emit(state.copyWith(
+          goodsCategory: goodsCategory,
+          serCategory: serCategory,
+        ));
+      } catch (e) {
+        log('Error: ${e.toString()}');
       }
-    }
-
-    // Convert Sets to Lists for final state
-    List<String> goodsCategory = goodsCategorySet.toList();
-    List<String> serCategory = serCategorySet.toList();
-
-    // Emit the state with the grouped and unique categories
-    emit(state.copyWith(
-      goodsCategory: goodsCategory,
-      serCategory: serCategory,
-    ));
-  } catch (e) {
-    log('Error: ${e.toString()}');
-  }
-});
-
+    });
 
     on<ItemInitalFetch>((event, emit) async {
       log('ItemInitalFetch-------StockBloc');
@@ -122,6 +213,7 @@ List<Map<String, dynamic>> categoryQueryResult = List<Map<String, dynamic>>.from
 
           // Create kotItem object and add it to the appropriate category list
           kotItem item = kotItem(
+            parcelOrnot: '',
             cessAmt: 0.00,
             gstAmt: 0.00,
             kotno: 'null',
@@ -247,7 +339,8 @@ List<Map<String, dynamic>> categoryQueryResult = List<Map<String, dynamic>>.from
 
           double taxableAmount =
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
-          stocksnew.add(kotItem(
+          stocksnew.add(kotItem(            parcelOrnot: '',
+
             cessAmt: 0.00,
             gstAmt: 0.00,
             kotno: 'null',
@@ -312,45 +405,45 @@ List<Map<String, dynamic>> categoryQueryResult = List<Map<String, dynamic>>.from
 
     // Search products
     on<Search>((event, emit) async {
-      emit(state.copyWith(
-        isLoading: true,
-      ));
+      emit(state.copyWith(isLoading: true));
+      log('Starting search in StockBloc');
 
-      log('Search-------StockBloc');
       try {
-        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
-        MssqlConnection connection = await connectionManager.getConnection();
+        final String goodsOrSER = state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER';
+        final List<Product> allList = state.allList;
+        log('----allList---${allList.length.toString()} --------------------------------');
+        // Filter by category (serOrGoods)
+        final List<Product> filteredByCategory =
+            allList.where((item) => item.serOrGoods == goodsOrSER).toList();
+        log('----filteredByCategory---${filteredByCategory.length.toString()} --------------------------------');
 
-        String stockQuery = """
-  SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
-  FROM  [dbo].[MainStock]
- WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}'
-    AND LOWER([pdtname]) LIKE LOWER('%${event.searchQuary.trim()}%');
-""";
+        // Further filter by product name based on search query
+       final List<Product> matchingItems = filteredByCategory
+    .where((item) {
+      // Safely handle null values and apply trim + toLowerCase
+      final productName = item.productName.trim().toLowerCase() ;
+      final searchQuery = event.searchQuary.trim().toLowerCase();
+      return productName.contains(searchQuery);
+    })
+    .toList();
 
-        String stockQueryResult = await connection.getData(stockQuery);
-        List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
-        log(stockQueryResult);
-        List<Product> stocks =
-            stockJsonResponse.map((data) => Product.fromJson(data)).toList();
+        log('----matchingItems---${matchingItems.length.toString()} --------------------------------');
 
-        final List<kotItem> stocksnew = [];
+        // Create the final stock list
+        final List<kotItem> stocksNew = matchingItems.map((element) {
+          log('dineInACRate: ${element.dineInACRate}');
+          log('dineInNonACRate: ${element.dineInNonACRate}');
 
-        for (var element in stocks) {
-          log('dineInACRate =====${element.dineInACRate}');
-          log('dineInNonACRate =====${element.dineInNonACRate}');
-
-          double basicRate = basicRateclc(
-            element: element,
-            isAc: event.acOrNonAc,
-          );
+          double basicRate =
+              basicRateclc(element: element, isAc: event.acOrNonAc);
           double taxableAmount =
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
 
-          stocksnew.add(kotItem(
+          return kotItem(
+            parcelOrnot: '',
             cessAmt: 0.00,
             gstAmt: 0.00,
-            kotno: 'null',
+            kotno: 'null', // Use a more appropriate default value than 'null'
             stock: 0,
             qty: 0,
             serOrGoods: getCategory(element.codeOrSKU),
@@ -363,22 +456,29 @@ List<Map<String, dynamic>> categoryQueryResult = List<Map<String, dynamic>>.from
             unitTaxableAmount: taxableAmount,
             gstPer: double.parse(element.vendorIGST.toString()),
             cessPer: double.parse(element.cessRate.toString()),
-          ));
-        }
+          );
+        }).toList();
 
+        // Create a map for item quantities from the existing state
         var toKOTMap = {
           for (var element in state.toKOTitems)
             element.itemCode: element.quantity
         };
 
-// Iterate through items and update quantity
-        for (var item in stocksnew) {
+        // Update quantities based on the existing 'toKOTMap'
+        for (var item in stocksNew) {
           item.quantity = toKOTMap[item.itemCode] ?? 0;
         }
+        log('----stocksNew---${stocksNew.length.toString()} --------------------------------');
+
+        // Emit the updated state
         emit(state.copyWith(
-            isLoading: false, stocklist: stocksnew, selectedcategory: null));
-      } catch (e) {
-        log('Error during search: ${e.toString()}');
+          isLoading: false,
+          stocklist: stocksNew,
+          selectedcategory: null,
+        ));
+      } catch (e, stackTrace) {
+        log('Error during search: ${e.toString()}\nStackTrace: $stackTrace');
         emit(state.copyWith(isLoading: false));
       }
     });

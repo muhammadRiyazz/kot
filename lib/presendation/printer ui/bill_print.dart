@@ -12,6 +12,9 @@ Future<List<int>> billPrintData({
   required double netAmount,
   required double tax,
   required double cess,
+  required String mergedorNot,
+  String? mergedOrders,
+  String? mergedTables,
 }) async {
   final cGst = tax / 2;
   final sGst = tax / 2;
@@ -83,24 +86,24 @@ Future<List<int>> billPrintData({
   bytes += generator.row([
     PosColumn(
       text: 'Order No',
-      width: 6,
+      width: 4,
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
-      text: orderNo,
-      width: 6,
+      text: mergedorNot == 'Merged' ? '$orderNo,$mergedOrders' : orderNo,
+      width: 8,
       styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
   ]);
   bytes += generator.row([
     PosColumn(
       text: 'Table',
-      width: 6,
+      width: 4,
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
-      text: tableNo,
-      width: 6,
+      text: mergedorNot == 'Merged' ? '$tableNo,$mergedTables' : tableNo,
+      width: 8,
       styles: const PosStyles(align: PosAlign.right, bold: true),
     ),
   ]);

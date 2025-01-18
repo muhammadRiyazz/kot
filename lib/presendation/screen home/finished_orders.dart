@@ -16,9 +16,9 @@ class FinishedOrders extends StatelessWidget {
 
     // Determine the number of grid columns based on screen width
     int crossAxisCount = 1;
-    if (screenWidth >= 900) {
+    if (screenWidth >= 1100) {
       crossAxisCount = 3;
-    } else if (screenWidth >= 600) {
+    } else if (screenWidth >= 900) {
       crossAxisCount = 2;
     }
 
@@ -200,11 +200,38 @@ class FinishedOrders extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              '${order.orderNumber}',
-                                              style: TextStyle(
-                                                fontSize: textSize,
-                                              ),
+                                            Row(
+                                              children: [
+                                                order.mergedOrNot == 'Merged'
+                                                    ? const Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.info_outline,
+                                                            size: 15,
+                                                            color: Colors
+                                                                .deepOrangeAccent,
+                                                          ),
+                                                          Text(
+                                                            ' Merged -  ',
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: Colors
+                                                                  .deepOrangeAccent,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : SizedBox(),
+                                                Text(
+                                                  '${order.orderNumber}',
+                                                  style: TextStyle(
+                                                    fontSize: textSize,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                             Row(
                                               children: [

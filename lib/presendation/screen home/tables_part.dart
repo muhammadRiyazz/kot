@@ -20,22 +20,55 @@ class Tablespart extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // CrossAxisCount based on screen width
+// CrossAxisCount based on screen width
     int crossAxisCount = screenWidth < 650
-        ? 2
-        : screenWidth > 650 && screenWidth < 1110
-            ? 3
-            : 5; // 2 columns for phones, 3 for tablets
+        ? 2 // Mobile (smaller screen)
+        : screenWidth >= 650 && screenWidth < 900
+            ? 3 // Tablet (medium screen)
+            : screenWidth >= 900 && screenWidth < 1110
+                ? 3 // Large tablet (larger screen)
+                : 4; // Web (full-sized screen)
 
-    // Define dynamic text size and box size adjustments based on screen size
-    double textSize = screenWidth < 650 ? 16 : 18; // Larger text on tablets
-    double boxImageSize =
-        screenWidth < 650 ? 45 : 60; // Box image size for mobile and tablet
-    double boxPadding =
-        screenWidth < 650 ? 10 : 20; // Padding based on screen size
+// Define dynamic text size based on screen size
+    double textSize = screenWidth < 650
+        ? 18 // Smaller text for mobile
+        : screenWidth >= 650 && screenWidth < 900
+            ? 18 // Medium text for tablet
+            : screenWidth >= 900 && screenWidth < 1110
+                ? 22 // Larger text for large tablet
+                : 23; // Largest text for web
+
+// Box Image Size based on screen width
+    double boxImageSize = screenWidth < 650
+        ? 50 // Smaller box image for mobile
+        : screenWidth >= 650 && screenWidth < 900
+            ? 60 // Medium box image for tablet
+            : screenWidth >= 900 && screenWidth < 1110
+                ? 70 // Larger box image for large tablet
+                : 70; // Largest box image for web
+
+// Box Padding based on screen width
+    double boxPadding = screenWidth < 650
+        ? 10 // Smaller padding for mobile
+        : screenWidth >= 650 && screenWidth < 900
+            ? 12 // Medium padding for tablet
+            : screenWidth >= 900 && screenWidth < 1110
+                ? 20 // Larger padding for large tablet
+                : 23; // Largest padding for web
+
+// Adjust childAspectRatio based on screen width
     double childAspectRatio = screenWidth < 650
-        ? (screenWidth / (screenHeight / 1.9)) // Adjust for mobile
-        : (screenWidth / (screenHeight / .6)); // Adjust for tablet
+        ? (screenWidth /
+            (screenHeight / 2)) // Adjust for mobile (taller layout)
+        : screenWidth >= 650 && screenWidth < 900
+            ? (screenWidth /
+                (screenHeight / .6)) // Adjust for tablet (more balanced)
+            : screenWidth >= 900 && screenWidth < 1110
+                ? (screenWidth /
+                    (screenHeight / 1.4)) // Adjust for large tablet (wider)
+                : (screenWidth /
+                    (screenHeight / .7)); // Adjust for web (even wider)
+
     return RefreshIndicator(
       backgroundColor: mainclr,
       color: mainclrbg,
@@ -151,8 +184,8 @@ class Tablespart extends StatelessWidget {
                                 childAspectRatio: childAspectRatio,
                                 crossAxisCount:
                                     crossAxisCount, // Dynamic number of columns
-                                crossAxisSpacing: 10.0,
-                                mainAxisSpacing: 10.0,
+                                crossAxisSpacing: 7,
+                                mainAxisSpacing: 7,
                               ),
                               itemCount: state.tables.length,
                               itemBuilder: (context, index) {
@@ -175,7 +208,8 @@ class Tablespart extends StatelessWidget {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                           builder: (context) {
-                                            return ProductChoosingPage(billNo: '',
+                                            return ProductChoosingPage(
+                                                billNo: '',
                                                 tableinfo: TableInfo(
                                                     acOrNonAc: state
                                                         .tables[index]
@@ -243,16 +277,16 @@ class Tablespart extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w300,
                                                         fontSize:
-                                                            textSize - 5)),
+                                                            textSize - 3)),
                                               ),
                                             ),
                                           ),
                                           const Divider(
-                                            height: 0,
+                                            height: 15,
                                           ),
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
                                                 decoration: BoxDecoration(
@@ -342,7 +376,7 @@ class Tablespart extends StatelessWidget {
                                                 '₹ ${state.tables[index].totalOrderPrice}',
                                                 style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: textSize - 2,
+                                                    fontSize: textSize - 1,
                                                     fontWeight:
                                                         FontWeight.w500),
                                               )

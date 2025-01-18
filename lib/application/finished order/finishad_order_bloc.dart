@@ -55,7 +55,8 @@ class FinishadOrderBloc extends Bloc<FinishadOrderEvent, FinishadOrderState> {
       [ParcelOrNot],
       [BillAC],
       [OrderNumber],
-      [UserID]
+      [UserID],
+      [Merged]
   FROM  [dbo].[InvoiceAccountDetail]
   WHERE CAST([Invoicedate] AS DATE) = '$dateOnly'
         AND [CreditOrCleared] = 'Cleared' AND [UserID] ='$usernameA';
@@ -134,6 +135,7 @@ class FinishadOrderBloc extends Bloc<FinishadOrderEvent, FinishadOrderState> {
       ,[OrderNumber]
       ,[KOTNumber]
       ,[UserID]
+
   FROM  [dbo].[invoicedetail]
   WHERE [invoiceno] = '${event.invNo}' ;
 """;

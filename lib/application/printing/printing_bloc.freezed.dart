@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PrintingEvent {
+  String get mergedOrNot => throw _privateConstructorUsedError;
   PrinterConfig get printer => throw _privateConstructorUsedError;
   List<kotItem> get items => throw _privateConstructorUsedError;
   String get invNo => throw _privateConstructorUsedError;
@@ -28,6 +29,7 @@ mixin _$PrintingEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
+            String mergedOrNot,
             PrinterConfig printer,
             List<kotItem> items,
             String invNo,
@@ -43,6 +45,7 @@ mixin _$PrintingEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
+            String mergedOrNot,
             PrinterConfig printer,
             List<kotItem> items,
             String invNo,
@@ -58,6 +61,7 @@ mixin _$PrintingEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
+            String mergedOrNot,
             PrinterConfig printer,
             List<kotItem> items,
             String invNo,
@@ -102,7 +106,8 @@ abstract class $PrintingEventCopyWith<$Res> {
       _$PrintingEventCopyWithImpl<$Res, PrintingEvent>;
   @useResult
   $Res call(
-      {PrinterConfig printer,
+      {String mergedOrNot,
+      PrinterConfig printer,
       List<kotItem> items,
       String invNo,
       double taxable,
@@ -128,6 +133,7 @@ class _$PrintingEventCopyWithImpl<$Res, $Val extends PrintingEvent>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? mergedOrNot = null,
     Object? printer = null,
     Object? items = null,
     Object? invNo = null,
@@ -139,6 +145,10 @@ class _$PrintingEventCopyWithImpl<$Res, $Val extends PrintingEvent>
     Object? tableName = null,
   }) {
     return _then(_value.copyWith(
+      mergedOrNot: null == mergedOrNot
+          ? _value.mergedOrNot
+          : mergedOrNot // ignore: cast_nullable_to_non_nullable
+              as String,
       printer: null == printer
           ? _value.printer
           : printer // ignore: cast_nullable_to_non_nullable
@@ -188,7 +198,8 @@ abstract class _$$PrintBillImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {PrinterConfig printer,
+      {String mergedOrNot,
+      PrinterConfig printer,
       List<kotItem> items,
       String invNo,
       double taxable,
@@ -212,6 +223,7 @@ class __$$PrintBillImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? mergedOrNot = null,
     Object? printer = null,
     Object? items = null,
     Object? invNo = null,
@@ -223,6 +235,10 @@ class __$$PrintBillImplCopyWithImpl<$Res>
     Object? tableName = null,
   }) {
     return _then(_$PrintBillImpl(
+      mergedOrNot: null == mergedOrNot
+          ? _value.mergedOrNot
+          : mergedOrNot // ignore: cast_nullable_to_non_nullable
+              as String,
       printer: null == printer
           ? _value.printer
           : printer // ignore: cast_nullable_to_non_nullable
@@ -267,7 +283,8 @@ class __$$PrintBillImplCopyWithImpl<$Res>
 
 class _$PrintBillImpl implements PrintBill {
   const _$PrintBillImpl(
-      {required this.printer,
+      {required this.mergedOrNot,
+      required this.printer,
       required final List<kotItem> items,
       required this.invNo,
       required this.taxable,
@@ -278,6 +295,8 @@ class _$PrintBillImpl implements PrintBill {
       required this.tableName})
       : _items = items;
 
+  @override
+  final String mergedOrNot;
   @override
   final PrinterConfig printer;
   final List<kotItem> _items;
@@ -305,7 +324,7 @@ class _$PrintBillImpl implements PrintBill {
 
   @override
   String toString() {
-    return 'PrintingEvent.printBill(printer: $printer, items: $items, invNo: $invNo, taxable: $taxable, netAmount: $netAmount, cGst: $cGst, sGst: $sGst, orderID: $orderID, tableName: $tableName)';
+    return 'PrintingEvent.printBill(mergedOrNot: $mergedOrNot, printer: $printer, items: $items, invNo: $invNo, taxable: $taxable, netAmount: $netAmount, cGst: $cGst, sGst: $sGst, orderID: $orderID, tableName: $tableName)';
   }
 
   @override
@@ -313,6 +332,8 @@ class _$PrintBillImpl implements PrintBill {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PrintBillImpl &&
+            (identical(other.mergedOrNot, mergedOrNot) ||
+                other.mergedOrNot == mergedOrNot) &&
             (identical(other.printer, printer) || other.printer == printer) &&
             const DeepCollectionEquality().equals(other._items, _items) &&
             (identical(other.invNo, invNo) || other.invNo == invNo) &&
@@ -329,6 +350,7 @@ class _$PrintBillImpl implements PrintBill {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      mergedOrNot,
       printer,
       const DeepCollectionEquality().hash(_items),
       invNo,
@@ -351,6 +373,7 @@ class _$PrintBillImpl implements PrintBill {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
+            String mergedOrNot,
             PrinterConfig printer,
             List<kotItem> items,
             String invNo,
@@ -362,14 +385,15 @@ class _$PrintBillImpl implements PrintBill {
             String tableName)
         printBill,
   }) {
-    return printBill(printer, items, invNo, taxable, netAmount, cGst, sGst,
-        orderID, tableName);
+    return printBill(mergedOrNot, printer, items, invNo, taxable, netAmount,
+        cGst, sGst, orderID, tableName);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(
+            String mergedOrNot,
             PrinterConfig printer,
             List<kotItem> items,
             String invNo,
@@ -381,14 +405,15 @@ class _$PrintBillImpl implements PrintBill {
             String tableName)?
         printBill,
   }) {
-    return printBill?.call(printer, items, invNo, taxable, netAmount, cGst,
-        sGst, orderID, tableName);
+    return printBill?.call(mergedOrNot, printer, items, invNo, taxable,
+        netAmount, cGst, sGst, orderID, tableName);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(
+            String mergedOrNot,
             PrinterConfig printer,
             List<kotItem> items,
             String invNo,
@@ -402,8 +427,8 @@ class _$PrintBillImpl implements PrintBill {
     required TResult orElse(),
   }) {
     if (printBill != null) {
-      return printBill(printer, items, invNo, taxable, netAmount, cGst, sGst,
-          orderID, tableName);
+      return printBill(mergedOrNot, printer, items, invNo, taxable, netAmount,
+          cGst, sGst, orderID, tableName);
     }
     return orElse();
   }
@@ -439,7 +464,8 @@ class _$PrintBillImpl implements PrintBill {
 
 abstract class PrintBill implements PrintingEvent {
   const factory PrintBill(
-      {required final PrinterConfig printer,
+      {required final String mergedOrNot,
+      required final PrinterConfig printer,
       required final List<kotItem> items,
       required final String invNo,
       required final double taxable,
@@ -449,6 +475,8 @@ abstract class PrintBill implements PrintingEvent {
       required final String orderID,
       required final String tableName}) = _$PrintBillImpl;
 
+  @override
+  String get mergedOrNot;
   @override
   PrinterConfig get printer;
   @override

@@ -27,8 +27,10 @@ class InvoicesList {
   String? billAC;
   String? orderNumber;
   String? userID;
+  String? mergedOrNot;
 
   InvoicesList({
+    this.mergedOrNot,
     this.cusid,
     this.cusname,
     this.cusnameAddress,
@@ -61,6 +63,7 @@ class InvoicesList {
 
   factory InvoicesList.fromJson(Map<String, dynamic> json) {
     return InvoicesList(
+      mergedOrNot: json['Merged'] ?? '',
       cusid: json['cusid'],
       cusname: json['cusname'],
       cusnameAddress: json['cusnameAddress'],
@@ -125,6 +128,7 @@ class InvoicesList {
     };
   }
 }
+
 class InvoiceItem {
   String? invoiceno;
   String? invdate;
@@ -219,63 +223,62 @@ class InvoiceItem {
     this.kotNumber,
     this.userId,
   });
-factory InvoiceItem.fromJson(Map<String, dynamic> json) {
-  double? parseDouble(dynamic value) {
-    if (value == null) return null;
-    if (value is num) return value.toDouble();
-    if (value is String) return double.tryParse(value);
-    return null;
+  factory InvoiceItem.fromJson(Map<String, dynamic> json) {
+    double? parseDouble(dynamic value) {
+      if (value == null) return null;
+      if (value is num) return value.toDouble();
+      if (value is String) return double.tryParse(value);
+      return null;
+    }
+
+    return InvoiceItem(
+      invoiceno: json['invoiceno'],
+      invdate: json['invdate'],
+      terms: json['terms'],
+      ordereference: json['ordereference'],
+      cusid: json['cusid'],
+      invoiceto: json['invoiceto'],
+      invaddress: json['invaddress'],
+      shipto: json['shipto'],
+      shipaddr: json['shipaddr'],
+      gstno: json['gstno'],
+      email: json['email'],
+      smsno: json['smsno'],
+      customerType: json['CustomerTYPE'],
+      pdtcode: json['pdtcode'],
+      pdtname: json['pdtname'],
+      hsnCode: json['HSNCode'],
+      discp: json['discp '],
+      pcs: parseDouble(json['pcs']),
+      qty: parseDouble(json['qty']),
+      freeQty: parseDouble(json['Freeqty']),
+      unitPrice: parseDouble(json['unitprice']),
+      itemMRP: parseDouble(json['itemMRP']),
+      amount: parseDouble(json['Amount']),
+      itemDiscPer: parseDouble(json['ItemDiscPer']),
+      itemDiscAmount: parseDouble(json['ItemDiscAmount']),
+      grossValueAfterItemDisc: parseDouble(json['GrossValueAftrITMDisc']),
+      itemBillDiscPer: parseDouble(json['ItemBillDiscPER']),
+      itemBillDiscAmount: parseDouble(json['ItemBillDiscAmount']),
+      itemTotalNetAmount: parseDouble(json['ItemTotalNETAmount']),
+      gst: parseDouble(json['gst']),
+      gstAmount: parseDouble(json['gstamount']),
+      totalAmount: parseDouble(json['Totalamount']),
+      venIGST: parseDouble(json['venIGST']),
+      venIGSTAmount: parseDouble(json['venIGSTamnt']),
+      venCGST: parseDouble(json['venCGST']),
+      venCGSTAmount: parseDouble(json['venCGSTamnt']),
+      venSGST: parseDouble(json['venSGST']),
+      venSGSTAmount: parseDouble(json['venSGSTamnt']),
+      cessPercentage: parseDouble(json['CessPercentage']),
+      cessAmount: parseDouble(json['CessAmount']),
+      itemUnitSaleRate: parseDouble(json['ItemUnitSaleRate']),
+      parcelOrNot: json['ParcelOrNot'],
+      orderNumber: json['OrderNumber'],
+      kotNumber: json['KOTNumber'],
+      userId: json['UserID'],
+    );
   }
-
-  return InvoiceItem(
-    invoiceno: json['invoiceno'],
-    invdate: json['invdate'],
-    terms: json['terms'],
-    ordereference: json['ordereference'],
-    cusid: json['cusid'],
-    invoiceto: json['invoiceto'],
-    invaddress: json['invaddress'],
-    shipto: json['shipto'],
-    shipaddr: json['shipaddr'],
-    gstno: json['gstno'],
-    email: json['email'],
-    smsno: json['smsno'],
-    customerType: json['CustomerTYPE'],
-    pdtcode: json['pdtcode'],
-    pdtname: json['pdtname'],
-    hsnCode: json['HSNCode'],
-    discp: json['discp '],
-    pcs: parseDouble(json['pcs']),
-    qty: parseDouble(json['qty']),
-    freeQty: parseDouble(json['Freeqty']),
-    unitPrice: parseDouble(json['unitprice']),
-    itemMRP: parseDouble(json['itemMRP']),
-    amount: parseDouble(json['Amount']),
-    itemDiscPer: parseDouble(json['ItemDiscPer']),
-    itemDiscAmount: parseDouble(json['ItemDiscAmount']),
-    grossValueAfterItemDisc: parseDouble(json['GrossValueAftrITMDisc']),
-    itemBillDiscPer: parseDouble(json['ItemBillDiscPER']),
-    itemBillDiscAmount: parseDouble(json['ItemBillDiscAmount']),
-    itemTotalNetAmount: parseDouble(json['ItemTotalNETAmount']),
-    gst: parseDouble(json['gst']),
-    gstAmount: parseDouble(json['gstamount']),
-    totalAmount: parseDouble(json['Totalamount']),
-    venIGST: parseDouble(json['venIGST']),
-    venIGSTAmount: parseDouble(json['venIGSTamnt']),
-    venCGST: parseDouble(json['venCGST']),
-    venCGSTAmount: parseDouble(json['venCGSTamnt']),
-    venSGST: parseDouble(json['venSGST']),
-    venSGSTAmount: parseDouble(json['venSGSTamnt']),
-    cessPercentage: parseDouble(json['CessPercentage']),
-    cessAmount: parseDouble(json['CessAmount']),
-    itemUnitSaleRate: parseDouble(json['ItemUnitSaleRate']),
-    parcelOrNot: json['ParcelOrNot'],
-    orderNumber: json['OrderNumber'],
-    kotNumber: json['KOTNumber'],
-    userId: json['UserID'],
-  );
-}
-
 
   Map<String, dynamic> toJson() {
     return {

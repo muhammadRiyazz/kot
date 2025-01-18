@@ -1,22 +1,17 @@
 import 'dart:developer';
 
-// import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:restaurant_kot/application/KotSubmitPrint/kot_submit_print_bloc.dart';
-import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'package:restaurant_kot/core/printer/network_printer.dart';
 import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
 
 class BillSubmitedDone extends StatefulWidget {
   final dynamic onpress;
 
   BillSubmitedDone({Key? key, required this.onpress}) : super(key: key);
-
-  // final AssetsAudioPlayer player = AssetsAudioPlayer();
 
   @override
   State<BillSubmitedDone> createState() => _BillSubmitedDoneState();
@@ -26,12 +21,6 @@ class _BillSubmitedDoneState extends State<BillSubmitedDone> {
   @override
   void initState() {
     super.initState();
-
-    // widget.player.open(
-    //   Audio('assets/mp3/success-1-6297.mp3'),
-    //   autoStart: true,
-    // );
-
     HapticFeedback.lightImpact();
   }
 
@@ -52,43 +41,34 @@ class _BillSubmitedDoneState extends State<BillSubmitedDone> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.close, color: Colors.black),
-            onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => const HomeScreen(from: 1),
-                ),
-                (route) => false,
-              );
-            },
-          ),
         ),
         body: SafeArea(
-          child: BlocConsumer<KotSubmitPrintBloc, KotSubmitPrintState>(
-            listener: (context, state) {
-              // Handle state changes if needed
-            },
-            builder: (context, state) {
-              return Center(
-                child: AnimationLimiter(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: AnimationConfiguration.toStaggeredList(
-                      duration: const Duration(milliseconds: 375),
-                      childAnimationBuilder: (widget) => SlideAnimation(
-                        horizontalOffset: 50.0,
-                        child: FadeInAnimation(child: widget),
-                      ),
-                      children: [
-                        _buildSuccessSection(),
-                        _buildPrinterStatusSection(state),
-                      ],
-                    ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Center(
+                  child: BlocConsumer<KotSubmitPrintBloc, KotSubmitPrintState>(
+                    listener: (context, state) {
+                      // Handle state changes if needed
+                    },
+                    builder: (context, state) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildSuccessSection(),
+                          const SizedBox(height: 20),
+                          _buildPrinterStatusSection(state),
+                        ],
+                      );
+                    },
                   ),
                 ),
-              );
-            },
+              ),
+              _buildLargeDoneButton(
+                  context), // Large button placed at the bottom
+            ],
           ),
         ),
       ),
@@ -98,7 +78,6 @@ class _BillSubmitedDoneState extends State<BillSubmitedDone> {
   Widget _buildSuccessSection() {
     return const Column(
       children: [
-        SizedBox(height: 20),
         CircleAvatar(
           backgroundColor: mainclr,
           radius: 60,
@@ -136,13 +115,11 @@ class _BillSubmitedDoneState extends State<BillSubmitedDone> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height *
-                  0.15, // 15% of screen height
-              width: MediaQuery.of(context).size.width *
-                  0.8, // 80% of screen width
+              height: MediaQuery.of(context).size.height * 0.15,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: Image.asset(
                 'assets/img/printer/printerb.jpg',
-                fit: BoxFit.contain, // Ensures the image maintains aspect ratio
+                fit: BoxFit.contain,
               ),
             ),
           ),
@@ -182,5 +159,37 @@ class _BillSubmitedDoneState extends State<BillSubmitedDone> {
         ],
       );
     }
+  }
+
+  Widget _buildLargeDoneButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: mainclr,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        onPressed: () {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(from: 1),
+            ),
+            (route) => false,
+          );
+        },
+        child: const Text(
+          'Done',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }

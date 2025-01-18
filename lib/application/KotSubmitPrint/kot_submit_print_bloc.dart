@@ -219,9 +219,13 @@ class KotSubmitPrintBloc
     DineInOrOther = 'Dining',
     CreditOrPaid = 'Credit',
     BillNumber = '',
-    UserID = '${event.userId}'
-  WHERE OrderNumber = '$orderId'
-''';
+    UserID = '${event.userId}',
+    MergedorNot = '',
+    MergedOrders = '',
+    MergedTables = ''
+
+    WHERE OrderNumber = '$orderId'
+    ''';
 
 // log(updateQuery);
 
@@ -240,21 +244,22 @@ class KotSubmitPrintBloc
               final double totalAmount = qty * element.basicRate;
 
               String itemInsertQuery = '''
-            INSERT INTO  [dbo].[OrderItemDetailsDetails] (
-            OrderNumber, KOTNumber, EntryDate, StartTime, EndTime, CustomerId, CustomerName,
-            TableName, FloorNumber, Description, ItemCode, ItemName, Quantity, BasicRate,
-             UnitTaxableAmountBeforeDiscount, Discount, DiscountPer, UnitTaxableAmount,
-               TotalTaxableAmount, GSTPer, CessPer, TotalTaxAmount, TotalCessAmount, TotalAmount,
-                DineInOrOther, Delivery,ParcelOrNot, BillNumber, KitchenName, UserID
-            ) VALUES (
-            '$orderId', '$kotId', '$entrydata', '$formattedDate', '$formattedDate', '${event.selectedcustomer.cusid}',
-           '${event.selectedcustomer.bussinessname}', '${event.table.tableName}', '${event.table.floor}',
-           '${event.note ?? ""}', '${element.itemCode}', '${element.itemName}', ${element.quantity}, ${element.basicRate},
-            ${element.unitTaxableAmountBeforeDiscount}, 0.0, 0.0, ${element.unitTaxableAmount}, $totalTaxableAmount,
-            ${element.gstPer}, ${element.cessPer}, $totalTaxAmount, $totalCessAmount, $totalAmount,
-            'Dining', '-',  'ParcelOrNot','', '${element.kitchenName}','${event.userId}'
-            )
-            ''';
+INSERT INTO [dbo].[OrderItemDetailsDetails] (
+    OrderNumber, KOTNumber, EntryDate, StartTime, EndTime, CustomerId, CustomerName,
+    TableName, FloorNumber, Description, ItemCode, ItemName, Quantity, BasicRate,
+    UnitTaxableAmountBeforeDiscount, Discount, DiscountPer, UnitTaxableAmount,
+    TotalTaxableAmount, GSTPer, CessPer, TotalTaxAmount, TotalCessAmount, TotalAmount,
+    DineInOrOther, Delivery, ParcelOrNot, BillNumber, KitchenName, UserID, MergedOldOrderNumber,
+    MergedOldTableNumber
+) VALUES (
+    '$orderId', '$kotId', '$entrydata', '$formattedDate', '$formattedDate', '${event.selectedcustomer.cusid}',
+    '${event.selectedcustomer.bussinessname}', '${event.table.tableName}', '${event.table.floor}',
+    '${event.note ?? ""}', '${element.itemCode}', '${element.itemName}', ${element.quantity}, ${element.basicRate},
+    ${element.unitTaxableAmountBeforeDiscount}, 0.0, 0.0, ${element.unitTaxableAmount}, $totalTaxableAmount,
+    ${element.gstPer}, ${element.cessPer}, $totalTaxAmount, $totalCessAmount, $totalAmount,
+    'Dining', '-', ${state.parcel ? "'Parcel'" : "''"}, '', '${element.kitchenName}', '${event.userId}', '-', '-'
+)
+''';
 
               // log(itemInsertQuery);
               await connection.writeData(itemInsertQuery);
@@ -273,38 +278,38 @@ class KotSubmitPrintBloc
               final double totalAmount = qty * element.basicRate;
 
               String itemUpdateQuery = '''
-    UPDATE  [dbo].[OrderItemDetailsDetails]
-    SET 
-        OrderNumber = '$orderId',
-        EntryDate = '$entrydata',
-        StartTime = '$formattedDate',
-        EndTime = '$formattedDate',
-        CustomerId = '${event.selectedcustomer.cusid}',
-        CustomerName = '${event.selectedcustomer.bussinessname}',
-        TableName = '${event.table.tableName}',
-        FloorNumber = '${event.table.floor}',
-        Description = '${event.note ?? ""}',
-        Quantity = $qty,
-        BasicRate = ${element.basicRate},
-        UnitTaxableAmountBeforeDiscount = ${element.unitTaxableAmountBeforeDiscount},
-        Discount = 0.0,
-        DiscountPer = 0.0,
-        UnitTaxableAmount = ${element.unitTaxableAmount},
-        TotalTaxableAmount = $totalTaxableAmount,
-        GSTPer = ${element.gstPer},
-        CessPer = ${element.cessPer},
-        TotalTaxAmount = $totalTaxAmount,
-        TotalCessAmount = $totalCessAmount,
-        TotalAmount = $totalAmount,
-        DineInOrOther = 'Dining',
-        Delivery = '-',
-        ParcelOrNot = 'ParcelOrNot',
-        BillNumber = '',
-        KitchenName = '${element.kitchenName}',
-        UserID = '${event.userId}'
-        WHERE 
-        KOTNumber = '${element.kotno}' AND ItemCode = '${element.itemCode}';
-        ''';
+UPDATE [dbo].[OrderItemDetailsDetails]
+SET 
+    OrderNumber = '$orderId',
+    EntryDate = '$entrydata',
+    StartTime = '$formattedDate',
+    EndTime = '$formattedDate',
+    CustomerId = '${event.selectedcustomer.cusid}',
+    CustomerName = '${event.selectedcustomer.bussinessname}',
+    TableName = '${event.table.tableName}',
+    FloorNumber = '${event.table.floor}',
+    Description = '${event.note ?? ""}',
+    Quantity = $qty,
+    BasicRate = ${element.basicRate},
+    UnitTaxableAmountBeforeDiscount = ${element.unitTaxableAmountBeforeDiscount},
+    Discount = 0.0,
+    DiscountPer = 0.0,
+    UnitTaxableAmount = ${element.unitTaxableAmount},
+    TotalTaxableAmount = $totalTaxableAmount,
+    GSTPer = ${element.gstPer},
+    CessPer = ${element.cessPer},
+    TotalTaxAmount = $totalTaxAmount ,
+    TotalCessAmount = $totalCessAmount ,
+    TotalAmount = $totalAmount ,
+    DineInOrOther = 'Dining',
+    Delivery = '-',
+    ParcelOrNot = '${state.parcel ? 'Parcel' : ''}',
+    BillNumber = '',
+    KitchenName = '${element.kitchenName}',
+    UserID = '${event.userId}'
+WHERE 
+    KOTNumber = '${element.kotno}' AND ItemCode = '${element.itemCode}';
+''';
 
               final resultitemUpdateQuery =
                   await connection.writeData(itemUpdateQuery);
@@ -518,6 +523,10 @@ class KotSubmitPrintBloc
     CreditOrPaid = 'Credit',
     BillNumber ='${event.billNumber}',
     UserID ='${event.userId}'
+  
+
+
+
   WHERE
     OrderNumber = '${event.currentorderid}';
 ''';

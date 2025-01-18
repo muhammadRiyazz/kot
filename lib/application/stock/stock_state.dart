@@ -6,6 +6,8 @@ class StockState with _$StockState {
     required String goodsOrSER,
     String? selectedcategory,
     required List<kotItem> stocklist,
+        required List<Product> allList,
+
     required List<kotItem> seritems,
     required List<kotItem> goodsitems,
     required bool isLoading,
@@ -17,7 +19,7 @@ class StockState with _$StockState {
     required List<String> category,
   }) = _StockState;
   factory StockState.initial() {
-    return StockState(
+    return StockState(allList: [],
         goodsOrSER: 'Service',
         category: [],
         stocklist: [],

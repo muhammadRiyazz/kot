@@ -10,7 +10,6 @@ import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/next%20id/appentydata.dart';
-import 'package:restaurant_kot/infrastructure/next%20id/invoice_no_next.dart';
 import 'package:restaurant_kot/infrastructure/next%20id/pay_id_next.dart';
 import 'package:restaurant_kot/presendation/printer%20ui/bill_print.dart';
 part 'bill_submit_print_event.dart';
@@ -41,6 +40,7 @@ class BillSubmitPrintBloc
           // If the product exists, create a new updated item
           var existingProduct = updatedbillItems[existingProductIndex];
           var updatedProduct = kotItem(
+            parcelOrnot: existingProduct.parcelOrnot,
             cessAmt: existingProduct.cessAmt,
             gstAmt: existingProduct.gstAmt,
             kotno: existingProduct.kotno,
@@ -164,7 +164,10 @@ class BillSubmitPrintBloc
     ParcelOrNot = 'parcelOrNot',
     BillAC = '--',
     OrderNumber = '${state.orderid!}',
-    UserID = '${event.userID}'
+    UserID = '${event.userID}',
+    Merged = '${event.mergedorNot}'
+
+
     WHERE custominvno = '$invno';
     """;
 
@@ -202,7 +205,7 @@ class BillSubmitPrintBloc
             ${element.gstPer}, ${element.gstAmt}, $venCGST,
             $venCGSTamt, $venSGST, $venSGSTamt ,
             ${element.cessPer}, ${element.cessAmt},
-            ${element.unitTaxableAmount}, 'parcelOrNot', '${state.orderid!}',
+            ${element.unitTaxableAmount}, '${element.parcelOrnot}', '${state.orderid!}',
            '${element.kotno}', '${event.userID}'
         );
         UPDATE MainStock SET totalstock = (
@@ -247,6 +250,9 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
+              mergedorNot: event.mergedorNot,
+              mergedOrders: event.mergedOrders,
+              mergedTables: event.mergedTables,
               tax: state.tax!,
               cess: state.cess!,
               netAmount: state.totalAmt!,
@@ -344,7 +350,9 @@ class BillSubmitPrintBloc
     ParcelOrNot = 'parcelOrNot',
     BillAC = '--',
     OrderNumber = '${state.orderid!}',
-    UserID = '${event.userID}'
+    UserID = '${event.userID}',
+        Merged = '${event.mergedorNot}'
+
   WHERE custominvno = '$nextinvNo';
 """;
 
@@ -408,7 +416,7 @@ class BillSubmitPrintBloc
             ${element.gstPer}, ${element.gstAmt}, $venCGST,
             $venCGSTamt , $venSGST, $venSGSTamt,
             ${element.cessPer}, ${element.cessAmt},
-            ${element.unitTaxableAmount}, 'parcelOrNot', '${state.orderid!}',
+            ${element.unitTaxableAmount}, '${element.parcelOrnot}', '${state.orderid!}',
             '${element.kotno}', '${event.userID}'
         );
                  UPDATE MainStock SET totalstock = (
@@ -451,6 +459,9 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
+              mergedorNot: event.mergedorNot,
+              mergedOrders: event.mergedOrders,
+              mergedTables: event.mergedTables,
               netAmount: state.totalAmt!,
               tax: state.tax!,
               cess: state.cess!,
@@ -560,7 +571,9 @@ class BillSubmitPrintBloc
         ParcelOrNot = 'parcelOrNot',
         BillAC = '--',
         OrderNumber = '${state.orderid!}',
-        UserID = '${event.userId}'
+        UserID = '${event.userId}',
+            Merged = '${event.mergedorNot}'
+
     WHERE custominvno = '${event.invNo}';
 """;
 
@@ -607,7 +620,7 @@ class BillSubmitPrintBloc
             ${element.gstPer}, ${element.gstAmt}, $venCGST,
             $venCGSTamt, $venSGST, $venSGSTamt ,
             ${element.cessPer}, ${element.cessAmt},
-            ${element.unitTaxableAmount}, 'parcelOrNot', '${state.orderid!}',
+            ${element.unitTaxableAmount}, '${element.parcelOrnot}', '${state.orderid!}',
            '${element.kotno}', '$usernameA'
         );
         UPDATE MainStock SET totalstock = (
@@ -636,6 +649,9 @@ class BillSubmitPrintBloc
             PrinterConfig printer = event.printer!;
             int printingStatus = 0;
             final List<int> test = await billPrintData(
+              mergedorNot: event.mergedorNot,
+              mergedOrders: event.mergedOrders,
+              mergedTables: event.mergedTables,
               netAmount: state.totalAmt!,
               tax: state.tax!,
               cess: state.cess!,
@@ -707,7 +723,9 @@ class BillSubmitPrintBloc
         ParcelOrNot = 'parcelOrNot',
         BillAC = '--',
         OrderNumber = '${state.orderid!}',
-        UserID = '${event.userId}'
+        UserID = '${event.userId}',
+            Merged = '${event.mergedorNot}'
+
     WHERE custominvno = '${event.invNo}';
 """;
 
@@ -773,7 +791,7 @@ class BillSubmitPrintBloc
             ${element.gstPer}, ${element.gstAmt}, $venCGST,
             $venCGSTamt , $venSGST, $venSGSTamt,
             ${element.cessPer}, ${element.cessAmt},
-            ${element.unitTaxableAmount}, 'parcelOrNot', '${state.orderid!}',
+            ${element.unitTaxableAmount}, '${element.parcelOrnot}', '${state.orderid!}',
             '${element.kotno}', '$usernameA'
         );
                  UPDATE MainStock SET totalstock = (
@@ -814,6 +832,9 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
+              mergedorNot: event.mergedorNot, mergedOrders: event.mergedOrders,
+              mergedTables: event.mergedTables,
+
               orderNo: state.orderid!,
               tax: state.tax!,
               cess: state.cess!,
@@ -875,6 +896,9 @@ class BillSubmitPrintBloc
         int printingStatus = 0;
 
         final List<int> test = await billPrintData(
+          mergedorNot: event.mergedorNot,
+          mergedOrders: event.mergedOrders,
+          mergedTables: event.mergedTables,
           tax: state.tax!,
           cess: state.cess!,
           netAmount: state.totalAmt!,

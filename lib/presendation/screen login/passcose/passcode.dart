@@ -138,13 +138,18 @@ class PasscodePage extends StatelessWidget {
                               : MainButton(
                                   label: 'Next',
                                   onpress: () {
-                                    if (_passcodeFormKey.currentState!
-                                        .validate()) {
-                                      BlocProvider.of<ServerConnBloc>(context)
-                                          .add(Passcode(
-                                              passcodepin:
-                                                  passcodeController.text));
-                                    }
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return ServerConnectionPage();
+                                      },
+                                    ));
+                                    // if (_passcodeFormKey.currentState!
+                                    //     .validate()) {
+                                    //   BlocProvider.of<ServerConnBloc>(context)
+                                    //       .add(Passcode(
+                                    //           passcodepin:
+                                    //               passcodeController.text));
+                                    // }
                                   },
                                 );
                         },

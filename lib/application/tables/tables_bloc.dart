@@ -59,11 +59,15 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
             .toList();
 
         // Fetching order data for a specific date
-        String ordersQuery = """
-        SELECT Id, OrderNumber, EntryDate, CustomerId, CustomerName, TableName, FloorNumber, Discount, TotalAmount, StartTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
-         FROM dbo.OrderMainDetails
-          WHERE CAST(EntryDate AS DATE) = '$currentDate' AND ActiveInnactive = 'Active' AND CreditOrPaid ='Credit'
-          """;
+     String ordersQuery = """
+    SELECT Id, OrderNumber, EntryDate, CustomerId, CustomerName, TableName, FloorNumber, Discount, TotalAmount, StartTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
+    FROM dbo.OrderMainDetails
+    WHERE CAST(EntryDate AS DATE) = '$currentDate' 
+      AND ActiveInnactive = 'Active' 
+      AND CreditOrPaid = 'Credit' 
+      AND DineInOrOther = 'Dining'
+      AND (MergedorNot = 'Merged' OR MergedorNot = '')
+""";
 
         List<dynamic> orders = await _fetchData(ordersQuery);
 

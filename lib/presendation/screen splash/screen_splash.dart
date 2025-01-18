@@ -26,38 +26,33 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus(); // Call the function to check login status
+    _checkLoginStatus();
   }
 
   Future<void> _checkLoginStatus() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isLoggedIn =
-        prefs.getBool('login') ?? false; // Default to false if not set
+    bool? isLoggedIn = prefs.getBool('login') ?? false;
 
-    // Navigate to the appropriate screen after 3 seconds
     Timer(const Duration(seconds: 0), () async {
       if (isLoggedIn) {
-        BlocProvider.of<LoginBloc>(context).add(const FetchLogin());
+  BlocProvider.of<StockBloc>(context)
+          .add(const StockEvent.fetchAllItems());
 
-        ///////
+
+        BlocProvider.of<LoginBloc>(context).add(const FetchLogin());
         BlocProvider.of<InitalDataBloc>(context)
             .add(const InitalDataEvent.fetchAppEnty());
-
         BlocProvider.of<InitalDataBloc>(context).add(const FetchPaymentType());
-
         BlocProvider.of<InitalDataBloc>(context)
             .add(const InitalDataEvent.addinitaldatas());
         BlocProvider.of<PrinterSetupBloc>(context)
             .add(const PrinterSetupEvent.fetchKitchens());
-
         BlocProvider.of<PrinterSetupBloc>(context)
             .add(const PrinterSetupEvent.fetchPrinter());
         await StockMng().fetchstockmngGoods();
         await StockMng().fetchstockmngService();
-
         BlocProvider.of<CustomerpartBloc>(context)
             .add(const CustomerpartEvent.cfetchlist());
-
         BlocProvider.of<StockBloc>(context)
             .add(const StockEvent.categoryFetch());
         BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
@@ -65,18 +60,14 @@ class _SplashScreenState extends State<SplashScreen> {
             .add(const FinishadOrderEvent.fetchBills());
         BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
 
-        Timer(const Duration(seconds: 8,), () async {
+        Timer(const Duration(seconds: 8), () async {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) => const HomeScreen(
-                      from: 0,
-                    )),
+              builder: (context) => const HomeScreen(from: 0),
+            ),
           );
         });
-
-        // If the user is logged in, navigate to the home screen
       } else {
-        // If the user is not logged in, navigate to the login screen
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => ScreenLogin()),
         );
@@ -86,46 +77,56 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(
-          255, 255, 255, 255), // Splash screen background color
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: MediaQuery.of(context).size.height * .2),
+            SizedBox(height: screenHeight * 0.2),
             Center(
               child: SizedBox(
+                width: screenWidth * 0.6,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 80, left: 60),
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
                   child: Image.asset(
                     'assets/img/logo/splashlogo.png',
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * .2),
+            SizedBox(height: screenHeight * 0.15),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
               child: SizedBox(
                 child: LinearProgressIndicator(
-                  borderRadius: BorderRadius.circular(30),
+                  // minHeight: screenHeight * 0.01,
                   backgroundColor: Colors.black12,
                   color: mainclr,
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * .03),
-            const Text(
+            SizedBox(height: screenHeight * 0.03),
+            Text(
               'Restaurant KOT Manager',
               style: TextStyle(
-                  color: mainclr, fontSize: 18, fontWeight: FontWeight.bold),
+                color: mainclr,
+                fontSize: screenWidth * 0.04,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 5),
-            const Text(
+            SizedBox(height: screenHeight * 0.005),
+            Text(
               'Powered by Eye2EyeTech',
-              style: TextStyle(color: mainclr, fontSize: 16),
+              style: TextStyle(
+                color: mainclr,
+                fontSize: screenWidth * 0.03,
+              ),
             ),
           ],
         ),

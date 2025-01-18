@@ -81,13 +81,34 @@ class FinishedOrderDetail extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                invoice.custominvno!,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black87,
-                                                ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    invoice.custominvno!,
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black87,
+                                                    ),
+                                                  ),
+                                                  invoice.mergedOrNot ==
+                                                          'Merged'
+                                                      ? const Text(
+                                                          'Merged Bill',
+                                                          style: TextStyle(
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            color: mainclr,
+                                                          ),
+                                                        )
+                                                      : SizedBox()
+                                                ],
                                               ),
                                               const Divider(),
                                               // Customer Name Section
@@ -421,6 +442,9 @@ class FinishedOrderDetail extends StatelessWidget {
                                                                         .state
                                                                         .billPrinterInfo;
                                                                 BlocProvider.of<PrintingBloc>(context).add(PrintBill(
+                                                                    mergedOrNot:
+                                                                        invoice.mergedOrNot ??
+                                                                            '',
                                                                     orderID: invoice
                                                                         .orderNumber!,
                                                                     printer:
@@ -601,6 +625,7 @@ List<kotItem> convert({required List<InvoiceItem> invList}) {
   List<kotItem> printItems = [];
   for (var element in invList) {
     printItems.add(kotItem(
+      parcelOrnot: element.parcelOrNot??'',
         gstAmt: element.gstAmount!,
         cessAmt: element.cessAmount!,
         kotno: '',

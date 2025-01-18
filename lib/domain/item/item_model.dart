@@ -29,11 +29,14 @@ class OrderItem {
   final String billNumber;
   final String kitchenName;
   final String userId;
+  final String parcelOrnot;
 
   // Adding `changedQty` for mutable quantity tracking if needed
   final int changedQty;
 
   OrderItem({
+        required this.parcelOrnot,
+
     required this.id,
     required this.orderNumber,
     required this.kotNumber,
@@ -68,6 +71,7 @@ class OrderItem {
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
+      parcelOrnot:json['ParcelOrNot']??'',
       id: json['Id'],
       orderNumber: json['OrderNumber'],
       kotNumber: json['KOTNumber'],
@@ -105,6 +109,7 @@ class OrderItem {
     // Add other fields if needed...
   }) {
     return OrderItem(
+      parcelOrnot:parcelOrnot ,
       id: id,
       orderNumber: orderNumber,
       kotNumber: kotNumber,

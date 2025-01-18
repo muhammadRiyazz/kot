@@ -49,9 +49,29 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   }
 
   bool _isSnackBarVisible = false;
-  // void initState() {
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    bool isMobile = screenWidth < 600;
+    bool isTablet = screenWidth >= 600 && screenWidth < 1024;
+
+    double textSize = isMobile
+        ? 16
+        : isTablet
+            ? 16
+            : 18;
+    double titlePadding = isMobile ? 8 : 12;
+    double subtitlePadding = isMobile ? 6 : 10;
+    double iconSize = isMobile
+        ? 25
+        : isTablet
+            ? 24
+            : 30;
+    double leadingPadding = isMobile ? 8 : 12;
+    double cardPadding = isMobile ? 8 : 12;
+    double buttonPadding = isMobile ? 10 : 15;
+
     return Scaffold(
       backgroundColor: mainclrbg,
       appBar: AppBar(
@@ -239,7 +259,165 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                     ),
                                     const Divider(
                                       height: 0,
-                                    )
+                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.symmetric(
+                                    //       horizontal: 12, vertical: 12),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       const Text(
+                                    //         'Other Tables ',
+                                    //         style: TextStyle(
+                                    //             color: Colors.black,
+                                    //             // fontWeight: FontWeight.bold,
+                                    //             fontSize: 12),
+                                    //       ),
+                                    //       Text(
+                                    //         widget.order.mergedTables,
+                                    //         style: const TextStyle(
+                                    //             color: Colors.black,
+                                    //             fontWeight: FontWeight.bold,
+                                    //             fontSize: 13),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    // // SizedBox(
+                                    // //   height: 10,
+                                    // // ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.symmetric(
+                                    //       horizontal: 12, vertical: 12),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       const Text(
+                                    //         'Other Orders ',
+                                    //         style: TextStyle(
+                                    //             color: Colors.black,
+                                    //             // fontWeight: FontWeight.bold,
+                                    //             fontSize: 12),
+                                    //       ),
+                                    //       Text(
+                                    //         widget.order.mergedOrders,
+                                    //         style: const TextStyle(
+                                    //             color: Colors.black,
+                                    //             fontWeight: FontWeight.bold,
+                                    //             fontSize: 13),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    const Divider(
+                                      height: 0,
+                                    ),
+                                    // widget.order.mergedorNot == 'Merged'
+                                    //     ? ListTile(
+                                    //         leading: const Text(
+                                    //           'Other Tables -',
+                                    //           style: TextStyle(
+                                    //               color: Colors.black,
+                                    //               // fontWeight: FontWeight.bold,
+                                    //               fontSize: 12),
+                                    //         ),
+                                    //         contentPadding:
+                                    //             const EdgeInsets.only(
+                                    //                 left: 16,
+                                    //                 top: 0,
+                                    //                 bottom: 0),
+                                    //         title: Text(
+                                    //           widget.order.mergedTables,
+                                    //           style: const TextStyle(
+                                    //               color: Colors.black,
+                                    //               fontWeight: FontWeight.bold,
+                                    //               fontSize: 13),
+                                    //         ),
+                                    //       )
+                                    //     : const SizedBox(),
+                                    // widget.order.mergedorNot == 'Merged'
+                                    //     ? ListTile(
+                                    //         leading: const Text(
+                                    //           'Other Orders -',
+                                    //           style: TextStyle(
+                                    //               color: Colors.black,
+                                    //               // fontWeight: FontWeight.bold,
+                                    //               fontSize: 12),
+                                    //         ),
+                                    //         contentPadding:
+                                    //             const EdgeInsets.only(
+                                    //                 left: 16,
+                                    //                 top: 0,
+                                    //                 bottom: 0),
+                                    //         title: Text(
+                                    //           widget.order.mergedOrders,
+                                    //           style: const TextStyle(
+                                    //               color: Colors.black,
+                                    //               fontWeight: FontWeight.bold,
+                                    //               fontSize: 13),
+                                    //         ),
+                                    //       )
+                                    //     : const SizedBox()
+
+                                    widget.order.mergedorNot == 'Merged'
+                                        ? ExpansionTile(
+                                            title: const Text(
+                                              'Merged info',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12),
+                                            ),
+                                            children: [
+                                              ListTile(
+                                                title: const Text(
+                                                  'Other Tables',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      // fontWeight: FontWeight.bold,
+                                                      fontSize: 12),
+                                                ),
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        left: 16,
+                                                        top: 0,
+                                                        bottom: 0),
+                                                subtitle: Text(
+                                                  widget.order.mergedTables,
+                                                  style: const TextStyle(
+                                                      color: mainclr,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                              ),
+                                              ListTile(
+                                                title: const Text(
+                                                  'Other Orders',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      // fontWeight: FontWeight.bold,
+                                                      fontSize: 12),
+                                                ),
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        left: 16,
+                                                        top: 0,
+                                                        bottom: 0),
+                                                subtitle: Text(
+                                                  widget.order.mergedOrders,
+                                                  style: const TextStyle(
+                                                      color: mainclr,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : const SizedBox()
                                   ],
                                 ),
                               ),
@@ -313,440 +491,420 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                     ),
                               // Item List
 
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 0),
-                                child: Column(
-                                  children: List.generate(
-                                    state.orderitems.length,
-                                    (index) {
-                                      final item = state.orderitems[index];
-                                      final isSelected =
-                                          selectedItems.contains(item);
-
-                                      return GestureDetector(
-                                        onLongPress: () {
-                                          if (state.toAddItems.isNotEmpty ||
-                                              state.toCancelItems.isNotEmpty) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  "⚠️ Action pending! Please complete your last operation before proceeding.",
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                    // fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                backgroundColor: mainclr,
-                                                behavior:
-                                                    SnackBarBehavior.floating,
-                                                margin: EdgeInsets.all(12),
-                                                duration: Duration(seconds: 4),
-                                              ),
-                                            );
-                                          } else {
-                                            toggleSelection(item);
-                                          }
-                                        },
-                                        onTap: () {
-                                          log(item.qty.toString());
-                                          if (selectedItems.isNotEmpty) {
-                                            toggleSelection(item);
-                                          }
-                                        },
-                                        child: Card(
-                                          margin: const EdgeInsets.only(
-                                              right: 7, left: 7, bottom: 7),
-                                          elevation: 3,
-                                          shadowColor: const Color.fromARGB(
-                                              255, 255, 255, 255),
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5, horizontal: 8),
-                                            decoration: BoxDecoration(
-                                              color: isSelected
-                                                  ? Colors.blue.withOpacity(0.0)
-                                                  : Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              border: isSelected
-                                                  ? Border.all(
-                                                      color: mainclr, width: 2)
-                                                  : null,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                        height: 55,
-                                                        width: 55,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: boxbgclr,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          child: FutureBuilder(
-                                                            future: fetchImageUrl(
-                                                                item.itemCode),
-                                                            builder: (context,
-                                                                snapshot) {
-                                                              if (snapshot
-                                                                      .connectionState ==
-                                                                  ConnectionState
-                                                                      .waiting) {
-                                                                // Show shimmer effect while loading
-                                                                return Shimmer
-                                                                    .fromColors(
-                                                                  baseColor:
-                                                                      Colors.grey[
-                                                                          300]!,
-                                                                  highlightColor:
-                                                                      Colors.grey[
-                                                                          100]!,
-                                                                  child:
-                                                                      Container(
-                                                                    height:
-                                                                        150, // Adjust height as needed
-                                                                    width: double
-                                                                        .infinity, // Adjust width as needed
-                                                                    color: Colors
-                                                                        .white,
-                                                                  ),
-                                                                );
-                                                              } else if (snapshot
-                                                                      .hasError ||
-                                                                  !snapshot
-                                                                      .hasData) {
-                                                                // Show an error image if all attempts fail
-                                                                return Image
-                                                                    .asset(
-                                                                  'assets/img/no data/noimg.png',
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                );
-                                                              } else {
-                                                                // Load the resolved image URL
-                                                                return Image
-                                                                    .network(
-                                                                  snapshot
-                                                                      .data!,
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                  errorBuilder:
-                                                                      (context,
-                                                                          error,
-                                                                          stackTrace) {
-                                                                    // Fallback error image
-                                                                    return Image
-                                                                        .asset(
-                                                                      'assets/img/no data/noimg.png',
-                                                                      fit: BoxFit
-                                                                          .fill,
-                                                                    );
-                                                                  },
-                                                                );
-                                                              }
-                                                            },
-                                                          ),
-                                                        )),
-                                                    const SizedBox(width: 8),
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            item.itemName,
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                            maxLines: 2,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 3),
-                                                          Text(
-                                                            'Amount: ₹ ${item.basicRate}/-',
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        12),
-                                                          ),
-                                                        ],
+                              Container(
+                                // height: 800,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 0),
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return GridView.builder(
+                                        shrinkWrap:
+                                            true, // Let GridView take dynamic height
+                                        physics:
+                                            const NeverScrollableScrollPhysics(), // Prevent GridView scrolling
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount:
+                                              isMobile ? 1 : (isTablet ? 2 : 3),
+                                          crossAxisSpacing: isMobile
+                                              ? 2
+                                              : (isTablet ? 10 : 10),
+                                          mainAxisSpacing: isMobile
+                                              ? 2
+                                              : (isTablet ? 10 : 10),
+                                          childAspectRatio: isMobile ? 2.5 : 3,
+                                        ),
+                                        itemCount: state.orderitems.length,
+                                        itemBuilder: (context, index) {
+                                          final item = state.orderitems[index];
+                                          final isSelected =
+                                              selectedItems.contains(item);
+                                          return GestureDetector(
+                                            onLongPress: () {
+                                              if (state.toAddItems.isNotEmpty ||
+                                                  state.toCancelItems
+                                                      .isNotEmpty) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      "⚠️ Action pending! Please complete your last operation before proceeding.",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                        // fontWeight: FontWeight.bold,
                                                       ),
                                                     ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
+                                                    backgroundColor: mainclr,
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    margin: EdgeInsets.all(12),
+                                                    duration:
+                                                        Duration(seconds: 4),
+                                                  ),
+                                                );
+                                              } else {
+                                                toggleSelection(item);
+                                              }
+                                            },
+                                            onTap: () {
+                                              log(item.qty.toString());
+                                              if (selectedItems.isNotEmpty) {
+                                                toggleSelection(item);
+                                              }
+                                            },
+                                            child: Center(
+                                              child: Card(
+                                                margin: const EdgeInsets.only(
+                                                    right: 7,
+                                                    left: 7,
+                                                    bottom: 7),
+                                                elevation: 3,
+                                                shadowColor:
+                                                    const Color.fromARGB(
+                                                        255, 255, 255, 255),
+                                                child: Center(
+                                                  child: Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 5,
+                                                        horizontal: 8),
+                                                    decoration: BoxDecoration(
+                                                      color: isSelected
+                                                          ? Colors.blue
+                                                              .withOpacity(0.0)
+                                                          : Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      border: isSelected
+                                                          ? Border.all(
+                                                              color: mainclr,
+                                                              width: 2)
+                                                          : null,
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
                                                       children: [
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              const TextSpan(
-                                                                text: 'Qty: ',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize: 13,
-                                                                  color: Colors
-                                                                      .black,
+                                                        Row(
+                                                          children: [
+                                                            Container(
+                                                                height: 55,
+                                                                width: 55,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color:
+                                                                      boxbgclr,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
                                                                 ),
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  child:
+                                                                      FutureBuilder(
+                                                                    future: fetchImageUrl(
+                                                                        item.itemCode),
+                                                                    builder:
+                                                                        (context,
+                                                                            snapshot) {
+                                                                      if (snapshot
+                                                                              .connectionState ==
+                                                                          ConnectionState
+                                                                              .waiting) {
+                                                                        // Show shimmer effect while loading
+                                                                        return Shimmer
+                                                                            .fromColors(
+                                                                          baseColor:
+                                                                              Colors.grey[300]!,
+                                                                          highlightColor:
+                                                                              Colors.grey[100]!,
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                150, // Adjust height as needed
+                                                                            width:
+                                                                                double.infinity, // Adjust width as needed
+                                                                            color:
+                                                                                Colors.white,
+                                                                          ),
+                                                                        );
+                                                                      } else if (snapshot
+                                                                              .hasError ||
+                                                                          !snapshot
+                                                                              .hasData) {
+                                                                        // Show an error image if all attempts fail
+                                                                        return Image
+                                                                            .asset(
+                                                                          'assets/img/no data/noimg.png',
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        );
+                                                                      } else {
+                                                                        // Load the resolved image URL
+                                                                        return Image
+                                                                            .network(
+                                                                          snapshot
+                                                                              .data!,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                          errorBuilder: (context,
+                                                                              error,
+                                                                              stackTrace) {
+                                                                            // Fallback error image
+                                                                            return Image.asset(
+                                                                              'assets/img/no data/noimg.png',
+                                                                              fit: BoxFit.fill,
+                                                                            );
+                                                                          },
+                                                                        );
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                )),
+                                                            const SizedBox(
+                                                                width: 8),
+                                                            Expanded(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    item.itemName,
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                    maxLines: 2,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          3),
+                                                                  Text(
+                                                                    'Amount: ₹ ${item.basicRate}/-',
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                              TextSpan(
-                                                                text:
-                                                                    '${item.qty.toString()} ',
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize:
-                                                                      13, // Adjusted font size
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .red,
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                RichText(
+                                                                  text:
+                                                                      TextSpan(
+                                                                    children: [
+                                                                      const TextSpan(
+                                                                        text:
+                                                                            'Qty: ',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontFamily:
+                                                                              'Montserrat',
+                                                                          fontSize:
+                                                                              13,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                      TextSpan(
+                                                                        text:
+                                                                            '${item.qty.toString()} ',
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          fontFamily:
+                                                                              'Montserrat',
+                                                                          fontSize:
+                                                                              13, // Adjusted font size
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          color:
+                                                                              Colors.red,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 10),
+                                                        const Divider(
+                                                            height: 0),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              item.kotno,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 13,
                                                               ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                            selectedItems
+                                                                    .isEmpty
+                                                                ? Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      IconButton(
+                                                                          icon:
+                                                                              Container(
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: Colors.red,
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                            ),
+                                                                            child:
+                                                                                const Padding(
+                                                                              padding: EdgeInsets.all(5),
+                                                                              child: Icon(Icons.remove, color: Colors.white, size: 17),
+                                                                            ),
+                                                                          ),
+                                                                          // Add this at the top of your widget class
+
+                                                                          onPressed:
+                                                                              () {
+                                                                            int value =
+                                                                                0;
+                                                                            if (state.orderitems[index].quantity <
+                                                                                0) {
+                                                                              value = state.orderitems[index].qty - state.orderitems[index].quantity.abs();
+                                                                            }
+
+                                                                            if (value !=
+                                                                                1) {
+                                                                              if (state.orderitems[index].quantity > 0) {
+                                                                                log('calling ---');
+                                                                                BlocProvider.of<StockBloc>(context).add(StockEvent.add(item: state.orderitems[index], isIncrement: false, productid: state.orderitems[index].itemCode, qty: 1));
+
+                                                                                // Your code here
+                                                                              }
+
+                                                                              BlocProvider.of<OrderDetailsBloc>(context).add(OrderDetailsEvent.cancelQty(kotno: state.orderitems[index].kotno, currentItemid: state.orderitems[index].itemCode));
+                                                                            } else {
+                                                                              if (!_isSnackBarVisible) {
+                                                                                // Check if a SnackBar is already visible
+                                                                                _isSnackBarVisible = true;
+
+                                                                                ScaffoldMessenger.of(context)
+                                                                                    .showSnackBar(
+                                                                                      SnackBar(
+                                                                                        content: const Text(
+                                                                                          "⚠️ To delete an item from the order, please long-press the tile, select the item, and then delete it",
+                                                                                          style: TextStyle(
+                                                                                            color: Colors.white,
+                                                                                            fontSize: 12,
+                                                                                          ),
+                                                                                        ),
+                                                                                        backgroundColor: mainclr,
+                                                                                        behavior: SnackBarBehavior.floating,
+                                                                                        margin: const EdgeInsets.all(12),
+                                                                                        duration: const Duration(seconds: 4),
+                                                                                        action: SnackBarAction(
+                                                                                          label: '✖', // Close icon as a label
+                                                                                          textColor: Colors.white, // Color of the icon
+                                                                                          onPressed: () {
+                                                                                            // Dismiss the SnackBar and reset the flag
+                                                                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                                                                            _isSnackBarVisible = false;
+                                                                                          },
+                                                                                        ),
+                                                                                      ),
+                                                                                    )
+                                                                                    .closed
+                                                                                    .then((_) {
+                                                                                  // Reset the flag when the SnackBar is dismissed
+                                                                                  _isSnackBarVisible = false;
+                                                                                });
+
+                                                                                log('------');
+                                                                              }
+                                                                            }
+                                                                          }),
+                                                                      Text(
+                                                                        item.quantity ==
+                                                                                0
+                                                                            ? ''
+                                                                            : item.quantity.toString(),
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      ),
+                                                                      IconButton(
+                                                                          icon:
+                                                                              Container(
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: Colors.green,
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                            ),
+                                                                            child:
+                                                                                const Padding(
+                                                                              padding: EdgeInsets.all(5),
+                                                                              child: Icon(Icons.add, color: Colors.white, size: 17),
+                                                                            ),
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            if (state.orderitems[index].quantity !=
+                                                                                -1) {
+                                                                              BlocProvider.of<StockBloc>(context).add(StockEvent.add(item: state.orderitems[index], isIncrement: true, productid: state.orderitems[index].itemCode, qty: 1));
+                                                                            }
+
+                                                                            BlocProvider.of<OrderDetailsBloc>(context).add(OrderDetailsEvent.addQty(
+                                                                                kotno: state.orderitems[index].kotno,
+                                                                                currentItemid: state.orderitems[index].itemCode));
+                                                                          }),
+                                                                    ],
+                                                                  )
+                                                                : const SizedBox(
+                                                                    height: 40,
+                                                                  )
+                                                          ],
                                                         ),
                                                       ],
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
-                                                const SizedBox(height: 10),
-                                                const Divider(height: 0),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      item.kotno,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 13,
-                                                      ),
-                                                    ),
-                                                    selectedItems.isEmpty
-                                                        ? Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              IconButton(
-                                                                  icon:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: Colors
-                                                                          .red,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10),
-                                                                    ),
-                                                                    child:
-                                                                        const Padding(
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              5),
-                                                                      child: Icon(
-                                                                          Icons
-                                                                              .remove,
-                                                                          color: Colors
-                                                                              .white,
-                                                                          size:
-                                                                              17),
-                                                                    ),
-                                                                  ),
-                                                                  // Add this at the top of your widget class
-
-                                                                  onPressed:
-                                                                      () {
-                                                                    int value =
-                                                                        0;
-                                                                    if (state
-                                                                            .orderitems[index]
-                                                                            .quantity <
-                                                                        0) {
-                                                                      value = state
-                                                                              .orderitems[
-                                                                                  index]
-                                                                              .qty -
-                                                                          state
-                                                                              .orderitems[index]
-                                                                              .quantity
-                                                                              .abs();
-                                                                    }
-
-                                                                    if (value !=
-                                                                        1) {
-                                                                      if (state
-                                                                              .orderitems[index]
-                                                                              .quantity >
-                                                                          0) {
-                                                                        log('calling ---');
-                                                                        BlocProvider.of<StockBloc>(context).add(StockEvent.add(
-                                                                            item: state.orderitems[
-                                                                                index],
-                                                                            isIncrement:
-                                                                                false,
-                                                                            productid:
-                                                                                state.orderitems[index].itemCode,
-                                                                            qty: 1));
-
-                                                                        // Your code here
-                                                                      }
-
-                                                                      BlocProvider.of<OrderDetailsBloc>(context).add(OrderDetailsEvent.cancelQty(
-                                                                          kotno: state
-                                                                              .orderitems[
-                                                                                  index]
-                                                                              .kotno,
-                                                                          currentItemid: state
-                                                                              .orderitems[index]
-                                                                              .itemCode));
-                                                                    } else {
-                                                                      if (!_isSnackBarVisible) {
-                                                                        // Check if a SnackBar is already visible
-                                                                        _isSnackBarVisible =
-                                                                            true;
-
-                                                                        ScaffoldMessenger.of(context)
-                                                                            .showSnackBar(
-                                                                              SnackBar(
-                                                                                content: const Text(
-                                                                                  "⚠️ To delete an item from the order, please long-press the tile, select the item, and then delete it",
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.white,
-                                                                                    fontSize: 12,
-                                                                                  ),
-                                                                                ),
-                                                                                backgroundColor: mainclr,
-                                                                                behavior: SnackBarBehavior.floating,
-                                                                                margin: const EdgeInsets.all(12),
-                                                                                duration: const Duration(seconds: 4),
-                                                                                action: SnackBarAction(
-                                                                                  label: '✖', // Close icon as a label
-                                                                                  textColor: Colors.white, // Color of the icon
-                                                                                  onPressed: () {
-                                                                                    // Dismiss the SnackBar and reset the flag
-                                                                                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                                                                    _isSnackBarVisible = false;
-                                                                                  },
-                                                                                ),
-                                                                              ),
-                                                                            )
-                                                                            .closed
-                                                                            .then((_) {
-                                                                          // Reset the flag when the SnackBar is dismissed
-                                                                          _isSnackBarVisible =
-                                                                              false;
-                                                                        });
-
-                                                                        log('------');
-                                                                      }
-                                                                    }
-                                                                  }),
-                                                              Text(
-                                                                item.quantity ==
-                                                                        0
-                                                                    ? ''
-                                                                    : item
-                                                                        .quantity
-                                                                        .toString(),
-                                                                style:
-                                                                    const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 15,
-                                                                ),
-                                                              ),
-                                                              IconButton(
-                                                                  icon:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: Colors
-                                                                          .green,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10),
-                                                                    ),
-                                                                    child:
-                                                                        const Padding(
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              5),
-                                                                      child: Icon(
-                                                                          Icons
-                                                                              .add,
-                                                                          color: Colors
-                                                                              .white,
-                                                                          size:
-                                                                              17),
-                                                                    ),
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    if (state
-                                                                            .orderitems[index]
-                                                                            .quantity !=
-                                                                        -1) {
-                                                                      BlocProvider.of<StockBloc>(context).add(StockEvent.add(
-                                                                          item: state.orderitems[
-                                                                              index],
-                                                                          isIncrement:
-                                                                              true,
-                                                                          productid: state
-                                                                              .orderitems[index]
-                                                                              .itemCode,
-                                                                          qty: 1));
-                                                                    }
-
-                                                                    BlocProvider.of<OrderDetailsBloc>(context).add(OrderDetailsEvent.addQty(
-                                                                        kotno: state
-                                                                            .orderitems[
-                                                                                index]
-                                                                            .kotno,
-                                                                        currentItemid: state
-                                                                            .orderitems[index]
-                                                                            .itemCode));
-                                                                  }),
-                                                            ],
-                                                          )
-                                                        : const SizedBox(
-                                                            height: 40,
-                                                          )
-                                                  ],
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
+                                          );
+                                        },
                                       );
                                     },
                                   ),
@@ -807,6 +965,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                               : 'Proceed Cancel KOT',
                                           onpress: () {
                                             if (selectedItems.isEmpty) {
+                                              BlocProvider.of<
+                                                          KotSubmitPrintBloc>(
+                                                      context)
+                                                  .add(const KotSubmitPrintEvent
+                                                      .parcel(parcel: false));
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                 builder: (context) {

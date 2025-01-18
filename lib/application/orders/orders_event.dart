@@ -8,6 +8,5 @@ class OrdersEvent with _$OrdersEvent {
   const factory OrdersEvent.clearitem() = Clearitem;
   const factory OrdersEvent.longpress({required Order item}) = Longpress;
   const factory OrdersEvent.ontap({required Order item}) = Ontap;
-  const factory OrdersEvent.mergeAndprint({required PrinterConfig printer}) =
-      MergeAndprint;
+  const factory OrdersEvent.mergeAndprint() = MergeAndPrint;
 }

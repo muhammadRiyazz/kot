@@ -6,13 +6,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
-import 'package:restaurant_kot/core/printer/network_printer.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
-import 'package:restaurant_kot/infrastructure/get_time.dart';
-import 'package:restaurant_kot/presendation/printer%20ui/bill_print.dart';
-import 'package:restaurant_kot/presendation/printer%20ui/merge_bill_print.dart';
 
 import '../../domain/orders/order_model.dart';
 
@@ -25,8 +21,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<AllOrders>((event, emit) async {
       log('AllOrders --------------------------');
       emit(state.copyWith(
-        isLoading: true,
-      ));
+          isLoading: true, mergeisLoading: false, mergeStatus: 0));
 
       try {
         String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -53,10 +48,13 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [DineInOrOther], 
            [CreditOrPaid], 
            [BillNumber], 
-           [UserID]
+           [UserID],
+           [MergedorNot],
+           [MergedOrders],
+           [MergedTables]
     FROM  [dbo].[OrderMainDetails]
     WHERE CAST([EntryDate] AS DATE) = '$currentDate' 
-          AND [ActiveInnactive] = 'Active' AND [CreditOrPaid] ='Credit' AND [UserID] = '$usernameA';
+          AND [ActiveInnactive] = 'Active' AND (MergedorNot = 'Merged' OR MergedorNot = '') AND [CreditOrPaid] ='Credit' AND [UserID] = '$usernameA' AND [DineInOrOther] = 'Dining';
 """;
 
         // String ordersQuery =
@@ -77,6 +75,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
             jsonResponse.map((data) => Order.fromJson(data)).toList();
         // Emit state with tableModels data
 
+      
         emit(state.copyWith(isLoading: false, orders: orders));
       } catch (e) {
         emit(state.copyWith(isLoading: false));
@@ -87,8 +86,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
       emit(state.copyWith(
-        isLoading: true,
-      ));
+          isLoading: true, mergeisLoading: false, mergeStatus: 0));
 
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
@@ -113,9 +111,12 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [DineInOrOther], 
            [CreditOrPaid], 
            [BillNumber], 
-           [UserID]
+           [UserID] ,
+           [MergedorNot],
+           [MergedOrders],
+           [MergedTables]
     FROM  [dbo].[OrderMainDetails]
- WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}' AND [CreditOrPaid] ='Credit' AND [UserID] = '$usernameA';
+ WHERE CAST([EntryDate] AS DATE) = '$currentDate'   AND [TableName] = '${event.tableNo}' AND  (MergedorNot = 'Merged' OR MergedorNot = '') AND [CreditOrPaid] ='Credit' AND [UserID] = '$usernameA' AND [DineInOrOther] = 'Dining';
 """;
 
         String? ordersresult = await connection.getData(ordersQuery);
@@ -177,89 +178,234 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       }
     });
 
-    on<MergeAndprint>((event, emit) async {
-      log('MergeAndprint---- calling');
+    on<MergeAndPrint>((event, emit) async {
+      emit(state.copyWith(
+        mergeisLoading: true,
+        mergeStatus: 0,
+      ));
+      log('MergeAndPrint---- calling');
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
-        // Create a mutable copy of the list
+
         List<Order> orders = List.from(state.isSelected);
 
-        List<Orders> orderslist = [];
-
-        for (var element in orders) {
-          String ordersitemQuery = """
-         SELECT [Id], [OrderNumber], [KOTNumber], [EntryDate], [StartTime], [EndTime], [CustomerId], [CustomerName],
-         [TableName], [FloorNumber], [Description], [ItemCode], [ItemName], [Quantity], [BasicRate],
-         [UnitTaxableAmountBeforeDiscount], [Discount], [UnitTaxableAmount], [TotalTaxableAmount], [GSTPer],
-         [CessPer], [TotalTaxAmount], [TotalCessAmount], [TotalAmount], [DineInOrOther], [Delivery],
-         [BillNumber], [KitchenName], [UserID]
-         FROM  [dbo].[OrderItemDetailsDetails]
-         WHERE [OrderNumber] = '${element.orderNumber}';
-         """;
-
-          String? ordersitemresult = await connection.getData(ordersitemQuery);
-          log(ordersitemresult);
-          List<dynamic> ordersitemresultjson = jsonDecode(ordersitemresult);
-
-          // // Map the JSON to a list of Order objects
-          List<OrderItem> items = ordersitemresultjson
-              .map((data) => OrderItem.fromJson(data))
-              .toList();
-
-          orderslist.add(Orders(itemList: items, order: element));
-
+        if (orders.isEmpty) {
+          log('No orders selected for merging.');
+          return;
         }
 
+        // Find the lowest order by order number
+        Order lowestOrder = orders.reduce((current, next) {
+          int currentNum = int.parse(
+              current.orderNumber.substring(3)); // Remove first 3 characters
+          int nextNum = int.parse(
+              next.orderNumber.substring(3)); // Remove first 3 characters
+          return (currentNum < nextNum) ? current : next;
+        });
 
-          double tax = 0.00;
+        log('Lowest order number: ${lowestOrder.orderNumber}');
 
-          double cess = 0.00;
-          double netAmount = 0.00;
-          double taxable = 0.00;
+        // Prepare concatenated values for tables and orders to merge
+        String newMergedTables = orders
+            .where((element) => element.orderNumber != lowestOrder.orderNumber)
+            .map((element) => element.tableName)
+            .join(',');
 
-          for (var element in orderslist) {
-            tax = tax + element.order.totalTaxAmount;
-            cess = cess + element.order.totalCessAmount;
-            netAmount = netAmount + element.order.totalAmount;
-            taxable = taxable + element.order.totalTaxableAmount;
+        String newMergedOrders = orders
+            .where((element) => element.orderNumber != lowestOrder.orderNumber)
+            .map((element) => element.orderNumber)
+            .join(',');
+
+        // Single query to update the lowest order with concatenated values
+        String updateLowestOrderQuery = """
+        UPDATE [dbo].[OrderMainDetails]
+        SET 
+        [MergedorNot] = 'Merged',
+        [MergedTables] = COALESCE(NULLIF([MergedTables], ''), '') 
+                          + CASE WHEN [MergedTables] IS NOT NULL AND [MergedTables] <> '' THEN ',' ELSE '' END 
+                          + '$newMergedTables',
+        [MergedOrders] = COALESCE(NULLIF([MergedOrders], ''), '') 
+                          + CASE WHEN [MergedOrders] IS NOT NULL AND [MergedOrders] <> '' THEN ',' ELSE '' END 
+                          + '$newMergedOrders'
+        WHERE [OrderNumber] = '${lowestOrder.orderNumber}';
+        """;
+
+        await connection.writeData(updateLowestOrderQuery);
+
+        // Update the database for all orders being merged
+        for (var order in orders) {
+          if (order.orderNumber != lowestOrder.orderNumber) {
+            // Update order item details
+            String updateItemDetailsQuery = """
+            UPDATE [dbo].[OrderItemDetailsDetails]
+            SET 
+            [OrderNumber] = '${lowestOrder.orderNumber}',
+            [MergedOldOrderNumber] = '${order.orderNumber}',
+            [MergedOldTableNumber] = '${order.tableName}'
+             WHERE [OrderNumber] = '${order.orderNumber}';
+             """;
+
+            await connection.writeData(updateItemDetailsQuery);
+
+            // Update main order details for merged orders
+            String updateOrderQuery = """
+            UPDATE [dbo].[OrderMainDetails]
+            SET 
+            [MergedorNot] = '${lowestOrder.orderNumber}',
+            [MergedOrders] = '',
+            [MergedTables] = ''
+            WHERE [OrderNumber] = '${order.orderNumber}';
+            """;
+
+            await connection.writeData(updateOrderQuery);
           }
+        }
 
-          PrinterConfig printer = event.printer;
+        // Query to retrieve order item details for the lowest order
+        String ordersItemQuery = """
+      SELECT [Id], [OrderNumber], [KOTNumber], [EntryDate], [StartTime], [EndTime], 
+             [CustomerId], [CustomerName], [TableName], [FloorNumber], [Description], 
+             [ItemCode], [ItemName], [Quantity], [BasicRate], 
+             [UnitTaxableAmountBeforeDiscount], [Discount], [UnitTaxableAmount], 
+             [TotalTaxableAmount], [GSTPer], [CessPer], [TotalTaxAmount], 
+             [TotalCessAmount], [TotalAmount], [DineInOrOther], [Delivery], 
+             [BillNumber], [KitchenName], [UserID]
+      FROM [dbo].[OrderItemDetailsDetails]
+      WHERE [OrderNumber] = '${lowestOrder.orderNumber}';
+    """;
 
-          int printingStatus = 0;
+        String? ordersItemResult = await connection.getData(ordersItemQuery);
+        log(ordersItemResult);
 
-          final List<int> test = await mergebillPrintData(
-              tax: tax,
-              cess: cess,
-              netAmount: netAmount,
-              taxable: taxable,
-              orders: orderslist);
+        List<dynamic> ordersItemResultJson = jsonDecode(ordersItemResult);
 
-          printingStatus = await NetworkPrinter().printTicket(
-            test,
-            printer.printerName,
-          );
+        // Map the JSON to a list of OrderItem objects
+        List<OrderItem> items = ordersItemResultJson
+            .map((data) => OrderItem.fromJson(data))
+            .toList();
 
-          log('Printer response---$printingStatus');
+        double totalTaxableAmount = 0.00;
+        double totalTaxAmount = 0.00;
+        double totalCessAmount = 0.00;
+        double totalAmount = 0.00;
 
-          if (printingStatus == 1) {
-            log('Printer status: 2---------');
-            emit(state.copyWith(
-              isLoading: false,
-              printerstatus: 2,
-            ));
-          } else {
-            log('Printer status: 1---------');
-            emit(state.copyWith(
-              isLoading: false,
-              printerstatus: 1,
-            ));
-          }
-        log(' length ---${orders.length}');
-      } catch (e) {
-        log(e.toString());
+        for (var item in items) {
+          totalAmount += item.totalAmount;
+          totalCessAmount += item.totalCessAmount;
+          totalTaxAmount += item.totalTaxAmount;
+          totalTaxableAmount += item.totalTaxableAmount;
+        }
+
+        // Update the totals in the main order details
+        String updateOrderQuery = """
+      UPDATE [dbo].[OrderMainDetails]
+      SET 
+        [TotalAmountBeforeDisc] = '$totalTaxableAmount',
+        [TotalTaxableAmount] = '$totalTaxableAmount',
+        [TotalTaxAmount] = '$totalTaxAmount',
+        [TotalCessAmount] = '$totalCessAmount',
+        [TotalAmount] = '$totalAmount'
+      WHERE [OrderNumber] = '${lowestOrder.orderNumber}';
+    """;
+
+        await connection.writeData(updateOrderQuery);
+
+        log('MergeAndPrint completed successfully.');
+        emit(state.copyWith(
+          mergeisLoading: false,
+          mergeStatus: 1,
+          isMultiSelectMode: false,isSelected: []
+        ));
+      } catch (e, stackTrace) {
+        emit(state.copyWith(
+          mergeisLoading: false,
+          mergeStatus: 2,
+          isMultiSelectMode: false,
+        ));
+        log('Error in MergeAndPrint: $e');
+        log('StackTrace: $stackTrace');
       }
     });
   }
 }
+
+
+
+ // List<Orders> orderslist = [];
+
+        // for (var element in orders) {
+        //   String ordersitemQuery = """
+        //  SELECT [Id], [OrderNumber], [KOTNumber], [EntryDate], [StartTime], [EndTime], [CustomerId], [CustomerName],
+        //  [TableName], [FloorNumber], [Description], [ItemCode], [ItemName], [Quantity], [BasicRate],
+        //  [UnitTaxableAmountBeforeDiscount], [Discount], [UnitTaxableAmount], [TotalTaxableAmount], [GSTPer],
+        //  [CessPer], [TotalTaxAmount], [TotalCessAmount], [TotalAmount], [DineInOrOther], [Delivery],
+        //  [BillNumber], [KitchenName], [UserID]
+        //  FROM  [dbo].[OrderItemDetailsDetails]
+        //  WHERE [OrderNumber] = '${element.orderNumber}';
+        //  """;
+
+        //   String? ordersitemresult = await connection.getData(ordersitemQuery);
+        //   log(ordersitemresult);
+        //   List<dynamic> ordersitemresultjson = jsonDecode(ordersitemresult);
+
+        //   // // Map the JSON to a list of Order objects
+        //   List<OrderItem> items = ordersitemresultjson
+        //       .map((data) => OrderItem.fromJson(data))
+        //       .toList();
+
+        //   orderslist.add(Orders(itemList: items, order: element));
+
+        // }
+
+        // double tax = 0.00;
+
+        // double cess = 0.00;
+        // double netAmount = 0.00;
+        // double taxable = 0.00;
+
+        // for (var element in orderslist) {
+        //   tax = tax + element.order.totalTaxAmount;
+        //   cess = cess + element.order.totalCessAmount;
+        //   netAmount = netAmount + element.order.totalAmount;
+        //   taxable = taxable + element.order.totalTaxableAmount;
+        // }
+
+        // PrinterConfig printer = event.printer;
+
+        // int printingStatus = 0;
+
+        // final List<int> test = await mergebillPrintData(
+        //     tax: tax,
+        //     cess: cess,
+        //     netAmount: netAmount,
+        //     taxable: taxable,
+        //     orders: orderslist);
+
+        // printingStatus = await NetworkPrinter().printTicket(
+        //   test,
+        //   printer.printerName,
+        // );
+
+        // log('Printer response---$printingStatus');
+
+        // if (printingStatus == 1) {
+        //   log('Printer status: 2---------');
+        //   emit(state.copyWith(
+        //     isLoading: false,
+        //     printerstatus: 2,
+        //   ));
+        // } else {
+        //   log('Printer status: 1---------');
+        //   emit(state.copyWith(
+        //     isLoading: false,
+        //     printerstatus: 1,
+        //   ));
+        // }
+
+
+
+
+
+
+ 

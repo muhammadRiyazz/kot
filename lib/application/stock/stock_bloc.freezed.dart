@@ -27,6 +27,7 @@ mixin _$StockEvent {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -46,6 +47,7 @@ mixin _$StockEvent {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -64,6 +66,7 @@ mixin _$StockEvent {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -81,6 +84,7 @@ mixin _$StockEvent {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -96,6 +100,7 @@ mixin _$StockEvent {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -111,6 +116,7 @@ mixin _$StockEvent {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -196,6 +202,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -218,6 +225,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -239,6 +247,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -262,6 +271,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -280,6 +290,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -298,6 +309,7 @@ class _$FetchStocksAndCategoryImpl implements FetchStocksAndCategory {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -367,6 +379,7 @@ class _$ClearcategoryImpl implements Clearcategory {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -389,6 +402,7 @@ class _$ClearcategoryImpl implements Clearcategory {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -410,6 +424,7 @@ class _$ClearcategoryImpl implements Clearcategory {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -433,6 +448,7 @@ class _$ClearcategoryImpl implements Clearcategory {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -451,6 +467,7 @@ class _$ClearcategoryImpl implements Clearcategory {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -469,6 +486,7 @@ class _$ClearcategoryImpl implements Clearcategory {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -618,6 +636,7 @@ class _$AddImpl implements Add {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -640,6 +659,7 @@ class _$AddImpl implements Add {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -661,6 +681,7 @@ class _$AddImpl implements Add {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -684,6 +705,7 @@ class _$AddImpl implements Add {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -702,6 +724,7 @@ class _$AddImpl implements Add {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -720,6 +743,7 @@ class _$AddImpl implements Add {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -863,6 +887,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -885,6 +910,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -906,6 +932,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -929,6 +956,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -947,6 +975,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -965,6 +994,7 @@ class _$ListFromOrderImpl implements ListFromOrder {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -1045,6 +1075,7 @@ class _$ClearSelectionImpl implements ClearSelection {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -1067,6 +1098,7 @@ class _$ClearSelectionImpl implements ClearSelection {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -1088,6 +1120,7 @@ class _$ClearSelectionImpl implements ClearSelection {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -1111,6 +1144,7 @@ class _$ClearSelectionImpl implements ClearSelection {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -1129,6 +1163,7 @@ class _$ClearSelectionImpl implements ClearSelection {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -1147,6 +1182,7 @@ class _$ClearSelectionImpl implements ClearSelection {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -1164,6 +1200,183 @@ class _$ClearSelectionImpl implements ClearSelection {
 
 abstract class ClearSelection implements StockEvent {
   const factory ClearSelection() = _$ClearSelectionImpl;
+}
+
+/// @nodoc
+abstract class _$$FetchAllItemsImplCopyWith<$Res> {
+  factory _$$FetchAllItemsImplCopyWith(
+          _$FetchAllItemsImpl value, $Res Function(_$FetchAllItemsImpl) then) =
+      __$$FetchAllItemsImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$FetchAllItemsImplCopyWithImpl<$Res>
+    extends _$StockEventCopyWithImpl<$Res, _$FetchAllItemsImpl>
+    implements _$$FetchAllItemsImplCopyWith<$Res> {
+  __$$FetchAllItemsImplCopyWithImpl(
+      _$FetchAllItemsImpl _value, $Res Function(_$FetchAllItemsImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of StockEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$FetchAllItemsImpl implements FetchAllItems {
+  const _$FetchAllItemsImpl();
+
+  @override
+  String toString() {
+    return 'StockEvent.fetchAllItems()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$FetchAllItemsImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() fetchStocksAndCategory,
+    required TResult Function() clearcategory,
+    required TResult Function(int qty, bool? update, double? amount,
+            kotItem? item, String productid, bool isIncrement)
+        add,
+    required TResult Function(
+            List<kotItem> itemslist, List<kotItem> cancelItemslist)
+        listFromOrder,
+    required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
+    required TResult Function(String searchQuary, bool acOrNonAc) search,
+    required TResult Function(bool acOrNonAc) itemInitalFetch,
+    required TResult Function(String type) typeChange,
+    required TResult Function(String from, kotItem item) itemAction,
+    required TResult Function() categoryFetch,
+    required TResult Function(String category, bool acOrNonAc)
+        categorySelection,
+  }) {
+    return fetchAllItems();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? fetchStocksAndCategory,
+    TResult? Function()? clearcategory,
+    TResult? Function(int qty, bool? update, double? amount, kotItem? item,
+            String productid, bool isIncrement)?
+        add,
+    TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
+        listFromOrder,
+    TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
+    TResult? Function(String searchQuary, bool acOrNonAc)? search,
+    TResult? Function(bool acOrNonAc)? itemInitalFetch,
+    TResult? Function(String type)? typeChange,
+    TResult? Function(String from, kotItem item)? itemAction,
+    TResult? Function()? categoryFetch,
+    TResult? Function(String category, bool acOrNonAc)? categorySelection,
+  }) {
+    return fetchAllItems?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? fetchStocksAndCategory,
+    TResult Function()? clearcategory,
+    TResult Function(int qty, bool? update, double? amount, kotItem? item,
+            String productid, bool isIncrement)?
+        add,
+    TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
+        listFromOrder,
+    TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
+    TResult Function(String searchQuary, bool acOrNonAc)? search,
+    TResult Function(bool acOrNonAc)? itemInitalFetch,
+    TResult Function(String type)? typeChange,
+    TResult Function(String from, kotItem item)? itemAction,
+    TResult Function()? categoryFetch,
+    TResult Function(String category, bool acOrNonAc)? categorySelection,
+    required TResult orElse(),
+  }) {
+    if (fetchAllItems != null) {
+      return fetchAllItems();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FetchStocksAndCategory value)
+        fetchStocksAndCategory,
+    required TResult Function(Clearcategory value) clearcategory,
+    required TResult Function(Add value) add,
+    required TResult Function(ListFromOrder value) listFromOrder,
+    required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
+    required TResult Function(Search value) search,
+    required TResult Function(ItemInitalFetch value) itemInitalFetch,
+    required TResult Function(TypeChange value) typeChange,
+    required TResult Function(ItemAction value) itemAction,
+    required TResult Function(CategoryFetch value) categoryFetch,
+    required TResult Function(CategorySelection value) categorySelection,
+  }) {
+    return fetchAllItems(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
+    TResult? Function(Clearcategory value)? clearcategory,
+    TResult? Function(Add value)? add,
+    TResult? Function(ListFromOrder value)? listFromOrder,
+    TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
+    TResult? Function(Search value)? search,
+    TResult? Function(ItemInitalFetch value)? itemInitalFetch,
+    TResult? Function(TypeChange value)? typeChange,
+    TResult? Function(ItemAction value)? itemAction,
+    TResult? Function(CategoryFetch value)? categoryFetch,
+    TResult? Function(CategorySelection value)? categorySelection,
+  }) {
+    return fetchAllItems?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FetchStocksAndCategory value)? fetchStocksAndCategory,
+    TResult Function(Clearcategory value)? clearcategory,
+    TResult Function(Add value)? add,
+    TResult Function(ListFromOrder value)? listFromOrder,
+    TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
+    TResult Function(Search value)? search,
+    TResult Function(ItemInitalFetch value)? itemInitalFetch,
+    TResult Function(TypeChange value)? typeChange,
+    TResult Function(ItemAction value)? itemAction,
+    TResult Function(CategoryFetch value)? categoryFetch,
+    TResult Function(CategorySelection value)? categorySelection,
+    required TResult orElse(),
+  }) {
+    if (fetchAllItems != null) {
+      return fetchAllItems(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FetchAllItems implements StockEvent {
+  const factory FetchAllItems() = _$FetchAllItemsImpl;
 }
 
 /// @nodoc
@@ -1253,6 +1466,7 @@ class _$SearchImpl implements Search {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -1275,6 +1489,7 @@ class _$SearchImpl implements Search {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -1296,6 +1511,7 @@ class _$SearchImpl implements Search {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -1319,6 +1535,7 @@ class _$SearchImpl implements Search {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -1337,6 +1554,7 @@ class _$SearchImpl implements Search {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -1355,6 +1573,7 @@ class _$SearchImpl implements Search {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -1464,6 +1683,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -1486,6 +1706,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -1507,6 +1728,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -1530,6 +1752,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -1548,6 +1771,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -1566,6 +1790,7 @@ class _$ItemInitalFetchImpl implements ItemInitalFetch {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -1671,6 +1896,7 @@ class _$TypeChangeImpl implements TypeChange {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -1693,6 +1919,7 @@ class _$TypeChangeImpl implements TypeChange {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -1714,6 +1941,7 @@ class _$TypeChangeImpl implements TypeChange {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -1737,6 +1965,7 @@ class _$TypeChangeImpl implements TypeChange {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -1755,6 +1984,7 @@ class _$TypeChangeImpl implements TypeChange {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -1773,6 +2003,7 @@ class _$TypeChangeImpl implements TypeChange {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -1885,6 +2116,7 @@ class _$ItemActionImpl implements ItemAction {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -1907,6 +2139,7 @@ class _$ItemActionImpl implements ItemAction {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -1928,6 +2161,7 @@ class _$ItemActionImpl implements ItemAction {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -1951,6 +2185,7 @@ class _$ItemActionImpl implements ItemAction {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -1969,6 +2204,7 @@ class _$ItemActionImpl implements ItemAction {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -1987,6 +2223,7 @@ class _$ItemActionImpl implements ItemAction {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -2067,6 +2304,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -2089,6 +2327,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -2110,6 +2349,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -2133,6 +2373,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -2151,6 +2392,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -2169,6 +2411,7 @@ class _$CategoryFetchImpl implements CategoryFetch {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -2277,6 +2520,7 @@ class _$CategorySelectionImpl implements CategorySelection {
             List<kotItem> itemslist, List<kotItem> cancelItemslist)
         listFromOrder,
     required TResult Function() clearSelection,
+    required TResult Function() fetchAllItems,
     required TResult Function(String searchQuary, bool acOrNonAc) search,
     required TResult Function(bool acOrNonAc) itemInitalFetch,
     required TResult Function(String type) typeChange,
@@ -2299,6 +2543,7 @@ class _$CategorySelectionImpl implements CategorySelection {
     TResult? Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult? Function()? clearSelection,
+    TResult? Function()? fetchAllItems,
     TResult? Function(String searchQuary, bool acOrNonAc)? search,
     TResult? Function(bool acOrNonAc)? itemInitalFetch,
     TResult? Function(String type)? typeChange,
@@ -2320,6 +2565,7 @@ class _$CategorySelectionImpl implements CategorySelection {
     TResult Function(List<kotItem> itemslist, List<kotItem> cancelItemslist)?
         listFromOrder,
     TResult Function()? clearSelection,
+    TResult Function()? fetchAllItems,
     TResult Function(String searchQuary, bool acOrNonAc)? search,
     TResult Function(bool acOrNonAc)? itemInitalFetch,
     TResult Function(String type)? typeChange,
@@ -2343,6 +2589,7 @@ class _$CategorySelectionImpl implements CategorySelection {
     required TResult Function(Add value) add,
     required TResult Function(ListFromOrder value) listFromOrder,
     required TResult Function(ClearSelection value) clearSelection,
+    required TResult Function(FetchAllItems value) fetchAllItems,
     required TResult Function(Search value) search,
     required TResult Function(ItemInitalFetch value) itemInitalFetch,
     required TResult Function(TypeChange value) typeChange,
@@ -2361,6 +2608,7 @@ class _$CategorySelectionImpl implements CategorySelection {
     TResult? Function(Add value)? add,
     TResult? Function(ListFromOrder value)? listFromOrder,
     TResult? Function(ClearSelection value)? clearSelection,
+    TResult? Function(FetchAllItems value)? fetchAllItems,
     TResult? Function(Search value)? search,
     TResult? Function(ItemInitalFetch value)? itemInitalFetch,
     TResult? Function(TypeChange value)? typeChange,
@@ -2379,6 +2627,7 @@ class _$CategorySelectionImpl implements CategorySelection {
     TResult Function(Add value)? add,
     TResult Function(ListFromOrder value)? listFromOrder,
     TResult Function(ClearSelection value)? clearSelection,
+    TResult Function(FetchAllItems value)? fetchAllItems,
     TResult Function(Search value)? search,
     TResult Function(ItemInitalFetch value)? itemInitalFetch,
     TResult Function(TypeChange value)? typeChange,
@@ -2414,6 +2663,7 @@ mixin _$StockState {
   String get goodsOrSER => throw _privateConstructorUsedError;
   String? get selectedcategory => throw _privateConstructorUsedError;
   List<kotItem> get stocklist => throw _privateConstructorUsedError;
+  List<Product> get allList => throw _privateConstructorUsedError;
   List<kotItem> get seritems => throw _privateConstructorUsedError;
   List<kotItem> get goodsitems => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
@@ -2441,6 +2691,7 @@ abstract class $StockStateCopyWith<$Res> {
       {String goodsOrSER,
       String? selectedcategory,
       List<kotItem> stocklist,
+      List<Product> allList,
       List<kotItem> seritems,
       List<kotItem> goodsitems,
       bool isLoading,
@@ -2470,6 +2721,7 @@ class _$StockStateCopyWithImpl<$Res, $Val extends StockState>
     Object? goodsOrSER = null,
     Object? selectedcategory = freezed,
     Object? stocklist = null,
+    Object? allList = null,
     Object? seritems = null,
     Object? goodsitems = null,
     Object? isLoading = null,
@@ -2493,6 +2745,10 @@ class _$StockStateCopyWithImpl<$Res, $Val extends StockState>
           ? _value.stocklist
           : stocklist // ignore: cast_nullable_to_non_nullable
               as List<kotItem>,
+      allList: null == allList
+          ? _value.allList
+          : allList // ignore: cast_nullable_to_non_nullable
+              as List<Product>,
       seritems: null == seritems
           ? _value.seritems
           : seritems // ignore: cast_nullable_to_non_nullable
@@ -2545,6 +2801,7 @@ abstract class _$$StockStateImplCopyWith<$Res>
       {String goodsOrSER,
       String? selectedcategory,
       List<kotItem> stocklist,
+      List<Product> allList,
       List<kotItem> seritems,
       List<kotItem> goodsitems,
       bool isLoading,
@@ -2572,6 +2829,7 @@ class __$$StockStateImplCopyWithImpl<$Res>
     Object? goodsOrSER = null,
     Object? selectedcategory = freezed,
     Object? stocklist = null,
+    Object? allList = null,
     Object? seritems = null,
     Object? goodsitems = null,
     Object? isLoading = null,
@@ -2595,6 +2853,10 @@ class __$$StockStateImplCopyWithImpl<$Res>
           ? _value._stocklist
           : stocklist // ignore: cast_nullable_to_non_nullable
               as List<kotItem>,
+      allList: null == allList
+          ? _value._allList
+          : allList // ignore: cast_nullable_to_non_nullable
+              as List<Product>,
       seritems: null == seritems
           ? _value._seritems
           : seritems // ignore: cast_nullable_to_non_nullable
@@ -2642,6 +2904,7 @@ class _$StockStateImpl implements _StockState {
       {required this.goodsOrSER,
       this.selectedcategory,
       required final List<kotItem> stocklist,
+      required final List<Product> allList,
       required final List<kotItem> seritems,
       required final List<kotItem> goodsitems,
       required this.isLoading,
@@ -2652,6 +2915,7 @@ class _$StockStateImpl implements _StockState {
       required final List<String> serCategory,
       required final List<String> category})
       : _stocklist = stocklist,
+        _allList = allList,
         _seritems = seritems,
         _goodsitems = goodsitems,
         _toKOTitems = toKOTitems,
@@ -2670,6 +2934,14 @@ class _$StockStateImpl implements _StockState {
     if (_stocklist is EqualUnmodifiableListView) return _stocklist;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_stocklist);
+  }
+
+  final List<Product> _allList;
+  @override
+  List<Product> get allList {
+    if (_allList is EqualUnmodifiableListView) return _allList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_allList);
   }
 
   final List<kotItem> _seritems;
@@ -2734,7 +3006,7 @@ class _$StockStateImpl implements _StockState {
 
   @override
   String toString() {
-    return 'StockState(goodsOrSER: $goodsOrSER, selectedcategory: $selectedcategory, stocklist: $stocklist, seritems: $seritems, goodsitems: $goodsitems, isLoading: $isLoading, hasReachedMax: $hasReachedMax, toKOTitems: $toKOTitems, cancelKOTitems: $cancelKOTitems, goodsCategory: $goodsCategory, serCategory: $serCategory, category: $category)';
+    return 'StockState(goodsOrSER: $goodsOrSER, selectedcategory: $selectedcategory, stocklist: $stocklist, allList: $allList, seritems: $seritems, goodsitems: $goodsitems, isLoading: $isLoading, hasReachedMax: $hasReachedMax, toKOTitems: $toKOTitems, cancelKOTitems: $cancelKOTitems, goodsCategory: $goodsCategory, serCategory: $serCategory, category: $category)';
   }
 
   @override
@@ -2748,6 +3020,7 @@ class _$StockStateImpl implements _StockState {
                 other.selectedcategory == selectedcategory) &&
             const DeepCollectionEquality()
                 .equals(other._stocklist, _stocklist) &&
+            const DeepCollectionEquality().equals(other._allList, _allList) &&
             const DeepCollectionEquality().equals(other._seritems, _seritems) &&
             const DeepCollectionEquality()
                 .equals(other._goodsitems, _goodsitems) &&
@@ -2772,6 +3045,7 @@ class _$StockStateImpl implements _StockState {
       goodsOrSER,
       selectedcategory,
       const DeepCollectionEquality().hash(_stocklist),
+      const DeepCollectionEquality().hash(_allList),
       const DeepCollectionEquality().hash(_seritems),
       const DeepCollectionEquality().hash(_goodsitems),
       isLoading,
@@ -2796,6 +3070,7 @@ abstract class _StockState implements StockState {
       {required final String goodsOrSER,
       final String? selectedcategory,
       required final List<kotItem> stocklist,
+      required final List<Product> allList,
       required final List<kotItem> seritems,
       required final List<kotItem> goodsitems,
       required final bool isLoading,
@@ -2812,6 +3087,8 @@ abstract class _StockState implements StockState {
   String? get selectedcategory;
   @override
   List<kotItem> get stocklist;
+  @override
+  List<Product> get allList;
   @override
   List<kotItem> get seritems;
   @override

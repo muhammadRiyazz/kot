@@ -145,8 +145,14 @@ class Order {
   final String creditOrPaid;
   final String billNumber;
   final String userId;
+  final String mergedorNot;
+  final String mergedOrders;
+  final String mergedTables;
 
   Order({
+    required this.mergedorNot,
+    required this.mergedOrders,
+    required this.mergedTables,
     required this.id,
     required this.orderNumber,
     required this.entryDate,
@@ -171,6 +177,9 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
+      mergedOrders: json['MergedOrders'] ?? '',
+      mergedTables: json['MergedTables'] ?? '',
+      mergedorNot: json['MergedorNot'] ?? '',
       id: json['Id'] ?? 0,
       orderNumber: json['OrderNumber'] ?? '',
       entryDate: json['EntryDate'] ?? '',
@@ -230,6 +239,4 @@ class Orders {
     required this.order,
     required this.itemList,
   });
-
-  
 }

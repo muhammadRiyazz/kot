@@ -2,6 +2,8 @@ class kotItem {
   final String serOrGoods;
   String kitchenName;
   final String itemName;
+    final String parcelOrnot;
+
   final String itemCode;
   int quantity; // Quantity for the item
   int qty; // Quantity for the item
@@ -33,11 +35,15 @@ class kotItem {
     required this.unitTaxableAmount,
     required this.gstPer,
     required this.cessPer,
+        required this.parcelOrnot,
+
   });
 
   // CopyWith method to create a modified copy of kotItem
   kotItem copyWith({
-    String? kotno,
+        String? kotno,
+
+    String? parcelOrnot,
     String? serOrGoods,
     String? kitchenName,
     String? itemName,
@@ -54,6 +60,7 @@ class kotItem {
     double? cessPer,
   }) {
     return kotItem(
+      parcelOrnot:parcelOrnot ?? this.parcelOrnot ,
       cessAmt: cessAmt ?? this.cessAmt,
       gstAmt: gstAmt ?? this.gstAmt,
       kotno: kotno ?? this.kotno,

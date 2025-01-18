@@ -476,7 +476,9 @@ class _BillPageState extends State<BillPage> {
                                 if (state.billsubmission) {
                                   Navigator.push(context, MaterialPageRoute(
                                     builder: (context) {
-                                      return BillPrintpage();
+                                      return BillPrintpage(
+                                        order: widget.order,
+                                      );
                                     },
                                   ));
                                 }
@@ -678,7 +680,7 @@ class _BillPageState extends State<BillPage> {
 void handlePrinterSetup(
     {required BuildContext context,
     required Order
-        order, // Replace 'Order' with the actual type of the order object.
+        order, 
     required bool isPaid,
     required bool billprint}) {
   if (billprint) {
@@ -690,6 +692,7 @@ void handlePrinterSetup(
         log('order.billNumber.isEmpty');
         BlocProvider.of<BillSubmitPrintBloc>(context).add(
           BillSubmitPrintEvent.billSubmitAndPrint(
+            mergedOrders:order.mergedOrders ,mergedTables: order.mergedTables,mergedorNot:order.mergedorNot ,
             billPrint: billprint,
             userID: context.read<LoginBloc>().state.userId ?? '--',
             printer: printer,
@@ -699,6 +702,8 @@ void handlePrinterSetup(
       } else {
         BlocProvider.of<BillSubmitPrintBloc>(context).add(
           BillSubmitPrintEvent.billUpdateAndPrint(
+                        mergedOrders:order.mergedOrders ,mergedTables: order.mergedTables,mergedorNot:order.mergedorNot ,
+
             billPrint: billprint,
             userId: context.read<LoginBloc>().state.userId ?? '--',
             printer: printer,
@@ -756,6 +761,8 @@ void handlePrinterSetup(
       log('order.billNumber.isEmpty');
       BlocProvider.of<BillSubmitPrintBloc>(context).add(
         BillSubmitPrintEvent.billSubmitAndPrint(
+                      mergedOrders:order.mergedOrders ,mergedTables: order.mergedTables,mergedorNot:order.mergedorNot ,
+
           billPrint: billprint,
           userID: context.read<LoginBloc>().state.userId ?? '--',
           // printer: printer,
@@ -765,6 +772,8 @@ void handlePrinterSetup(
     } else {
       BlocProvider.of<BillSubmitPrintBloc>(context).add(
         BillSubmitPrintEvent.billUpdateAndPrint(
+                      mergedOrders:order.mergedOrders ,mergedTables: order.mergedTables,mergedorNot:order.mergedorNot ,
+
           billPrint: billprint,
           userId: context.read<LoginBloc>().state.userId ?? '--',
           // printer: printer,
