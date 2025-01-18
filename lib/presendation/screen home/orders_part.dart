@@ -10,6 +10,7 @@ import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
+import 'package:restaurant_kot/presendation/screen%20home/loadings.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/screen_order_detail.dart';
 import 'package:restaurant_kot/presendation/settings/printer/printer_page.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
@@ -144,9 +145,7 @@ class OrderPage extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return state.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                    ? ordersloading()
                     : state.orders.isEmpty
                         ? RefreshIndicator(
                             onRefresh: () async {

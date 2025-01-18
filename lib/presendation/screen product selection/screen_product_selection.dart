@@ -112,9 +112,7 @@ class ProductChoosingPage extends StatelessWidget {
                   }
                 },
                 child: state.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                    ? buildShimmerList()
                     : Column(
                         children: [
                           // const SizedBox(
@@ -359,7 +357,8 @@ class ProductChoosingPage extends StatelessWidget {
                                     ),
                                     child: TextField(
                                       controller: searchController,
-                                      decoration: InputDecoration(          filled: true, // Fills the background
+                                      decoration: InputDecoration(
+                                        filled: true, // Fills the background
                                         fillColor: const Color.fromARGB(
                                             255,
                                             255,
@@ -429,12 +428,12 @@ class ProductChoosingPage extends StatelessWidget {
                                 //       decoration: InputDecoration(
                                 //         // contentPadding:
                                 //         //     EdgeInsets.all(15),
-                                        // filled: true, // Fills the background
-                                        // fillColor: const Color.fromARGB(
-                                        //     255,
-                                        //     255,
-                                        //     255,
-                                        //     255), // Set background color to white
+                                // filled: true, // Fills the background
+                                // fillColor: const Color.fromARGB(
+                                //     255,
+                                //     255,
+                                //     255,
+                                //     255), // Set background color to white
                                 //         hintText: 'Search',
                                 //         labelStyle: const TextStyle(
                                 //           color:
@@ -729,4 +728,96 @@ class ProductChoosingPage extends StatelessWidget {
       ),
     );
   }
+}
+
+// Attractive Shimmer List Placeholder
+Widget buildShimmerList() {
+  return ListView(
+    children: [
+      const SizedBox(height: 25.0),
+      Column(
+        children: List.generate(
+          // itemCount: 10, // Number of shimmer items
+          55,
+          (index) {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        // Profile icon or image placeholder
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 16.0),
+                        // Text and button placeholders
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Title placeholder
+                              Container(
+                                width: double.infinity,
+                                height: 20.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 8.0),
+                              // Subtitle placeholder
+                              Container(
+                                width: 150.0,
+                                height: 15.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 12.0),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  width: 70.0,
+                                  height: 15.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              // Another placeholder (e.g., button or short text)
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 18.0),
+                    Container(
+                      width: double.infinity,
+                      height: 1.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
 }

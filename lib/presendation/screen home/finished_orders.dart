@@ -5,6 +5,7 @@ import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/invoice/inv_order_model.dart';
 import 'package:restaurant_kot/presendation/screen%20finished%20order/finished_order_deail.dart';
+import 'package:restaurant_kot/presendation/screen%20home/loadings.dart';
 
 class FinishedOrders extends StatelessWidget {
   FinishedOrders({super.key});
@@ -64,9 +65,7 @@ class FinishedOrders extends StatelessWidget {
               builder: (context, state) {
                 log('lengthhh -----${state.invoices.length}');
                 return state.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                    ? ordersloading()
                     : state.invoices.isEmpty
                         ? RefreshIndicator(
                             backgroundColor: mainclr,

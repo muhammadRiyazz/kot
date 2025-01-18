@@ -8,6 +8,7 @@ import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/tables/table_model.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
+import 'package:restaurant_kot/presendation/screen%20home/loadings.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/screen_order_detail.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
 
@@ -62,7 +63,7 @@ class ScreenOrdersList extends StatelessWidget {
         child: BlocBuilder<OrdersBloc, OrdersState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return ordersloading();
             }
 
             return Column(
