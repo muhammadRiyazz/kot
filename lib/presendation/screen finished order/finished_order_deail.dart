@@ -11,6 +11,7 @@ import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/invoice/inv_order_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
+import 'package:restaurant_kot/presendation/screen%20home/loadings.dart';
 import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 
@@ -35,9 +36,7 @@ class FinishedOrderDetail extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0),
                 child: state.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                    ? ordersloading()
                     : state.invoices.isEmpty || state.invoiceDetails!.isEmpty
                         ? SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
@@ -396,6 +395,28 @@ class FinishedOrderDetail extends StatelessWidget {
                                                   ),
                                                 ],
                                               ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    'Payment Method',
+                                                    style:
+                                                        TextStyle(fontSize: 17),
+                                                  ),
+                                                  Text(
+                                                    state.paidBy ?? '--',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ],
+                                              ),
                                               // const SizedBox(
                                               //   height: 12,
                                               // ),
@@ -625,7 +646,7 @@ List<kotItem> convert({required List<InvoiceItem> invList}) {
   List<kotItem> printItems = [];
   for (var element in invList) {
     printItems.add(kotItem(
-      parcelOrnot: element.parcelOrNot??'',
+        parcelOrnot: element.parcelOrNot ?? '',
         gstAmt: element.gstAmount!,
         cessAmt: element.cessAmount!,
         kotno: '',

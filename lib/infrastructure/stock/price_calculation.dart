@@ -198,7 +198,7 @@ double parceltaxableAmountcalculation(
     // For goods, directly use the sale amount with tax
 
     double gstPer = safeParseDouble(item.gstPer);
-    double cessPer = safeParseDouble(item.gstPer);
+    double cessPer = safeParseDouble(item.cessPer);
     log('gstPer--- $gstPer');
     log('cessPer--- $cessPer');
 

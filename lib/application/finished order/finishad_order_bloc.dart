@@ -60,7 +60,10 @@ class FinishadOrderBloc extends Bloc<FinishadOrderEvent, FinishadOrderState> {
   FROM  [dbo].[InvoiceAccountDetail]
   WHERE CAST([Invoicedate] AS DATE) = '$dateOnly'
         AND [CreditOrCleared] = 'Cleared' AND [UserID] ='$usernameA';
-""";
+"""; 
+
+
+
 
         String? result = await connection.getData(query);
         log(result);
@@ -77,81 +80,100 @@ class FinishadOrderBloc extends Bloc<FinishadOrderEvent, FinishadOrderState> {
       }
     });
 
-    on<FetchDetails>((event, emit) async {
-      log('FetchDetails called ---');
-      try {
-        emit(state.copyWith(
-          isLoading: true,
-        ));
-        final now = DateTime.now();
-        final dateOnly = DateFormat('yyyy-MM-dd').format(now);
-        log(dateOnly);
-        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
-        MssqlConnection connection = await connectionManager.getConnection();
-        String query = """
-  SELECT 
-        [invoiceno]
-      ,[invdate]
-      ,[terms]
-      ,[ordereference]
-      ,[cusid]
-      ,[invoiceto]
-      ,[invaddress]
-      ,[shipto]
-      ,[shipaddr]
-      ,[gstno]
-      ,[email]
-      ,[smsno]
-      ,[CustomerTYPE]
-      ,[pdtcode]
-      ,[pdtname]
-      ,[HSNCode]
-      ,[discp ]
-      ,[pcs]
-      ,[qty]
-      ,[Freeqty]
-      ,[unitprice]
-      ,[itemMRP]
-      ,[Amount]
-      ,[ItemDiscPer]
-      ,[ItemDiscAmount]
-      ,[GrossValueAftrITMDisc]
-      ,[ItemBillDiscPER]
-      ,[ItemBillDiscAmount]
-      ,[ItemTotalNETAmount]
-      ,[gst]
-      ,[gstamount]
-      ,[Totalamount]
-      ,[venIGST]
-      ,[venIGSTamnt]
-      ,[venCGST]
-      ,[venCGSTamnt]
-      ,[venSGST]
-      ,[venSGSTamnt]
-      ,[CessPercentage]
-      ,[CessAmount]
-      ,[ItemUnitSaleRate]
-      ,[ParcelOrNot]
-      ,[OrderNumber]
-      ,[KOTNumber]
-      ,[UserID]
+  on<FetchDetails>((event, emit) async {
+  log('FetchDetails called ---');
+  try {
+    emit(state.copyWith(
+      isLoading: true,
+    ));
+    final now = DateTime.now();
+    final dateOnly = DateFormat('yyyy-MM-dd').format(now);
+    log(dateOnly);
 
-  FROM  [dbo].[invoicedetail]
-  WHERE [invoiceno] = '${event.invNo}' ;
-""";
+    MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+    MssqlConnection connection = await connectionManager.getConnection();
 
-        String? result = await connection.getData(query);
-        log(result);
-        List<dynamic> jsonData = jsonDecode(result);
-        List<InvoiceItem> items =
-            jsonData.map((item) => InvoiceItem.fromJson(item)).toList();
-        emit(state.copyWith(isLoading: false, invoiceDetails: items));
-      } catch (e) {
-        emit(state.copyWith(
-          isLoading: false,
-        ));
-        log(e.toString());
-      }
-    });
+    // Combined query
+    String combinedQuery = """
+    SELECT 
+        inv.[invoiceno],
+        inv.[invdate],
+        inv.[terms],
+        inv.[ordereference],
+        inv.[cusid],
+        inv.[invoiceto],
+        inv.[invaddress],
+        inv.[shipto],
+        inv.[shipaddr],
+        inv.[gstno],
+        inv.[email],
+        inv.[smsno],
+        inv.[CustomerTYPE],
+        inv.[pdtcode],
+        inv.[pdtname],
+        inv.[HSNCode],
+        inv.[discp],
+        inv.[pcs],
+        inv.[qty],
+        inv.[Freeqty],
+        inv.[unitprice],
+        inv.[itemMRP],
+        inv.[Amount],
+        inv.[ItemDiscPer],
+        inv.[ItemDiscAmount],
+        inv.[GrossValueAftrITMDisc],
+        inv.[ItemBillDiscPER],
+        inv.[ItemBillDiscAmount],
+        inv.[ItemTotalNETAmount],
+        inv.[gst],
+        inv.[gstamount],
+        inv.[Totalamount],
+        inv.[venIGST],
+        inv.[venIGSTamnt],
+        inv.[venCGST],
+        inv.[venCGSTamnt],
+        inv.[venSGST],
+        inv.[venSGSTamnt],
+        inv.[CessPercentage],
+        inv.[CessAmount],
+        inv.[ItemUnitSaleRate],
+        inv.[ParcelOrNot],
+        inv.[OrderNumber],
+        inv.[KOTNumber],
+        inv.[UserID],
+        pay.[paidby]
+    FROM [dbo].[invoicedetail] inv
+    LEFT JOIN [dbo].[PayorEX] pay
+    ON inv.[invoiceno] = pay.[PayINVid]
+    WHERE inv.[invoiceno] = '${event.invNo}';
+    """;
+
+    // Execute the combined query
+    String? combinedResult = await connection.getData(combinedQuery);
+
+    log('Combined Result: $combinedResult');
+
+    // Parse results
+    List<dynamic> jsonData = jsonDecode(combinedResult);
+    List<InvoiceItem> invoiceDetails =
+        jsonData.map((item) => InvoiceItem.fromJson(item)).toList();
+
+    // Extract `paidby` field (assuming it is consistent across rows)
+    String? paidBy = jsonData.isNotEmpty ? jsonData[0]['paidby'] : null;
+
+    // Emit the state with the result
+    emit(state.copyWith(
+      isLoading: false,
+      invoiceDetails: invoiceDetails,
+      paidBy: paidBy,
+    ));
+  } catch (e) {
+    emit(state.copyWith(
+      isLoading: false,
+    ));
+    log(e.toString());
+  }
+});
+
   }
 }

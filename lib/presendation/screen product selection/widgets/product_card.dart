@@ -6,8 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/infrastructure/img.dart';
+import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/img.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/update.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -170,14 +172,46 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
               onLongPress: () {
-                log('onLongPress goods');
-                updatebox(
-                  context: context,
-                  productid: product.itemCode,
-                  qty: product.quantity.toString(),
-                  saleAmount: product.basicRate,
-                  serOrGoods: product.serOrGoods,
-                );
+                if (billEdit!) {
+                  log('onLongPress goods');
+                  updatebox(
+                    context: context,
+                    productid: product.itemCode,
+                    qty: product.quantity.toString(),
+                    saleAmount: product.basicRate,
+                    serOrGoods: product.serOrGoods,
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Sorry",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "You have no permission to update the Amount",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                      backgroundColor: mainclr,
+                      behavior: SnackBarBehavior.floating,
+                      margin: EdgeInsets.all(12),
+                      duration: Duration(seconds: 4),
+                    ),
+                  );
+                }
               },
             ),
           ),

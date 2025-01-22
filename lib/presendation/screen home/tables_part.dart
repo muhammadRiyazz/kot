@@ -31,7 +31,7 @@ class Tablespart extends StatelessWidget {
 
 // Define dynamic text size based on screen size
     double textSize = screenWidth < 650
-        ? 18 // Smaller text for mobile
+        ? 17 // Smaller text for mobile
         : screenWidth >= 650 && screenWidth < 900
             ? 18 // Medium text for tablet
             : screenWidth >= 900 && screenWidth < 1110
@@ -59,7 +59,7 @@ class Tablespart extends StatelessWidget {
 // Adjust childAspectRatio based on screen width
     double childAspectRatio = screenWidth < 650
         ? (screenWidth /
-            (screenHeight / 2)) // Adjust for mobile (taller layout)
+            (screenHeight / 1.8)) // Adjust for mobile (taller layout)
         : screenWidth >= 650 && screenWidth < 900
             ? (screenWidth /
                 (screenHeight / .6)) // Adjust for tablet (more balanced)

@@ -5,8 +5,8 @@ class FinishadOrderState with _$FinishadOrderState {
 factory FinishadOrderState({
     required bool isLoading,
 required List<InvoicesList> invoices,
-List<InvoiceItem>? invoiceDetails
-
+List<InvoiceItem>? invoiceDetails,
+String? paidBy,
   }) = _OrdersState;
   factory FinishadOrderState.initial() {
     return FinishadOrderState(invoiceDetails: [],

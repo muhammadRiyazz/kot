@@ -287,15 +287,48 @@ class OrderPage extends StatelessWidget {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text(
-                                                                '${state.orders[index].orderNumber}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      textSize,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
+                                                              Text.rich(
+                                                                TextSpan(
+                                                                  children: [
+                                                                    TextSpan(
+                                                                      text: state
+                                                                          .orders[
+                                                                              index]
+                                                                          .orderNumber
+                                                                          .substring(
+                                                                              0,
+                                                                              3), // First 3 letters
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            184,
+                                                                            12,
+                                                                            0), // Change this to your desired color
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                      ),
+                                                                    ),
+                                                                    TextSpan(
+                                                                      text: state
+                                                                          .orders[
+                                                                              index]
+                                                                          .orderNumber
+                                                                          .substring(
+                                                                              3), // Remaining part
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        color: Colors
+                                                                            .black, // Change this to your desired color
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ),
                                                               Text(

@@ -328,6 +328,7 @@ mixin _$FinishadOrderState {
   bool get isLoading => throw _privateConstructorUsedError;
   List<InvoicesList> get invoices => throw _privateConstructorUsedError;
   List<InvoiceItem>? get invoiceDetails => throw _privateConstructorUsedError;
+  String? get paidBy => throw _privateConstructorUsedError;
 
   /// Create a copy of FinishadOrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -345,7 +346,8 @@ abstract class $FinishadOrderStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       List<InvoicesList> invoices,
-      List<InvoiceItem>? invoiceDetails});
+      List<InvoiceItem>? invoiceDetails,
+      String? paidBy});
 }
 
 /// @nodoc
@@ -366,6 +368,7 @@ class _$FinishadOrderStateCopyWithImpl<$Res, $Val extends FinishadOrderState>
     Object? isLoading = null,
     Object? invoices = null,
     Object? invoiceDetails = freezed,
+    Object? paidBy = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -380,6 +383,10 @@ class _$FinishadOrderStateCopyWithImpl<$Res, $Val extends FinishadOrderState>
           ? _value.invoiceDetails
           : invoiceDetails // ignore: cast_nullable_to_non_nullable
               as List<InvoiceItem>?,
+      paidBy: freezed == paidBy
+          ? _value.paidBy
+          : paidBy // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -395,7 +402,8 @@ abstract class _$$OrdersStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       List<InvoicesList> invoices,
-      List<InvoiceItem>? invoiceDetails});
+      List<InvoiceItem>? invoiceDetails,
+      String? paidBy});
 }
 
 /// @nodoc
@@ -414,6 +422,7 @@ class __$$OrdersStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? invoices = null,
     Object? invoiceDetails = freezed,
+    Object? paidBy = freezed,
   }) {
     return _then(_$OrdersStateImpl(
       isLoading: null == isLoading
@@ -428,6 +437,10 @@ class __$$OrdersStateImplCopyWithImpl<$Res>
           ? _value._invoiceDetails
           : invoiceDetails // ignore: cast_nullable_to_non_nullable
               as List<InvoiceItem>?,
+      paidBy: freezed == paidBy
+          ? _value.paidBy
+          : paidBy // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -438,7 +451,8 @@ class _$OrdersStateImpl implements _OrdersState {
   _$OrdersStateImpl(
       {required this.isLoading,
       required final List<InvoicesList> invoices,
-      final List<InvoiceItem>? invoiceDetails})
+      final List<InvoiceItem>? invoiceDetails,
+      this.paidBy})
       : _invoices = invoices,
         _invoiceDetails = invoiceDetails;
 
@@ -463,8 +477,11 @@ class _$OrdersStateImpl implements _OrdersState {
   }
 
   @override
+  final String? paidBy;
+
+  @override
   String toString() {
-    return 'FinishadOrderState(isLoading: $isLoading, invoices: $invoices, invoiceDetails: $invoiceDetails)';
+    return 'FinishadOrderState(isLoading: $isLoading, invoices: $invoices, invoiceDetails: $invoiceDetails, paidBy: $paidBy)';
   }
 
   @override
@@ -476,7 +493,8 @@ class _$OrdersStateImpl implements _OrdersState {
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality().equals(other._invoices, _invoices) &&
             const DeepCollectionEquality()
-                .equals(other._invoiceDetails, _invoiceDetails));
+                .equals(other._invoiceDetails, _invoiceDetails) &&
+            (identical(other.paidBy, paidBy) || other.paidBy == paidBy));
   }
 
   @override
@@ -484,7 +502,8 @@ class _$OrdersStateImpl implements _OrdersState {
       runtimeType,
       isLoading,
       const DeepCollectionEquality().hash(_invoices),
-      const DeepCollectionEquality().hash(_invoiceDetails));
+      const DeepCollectionEquality().hash(_invoiceDetails),
+      paidBy);
 
   /// Create a copy of FinishadOrderState
   /// with the given fields replaced by the non-null parameter values.
@@ -499,7 +518,8 @@ abstract class _OrdersState implements FinishadOrderState {
   factory _OrdersState(
       {required final bool isLoading,
       required final List<InvoicesList> invoices,
-      final List<InvoiceItem>? invoiceDetails}) = _$OrdersStateImpl;
+      final List<InvoiceItem>? invoiceDetails,
+      final String? paidBy}) = _$OrdersStateImpl;
 
   @override
   bool get isLoading;
@@ -507,6 +527,8 @@ abstract class _OrdersState implements FinishadOrderState {
   List<InvoicesList> get invoices;
   @override
   List<InvoiceItem>? get invoiceDetails;
+  @override
+  String? get paidBy;
 
   /// Create a copy of FinishadOrderState
   /// with the given fields replaced by the non-null parameter values.

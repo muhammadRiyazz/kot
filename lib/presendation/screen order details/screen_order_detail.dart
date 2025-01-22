@@ -17,6 +17,7 @@ import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/chec
 import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/kot_submision_success.dart';
 import 'package:restaurant_kot/presendation/screen%20bill%20preview/screen_bill.dart';
+import 'package:restaurant_kot/presendation/screen%20home/loadings.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/table_view.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/selected_product.dart';
@@ -102,9 +103,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             log('building');
             // log(state.orderitems[0].changedQty.toString());
             return state.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
+                ? ordersloading()
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -587,7 +586,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .center,
+                                                              .spaceEvenly,
                                                       children: [
                                                         Row(
                                                           children: [
@@ -961,7 +960,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                       padding: const EdgeInsets.all(12.0),
                                       child: MainButton(
                                           label: selectedItems.isEmpty
-                                              ? 'KOT'
+                                              ? 'Proceed to KOT'
                                               : 'Proceed Cancel KOT',
                                           onpress: () {
                                             if (selectedItems.isEmpty) {

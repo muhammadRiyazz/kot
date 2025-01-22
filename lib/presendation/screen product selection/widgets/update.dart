@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'package:restaurant_kot/domain/stock/stock_model.dart';
 
-Future<dynamic> updatebox(
-    {required context,
-    required String productid,
-    required double saleAmount,
-    required String qty,
-    required String serOrGoods,
-   }) {
+Future<dynamic> updatebox({
+  required BuildContext context,
+  required String productid,
+  required double saleAmount,
+  required String qty,
+  required String serOrGoods,
+}) {
   final TextEditingController amountController =
       TextEditingController(text: saleAmount.toString());
   final TextEditingController qtyController =
@@ -61,15 +60,19 @@ Future<dynamic> updatebox(
                   if (value == null || value.isEmpty) {
                     return 'Amount is required';
                   }
-                  if (double.tryParse(value) == null) {
+                  final enteredAmount = double.tryParse(value);
+                  if (enteredAmount == null) {
                     return 'Enter a valid number';
+                  }
+                  if (enteredAmount <= 0) {
+                    return 'Amount must be greater than 0';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
 
-              // Quantity TextField with totalStock validation
+              // Quantity TextField
               TextFormField(
                 controller: qtyController,
                 keyboardType: TextInputType.number,
@@ -90,11 +93,6 @@ Future<dynamic> updatebox(
                   if (enteredQty <= 0) {
                     return 'Quantity must be greater than 0';
                   }
-                  // final totalStock = double.tryParse(
-                  //     stock.toString()); // Parse totalStock as double
-                  // if (enteredQty > totalStock! && serOrGoods == 'GOODS') {
-                  //   return 'Quantity exceeds available stock (${stock.toString()})';
-                  // }
                   return null;
                 },
               ),
@@ -119,11 +117,12 @@ Future<dynamic> updatebox(
                 String qty = qtyController.text;
 
                 BlocProvider.of<StockBloc>(context).add(StockEvent.add(
-                    isIncrement: true,
-                    update: true,
-                    amount: double.parse(amount) ,
-                    productid: productid,
-                    qty: int.parse(qty))); // Parse qty as int
+                  isIncrement: true,
+                  update: true,
+                  amount: double.parse(amount),
+                  productid: productid,
+                  qty: int.parse(qty),
+                )); // Parse qty as int
 
                 Navigator.of(context).pop(); // Close dialog after update
               }

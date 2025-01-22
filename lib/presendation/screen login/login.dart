@@ -267,3 +267,168 @@ class ScreenLogin extends StatelessWidget {
     );
   }
 }
+
+// class ScreenLogin extends StatefulWidget {
+//   const ScreenLogin({Key? key}) : super(key: key);
+
+//   @override
+//   _ScreenLoginState createState() => _ScreenLoginState();
+// }
+
+// class _ScreenLoginState extends State<ScreenLogin> {
+//   final _emailController = TextEditingController();
+//   final _passwordController = TextEditingController();
+//   bool _isPasswordVisible = false;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Container(
+//         padding: const EdgeInsets.all(20.0),
+//         decoration: const BoxDecoration(
+//           gradient: LinearGradient(
+//             colors: [mainclr, mainclr],
+//             begin: Alignment.topCenter,
+//             end: Alignment.bottomCenter,
+//           ),
+//         ),
+//         child: Center(
+//           child: SingleChildScrollView(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 const CircleAvatar(
+//                   radius: 50,
+//                   backgroundColor: Colors.white,
+//                   child: Icon(Icons.restaurant, size: 40, color: mainclr),
+//                 ),
+//                 const SizedBox(height: 20),
+//                 const Text(
+//                   "Welcome Back",
+//                   style: TextStyle(
+//                     color: Colors.white,
+//                     fontSize: 28,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 5),
+//                 const Text(
+//                   "Login to your account",
+//                   style: TextStyle(
+//                     color: Colors.white70,
+//                     fontSize: 16,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 30),
+//                 TextField(
+//                   controller: _emailController,
+//                   style: const TextStyle(color: Colors.white),
+//                   decoration: InputDecoration(
+//                     prefixIcon: const Icon(Icons.person, color: Colors.white),
+//                     hintText: 'User Name',
+//                     hintStyle: const TextStyle(color: Colors.white70),
+//                     filled: true,
+//                     fillColor: Colors.white.withOpacity(0.2),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(10),
+//                       borderSide: BorderSide.none,
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 15),
+//                 TextField(
+//                   controller: _passwordController,
+//                   obscureText: !_isPasswordVisible,
+//                   style: const TextStyle(color: Colors.white),
+//                   decoration: InputDecoration(
+//                     prefixIcon: const Icon(Icons.lock, color: Colors.white),
+//                     hintText: 'Password',
+//                     hintStyle: const TextStyle(color: Colors.white70),
+//                     filled: true,
+//                     fillColor: Colors.white.withOpacity(0.2),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(10),
+//                       borderSide: BorderSide.none,
+//                     ),
+//                     suffixIcon: IconButton(
+//                       icon: Icon(
+//                         _isPasswordVisible
+//                             ? Icons.visibility
+//                             : Icons.visibility_off,
+//                         color: Colors.white,
+//                       ),
+//                       onPressed: () {
+//                         setState(() {
+//                           _isPasswordVisible = !_isPasswordVisible;
+//                         });
+//                       },
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 15),
+//                 Align(
+//                   alignment: Alignment.centerRight,
+//                   child: Row(
+//                     mainAxisAlignment: MainAxisAlignment.end,
+//                     children: [
+//                       TextButton(
+//                         onPressed: () {},
+//                         child: Text(
+//                           "Settings",
+//                           style: TextStyle(color: Colors.white),
+//                         ),
+//                       ),
+//                       Icon(Icons.arrow_right_rounded, color: Colors.white),
+//                     ],
+//                   ),
+//                 ),
+//                 const SizedBox(height: 20),
+//                 SizedBox(
+//                   width: double.infinity,
+//                   height: 50,
+//                   child: ElevatedButton(
+//                     onPressed: () {},
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: Colors.white,
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(10),
+//                       ),
+//                     ),
+//                     child: const Text(
+//                       "LOGIN",
+//                       style: TextStyle(
+//                         color: mainclr,
+//                         fontSize: 18,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 20),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     const Text(
+//                       "Need any help?",
+//                       style: TextStyle(color: Colors.white),
+//                     ),
+//                     TextButton(
+//                       onPressed: () {},
+//                       child: const Text(
+//                         "Support",
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
