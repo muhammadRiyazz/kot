@@ -1,5 +1,4 @@
 class OrderItem {
-    
   final int id;
   final String orderNumber;
   final String kotNumber;
@@ -13,7 +12,7 @@ class OrderItem {
   final String description;
   final String itemCode;
   final String itemName;
-  final double quantity; // Change this to double
+  final double quantity;
   final double basicRate;
   final double unitTaxableAmountBeforeDiscount;
   final double discount;
@@ -30,13 +29,10 @@ class OrderItem {
   final String kitchenName;
   final String userId;
   final String parcelOrnot;
+  final String? productImg; // Add productImg as nullable
 
-  // Adding `changedQty` for mutable quantity tracking if needed
-  final int changedQty;
-
+  // Constructor
   OrderItem({
-        required this.parcelOrnot,
-
     required this.id,
     required this.orderNumber,
     required this.kotNumber,
@@ -50,7 +46,7 @@ class OrderItem {
     required this.description,
     required this.itemCode,
     required this.itemName,
-    required this.quantity, // Keep as double
+    required this.quantity,
     required this.basicRate,
     required this.unitTaxableAmountBeforeDiscount,
     required this.discount,
@@ -66,12 +62,13 @@ class OrderItem {
     required this.billNumber,
     required this.kitchenName,
     required this.userId,
-    this.changedQty = 0, // Default value for changedQty
+    required this.parcelOrnot,
+    this.productImg, // Optional field
   });
 
+  // Factory method
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
-      parcelOrnot:json['ParcelOrNot']??'',
       id: json['Id'],
       orderNumber: json['OrderNumber'],
       kotNumber: json['KOTNumber'],
@@ -85,61 +82,24 @@ class OrderItem {
       description: json['Description'] ?? '',
       itemCode: json['ItemCode'],
       itemName: json['ItemName'],
-      quantity: (json['Quantity'] as num).toDouble(), // Convert to double
-      basicRate: (json['BasicRate'] as num).toDouble(), // Convert to double
-      unitTaxableAmountBeforeDiscount: (json['UnitTaxableAmountBeforeDiscount'] as num).toDouble(), // Convert to double
-      discount: (json['Discount'] as num).toDouble(), // Convert to double
-      unitTaxableAmount: (json['UnitTaxableAmount'] as num).toDouble(), // Convert to double
-      totalTaxableAmount: (json['TotalTaxableAmount'] as num).toDouble(), // Convert to double
-      gstPer: (json['GSTPer'] as num).toDouble(), // Convert to double
-      cessPer: (json['CessPer'] as num).toDouble(), // Convert to double
-      totalTaxAmount: (json['TotalTaxAmount'] as num).toDouble(), // Convert to double
-      totalCessAmount: (json['TotalCessAmount'] as num).toDouble(), // Convert to double
-      totalAmount: (json['TotalAmount'] as num).toDouble(), // Convert to double
+      quantity: (json['Quantity'] as num).toDouble(),
+      basicRate: (json['BasicRate'] as num).toDouble(),
+      unitTaxableAmountBeforeDiscount: (json['UnitTaxableAmountBeforeDiscount'] as num).toDouble(),
+      discount: (json['Discount'] as num).toDouble(),
+      unitTaxableAmount: (json['UnitTaxableAmount'] as num).toDouble(),
+      totalTaxableAmount: (json['TotalTaxableAmount'] as num).toDouble(),
+      gstPer: (json['GSTPer'] as num).toDouble(),
+      cessPer: (json['CessPer'] as num).toDouble(),
+      totalTaxAmount: (json['TotalTaxAmount'] as num).toDouble(),
+      totalCessAmount: (json['TotalCessAmount'] as num).toDouble(),
+      totalAmount: (json['TotalAmount'] as num).toDouble(),
       dineInOrOther: json['DineInOrOther'] ?? '',
       delivery: json['Delivery'] ?? '',
       billNumber: json['BillNumber'] ?? '',
       kitchenName: json['KitchenName'] ?? '',
       userId: json['UserID'] ?? '',
-    );
-  }
-
-  OrderItem copyWith({
-    int? changedQty,
-    // Add other fields if needed...
-  }) {
-    return OrderItem(
-      parcelOrnot:parcelOrnot ,
-      id: id,
-      orderNumber: orderNumber,
-      kotNumber: kotNumber,
-      entryDate: entryDate,
-      startTime: startTime,
-      endTime: endTime,
-      customerId: customerId,
-      customerName: customerName,
-      tableName: tableName,
-      floorNumber: floorNumber,
-      description: description,
-      itemCode: itemCode,
-      itemName: itemName,
-      quantity: quantity,
-      basicRate: basicRate,
-      unitTaxableAmountBeforeDiscount: unitTaxableAmountBeforeDiscount,
-      discount: discount,
-      unitTaxableAmount: unitTaxableAmount,
-      totalTaxableAmount: totalTaxableAmount,
-      gstPer: gstPer,
-      cessPer: cessPer,
-      totalTaxAmount: totalTaxAmount,
-      totalCessAmount: totalCessAmount,
-      totalAmount: totalAmount,
-      dineInOrOther: dineInOrOther,
-      delivery: delivery,
-      billNumber: billNumber,
-      kitchenName: kitchenName,
-      userId: userId,
-      changedQty: changedQty ?? this.changedQty, // Update `changedQty`
+      parcelOrnot: json['ParcelOrNot'] ?? '',
+      productImg:  json['productImg'], // Map the new field
     );
   }
 }

@@ -3,6 +3,8 @@ class kotItem {
   String kitchenName;
   final String itemName;
     final String parcelOrnot;
+  String productImg;
+
 
   final String itemCode;
   int quantity; // Quantity for the item
@@ -20,6 +22,7 @@ class kotItem {
   final double gstAmt;
 
   kotItem({
+    required this.productImg,
    required this.gstAmt,
    required this.cessAmt,
     required this.kotno,
@@ -60,6 +63,7 @@ class kotItem {
     double? cessPer,
   }) {
     return kotItem(
+      productImg: productImg,
       parcelOrnot:parcelOrnot ?? this.parcelOrnot ,
       cessAmt: cessAmt ?? this.cessAmt,
       gstAmt: gstAmt ?? this.gstAmt,

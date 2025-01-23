@@ -50,41 +50,52 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: FutureBuilder(
-                      future: fetchImageUrl(product.itemCode),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          // Show shimmer effect while loading
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              height: 150, // Adjust height as needed
-                              width: double.infinity, // Adjust width as needed
-                              color: Colors.white,
-                            ),
-                          );
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          // Show an error image if all attempts fail
-                          return Image.asset(
-                            'assets/img/no data/noimg.png',
-                            fit: BoxFit.fill,
-                          );
-                        } else {
-                          // Load the resolved image URL
-                          return Image.network(
-                            snapshot.data!,
-                            fit: BoxFit.fill,
-                            errorBuilder: (context, error, stackTrace) {
-                              // Fallback error image
-                              return Image.asset(
-                                'assets/img/no data/noimg.png',
-                                fit: BoxFit.fill,
-                              );
-                            },
-                          );
-                        }
+                    // child: FutureBuilder(
+                    //   future: fetchImageUrl(product.itemCode),
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState ==
+                    //         ConnectionState.waiting) {
+                    //       // Show shimmer effect while loading
+                    //       return Shimmer.fromColors(
+                    //         baseColor: Colors.grey[300]!,
+                    //         highlightColor: Colors.grey[100]!,
+                    //         child: Container(
+                    //           height: 150, // Adjust height as needed
+                    //           width: double.infinity, // Adjust width as needed
+                    //           color: Colors.white,
+                    //         ),
+                    //       );
+                    //     } else if (snapshot.hasError || !snapshot.hasData) {
+                    //       // Show an error image if all attempts fail
+                    //       return Image.asset(
+                    //         'assets/img/no data/noimg.png',
+                    //         fit: BoxFit.fill,
+                    //       );
+                    //     } else {
+                    //       // Load the resolved image URL
+                    //       return Image.network(
+                    //         snapshot.data!,
+                    //         fit: BoxFit.fill,
+                    //         errorBuilder: (context, error, stackTrace) {
+                    //           // Fallback error image
+                    //           return Image.asset(
+                    //             'assets/img/no data/noimg.png',
+                    //             fit: BoxFit.fill,
+                    //           );
+                    //         },
+                    //       );
+                    //     }
+                    //   },
+                    // ),
+                    child: Image.network(
+                     getimgpath(product.productImg),
+                      fit: BoxFit.fill,
+                      errorBuilder: (context, error, stackTrace) {
+                        // Fallback error image
+                        return Image.asset(
+                          'assets/img/no data/noimg.png',
+                          fit: BoxFit.fill,
+                        );
                       },
                     ),
                   )),

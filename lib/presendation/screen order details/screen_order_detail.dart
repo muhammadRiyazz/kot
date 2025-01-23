@@ -21,6 +21,7 @@ import 'package:restaurant_kot/presendation/screen%20home/loadings.dart';
 import 'package:restaurant_kot/presendation/screen%20order%20details/table_view.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/selected_product.dart';
+import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/img.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 import 'package:shimmer/shimmer.dart';
@@ -608,64 +609,23 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                                       BorderRadius
                                                                           .circular(
                                                                               10),
-                                                                  child:
-                                                                      FutureBuilder(
-                                                                    future: fetchImageUrl(
-                                                                        item.itemCode),
-                                                                    builder:
+                                                                  child: Image
+                                                                      .network(
+                                                                    getimgpath(item
+                                                                        .productImg),
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                    errorBuilder:
                                                                         (context,
-                                                                            snapshot) {
-                                                                      if (snapshot
-                                                                              .connectionState ==
-                                                                          ConnectionState
-                                                                              .waiting) {
-                                                                        // Show shimmer effect while loading
-                                                                        return Shimmer
-                                                                            .fromColors(
-                                                                          baseColor:
-                                                                              Colors.grey[300]!,
-                                                                          highlightColor:
-                                                                              Colors.grey[100]!,
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                150, // Adjust height as needed
-                                                                            width:
-                                                                                double.infinity, // Adjust width as needed
-                                                                            color:
-                                                                                Colors.white,
-                                                                          ),
-                                                                        );
-                                                                      } else if (snapshot
-                                                                              .hasError ||
-                                                                          !snapshot
-                                                                              .hasData) {
-                                                                        // Show an error image if all attempts fail
-                                                                        return Image
-                                                                            .asset(
-                                                                          'assets/img/no data/noimg.png',
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                        );
-                                                                      } else {
-                                                                        // Load the resolved image URL
-                                                                        return Image
-                                                                            .network(
-                                                                          snapshot
-                                                                              .data!,
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                          errorBuilder: (context,
-                                                                              error,
-                                                                              stackTrace) {
-                                                                            // Fallback error image
-                                                                            return Image.asset(
-                                                                              'assets/img/no data/noimg.png',
-                                                                              fit: BoxFit.fill,
-                                                                            );
-                                                                          },
-                                                                        );
-                                                                      }
+                                                                            error,
+                                                                            stackTrace) {
+                                                                      // Fallback error image
+                                                                      return Image
+                                                                          .asset(
+                                                                        'assets/img/no data/noimg.png',
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      );
                                                                     },
                                                                   ),
                                                                 )),

@@ -13,6 +13,7 @@ import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/screen%20bill%20preview/bill_success.dart';
+import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/img.dart';
 import 'package:restaurant_kot/presendation/settings/printer/printer_page.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 import 'package:shimmer/shimmer.dart';
@@ -186,61 +187,17 @@ class _BillPageState extends State<BillPage> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               10),
-                                                      child: FutureBuilder(
-                                                        future: fetchImageUrl(
-                                                            item.itemCode),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          if (snapshot
-                                                                  .connectionState ==
-                                                              ConnectionState
-                                                                  .waiting) {
-                                                            // Show shimmer effect while loading
-                                                            return Shimmer
-                                                                .fromColors(
-                                                              baseColor: Colors
-                                                                  .grey[300]!,
-                                                              highlightColor:
-                                                                  Colors.grey[
-                                                                      100]!,
-                                                              child: Container(
-                                                                height:
-                                                                    150, // Adjust height as needed
-                                                                width: double
-                                                                    .infinity, // Adjust width as needed
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                            );
-                                                          } else if (snapshot
-                                                                  .hasError ||
-                                                              !snapshot
-                                                                  .hasData) {
-                                                            // Show an error image if all attempts fail
-                                                            return Image.asset(
-                                                              'assets/img/no data/noimg.png',
-                                                              fit: BoxFit.fill,
-                                                            );
-                                                          } else {
-                                                            // Load the resolved image URL
-                                                            return Image
-                                                                .network(
-                                                              snapshot.data!,
-                                                              fit: BoxFit.fill,
-                                                              errorBuilder:
-                                                                  (context,
-                                                                      error,
-                                                                      stackTrace) {
-                                                                // Fallback error image
-                                                                return Image
-                                                                    .asset(
-                                                                  'assets/img/no data/noimg.png',
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                );
-                                                              },
-                                                            );
-                                                          }
+                                                      child: Image.network(
+                                                        getimgpath(
+                                                            item.productImg),
+                                                        fit: BoxFit.fill,
+                                                        errorBuilder: (context,
+                                                            error, stackTrace) {
+                                                          // Fallback error image
+                                                          return Image.asset(
+                                                            'assets/img/no data/noimg.png',
+                                                            fit: BoxFit.fill,
+                                                          );
                                                         },
                                                       ),
                                                     )),
@@ -573,12 +530,6 @@ class _BillPageState extends State<BillPage> {
                                                                 label:
                                                                     'Confirm',
                                                                 onpress: () {
-
-
-
-
-
-                                                                  
                                                                   Navigator.pop(
                                                                       context);
                                                                   if (widget
@@ -679,8 +630,7 @@ class _BillPageState extends State<BillPage> {
 
 void handlePrinterSetup(
     {required BuildContext context,
-    required Order
-        order, 
+    required Order order,
     required bool isPaid,
     required bool billprint}) {
   if (billprint) {
@@ -692,7 +642,9 @@ void handlePrinterSetup(
         log('order.billNumber.isEmpty');
         BlocProvider.of<BillSubmitPrintBloc>(context).add(
           BillSubmitPrintEvent.billSubmitAndPrint(
-            mergedOrders:order.mergedOrders ,mergedTables: order.mergedTables,mergedorNot:order.mergedorNot ,
+            mergedOrders: order.mergedOrders,
+            mergedTables: order.mergedTables,
+            mergedorNot: order.mergedorNot,
             billPrint: billprint,
             userID: context.read<LoginBloc>().state.userId ?? '--',
             printer: printer,
@@ -702,8 +654,9 @@ void handlePrinterSetup(
       } else {
         BlocProvider.of<BillSubmitPrintBloc>(context).add(
           BillSubmitPrintEvent.billUpdateAndPrint(
-                        mergedOrders:order.mergedOrders ,mergedTables: order.mergedTables,mergedorNot:order.mergedorNot ,
-
+            mergedOrders: order.mergedOrders,
+            mergedTables: order.mergedTables,
+            mergedorNot: order.mergedorNot,
             billPrint: billprint,
             userId: context.read<LoginBloc>().state.userId ?? '--',
             printer: printer,
@@ -761,7 +714,8 @@ void handlePrinterSetup(
       log('order.billNumber.isEmpty');
       BlocProvider.of<BillSubmitPrintBloc>(context).add(
         BillSubmitPrintEvent.billSubmitAndPrint(
-                      mergedOrders:order.mergedOrders ,mergedTables: order.mergedTables,mergedorNot:order.mergedorNot ,
+          mergedOrders: order.mergedOrders, mergedTables: order.mergedTables,
+          mergedorNot: order.mergedorNot,
 
           billPrint: billprint,
           userID: context.read<LoginBloc>().state.userId ?? '--',
@@ -772,7 +726,8 @@ void handlePrinterSetup(
     } else {
       BlocProvider.of<BillSubmitPrintBloc>(context).add(
         BillSubmitPrintEvent.billUpdateAndPrint(
-                      mergedOrders:order.mergedOrders ,mergedTables: order.mergedTables,mergedorNot:order.mergedorNot ,
+          mergedOrders: order.mergedOrders, mergedTables: order.mergedTables,
+          mergedorNot: order.mergedorNot,
 
           billPrint: billprint,
           userId: context.read<LoginBloc>().state.userId ?? '--',

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
+import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/img.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../consts/colors.dart';
@@ -88,40 +89,7 @@ class CategoryBottomSheet extends StatelessWidget {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: FutureBuilder(
-                                    future:
-                                        fetchImageUrl(state.category[index]),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Shimmer.fromColors(
-                                          baseColor: Colors.grey[300]!,
-                                          highlightColor: Colors.grey[100]!,
-                                          child: Container(
-                                            color: Colors.white,
-                                          ),
-                                        );
-                                      } else if (snapshot.hasError ||
-                                          !snapshot.hasData) {
-                                        return Image.asset(
-                                          'assets/img/no data/noimg.png',
-                                          fit: BoxFit.cover,
-                                        );
-                                      } else {
-                                        return Image.network(
-                                          snapshot.data!,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Image.asset(
-                                              'assets/img/no data/noimg.png',
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                  ),
+                                  child:ProductImageWidget(itemCode:state.category[index] ,),
                                 ),
                               ),
                               const SizedBox(height: 8),

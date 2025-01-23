@@ -5,7 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
-import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/core/conn.dart';
 import 'package:restaurant_kot/domain/item/item_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
@@ -20,32 +19,43 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
     List<kotItem> orderItems = [];
     on<OrderDetails>((event, emit) async {
       emit(state.copyWith(isLoading: true, toAddItems: []));
+
       String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
       try {
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
+
+        // Updated SQL query with LEFT JOIN
         String ordersitemQuery = """
-  SELECT [Id], [OrderNumber], [KOTNumber], [EntryDate], [StartTime], [EndTime], [CustomerId], [CustomerName],
-         [TableName], [FloorNumber], [Description], [ItemCode], [ItemName], [Quantity], [BasicRate],
-         [UnitTaxableAmountBeforeDiscount], [Discount], [UnitTaxableAmount], [TotalTaxableAmount], [GSTPer],
-         [CessPer], [TotalTaxAmount], [TotalCessAmount], [TotalAmount], [DineInOrOther], [Delivery],
-         [BillNumber], [KitchenName], [UserID]
-          FROM  [dbo].[OrderItemDetailsDetails]
-          WHERE CAST(EntryDate AS DATE) = '$currentDate' AND [OrderNumber] = '${event.orderNo}';
-           """;
+      SELECT oid.[Id], oid.[OrderNumber], oid.[KOTNumber], oid.[EntryDate], oid.[StartTime], oid.[EndTime], 
+             oid.[CustomerId], oid.[CustomerName], oid.[TableName], oid.[FloorNumber], oid.[Description], 
+             oid.[ItemCode], oid.[ItemName], oid.[Quantity], oid.[BasicRate], 
+             oid.[UnitTaxableAmountBeforeDiscount], oid.[Discount], oid.[UnitTaxableAmount], 
+             oid.[TotalTaxableAmount], oid.[GSTPer], oid.[CessPer], oid.[TotalTaxAmount], 
+             oid.[TotalCessAmount], oid.[TotalAmount], oid.[DineInOrOther], oid.[Delivery], 
+             oid.[BillNumber], oid.[KitchenName], oid.[UserID], 
+             oid.[ParcelOrNot], ms.[productImg]
+      FROM [dbo].[OrderItemDetailsDetails] oid
+      LEFT JOIN [dbo].[MainStock] ms ON oid.[ItemCode] = ms.[codeorSKU]
+      WHERE CAST(oid.[EntryDate] AS DATE) = '$currentDate' 
+        AND oid.[OrderNumber] = '${event.orderNo}';
+    """;
 
         String? ordersitemresult = await connection.getData(ordersitemQuery);
         log(ordersitemresult);
+
         List<dynamic> ordersitemresultjson = jsonDecode(ordersitemresult);
 
-        // // Map the JSON to a list of Order objects
+        // Parse JSON to `OrderItem`
         List<OrderItem> items = ordersitemresultjson
             .map((data) => OrderItem.fromJson(data))
             .toList();
-        List<kotItem> neworderItems = [];
-        for (var element in items) {
-          neworderItems.add(kotItem(
+
+        // Map `OrderItem` to `kotItem`
+        List<kotItem> neworderItems = items.map((element) {
+          return kotItem(
+            productImg:  element.productImg ?? '', // Include product image
             parcelOrnot: element.parcelOrnot,
             cessAmt: element.totalCessAmount,
             gstAmt: element.totalTaxAmount,
@@ -63,11 +73,11 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
             unitTaxableAmount: element.unitTaxableAmount,
             gstPer: element.gstPer,
             cessPer: element.cessPer,
-          ));
-        }
+          );
+        }).toList();
+
         orderItems = neworderItems;
 
-        //       // Emit state with tableModels data
         emit(state.copyWith(isLoading: false, orderitems: orderItems));
       } catch (e) {
         emit(state.copyWith(isLoading: false));

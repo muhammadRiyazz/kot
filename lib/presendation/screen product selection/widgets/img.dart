@@ -90,3 +90,14 @@ class _ProductImageWidgetState extends State<ProductImageWidget> {
     );
   }
 }
+
+
+String getimgpath(String path) {
+  log(path);
+  // Normalize path separators for cross-platform compatibility
+  final normalizedPath = path.replaceAll('\\', '/');
+  final fileName = normalizedPath.split('/').last; // Extract the file name
+  String url = 'http://$ipid/$fileName'; // Construct the URL
+  log(url);
+  return url;
+}

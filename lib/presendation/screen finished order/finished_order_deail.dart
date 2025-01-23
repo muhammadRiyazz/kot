@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -207,7 +206,7 @@ class FinishedOrderDetail extends StatelessWidget {
                                           vertical: 10, horizontal: 20),
                                       child: Text(
                                         'Items ${state.invoiceDetails!.length}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
@@ -262,7 +261,7 @@ class FinishedOrderDetail extends StatelessWidget {
                                                           'Qty: ${item.qty != null ? item.qty!.toInt().toString() : "0"}'),
                                                       trailing: Text(
                                                         '₹ ${item.totalAmount.toString()}',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 16),
                                                       ),
                                                     ),
@@ -270,8 +269,8 @@ class FinishedOrderDetail extends StatelessWidget {
                                                             state.invoiceDetails!
                                                                     .length -
                                                                 1
-                                                        ? Divider()
-                                                        : SizedBox()
+                                                        ? const Divider()
+                                                        : const SizedBox()
                                                   ],
                                                 );
                                               },
@@ -395,7 +394,7 @@ class FinishedOrderDetail extends StatelessWidget {
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 5,
                                               ),
                                               Row(
@@ -403,14 +402,14 @@ class FinishedOrderDetail extends StatelessWidget {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text(
+                                                  const Text(
                                                     'Payment Method',
                                                     style:
                                                         TextStyle(fontSize: 17),
                                                   ),
                                                   Text(
                                                     state.paidBy ?? '--',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.w500),
@@ -646,6 +645,7 @@ List<kotItem> convert({required List<InvoiceItem> invList}) {
   List<kotItem> printItems = [];
   for (var element in invList) {
     printItems.add(kotItem(
+      productImg: '',
         parcelOrnot: element.parcelOrNot ?? '',
         gstAmt: element.gstAmount!,
         cessAmt: element.cessAmount!,
