@@ -54,7 +54,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
         // Map `OrderItem` to `kotItem`
         List<kotItem> neworderItems = items.map((element) {
-          return kotItem(
+          return kotItem(updated: false,
             productImg:  element.productImg ?? '', // Include product image
             parcelOrnot: element.parcelOrnot,
             cessAmt: element.totalCessAmount,

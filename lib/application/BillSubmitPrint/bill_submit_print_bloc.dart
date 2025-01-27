@@ -39,7 +39,10 @@ class BillSubmitPrintBloc
         if (existingProductIndex != -1) {
           // If the product exists, create a new updated item
           var existingProduct = updatedbillItems[existingProductIndex];
-          var updatedProduct = kotItem(    productImg:  existingProduct.productImg,   
+          var updatedProduct = kotItem(  
+            updated:existingProduct.updated ,
+            
+              productImg:  existingProduct.productImg,   
             parcelOrnot: existingProduct.parcelOrnot,
             cessAmt: existingProduct.cessAmt,
             gstAmt: existingProduct.gstAmt,

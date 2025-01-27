@@ -37,9 +37,88 @@ class ProductCard extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(10)),
             child: ListTile(
-              // onTap: () {
-
-              // },
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text(
+                        product.itemName,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      content: SizedBox(
+                        width: double
+                            .maxFinite, // Ensure the content can expand within the dialog
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              Text(
+                                'Item Code: ${product.itemCode}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'Quantity: ${product.quantity}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'Basic Rate: ₹ ${product.basicRate}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                'cessAmt: ${product.cessAmt}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'gstAmt: ${product.gstAmt}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'gstPer: ${product.gstPer}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'cessPer: ${product.cessPer}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'unitTaxableAmount: ${product.unitTaxableAmount}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'unitTaxableAmountBeforeDiscount: ${product.unitTaxableAmountBeforeDiscount}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'itemName: ${product.itemName}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(height: 5),
+                            ],
+                          ),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Close'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
               contentPadding: const EdgeInsets.only(left: 8, top: 5, bottom: 5),
               leading: Container(
                   height: 100,
@@ -88,7 +167,7 @@ class ProductCard extends StatelessWidget {
                     //   },
                     // ),
                     child: Image.network(
-                     getimgpath(product.productImg),
+                      getimgpath(product.productImg),
                       fit: BoxFit.fill,
                       errorBuilder: (context, error, stackTrace) {
                         // Fallback error image

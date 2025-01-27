@@ -148,11 +148,8 @@ class ProductChoosingPage extends StatelessWidget {
                                               Text(
                                                 'Service',
                                                 style: TextStyle(
-                                                    color: state.goodsOrSER ==
-                                                            'Service'
-                                                        ? const Color.fromARGB(
-                                                            255, 255, 255, 255)
-                                                        : Colors.grey,
+                                                    color: const Color.fromARGB(
+                                                        255, 255, 255, 255),
                                                     fontSize: state
                                                                 .goodsOrSER ==
                                                             'Service'
@@ -202,11 +199,8 @@ class ProductChoosingPage extends StatelessWidget {
                                               Text(
                                                 'Goods',
                                                 style: TextStyle(
-                                                    color: state.goodsOrSER ==
-                                                            'Goods'
-                                                        ? const Color.fromARGB(
-                                                            255, 255, 255, 255)
-                                                        : Colors.grey,
+                                                    color: const Color.fromARGB(
+                                                        255, 255, 255, 255),
                                                     fontSize: state
                                                                 .goodsOrSER ==
                                                             'Goods'

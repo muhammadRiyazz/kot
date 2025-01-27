@@ -214,6 +214,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
           // Create kotItem object and add it to the appropriate category list
           kotItem item = kotItem(
+            updated:false ,
             productImg: element['productImg'] ?? '',
             parcelOrnot: '',
             cessAmt: 0.00,
@@ -341,7 +342,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
           double taxableAmount =
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
-          stocksnew.add(kotItem(
+          stocksnew.add(kotItem( updated: false,
             productImg: element.productImg,
             parcelOrnot: '',
             cessAmt: 0.00,
@@ -441,6 +442,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
 
           return kotItem(
+            updated:  false,
             productImg: element.productImg,
             parcelOrnot: '',
             cessAmt: 0.00,
@@ -550,9 +552,17 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
           // Update product quantity and sale amount
           if (event.update != null) {
+
+
             products[index] = products[index].copyWith(
+updated:  true,
+
               quantity: event.qty,
               basicRate: event.amount,
+              unitTaxableAmount: updatetaxableAmountcalculation(
+                  element: products[index], amt: event.amount!),
+              unitTaxableAmountBeforeDiscount: updatetaxableAmountcalculation(
+                  element: products[index], amt: event.amount!),
             );
             log('products[index].qty   ---${products[index].quantity}');
 

@@ -172,7 +172,8 @@ class Tablespart extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 90),
                               child: Center(
                                 child: Image.asset(
-                                    'assets/img/no data/No_data.png'),
+                                  'assets/img/no data/No_data.png',
+                                ),
                               ),
                             )
                           : GridView.builder(
@@ -322,7 +323,7 @@ class Tablespart extends StatelessWidget {
                                                         color: state
                                                                 .tables[index]
                                                                 .isEmpty
-                                                            ? null
+                                                            ? mainclr
                                                             : Colors.white,
                                                       ),
                                                     ),

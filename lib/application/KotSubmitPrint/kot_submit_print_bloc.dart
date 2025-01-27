@@ -54,13 +54,20 @@ class KotSubmitPrintBloc
             log(result);
             List<dynamic> jsonList = json.decode(result);
             // Ensure totalstock is treated as an integer, even if it is a double
+            double basicRate;
+            double taxableAmount;
+            if (element.updated) {
+              basicRate = element.basicRate;
 
-            double basicRate = parcelRateclc(
-                item: element, pickuprate: jsonList[0]['pickuprate']);
-            double taxableAmount = parceltaxableAmountcalculation(
-              item: element,
-              pickuprate: jsonList[0]['pickuprate'],
-            );
+              taxableAmount = element.unitTaxableAmount;
+            } else {
+              basicRate = parcelRateclc(
+                  item: element, pickuprate: jsonList[0]['pickuprate']);
+              taxableAmount = parceltaxableAmountcalculation(
+                item: element,
+                pickuprate: jsonList[0]['pickuprate'],
+              );
+            }
 
             updatedutems.add(element.copyWith(
               basicRate: basicRate,

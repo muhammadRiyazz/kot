@@ -644,7 +644,7 @@ class FinishedOrderDetail extends StatelessWidget {
 List<kotItem> convert({required List<InvoiceItem> invList}) {
   List<kotItem> printItems = [];
   for (var element in invList) {
-    printItems.add(kotItem(
+    printItems.add(kotItem(updated: false,
       productImg: '',
         parcelOrnot: element.parcelOrNot ?? '',
         gstAmt: element.gstAmount!,

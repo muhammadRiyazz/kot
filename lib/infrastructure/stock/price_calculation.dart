@@ -189,6 +189,54 @@ double taxableAmountcalculation({
   return taxableAmount;
 }
 
+
+
+double updatetaxableAmountcalculation({
+  required kotItem element,
+ required double amt
+}) {
+  log('taxableAmountcalculation---');
+  double taxableAmount = 0.0;
+
+  // if (element.serOrGoods == 'GOODS') {
+    // For goods, directly use the sale amount with tax
+    double gstPer = safeParseDouble(element.gstPer);
+    double cessPer = safeParseDouble(element.cessPer);
+    log('gstPer--- $gstPer');
+    log('cessPer--- $cessPer');
+
+    double totalTaxPer = gstPer + cessPer;
+    log('totalTaxPer--- $totalTaxPer');
+
+    double rate = amt;
+    taxableAmount = rate / (1 + (totalTaxPer / 100));
+  // } else {
+  //   // For services, check the tax type
+  //   if (inc!) {
+  //     double gstPer = safeParseDouble(element.tax);
+  //     double cessPer = safeParseDouble(element.cessRate);
+  //     log('gstPer--- $gstPer');
+  //     log('cessPer--- $cessPer');
+
+  //     double totalTaxPer = gstPer + cessPer;
+  //     log('totalTaxPer--- $totalTaxPer');
+
+  //     double rate = isAc
+  //         ? safeParseDouble(element.dineInACRate)
+  //         : safeParseDouble(element.dineInNonACRate);
+  //     taxableAmount = rate / (1 + (totalTaxPer / 100));
+  //     log(' rate---------------${rate.toString()}');
+  //     log('taxableAmount ---------------${taxableAmount.toString()}');
+  //   } else {
+  //     taxableAmount = isAc
+  //         ? safeParseDouble(element.dineInACRate)
+  //         : safeParseDouble(element.dineInNonACRate);
+  //   }
+  // }
+
+  return taxableAmount;
+}
+
 double parceltaxableAmountcalculation(
     {required kotItem item, required dynamic pickuprate}) {
   log('taxableAmountcalculation---');
