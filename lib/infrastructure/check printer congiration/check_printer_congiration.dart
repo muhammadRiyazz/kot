@@ -19,6 +19,7 @@ bool checkPrinters({
 
   // Check if all selected kitchens have corresponding printers
   for (var kitchen in selectedKitchens) {
+    log(kitchen);
     bool printerFound =
         printers.any((printer) => printer.kitchenName == kitchen);
     if (!printerFound) {

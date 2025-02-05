@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/BillSubmitPrint/bill_submit_print_bloc.dart';
 import 'package:restaurant_kot/application/KotSubmitPrint/kot_submit_print_bloc.dart';
 import 'package:restaurant_kot/application/customerpart/customerpart_bloc.dart';
+import 'package:restaurant_kot/application/demo/demo_bloc.dart';
 import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:restaurant_kot/application/printing/printing_bloc.dart';
 import 'package:restaurant_kot/application/restore%20bill/restore_bill_bloc.dart';
 import 'package:restaurant_kot/application/server%20conn/server_conn_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
+import 'package:restaurant_kot/application/support/support_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 
 blocProviders() {
@@ -57,6 +59,12 @@ blocProviders() {
     ),
     BlocProvider(
       create: (context) => PrintingBloc(),
+    ),
+    BlocProvider(
+      create: (context) => SupportBloc(),
+    ),
+    BlocProvider(
+      create: (context) => DemoBloc(),
     ),
   ];
 }

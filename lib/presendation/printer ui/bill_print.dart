@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
 import 'package:flutter_esc_pos_utils/flutter_esc_pos_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
@@ -22,6 +26,13 @@ Future<List<int>> billPrintData({
   final profile = await CapabilityProfile.load();
   final generator = Generator(PaperSize.mm80, profile);
   List<int> bytes = [];
+
+  // Add the restaurant logo
+  final logoImage = await _getNetworkImage();
+  if (logoImage != null) {
+    bytes += generator.image(logoImage);
+    bytes += generator.feed(1); // Add some space after the logo
+  }
 
 // Header with increased font size
   bytes += generator.text(
@@ -302,4 +313,21 @@ Future<List<int>> billPrintData({
   bytes += generator.cut();
 
   return bytes;
+}
+
+Future<img.Image?> _getNetworkImage() async {
+  try {
+    final response =
+        await http.get(Uri.parse('http://$ipid/${infoCustomer!.cmpadd}.png'));
+    if (response.statusCode == 200) {
+      // Decode the image
+      final image = img.decodeImage(response.bodyBytes);
+
+      // Resize the image to fit the printer's width (e.g., 300 pixels wide)
+      return image != null ? img.copyResize(image, width: 300) : null;
+    }
+  } catch (e) {
+    log('Error loading image: $e');
+  }
+  return null;
 }

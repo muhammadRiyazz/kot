@@ -28,157 +28,176 @@ class KotSubmitPrintBloc
           printerstatus: 0,
           submitstatus: 0));
     });
-
     on<SubmitAndPrint>((event, emit) async {
       emit(state.copyWith(
           isLoading: true, stockout: false, printerstatus: 0, submitstatus: 0));
 
       try {
-        // Initialize and establish the MSSQL connection
+        log('Initializing MSSQL connection...');
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
         List<kotItem> kotitems = [];
 
         if (state.parcel) {
+          log('Parcel mode enabled. Processing items...');
           List<kotItem> updatedutems = [];
 
           for (var element in event.kotitems) {
-            String query = '''
-              SELECT 
-                     [pickuprate]
-              FROM  [dbo].[MainStock]
-              WHERE [codeorSKU] = '${element.itemCode}' 
-              ''';
+            log('Processing item: ${element.itemCode}');
+            try {
+              String query = '''
+            SELECT 
+                   [pickuprate]
+            FROM  [dbo].[MainStock]
+            WHERE [codeorSKU] = '${element.itemCode}' 
+            ''';
 
-            var result = await connection.getData(query);
-            log(result);
-            List<dynamic> jsonList = json.decode(result);
-            // Ensure totalstock is treated as an integer, even if it is a double
-            double basicRate;
-            double taxableAmount;
-            if (element.updated) {
-              basicRate = element.basicRate;
+              var result = await connection.getData(query);
+              log('Query result: $result');
+              List<dynamic> jsonList = json.decode(result);
+              double basicRate;
+              double taxableAmount;
+              if (element.updated) {
+                basicRate = element.basicRate;
+                taxableAmount = element.unitTaxableAmount;
+              } else {
+                basicRate = parcelRateclc(
+                    item: element, pickuprate: jsonList[0]['pickuprate']);
+                taxableAmount = parceltaxableAmountcalculation(
+                  item: element,
+                  pickuprate: jsonList[0]['pickuprate'],
+                );
+              }
 
-              taxableAmount = element.unitTaxableAmount;
-            } else {
-              basicRate = parcelRateclc(
-                  item: element, pickuprate: jsonList[0]['pickuprate']);
-              taxableAmount = parceltaxableAmountcalculation(
-                item: element,
-                pickuprate: jsonList[0]['pickuprate'],
-              );
+              updatedutems.add(element.copyWith(
+                basicRate: basicRate,
+                unitTaxableAmountBeforeDiscount: taxableAmount,
+                unitTaxableAmount: taxableAmount,
+              ));
+            } catch (e) {
+              log('Error processing item ${element.itemCode}: $e');
+              rethrow;
             }
-
-            updatedutems.add(element.copyWith(
-              basicRate: basicRate,
-              unitTaxableAmountBeforeDiscount: taxableAmount,
-              unitTaxableAmount: taxableAmount,
-            ));
           }
 
           kotitems = updatedutems;
         } else {
+          log('Parcel mode disabled. Using original items.');
           kotitems = event.kotitems;
         }
 
         List<kotItem> outofStock = [];
-
-        // Out of stock section ----- (if enabled)
+        if (stockmngGoods != null && stockmngService != null) {
         if (stockmngGoods! || stockmngService!) {
-          log('stockmngGoods! || stockmngService!');
-
+          log('Stock management enabled. Checking stock...');
           for (var product in kotitems) {
-            log(product.serOrGoods);
+            log('Checking stock for product: ${product.itemCode}');
+            try {
+              if ((stockmngGoods! && product.serOrGoods == 'GOODS') ||
+                  (stockmngService! && product.serOrGoods == 'SER') ||
+                  (stockmngGoods! && stockmngService!)) {
+                String productId = product.itemCode;
+                int qty = product.quantity;
 
-            if ((stockmngGoods! && product.serOrGoods == 'GOODS') ||
-                (stockmngService! && product.serOrGoods == 'SER') ||
-                (stockmngGoods! && stockmngService!)) {
-              String productId = product.itemCode;
-              int qty = product.quantity;
+                String query = '''
+            SELECT [Id],
+                   [codeorSKU],
+                   [pdtname],
+                   [totalstock]
+            FROM  [dbo].[MainStock]
+            WHERE [codeorSKU] = '$productId' AND [totalstock] < $qty
+            ''';
 
-              String query = '''
-              SELECT [Id],
-                     [codeorSKU],
-                     [pdtname],
-                     [totalstock]
-              FROM  [dbo].[MainStock]
-              WHERE [codeorSKU] = '$productId' AND [totalstock] < $qty
-              ''';
+                var result = await connection.getData(query);
+                log('Stock check result: $result');
 
-              var result = await connection.getData(query);
-              log(result);
-
-              if (result != '[]') {
-                List<dynamic> jsonList = json.decode(result);
-                // Ensure totalstock is treated as an integer, even if it is a double
-                int totalstock = (jsonList[0]['totalstock'] as num).toInt();
-                outofStock.add(product.copyWith(stock: totalstock));
+                if (result != '[]') {
+                  List<dynamic> jsonList = json.decode(result);
+                  int totalstock = (jsonList[0]['totalstock'] as num).toInt();
+                  outofStock.add(product.copyWith(stock: totalstock));
+                }
+              } else {
+                log('Stock management not applicable for this product.');
               }
-            } else {
-              log('----');
+            } catch (e) {
+              log('Error checking stock for product ${product.itemCode}: $e');
+              rethrow;
             }
+          }
           }
         }
 
         if (outofStock.isNotEmpty) {
+          log('Out of stock items found. Emitting state...');
           emit(state.copyWith(
             isLoading: false,
             stockout: true,
             outofStock: outofStock,
           ));
         } else {
-          // If stock management is not enabled
+          log('---------');
+          log('No out of stock items. Proceeding with order...');
+          try {
+            var formattedDate = getDateTime();
+            var entrydata = entyDateTime();
 
-          var formattedDate = getDateTime();
-          var entrydata = entyDateTime();
+            String kotId = await _fetchKotId(connection);
+            String orderId =
+                event.currentorderid ?? await _fetchOrderId(connection);
 
-          //         // Fetch KOT ID
-          String kotId = await _fetchKotId(connection);
-          // Fetch or Create Order ID
-          String orderId =
-              event.currentorderid ?? await _fetchOrderId(connection);
-
-          List<kotItem> kotitemslist = [];
-          if (event.currentorderid != null && event.currentitems != null) {
-            for (var product in event.currentitems!) {
-              if (product.quantity > 0) {
-                kotitemslist.add(
-                    product.copyWith(quantity: product.qty + product.quantity));
-              } else if (product.quantity < 0) {
-                kotitemslist.add(product.copyWith(
-                    quantity: product.qty - product.quantity.abs()));
-              } else {
-                kotitemslist.add(product.copyWith(quantity: product.qty));
+            List<kotItem> kotitemslist = [];
+            if (event.currentorderid != null && event.currentitems != null) {
+              log('Updating existing order items...');
+              for (var product in event.currentitems!) {
+                try {
+                  if (product.quantity > 0) {
+                    kotitemslist.add(product.copyWith(
+                        quantity: product.qty + product.quantity));
+                  } else if (product.quantity < 0) {
+                    kotitemslist.add(product.copyWith(
+                        quantity: product.qty - product.quantity.abs()));
+                  } else {
+                    kotitemslist.add(product.copyWith(quantity: product.qty));
+                  }
+                } catch (e) {
+                  log('Error updating item ${product.itemCode}: $e');
+                  rethrow;
+                }
               }
             }
-          }
 
-          kotitemslist.addAll(kotitems.where(
-              (item) => !kotitemslist.any((b) => b.itemCode == item.itemCode)));
+            kotitemslist.addAll(kotitems.where((item) =>
+                !kotitemslist.any((b) => b.itemCode == item.itemCode)));
 
-          // Add data to OrderMainDetails
-          double totalAmountBeforeDisc = 0.0;
-          double discount = 0.0;
-          double totalTaxableAmount = 0.0;
-          double totalTaxAmount = 0.0;
-          double totalCessAmount = 0.0;
-          double totalAmount = 0.0;
+            double totalAmountBeforeDisc = 0.0;
+            double discount = 0.0;
+            double totalTaxableAmount = 0.0;
+            double totalTaxAmount = 0.0;
+            double totalCessAmount = 0.0;
+            double totalAmount = 0.0;
 
-          for (var element in kotitemslist) {
-            int qty = element.quantity;
+            for (var element in kotitemslist) {
+              try {
+                int qty = element.quantity;
 
-            totalAmountBeforeDisc +=
-                element.unitTaxableAmountBeforeDiscount * qty;
-            totalTaxableAmount += element.unitTaxableAmount * qty;
-            totalAmount += element.basicRate * qty;
-            totalTaxAmount +=
-                (element.unitTaxableAmount * qty) * (element.gstPer / 100);
-            totalCessAmount +=
-                (element.unitTaxableAmount * qty) * (element.cessPer / 100);
-          }
+                totalAmountBeforeDisc +=
+                    element.unitTaxableAmountBeforeDiscount * qty;
+                totalTaxableAmount += element.unitTaxableAmount * qty;
+                totalAmount += element.basicRate * qty;
+                totalTaxAmount +=
+                    (element.unitTaxableAmount * qty) * (element.gstPer / 100);
+                totalCessAmount +=
+                    (element.unitTaxableAmount * qty) * (element.cessPer / 100);
+              } catch (e) {
+                log('Error calculating amounts for item ${element.itemCode}: $e');
+                rethrow;
+              }
+            }
 
-          if (event.currentorderid != null && event.currentitems != null) {
-            String updateQuery = '''
+            if (event.currentorderid != null && event.currentitems != null) {
+              log('Updating existing order in database...');
+              try {
+                String updateQuery = '''
   UPDATE  [dbo].[OrderMainDetails]
   SET
     EntryDate = '$entrydata',
@@ -203,10 +222,16 @@ class KotSubmitPrintBloc
     OrderNumber = '$orderId';
 ''';
 
-            final resultIfUpdate = await connection.writeData(updateQuery);
-            log(resultIfUpdate);
-          } else {
-            String updateQuery = '''
+                final resultIfUpdate = await connection.writeData(updateQuery);
+                log('Update result: $resultIfUpdate');
+              } catch (e) {
+                log('Error updating order in database: $e');
+                rethrow;
+              }
+            } else {
+              log('Creating new order in database...');
+              try {
+                String updateQuery = '''
   UPDATE [dbo].[OrderMainDetails]
   SET
     EntryDate = '$entrydata',
@@ -234,23 +259,29 @@ class KotSubmitPrintBloc
     WHERE OrderNumber = '$orderId'
     ''';
 
-// log(updateQuery);
+                final resultIfUpdate = await connection.writeData(updateQuery);
+                log('Update result: $resultIfUpdate');
+              } catch (e) {
+                log('Error creating new order in database: $e');
+                rethrow;
+              }
+            }
 
-            final resultIfUpdate = await connection.writeData(updateQuery);
-            log(resultIfUpdate.toString());
-          }
-          if (kotitems.isNotEmpty) {
-            for (var element in kotitems) {
-              int qty = element.quantity;
+            if (kotitems.isNotEmpty) {
+              log('Inserting order item details...');
+              for (var element in kotitems) {
+                try {
+                  int qty = element.quantity;
 
-              final double totalTaxableAmount = qty * element.unitTaxableAmount;
-              final double totalTaxAmount =
-                  totalTaxableAmount * (element.gstPer / 100);
-              final double totalCessAmount =
-                  totalTaxableAmount * (element.cessPer / 100);
-              final double totalAmount = qty * element.basicRate;
+                  final double totalTaxableAmount =
+                      qty * element.unitTaxableAmount;
+                  final double totalTaxAmount =
+                      totalTaxableAmount * (element.gstPer / 100);
+                  final double totalCessAmount =
+                      totalTaxableAmount * (element.cessPer / 100);
+                  final double totalAmount = qty * element.basicRate;
 
-              String itemInsertQuery = '''
+                  String itemInsertQuery = '''
 INSERT INTO [dbo].[OrderItemDetailsDetails] (
     OrderNumber, KOTNumber, EntryDate, StartTime, EndTime, CustomerId, CustomerName,
     TableName, FloorNumber, Description, ItemCode, ItemName, Quantity, BasicRate,
@@ -268,23 +299,28 @@ INSERT INTO [dbo].[OrderItemDetailsDetails] (
 )
 ''';
 
-              // log(itemInsertQuery);
-              await connection.writeData(itemInsertQuery);
+                  await connection.writeData(itemInsertQuery);
+                } catch (e) {
+                  log('Error inserting item ${element.itemCode}: $e');
+                  rethrow;
+                }
+              }
             }
-          }
-          // Insert Order Item Details
 
-          if (event.kotretunitems.isNotEmpty) {
-            for (var element in event.kotretunitems) {
-              int qty = element.qty - element.quantity.abs();
-              final double totalTaxableAmount = qty * element.unitTaxableAmount;
-              final double totalTaxAmount =
-                  totalTaxableAmount * (element.gstPer / 100);
-              final double totalCessAmount =
-                  totalTaxableAmount * (element.cessPer / 100);
-              final double totalAmount = qty * element.basicRate;
+            if (event.kotretunitems.isNotEmpty) {
+              log('Updating returned items...');
+              for (var element in event.kotretunitems) {
+                try {
+                  int qty = element.qty - element.quantity.abs();
+                  final double totalTaxableAmount =
+                      qty * element.unitTaxableAmount;
+                  final double totalTaxAmount =
+                      totalTaxableAmount * (element.gstPer / 100);
+                  final double totalCessAmount =
+                      totalTaxableAmount * (element.cessPer / 100);
+                  final double totalAmount = qty * element.basicRate;
 
-              String itemUpdateQuery = '''
+                  String itemUpdateQuery = '''
 UPDATE [dbo].[OrderItemDetailsDetails]
 SET 
     OrderNumber = '$orderId',
@@ -318,323 +354,137 @@ WHERE
     KOTNumber = '${element.kotno}' AND ItemCode = '${element.itemCode}';
 ''';
 
-              final resultitemUpdateQuery =
-                  await connection.writeData(itemUpdateQuery);
-              log(resultitemUpdateQuery.toString());
-            }
-          }
-          emit(state.copyWith(
-            isLoading: false,
-            submitstatus: 1,
-            kotNo: kotId,
-            ordno: orderId,
-          ));
-          log('print section ----------');
-
-          List<PrinterConfig?>? printers = event.printers;
-
-          int printingStatus = 0;
-
-          if (event.kotPrint) {
-            Map<String, List<kotItem>> groupedItems = {};
-            log(kotitems.length.toString());
-            for (var item in kotitems) {
-              if (!groupedItems.containsKey(item.kitchenName)) {
-                groupedItems[item.kitchenName] = [];
-              }
-              groupedItems[item.kitchenName]!.add(item);
-            }
-
-            for (var kitchen in groupedItems.keys) {
-              PrinterConfig? printer;
-
-              log('Kitchen: $kitchen');
-
-              // Find the printer for the kitchen
-              for (var element in printers!) {
-                if (element!.kitchenName == kitchen) {
-                  printer = element;
+                  final resultitemUpdateQuery =
+                      await connection.writeData(itemUpdateQuery);
+                  log('Update result: $resultitemUpdateQuery');
+                } catch (e) {
+                  log('Error updating returned item ${element.itemCode}: $e');
+                  rethrow;
                 }
               }
-
-              // Print the ticket and await the result
-              final List<int> test = await kotPrintData(
-                parcel: state.parcel,
-                dlt: false,
-                note: event.note ?? '',
-                items: groupedItems[kitchen]!,
-                kotNo: kotId,
-                orderNo: orderId,
-                tableNo: event.table.tableName,
-                user: 'user',
-              );
-
-              printingStatus = await NetworkPrinter().printTicket(
-                test,
-                printer!.printerName,
-              );
-
-              log('Printer response---$printingStatus');
             }
-          }
 
-          if (event.cancelKotPrint) {
-            Map<String, List<kotItem>> groupedcancelItems = {};
-            log(kotitems.length.toString());
-            for (var item in event.kotretunitems) {
-              if (!groupedcancelItems.containsKey(item.kitchenName)) {
-                groupedcancelItems[item.kitchenName] = [];
-              }
-              groupedcancelItems[item.kitchenName]!.add(item);
-            }
-            for (var kitchen in groupedcancelItems.keys) {
-              PrinterConfig? printer;
+            emit(state.copyWith(
+              isLoading: false,
+              submitstatus: 1,
+              kotNo: kotId,
+              ordno: orderId,
+            ));
 
-              // Find the printer for the kitchen
-              for (var element in printers!) {
-                if (element!.kitchenName == kitchen) {
-                  printer = element;
+            log('Print section ----------');
+            List<PrinterConfig?>? printers = event.printers;
+            int printingStatus = 0;
+
+            if (event.kotPrint) {
+              log('Printing KOT...');
+              Map<String, List<kotItem>> groupedItems = {};
+              for (var item in kotitems) {
+                if (!groupedItems.containsKey(item.kitchenName)) {
+                  groupedItems[item.kitchenName] = [];
                 }
+                groupedItems[item.kitchenName]!.add(item);
               }
 
-              // Print the ticket and await the result
-              final List<int> test = await kotPrintData(
-                parcel: state.parcel,
-                dlt: false,
-                note: event.note ?? '',
-                items: groupedcancelItems[kitchen]!,
-                kotNo: '--',
-                orderNo: orderId,
-                tableNo: event.table.tableName,
-                user: 'user',
-              );
+              for (var kitchen in groupedItems.keys) {
+                PrinterConfig? printer;
 
-              printingStatus = await NetworkPrinter().printTicket(
-                test,
-                printer!.printerName,
-              );
+                for (var element in printers!) {
+                  if (element!.kitchenName == kitchen) {
+                    printer = element;
+                  }
+                }
 
-              log('Printer response---$printingStatus');
+                final List<int> test = await kotPrintData(
+                  parcel: state.parcel,
+                  dlt: false,
+                  note: event.note ?? '',
+                  items: groupedItems[kitchen]!,
+                  kotNo: kotId,
+                  orderNo: orderId,
+                  tableNo: event.table.tableName,
+                  user: 'user',
+                );
+
+                printingStatus = await NetworkPrinter().printTicket(
+                  test,
+                  printer!.printerName,
+                );
+
+                log('Printer response---$printingStatus');
+              }
             }
-          }
 
-          if (event.cancelKotPrint || event.kotPrint) {
-            // After all the async operations, check the status
-            if (printingStatus == 1) {
-              log('Printer status: 2---------');
-              emit(state.copyWith(
-                isLoading: false,
-                printerstatus: 2,
-                submitstatus: 0,
-              ));
+            if (event.cancelKotPrint) {
+              log('Printing canceled KOT...');
+              Map<String, List<kotItem>> groupedcancelItems = {};
+              for (var item in event.kotretunitems) {
+                if (!groupedcancelItems.containsKey(item.kitchenName)) {
+                  groupedcancelItems[item.kitchenName] = [];
+                }
+                groupedcancelItems[item.kitchenName]!.add(item);
+              }
+              for (var kitchen in groupedcancelItems.keys) {
+                PrinterConfig? printer;
+
+                for (var element in printers!) {
+                  if (element!.kitchenName == kitchen) {
+                    printer = element;
+                  }
+                }
+
+                final List<int> test = await kotPrintData(
+                  parcel: state.parcel,
+                  dlt: false,
+                  note: event.note ?? '',
+                  items: groupedcancelItems[kitchen]!,
+                  kotNo: '--',
+                  orderNo: orderId,
+                  tableNo: event.table.tableName,
+                  user: 'user',
+                );
+
+                printingStatus = await NetworkPrinter().printTicket(
+                  test,
+                  printer!.printerName,
+                );
+
+                log('Printer response---$printingStatus');
+              }
+            }
+
+            if (event.cancelKotPrint || event.kotPrint) {
+              if (printingStatus == 1) {
+                log('Printer status: 2---------');
+                emit(state.copyWith(
+                  isLoading: false,
+                  printerstatus: 2,
+                  submitstatus: 0,
+                ));
+              } else {
+                log('Printer status: 1---------');
+                emit(state.copyWith(
+                  isLoading: false,
+                  printerstatus: 1,
+                  submitstatus: 0,
+                ));
+              }
             } else {
-              log('Printer status: 1---------');
               emit(state.copyWith(
                 isLoading: false,
                 printerstatus: 1,
                 submitstatus: 0,
               ));
             }
-          } else {
-            emit(state.copyWith(
-              isLoading: false,
-              printerstatus: 1,
-              submitstatus: 0,
-            ));
+          } catch (e) {
+            log('Error in order processing: $e');
+            rethrow;
           }
         }
-
-        // emit(state.copyWith(isLoading: false));
       } catch (e) {
         log('Error in SubmitAndPrint: $e');
         emit(state.copyWith(isLoading: false));
       }
     });
-
-    on<CancelKOT>((event, emit) async {
-      log('CancelKOT-------------------');
-      emit(state.copyWith(
-          isLoading: true, stockout: false, printerstatus: 0, submitstatus: 0));
-
-      try {
-        List<kotItem> cancelkotitems = event.cancelkotitems;
-        List<kotItem> currentkotitems = event.currentitems;
-        List<kotItem> newlist = [];
-
-        // Initialize and establish the MSSQL connection
-        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
-        MssqlConnection connection = await connectionManager.getConnection();
-        var formattedDate = getDateTime();
-        var entrydata = entyDateTime();
-
-        if (currentkotitems.length == cancelkotitems.length) {
-          String deleteQueary = '''
-           DELETE FROM  [dbo].[OrderMainDetails]
-            WHERE OrderNumber = '${event.currentorderid}';
-           ''';
-
-          log(deleteQueary);
-          final resultitemUpdateQuery =
-              await connection.writeData(deleteQueary);
-          log(resultitemUpdateQuery.toString());
-        } else {
-          // Add items from cancelkotitems that are not in currentkotitems
-          newlist = currentkotitems.where((currentItem) {
-            return !cancelkotitems.any((cancelItem) =>
-                currentItem.itemCode == cancelItem.itemCode &&
-                currentItem.kotno == cancelItem.kotno); // Match criteria
-          }).toList();
-          log(' cancelkotitems.length  ${cancelkotitems.length.toString()}');
-          log('currentkotitems.length---${currentkotitems.length.toString()}');
-          log("newlist.length----${newlist.length.toString()}");
-
-          // Add data to OrderMainDetails
-          double totalAmountBeforeDisc = 0.0;
-          double discount = 0.0;
-          double totalTaxableAmount = 0.0;
-          double totalTaxAmount = 0.0;
-          double totalCessAmount = 0.0;
-          double totalAmount = 0.0;
-
-          for (var element in newlist) {
-            int qty = element.qty;
-            log('${element.itemName}  -----   ${element.kotno}    ---${element.qty} ');
-            totalAmountBeforeDisc +=
-                element.unitTaxableAmountBeforeDiscount * qty;
-            totalTaxableAmount += element.unitTaxableAmount * qty;
-            totalAmount += element.basicRate * qty;
-            totalTaxAmount =
-                (element.unitTaxableAmount * qty) * (element.gstPer / 100);
-            totalCessAmount =
-                (element.unitTaxableAmount * qty) * (element.cessPer / 100);
-          }
-
-          String updateQuery = '''
-  UPDATE  [dbo].[OrderMainDetails]
-  SET
-    EntryDate = '$entrydata',
-    CustomerId = '${event.selectedcustomer.cusid}',
-    CustomerName = '${event.selectedcustomer.bussinessname}',
-    TableName = '${event.table.tableName}',
-    FloorNumber = '${event.table.floor}',
-    TotalAmountBeforeDisc = $totalAmountBeforeDisc,
-    Discount = $discount,
-    TotalTaxableAmount = $totalTaxableAmount,
-    TotalTaxAmount = $totalTaxAmount,
-    TotalCessAmount = $totalCessAmount,
-    TotalAmount = $totalAmount,
-    StartTime = '$formattedDate',
-    EndTime = '$formattedDate',
-    ActiveInnactive = 'Active',
-    DineInOrOther = 'Dining',
-    CreditOrPaid = 'Credit',
-    BillNumber ='${event.billNumber}',
-    UserID ='${event.userId}'
-  
-
-
-
-  WHERE
-    OrderNumber = '${event.currentorderid}';
-''';
-
-          log(updateQuery);
-
-          final resultIfUpdate = await connection.writeData(updateQuery);
-          log(resultIfUpdate);
-        }
-
-        for (var element in cancelkotitems) {
-          String itemUpdateQuery = '''
-      DELETE FROM  [dbo].[OrderItemDetailsDetails]
-      WHERE KOTNumber = '${element.kotno}' AND ItemCode = '${element.itemCode}';
-    ''';
-
-          log(itemUpdateQuery);
-          final resultitemUpdateQuery =
-              await connection.writeData(itemUpdateQuery);
-          log(resultitemUpdateQuery.toString());
-        }
-        emit(state.copyWith(
-          isLoading: false,
-          submitstatus: 1,
-        ));
-
-        if (event.cancelKotPrint) {
-          log('print section ----------');
-          Map<String, List<kotItem>> groupedItems = {};
-          for (var item in cancelkotitems) {
-            if (!groupedItems.containsKey(item.kitchenName)) {
-              groupedItems[item.kitchenName] = [];
-            }
-            groupedItems[item.kitchenName]!.add(item);
-          }
-
-          List<PrinterConfig?>? printers = event.printers;
-
-          int printingStatus = 0;
-
-          for (var kitchen in groupedItems.keys) {
-            PrinterConfig? printer;
-
-            log('Kitchen: $kitchen');
-
-            // Find the printer for the kitchen
-            for (var element in printers!) {
-              if (element!.kitchenName == kitchen) {
-                printer = element;
-              }
-            }
-
-            // Print the ticket and await the result
-            final List<int> test = await kotPrintData(
-              parcel: false,
-              dlt: true,
-              note: '',
-              items: groupedItems[kitchen]!,
-              kotNo: '--',
-              orderNo: event.currentorderid,
-              tableNo: event.table.tableName,
-              user: 'user',
-            );
-
-            printingStatus = await NetworkPrinter().printTicket(
-              test,
-              printer!.printerName,
-            );
-
-            log('Printer response---$printingStatus');
-          }
-
-          if (printingStatus == 1) {
-            log('Printer status: 2---------');
-            emit(state.copyWith(
-              isLoading: false,
-              printerstatus: 2,
-              submitstatus: 0,
-            ));
-          } else {
-            log('Printer status: 1---------');
-            emit(state.copyWith(
-              isLoading: false,
-              printerstatus: 1,
-              submitstatus: 0,
-            ));
-          }
-        } else {
-          log('Printer status: 1---------');
-          emit(state.copyWith(
-            isLoading: false,
-            printerstatus: 1,
-            submitstatus: 0,
-          ));
-        }
-      } catch (e) {
-        log(e.toString());
-        emit(state.copyWith(isLoading: false, stockout: false));
-      }
-    });
-
     on<rePrint>((event, emit) async {
       emit(state.copyWith(printerstatus: 0));
 
@@ -865,19 +715,3 @@ Future<String> _fetchOrderId(MssqlConnection connection) async {
   return jsonList[0]['OrderNumber'];
 }
 
-// Future<String> _fetchOrderId(MssqlConnection connection) async {
-//   logWithTime('_fetchOrderId  called --------');
-//   String query = '''
-//     SELECT ISNULL(
-//       'ORD' + CAST((1 + MAX(CONVERT(INT, RIGHT(OrderNumber, LEN(OrderNumber) - 3)))) AS VARCHAR),
-//       'ORD100'
-//     ) AS ORD FROM OrderMainDetails
-//     ''';
-//   var result = await connection.getData(query);
-//   logWithTime('_fetchOrderId  called --------$result');
-
-//   if (result == '[]') throw Exception("Failed to fetch Order ID");
-
-//   List<dynamic> jsonList = json.decode(result);
-//   return jsonList[0]['ORD'];
-// }

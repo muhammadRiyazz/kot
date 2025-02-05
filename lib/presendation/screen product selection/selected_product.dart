@@ -15,7 +15,7 @@ import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/chec
 import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/kot_submision_success.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/re_print.dart';
-import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dart';
+import 'package:restaurant_kot/presendation/settings/screen%20customers/customer_list.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/img.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';

@@ -29,6 +29,8 @@ dependencies:
   flutter_esc_pos_network: ^1.0.3
   flutter_esc_pos_utils: ^1.0.1
   http: ^1.2.2
+  lucide_icons: ^0.257.0
+  image: ^4.5.2
 
 
 

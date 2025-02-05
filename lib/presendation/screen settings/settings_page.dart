@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dart';
+import 'package:restaurant_kot/presendation/settings/screen%20customers/customer_list.dart';
 import 'package:restaurant_kot/presendation/screen%20home/Drawr.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/settings/stock_mng.dart';

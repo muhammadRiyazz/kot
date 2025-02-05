@@ -8,10 +8,7 @@ import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/item_model.dart';
-import 'package:restaurant_kot/domain/printer/priter_config.dart';
-
 import '../../domain/orders/order_model.dart';
-
 part 'orders_event.dart';
 part 'orders_state.dart';
 part 'orders_bloc.freezed.dart';

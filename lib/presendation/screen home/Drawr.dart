@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'package:restaurant_kot/presendation/screen%20customers/customer_list.dart';
+import 'package:restaurant_kot/presendation/settings/screen%20customers/customer_list.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
 import 'package:restaurant_kot/presendation/screen%20settings/settings_page.dart';
+import 'package:restaurant_kot/presendation/settings/bill_design.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/settings/stock_mng.dart';
 import 'package:shimmer/shimmer.dart';
@@ -100,88 +101,102 @@ class _AppDrawerState extends State<AppDrawer> {
               );
             },
           ),
-
+          SizedBox(
+            height: 20,
+          ),
           // Navigation List
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             // padding: const EdgeInsets.symmetric(vertical: 10),
             children: [
-              // const Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 16),
-              //   child: Text(
-              //     'Settings',
-              //     style: TextStyle(
-              //       fontSize: 14,
-              //       fontWeight: FontWeight.bold,
-              //       color: Colors.black,
-              //     ),
-              //   ),
-              // ),
-              // ListTile(
-              //   leading: const Icon(Icons.stacked_bar_chart, color: mainclr),
-              //   title: const Text('Stock Management'),
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => MngStockPage()),
-              //     );
-              //   },
-              // ),
-              // _divider(),
-              // ListTile(
-              //   leading: const Icon(Icons.supervised_user_circle_outlined,
-              //       color: mainclr),
-              //   title: const Text('Customer Management'),
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => CustomerView()),
-              //     );
-              //   },
-              // ),
-              // _divider(),
-              // ListTile(
-              //   leading: const Icon(Icons.print_rounded, color: mainclr),
-              //   title: const Text('Printer Management'),
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => KitchensPage()),
-              //     );
-              //   },
-              // ),
-              // _divider(),
-              SizedBox(
-                height: 20,
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+                child: Text(
+                  'Settings',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
               ),
               ListTile(
-                leading: const Icon(Icons.info_outline, color: mainclr),
-                title: const Text('About Us'),
-                onTap: () {},
-              ),
-              _divider(),
-              ListTile(
-                leading: const Icon(Icons.phone, color: mainclr),
-                title: const Text('Contact Us'),
-                onTap: () {},
-              ),
-              _divider(),
-              ListTile(
-                leading: const Icon(Icons.support_agent, color: mainclr),
-                title: const Text('Support'),
-                onTap: () {},
-              ),
-              _divider(),
-              ListTile(
-                leading: const Icon(Icons.settings, color: mainclr),
-                title: const Text('Settings'),
+                leading: const Icon(Icons.stacked_bar_chart, color: mainclr),
+                title: const Text('Stock Management'),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return SettingsPage();
-                    },
-                  ));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MngStockPage()),
+                  );
                 },
               ),
+              _divider(),
+              ListTile(
+                leading: const Icon(Icons.supervised_user_circle_outlined,
+                    color: mainclr),
+                title: const Text('Customer Management'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CustomerView()),
+                  );
+                },
+              ),
+              _divider(),
+              ListTile(
+                leading: const Icon(Icons.print_rounded, color: mainclr),
+                title: const Text('Printer Management'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => KitchensPage()),
+                  );
+                },
+              ),
+              _divider(),
+              ListTile(
+                leading: const Icon(Icons.edit_document, color: mainclr),
+                title: const Text('Bill Design'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BillDesignSettingsPage()),
+                  );
+                },
+              ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // ListTile(
+              //   leading: const Icon(Icons.info_outline, color: mainclr),
+              //   title: const Text('About Us'),
+              //   onTap: () {},
+              // ),
+              // _divider(),
+              // ListTile(
+              //   leading: const Icon(Icons.phone, color: mainclr),
+              //   title: const Text('Contact Us'),
+              //   onTap: () {},
+              // ),
+              // _divider(),
+              // ListTile(
+              //   leading: const Icon(Icons.support_agent, color: mainclr),
+              //   title: const Text('Support'),
+              //   onTap: () {},
+              // ),
+              // _divider(),
+              // ListTile(
+              //   leading: const Icon(Icons.settings, color: mainclr),
+              //   title: const Text('Settings'),
+              //   onTap: () {
+              //     Navigator.push(context, MaterialPageRoute(
+              //       builder: (context) {
+              //         return SettingsPage();
+              //       },
+              //     ));
+              //   },
+              // ),
             ],
           ),
           Spacer(),

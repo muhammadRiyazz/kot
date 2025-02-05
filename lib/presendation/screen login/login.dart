@@ -1,12 +1,255 @@
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
+// import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
+// import 'package:restaurant_kot/consts/colors.dart';
+// import 'package:restaurant_kot/presendation/screen%20login/passcose/passcode.dart';
+// import 'package:restaurant_kot/presendation/screen%20splash/screen_splash.dart';
+// import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
+
+// class ScreenLogin extends StatefulWidget {
+//   const ScreenLogin({Key? key}) : super(key: key);
+
+//   @override
+//   _ScreenLoginState createState() => _ScreenLoginState();
+// }
+
+// class _ScreenLoginState extends State<ScreenLogin> {
+//   final _emailController = TextEditingController();
+//   final _passwordController = TextEditingController();
+//   final _formKey = GlobalKey<FormState>();
+//   bool _isPasswordVisible = false;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Container(
+//         padding: const EdgeInsets.all(20.0),
+//         decoration: const BoxDecoration(color: mainclr),
+//         child: Center(
+//           child: SingleChildScrollView(
+//             child: Form(
+//               key: _formKey,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   const CircleAvatar(
+//                     radius: 50,
+//                     backgroundColor: Colors.white,
+//                     child: Icon(Icons.restaurant, size: 40, color: mainclr),
+//                   ),
+//                   const SizedBox(height: 20),
+//                   const Text(
+//                     "Welcome Back",
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                       fontSize: 28,
+//                       fontWeight: FontWeight.bold,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 5),
+//                   const Text(
+//                     "Login to your account",
+//                     style: TextStyle(
+//                       color: Colors.white70,
+//                       fontSize: 16,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 30),
+//                   TextFormField(
+//                     controller: _emailController,
+//                     style: const TextStyle(color: Colors.white),
+//                     decoration: InputDecoration(
+//                       prefixIcon: const Icon(Icons.person, color: Colors.white),
+//                       hintText: 'User Name',
+//                       hintStyle: const TextStyle(color: Colors.white70),
+//                       filled: true,
+//                       fillColor: Colors.white.withOpacity(0.2),
+//                       border: OutlineInputBorder(
+//                         borderRadius: BorderRadius.circular(10),
+//                         borderSide: BorderSide.none,
+//                       ),
+//                     ),
+//                     validator: (value) {
+//                       if (value == null || value.isEmpty) {
+//                         return 'Please enter your username';
+//                       }
+//                       return null;
+//                     },
+//                   ),
+//                   const SizedBox(height: 15),
+//                   TextFormField(
+//                     controller: _passwordController,
+//                     obscureText: !_isPasswordVisible,
+//                     style: const TextStyle(color: Colors.white),
+//                     decoration: InputDecoration(
+//                       prefixIcon: const Icon(Icons.lock, color: Colors.white),
+//                       suffixIcon: IconButton(
+//                         icon: Icon(
+//                           _isPasswordVisible
+//                               ? Icons.visibility
+//                               : Icons.visibility_off,
+//                           color: Colors.white70,
+//                         ),
+//                         onPressed: () {
+//                           setState(() {
+//                             _isPasswordVisible = !_isPasswordVisible;
+//                           });
+//                         },
+//                       ),
+//                       hintText: 'Password',
+//                       hintStyle: const TextStyle(color: Colors.white70),
+//                       filled: true,
+//                       fillColor: Colors.white.withOpacity(0.2),
+//                       border: OutlineInputBorder(
+//                         borderRadius: BorderRadius.circular(10),
+//                         borderSide: BorderSide.none,
+//                       ),
+//                     ),
+//                     validator: (value) {
+//                       if (value == null || value.isEmpty) {
+//                         return 'Please enter your password';
+//                       }
+//                       return null;
+//                     },
+//                   ),
+//                   const SizedBox(height: 15),
+//                   Align(
+//                     alignment: Alignment.centerRight,
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.end,
+//                       children: [
+//                         TextButton(
+//                           onPressed: () {
+//                             Navigator.push(
+//                                 context,
+//                                 MaterialPageRoute(
+//                                     builder: (context) => PasscodePage()));
+//                           },
+//                           child: Text(
+//                             "Settings",
+//                             style: TextStyle(color: Colors.white),
+//                           ),
+//                         ),
+//                         Icon(Icons.arrow_right_rounded, color: Colors.white),
+//                       ],
+//                     ),
+//                   ),
+//                   const SizedBox(height: 20),
+//                   BlocConsumer<LoginBloc, LoginState>(
+//                     listener: (context, state) async {
+//                       if (state.loged) {
+//                         Navigator.pushAndRemoveUntil(
+//                           context,
+//                           MaterialPageRoute(
+//                               builder: (context) => const SplashScreen()),
+//                           (route) => false,
+//                         );
+//                         BlocProvider.of<InitalDataBloc>(context)
+//                             .add(const InitalDataEvent.addinitaldatas());
+//                       }
+//                       if (state.errorMsg != null) {
+//                         ScaffoldMessenger.of(context).showSnackBar(
+//                           SnackBar(
+//                             behavior: SnackBarBehavior.floating,
+//                             backgroundColor: mainclr,
+//                             content: Text(state.errorMsg ?? "Error",
+//                                 style: const TextStyle(fontSize: 15)),
+//                           ),
+//                         );
+//                       }
+//                     },
+//                     builder: (context, state) {
+//                       return state.isLoading
+//                           ? const Loading()
+//                           : SizedBox(
+//                               width: double.infinity,
+//                               height: 50,
+//                               child: ElevatedButton(
+//                                 style: ElevatedButton.styleFrom(
+//                                   padding: const EdgeInsets.symmetric(
+//                                       horizontal: 100, vertical: 15),
+//                                   backgroundColor: Colors.white,
+//                                   shape: RoundedRectangleBorder(
+//                                     borderRadius: BorderRadius.circular(10),
+//                                   ),
+//                                 ),
+//                                 onPressed: () {
+//                                   if (_formKey.currentState!.validate()) {
+//                                     BlocProvider.of<LoginBloc>(context).add(
+//                                       LoginEvent.login(
+//                                         pass: _passwordController.text.trim(),
+//                                         username: _emailController.text.trim(),
+//                                       ),
+//                                     );
+//                                   }
+//                                 },
+//                                 child: const Text(
+//                                   "Login",
+//                                   style: TextStyle(
+//                                       color: mainclr,
+//                                       fontWeight: FontWeight.bold),
+//                                 ),
+//                               ));
+//                     },
+//                   ),
+//                   const SizedBox(height: 10),
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: [
+//                       const Text(
+//                         "Need any help?",
+//                         style: TextStyle(color: Colors.white),
+//                       ),
+//                       TextButton(
+//                         onPressed: () {},
+//                         child: const Text(
+//                           "Support",
+//                           style: TextStyle(
+//                             color: Colors.white,
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   TextButton(
+//                     onPressed: () {},
+//                     child: const Text(
+//                       "Demo",
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   @override
+//   void dispose() {
+//     _emailController.dispose();
+//     _passwordController.dispose();
+//     super.dispose();
+//   }
+// }
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_kot/application/demo/demo_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
-import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
+
 import 'package:restaurant_kot/presendation/screen%20login/passcose/passcode.dart';
 import 'package:restaurant_kot/presendation/screen%20splash/screen_splash.dart';
+import 'package:restaurant_kot/presendation/screen%20support/screen_support.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
 
@@ -20,248 +263,270 @@ class ScreenLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Define breakpoints for padding and font size
     double padding;
-
     if (screenWidth < 600) {
-      // Phone
-      padding = 10.0;
+      padding = 20.0;
     } else if (screenWidth >= 600 && screenWidth < 900) {
-      // Mini Tablet
       padding = 40.0;
     } else if (screenWidth >= 900 && screenWidth < 1200) {
-      // Large Tablet
       padding = 100.0;
     } else {
-      // Desktop
       padding = 130.0;
     }
 
     return Scaffold(
-      backgroundColor: mainclrbg,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: ListView(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.asset(
-                'assets/img/loginpage/login.jpg',
-                fit: BoxFit.contain,
-              ),
-            ),
-            Container(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: padding),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 00),
-                decoration: BoxDecoration(
-                    // color: Colors.white,
-                    // borderRadius: BorderRadius.circular(18.0),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: const Color.fromARGB(255, 202, 202, 202)
-                    //         .withOpacity(0.3),
-                    //     blurRadius: 15,
-                    //     spreadRadius: 5,
-                    //     offset: Offset(0, 5),
-                    //   ),
-                    // ],
-                    ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // SizedBox(height: 15),
-                      // Container(
-                      //   height: 35,
-                      //   child: Align(
-                      //     alignment: Alignment.center,
-                      //     child: Image.asset(
-                      //       'assets/img/logo/splashlogo.png',
-                      //       fit: BoxFit.contain,
-                      //     ),
-                      //   ),
-                      // ),
-                      const SizedBox(height: 30),
-                      // Username Field
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 192, 192, 192)),
+      backgroundColor: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: padding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Image.asset(
+                    'assets/img/loginpage/login.jpg',
+                    fit: BoxFit.contain,
+                    // height: 250,
+                  ),
+                ),
+                // const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Welcome Back',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: mainclr,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 192, 192, 192)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 192, 192, 192)),
-                          ),
-                          prefixIcon: const Icon(Icons.person),
-                          prefixIconColor: mainclr,
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your username';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      // Password Field
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 192, 192, 192)),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            labelText: 'Username',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: mainclr),
+                            ),
+                            prefixIcon: Icon(Icons.person, color: mainclr),
+                            filled: true,
+                            fillColor: Colors.white,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 192, 192, 192)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 192, 192, 192)),
-                          ),
-                          prefixIcon: Icon(Icons.lock),
-                          prefixIconColor: mainclr,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your username';
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      // Login Button
-                      BlocConsumer<LoginBloc, LoginState>(
-                        listener: (context, state) async {
-                          if (state.loged) {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SplashScreen()),
-                              (route) => false,
-                            );
-                            BlocProvider.of<InitalDataBloc>(context)
-                                .add(const InitalDataEvent.addinitaldatas());
-
-                            await StockMng().changestockmngGoods(value: false);
-                            await StockMng()
-                                .changestockmngService(value: false);
-                          }
-                          if (state.errorMsg != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: mainclr,
-                                content: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('Sorry!',
-                                          style: TextStyle(fontSize: 18)),
-                                      Text(state.errorMsg.toString(),
-                                          style: const TextStyle(fontSize: 15)),
-                                    ],
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: mainclr),
+                            ),
+                            prefixIcon: Icon(Icons.lock, color: mainclr),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        BlocConsumer<LoginBloc, LoginState>(
+                          listener: (context, state) async {
+                            if (state.loged) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SplashScreen()),
+                                (route) => false,
+                              );
+                              BlocProvider.of<InitalDataBloc>(context)
+                                  .add(const InitalDataEvent.addinitaldatas());
+                              // await BillDesignMng()
+                              //     .changebilldesignLogo(value: false);
+                              // await BillDesignMng()
+                              //     .changesbilldesignName(value: false);
+                              // await StockMng()
+                              //     .changestockmngGoods(value: false);
+                              // await StockMng()
+                              //     .changestockmngService(value: false);
+                            }
+                            if (state.errorMsg != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.red.shade700,
+                                  content: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Oops!',
+                                            style: TextStyle(fontSize: 18)),
+                                        Text(state.errorMsg.toString(),
+                                            style:
+                                                const TextStyle(fontSize: 15)),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }
-                        },
-                        builder: (context, state) {
-                          return state.isLoading
-                              ? const Loading()
-                              : MainButton(
-                                  label: 'Login',
-                                  onpress: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      BlocProvider.of<LoginBloc>(context).add(
-                                        LoginEvent.login(
-                                          pass: _passwordController.text.trim(),
-                                          username:
-                                              _usernameController.text.trim(),
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            return state.isLoading
+                                ? const Loading()
+                                : Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: mainclr,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          BlocProvider.of<LoginBloc>(context)
+                                              .add(
+                                            LoginEvent.login(
+                                              pass: _passwordController.text
+                                                  .trim(),
+                                              username: _usernameController.text
+                                                  .trim(),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
-                                      );
-                                    }
-                                  },
-                                );
-                        },
-                      ),
-                      const SizedBox(height: 5),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
+                                      ),
+                                      child: const Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PasscodePage()));
-                        },
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('Settings',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: mainclr)),
-                            Icon(Icons.arrow_right_rounded, color: mainclr),
-                          ],
+                                  builder: (context) => PasscodePage()),
+                            );
+                          },
+                          child: Text(
+                            'Settings',
+                            style: TextStyle(
+                              color: mainclr,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: const Row(
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SupportPage()),
+                                );
+                              },
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.support_agent_outlined,
-                                      size: 15, color: Colors.blue),
-                                  Text(' Support',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.blue)),
+                                      size: 20, color: mainclr),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'Support',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: mainclr,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
+                            TextButton(
+                              onPressed: () {
+                                _showOptionsBottomSheet(context);
+                              },
+                              child: Text(
+                                'Demo',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: mainclr,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -432,3 +697,101 @@ class ScreenLogin extends StatelessWidget {
 //     );
 //   }
 // }
+
+void _showOptionsBottomSheet(BuildContext context) {
+  String selectedOption = 'Non-Veg Restaurant'; // Default selected option
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true, // Makes the bottom sheet take more space
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 16),
+
+                // Title
+                Text(
+                  'Select Restaurant Type',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 16),
+                // Radio Button for Non-Veg Restaurant
+                RadioListTile<String>(
+                  controlAffinity: ListTileControlAffinity.trailing,
+                  title: const Text(
+                    'Non-Veg Restaurant',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  value: 'Non-Veg Restaurant',
+                  groupValue: selectedOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedOption = value!;
+                    });
+                  },
+                  activeColor: mainclr, // Custom color for selected radio
+                ),
+                Divider(),
+                // Radio Button for Veg Restaurant
+                RadioListTile<String>(
+                  controlAffinity: ListTileControlAffinity.trailing,
+                  title: Text(
+                    'Veg Restaurant',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  value: 'Veg Restaurant',
+                  groupValue: selectedOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedOption = value!;
+                    });
+                  },
+                  activeColor: mainclr, // Custom color for selected radio
+                ),
+
+                SizedBox(height: 20),
+
+                // Full-Width Next Button
+                BlocConsumer<DemoBloc, DemoState>(
+                  listener: (context, state) {
+                    if (state.loged) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SplashScreen()),
+                        (route) => false,
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    return state.isLoading
+                        ? LinearProgressIndicator(
+                            color: mainclr,
+                          )
+                        : MainButton(
+                            label: 'Next',
+                            onpress: () {
+                              BlocProvider.of<DemoBloc>(context).add(
+                                  DemoEvent.demodatabase(type: selectedOption));
+                            });
+                  },
+                )
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}

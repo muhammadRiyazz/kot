@@ -9,6 +9,7 @@ import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.da
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/bill_design_mng.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
 import 'package:restaurant_kot/presendation/screen%20home/screen_home.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
@@ -51,6 +52,8 @@ class _SplashScreenState extends State<SplashScreen> {
             .add(const PrinterSetupEvent.fetchPrinter());
         await StockMng().fetchstockmngGoods();
         await StockMng().fetchstockmngService();
+        await BillDesignMng().fetchbilldesignLogo();
+        await BillDesignMng().fetchbilldesignName();
         BlocProvider.of<CustomerpartBloc>(context)
             .add(const CustomerpartEvent.cfetchlist());
         BlocProvider.of<StockBloc>(context)

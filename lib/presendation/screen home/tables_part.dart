@@ -258,7 +258,7 @@ class Tablespart extends StatelessWidget {
                                               style: TextStyle(
                                                   color: mainclr,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: textSize),
+                                                  fontSize: textSize - 3),
                                             ),
                                           ),
                                           Container(
