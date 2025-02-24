@@ -214,7 +214,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
           // Create kotItem object and add it to the appropriate category list
           kotItem item = kotItem(
-            updated:false ,
+            updated: false,
             productImg: element['productImg'] ?? '',
             parcelOrnot: '',
             cessAmt: 0.00,
@@ -309,25 +309,43 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         log('Error in TypeChange: $e');
       }
     });
-
     on<CategorySelection>((event, emit) async {
       log('CategorySelection-------StockBloc');
 
       emit(state.copyWith(isLoading: true));
 
       try {
+        if (event.category == null) {
+          log('Error: event.category is null');
+          emit(state.copyWith(isLoading: false));
+          return;
+        }
+
         MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
         MssqlConnection connection = await connectionManager.getConnection();
 
         String stockQuery = """
-  SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
-  FROM  [dbo].[MainStock]
-  WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}' 
-    AND [category] = '${event.category}';
-""";
+      SELECT * FROM [dbo].[MainStock]
+      WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}' 
+      AND [category] = '${event.category}';
+    """;
 
         String stockQueryResult = await connection.getData(stockQuery);
-        List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
+
+        if (stockQueryResult == null || stockQueryResult.isEmpty) {
+          log('Error: stockQueryResult is null or empty');
+          emit(state.copyWith(isLoading: false));
+          return;
+        }
+
+        List<dynamic> stockJsonResponse = [];
+        try {
+          stockJsonResponse = jsonDecode(stockQueryResult);
+        } catch (e) {
+          log('Error decoding JSON: ${e.toString()}');
+          emit(state.copyWith(isLoading: false));
+          return;
+        }
 
         List<Product> stocks =
             stockJsonResponse.map((data) => Product.fromJson(data)).toList();
@@ -335,14 +353,13 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         final List<kotItem> stocksnew = [];
 
         for (var element in stocks) {
-          double basicRate = basicRateclc(
-            element: element,
-            isAc: event.acOrNonAc,
-          );
-
+          double basicRate =
+              basicRateclc(element: element, isAc: event.acOrNonAc);
           double taxableAmount =
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
-          stocksnew.add(kotItem( updated: false,
+
+          stocksnew.add(kotItem(
+            updated: false,
             productImg: element.productImg,
             parcelOrnot: '',
             cessAmt: 0.00,
@@ -358,20 +375,22 @@ class StockBloc extends Bloc<StockEvent, StockState> {
             basicRate: basicRate,
             unitTaxableAmountBeforeDiscount: taxableAmount,
             unitTaxableAmount: taxableAmount,
-            gstPer: double.parse(element.vendorIGST.toString()),
-            cessPer: double.parse(element.cessRate.toString()),
+            gstPer:
+                double.tryParse(element.vendorIGST?.toString() ?? '0.0') ?? 0.0,
+            cessPer:
+                double.tryParse(element.cessRate?.toString() ?? '0.0') ?? 0.0,
           ));
         }
 
         var toKOTMap = {
-          for (var element in state.toKOTitems)
+          for (var element in (state.toKOTitems ?? []))
             element.itemCode: element.quantity
         };
 
-// Iterate through items and update quantity
         for (var item in stocksnew) {
           item.quantity = toKOTMap[item.itemCode] ?? 0;
         }
+
         emit(state.copyWith(
             isLoading: false,
             stocklist: stocksnew,
@@ -442,7 +461,7 @@ class StockBloc extends Bloc<StockEvent, StockState> {
               taxableAmountcalculation(element: element, isAc: event.acOrNonAc);
 
           return kotItem(
-            updated:  false,
+            updated: false,
             productImg: element.productImg,
             parcelOrnot: '',
             cessAmt: 0.00,
@@ -552,11 +571,8 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
           // Update product quantity and sale amount
           if (event.update != null) {
-
-
             products[index] = products[index].copyWith(
-updated:  true,
-
+              updated: true,
               quantity: event.qty,
               basicRate: event.amount,
               unitTaxableAmount: updatetaxableAmountcalculation(

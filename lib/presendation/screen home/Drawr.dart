@@ -270,7 +270,7 @@ void showLogoutDialog(BuildContext context) {
           onPressed: () {
             context.read<LoginBloc>().add(const LoginEvent.logout());
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => ScreenLogin()),
+              MaterialPageRoute(builder: (context) => LoginScreen()),
             );
           },
         ),

@@ -17,7 +17,7 @@ part 'inital_data_bloc.freezed.dart';
 class InitalDataBloc extends Bloc<InitalDataEvent, InitalDataState> {
   InitalDataBloc() : super(InitalDataState.initial()) {
     on<Addinitaldatas>((event, emit) async {
-              emit(state.copyWith(isloading: true));
+      emit(state.copyWith(isloading: true));
 
       log('Addinitaldatas--pppppp');
       try {
@@ -43,7 +43,7 @@ class InitalDataBloc extends Bloc<InitalDataEvent, InitalDataState> {
           TaxtypeMng().addTaxtype(value: true);
         }
         infoCustomer = settingsList[0];
-        emit(state.copyWith(settingsData: settingsList[0],isloading: false));
+        emit(state.copyWith(settingsData: settingsList[0], isloading: false));
       } catch (e) {
         log(e.toString());
       }
@@ -80,10 +80,19 @@ class InitalDataBloc extends Bloc<InitalDataEvent, InitalDataState> {
 // Assuming your connection returns data in JSON format as a string
         String qry =
             'SELECT InvoiceNumberBtoC, InvoiceNumberBtoB, InvoiceReturnNumberBtoC, InvoiceReturnNumberBtoB FROM dbo.AppentryNumber';
-        String qryrslt = await connection.getData(qry);
-        log(qryrslt);
+        log('qry ---$qry-----------------------------');
+        String? qryrslt;
+        try {
+          log('000--------------------------');
+
+          qryrslt = await connection.getData(qry);
+          log('555---------------------------');
+        } catch (e) {
+          log(e.toString());
+        }
+        log('qryrslt ---$qryrslt-----------------------------');
 // Decode the JSON string into a List of Maps
-        List<dynamic> jsonData = jsonDecode(qryrslt);
+        List<dynamic> jsonData = jsonDecode(qryrslt!);
 
 // Convert the JSON data into a list of InvoiceInfo objects
         List<InvoiceInfo> qryrsltdata =

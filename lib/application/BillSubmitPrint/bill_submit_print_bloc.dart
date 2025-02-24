@@ -39,10 +39,10 @@ class BillSubmitPrintBloc
         if (existingProductIndex != -1) {
           // If the product exists, create a new updated item
           var existingProduct = updatedbillItems[existingProductIndex];
-          var updatedProduct = kotItem(  
-            updated:existingProduct.updated ,
-            
-              productImg:  existingProduct.productImg,   
+          var updatedProduct = kotItem(
+            updated: existingProduct.updated,
+
+            productImg: existingProduct.productImg,
             parcelOrnot: existingProduct.parcelOrnot,
             cessAmt: existingProduct.cessAmt,
             gstAmt: existingProduct.gstAmt,
@@ -743,7 +743,7 @@ class BillSubmitPrintBloc
           String payidno = await fetchAndInsertPayOrExpID(connection);
           log('queryPapayidnoyorEX ---------------$payidno');
 
-           String query4 = """
+          String query4 = """
           INSERT INTO  [dbo].[PayorEX] (
          PayOrExpID, VendIDOreCusID, VendIDOreCusName, PayOrExpDate, CAT,
         paidby,   paidamount, PayCrDr,

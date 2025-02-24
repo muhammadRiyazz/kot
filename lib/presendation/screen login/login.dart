@@ -1,280 +1,32 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
-// import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
-// import 'package:restaurant_kot/consts/colors.dart';
-// import 'package:restaurant_kot/presendation/screen%20login/passcose/passcode.dart';
-// import 'package:restaurant_kot/presendation/screen%20splash/screen_splash.dart';
-// import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
-
-// class ScreenLogin extends StatefulWidget {
-//   const ScreenLogin({Key? key}) : super(key: key);
-
-//   @override
-//   _ScreenLoginState createState() => _ScreenLoginState();
-// }
-
-// class _ScreenLoginState extends State<ScreenLogin> {
-//   final _emailController = TextEditingController();
-//   final _passwordController = TextEditingController();
-//   final _formKey = GlobalKey<FormState>();
-//   bool _isPasswordVisible = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         padding: const EdgeInsets.all(20.0),
-//         decoration: const BoxDecoration(color: mainclr),
-//         child: Center(
-//           child: SingleChildScrollView(
-//             child: Form(
-//               key: _formKey,
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   const CircleAvatar(
-//                     radius: 50,
-//                     backgroundColor: Colors.white,
-//                     child: Icon(Icons.restaurant, size: 40, color: mainclr),
-//                   ),
-//                   const SizedBox(height: 20),
-//                   const Text(
-//                     "Welcome Back",
-//                     style: TextStyle(
-//                       color: Colors.white,
-//                       fontSize: 28,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 5),
-//                   const Text(
-//                     "Login to your account",
-//                     style: TextStyle(
-//                       color: Colors.white70,
-//                       fontSize: 16,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 30),
-//                   TextFormField(
-//                     controller: _emailController,
-//                     style: const TextStyle(color: Colors.white),
-//                     decoration: InputDecoration(
-//                       prefixIcon: const Icon(Icons.person, color: Colors.white),
-//                       hintText: 'User Name',
-//                       hintStyle: const TextStyle(color: Colors.white70),
-//                       filled: true,
-//                       fillColor: Colors.white.withOpacity(0.2),
-//                       border: OutlineInputBorder(
-//                         borderRadius: BorderRadius.circular(10),
-//                         borderSide: BorderSide.none,
-//                       ),
-//                     ),
-//                     validator: (value) {
-//                       if (value == null || value.isEmpty) {
-//                         return 'Please enter your username';
-//                       }
-//                       return null;
-//                     },
-//                   ),
-//                   const SizedBox(height: 15),
-//                   TextFormField(
-//                     controller: _passwordController,
-//                     obscureText: !_isPasswordVisible,
-//                     style: const TextStyle(color: Colors.white),
-//                     decoration: InputDecoration(
-//                       prefixIcon: const Icon(Icons.lock, color: Colors.white),
-//                       suffixIcon: IconButton(
-//                         icon: Icon(
-//                           _isPasswordVisible
-//                               ? Icons.visibility
-//                               : Icons.visibility_off,
-//                           color: Colors.white70,
-//                         ),
-//                         onPressed: () {
-//                           setState(() {
-//                             _isPasswordVisible = !_isPasswordVisible;
-//                           });
-//                         },
-//                       ),
-//                       hintText: 'Password',
-//                       hintStyle: const TextStyle(color: Colors.white70),
-//                       filled: true,
-//                       fillColor: Colors.white.withOpacity(0.2),
-//                       border: OutlineInputBorder(
-//                         borderRadius: BorderRadius.circular(10),
-//                         borderSide: BorderSide.none,
-//                       ),
-//                     ),
-//                     validator: (value) {
-//                       if (value == null || value.isEmpty) {
-//                         return 'Please enter your password';
-//                       }
-//                       return null;
-//                     },
-//                   ),
-//                   const SizedBox(height: 15),
-//                   Align(
-//                     alignment: Alignment.centerRight,
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.end,
-//                       children: [
-//                         TextButton(
-//                           onPressed: () {
-//                             Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                     builder: (context) => PasscodePage()));
-//                           },
-//                           child: Text(
-//                             "Settings",
-//                             style: TextStyle(color: Colors.white),
-//                           ),
-//                         ),
-//                         Icon(Icons.arrow_right_rounded, color: Colors.white),
-//                       ],
-//                     ),
-//                   ),
-//                   const SizedBox(height: 20),
-//                   BlocConsumer<LoginBloc, LoginState>(
-//                     listener: (context, state) async {
-//                       if (state.loged) {
-//                         Navigator.pushAndRemoveUntil(
-//                           context,
-//                           MaterialPageRoute(
-//                               builder: (context) => const SplashScreen()),
-//                           (route) => false,
-//                         );
-//                         BlocProvider.of<InitalDataBloc>(context)
-//                             .add(const InitalDataEvent.addinitaldatas());
-//                       }
-//                       if (state.errorMsg != null) {
-//                         ScaffoldMessenger.of(context).showSnackBar(
-//                           SnackBar(
-//                             behavior: SnackBarBehavior.floating,
-//                             backgroundColor: mainclr,
-//                             content: Text(state.errorMsg ?? "Error",
-//                                 style: const TextStyle(fontSize: 15)),
-//                           ),
-//                         );
-//                       }
-//                     },
-//                     builder: (context, state) {
-//                       return state.isLoading
-//                           ? const Loading()
-//                           : SizedBox(
-//                               width: double.infinity,
-//                               height: 50,
-//                               child: ElevatedButton(
-//                                 style: ElevatedButton.styleFrom(
-//                                   padding: const EdgeInsets.symmetric(
-//                                       horizontal: 100, vertical: 15),
-//                                   backgroundColor: Colors.white,
-//                                   shape: RoundedRectangleBorder(
-//                                     borderRadius: BorderRadius.circular(10),
-//                                   ),
-//                                 ),
-//                                 onPressed: () {
-//                                   if (_formKey.currentState!.validate()) {
-//                                     BlocProvider.of<LoginBloc>(context).add(
-//                                       LoginEvent.login(
-//                                         pass: _passwordController.text.trim(),
-//                                         username: _emailController.text.trim(),
-//                                       ),
-//                                     );
-//                                   }
-//                                 },
-//                                 child: const Text(
-//                                   "Login",
-//                                   style: TextStyle(
-//                                       color: mainclr,
-//                                       fontWeight: FontWeight.bold),
-//                                 ),
-//                               ));
-//                     },
-//                   ),
-//                   const SizedBox(height: 10),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       const Text(
-//                         "Need any help?",
-//                         style: TextStyle(color: Colors.white),
-//                       ),
-//                       TextButton(
-//                         onPressed: () {},
-//                         child: const Text(
-//                           "Support",
-//                           style: TextStyle(
-//                             color: Colors.white,
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                   TextButton(
-//                     onPressed: () {},
-//                     child: const Text(
-//                       "Demo",
-//                       style: TextStyle(
-//                         color: Colors.white,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   @override
-//   void dispose() {
-//     _emailController.dispose();
-//     _passwordController.dispose();
-//     super.dispose();
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/demo/demo_bloc.dart';
-import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
+import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-
+import 'package:restaurant_kot/infrastructure/initalfetchdata/bill_design_mng.dart';
 import 'package:restaurant_kot/presendation/screen%20login/passcose/passcode.dart';
 import 'package:restaurant_kot/presendation/screen%20splash/screen_splash.dart';
 import 'package:restaurant_kot/presendation/screen%20support/screen_support.dart';
-import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
 
-class ScreenLogin extends StatelessWidget {
-  ScreenLogin({super.key});
-
+class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
-    double padding;
-    if (screenWidth < 600) {
-      padding = 20.0;
-    } else if (screenWidth >= 600 && screenWidth < 900) {
-      padding = 40.0;
-    } else if (screenWidth >= 900 && screenWidth < 1200) {
-      padding = 100.0;
-    } else {
-      padding = 130.0;
-    }
+    final double padding = (screenWidth < 600)
+        ? 20.0
+        : (screenWidth < 900)
+            ? 40.0
+            : (screenWidth < 1200)
+                ? 100.0
+                : 130.0;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -287,16 +39,14 @@ class ScreenLogin extends StatelessWidget {
               children: [
                 const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Image.asset(
                     'assets/img/loginpage/login.jpg',
                     fit: BoxFit.contain,
-                    // height: 250,
                   ),
                 ),
-                // const SizedBox(height: 30),
                 Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -310,6 +60,8 @@ class ScreenLogin extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
+
+                        // Username Field
                         TextFormField(
                           controller: _usernameController,
                           decoration: InputDecoration(
@@ -340,6 +92,8 @@ class ScreenLogin extends StatelessWidget {
                           },
                         ),
                         const SizedBox(height: 16),
+
+                        // Password Field
                         TextFormField(
                           controller: _passwordController,
                           obscureText: true,
@@ -371,8 +125,10 @@ class ScreenLogin extends StatelessWidget {
                           },
                         ),
                         const SizedBox(height: 20),
+
+                        // Login Button
                         BlocConsumer<LoginBloc, LoginState>(
-                          listener: (context, state) async {
+                          listener: (context, state) {
                             if (state.loged) {
                               Navigator.pushAndRemoveUntil(
                                 context,
@@ -382,34 +138,18 @@ class ScreenLogin extends StatelessWidget {
                               );
                               BlocProvider.of<InitalDataBloc>(context)
                                   .add(const InitalDataEvent.addinitaldatas());
-                              // await BillDesignMng()
-                              //     .changebilldesignLogo(value: false);
-                              // await BillDesignMng()
-                              //     .changesbilldesignName(value: false);
-                              // await StockMng()
-                              //     .changestockmngGoods(value: false);
-                              // await StockMng()
-                              //     .changestockmngService(value: false);
+                              BillDesignMng().changebilldesignLogo(value: true);
+                              BillDesignMng()
+                                  .changesbilldesignName(value: true);
                             }
                             if (state.errorMsg != null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   behavior: SnackBarBehavior.floating,
                                   backgroundColor: Colors.red.shade700,
-                                  content: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('Oops!',
-                                            style: TextStyle(fontSize: 18)),
-                                        Text(state.errorMsg.toString(),
-                                            style:
-                                                const TextStyle(fontSize: 15)),
-                                      ],
-                                    ),
+                                  content: Text(
+                                    'Oops! ${state.errorMsg}',
+                                    style: const TextStyle(fontSize: 15),
                                   ),
                                 ),
                               );
@@ -418,12 +158,8 @@ class ScreenLogin extends StatelessWidget {
                           builder: (context, state) {
                             return state.isLoading
                                 ? const Loading()
-                                : Container(
+                                : SizedBox(
                                     width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: mainclr,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
                                     child: ElevatedButton(
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
@@ -439,8 +175,7 @@ class ScreenLogin extends StatelessWidget {
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        shadowColor: Colors.transparent,
+                                        backgroundColor: mainclr,
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 15),
                                         shape: RoundedRectangleBorder(
@@ -461,6 +196,8 @@ class ScreenLogin extends StatelessWidget {
                           },
                         ),
                         const SizedBox(height: 10),
+
+                        // Settings Button
                         TextButton(
                           onPressed: () {
                             Navigator.push(
@@ -479,10 +216,12 @@ class ScreenLogin extends StatelessWidget {
                           ),
                         ),
                         const Divider(),
+
+                        // Support and Demo Buttons
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton(
+                            TextButton.icon(
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -490,32 +229,22 @@ class ScreenLogin extends StatelessWidget {
                                       builder: (context) => SupportPage()),
                                 );
                               },
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.support_agent_outlined,
-                                      size: 20, color: mainclr),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    'Support',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: mainclr,
-                                    ),
-                                  ),
-                                ],
+                              icon: const Icon(Icons.support_agent_outlined,
+                                  size: 20, color: mainclr),
+                              label: const Text(
+                                'Support',
+                                style: TextStyle(fontSize: 16, color: mainclr),
                               ),
                             ),
                             TextButton(
                               onPressed: () {
                                 _showOptionsBottomSheet(context);
+
+                                // Implement demo functionality
                               },
                               child: Text(
                                 'Demo',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: mainclr,
-                                ),
+                                style: TextStyle(fontSize: 16, color: mainclr),
                               ),
                             ),
                           ],
@@ -533,236 +262,56 @@ class ScreenLogin extends StatelessWidget {
   }
 }
 
-// class ScreenLogin extends StatefulWidget {
-//   const ScreenLogin({Key? key}) : super(key: key);
-
-//   @override
-//   _ScreenLoginState createState() => _ScreenLoginState();
-// }
-
-// class _ScreenLoginState extends State<ScreenLogin> {
-//   final _emailController = TextEditingController();
-//   final _passwordController = TextEditingController();
-//   bool _isPasswordVisible = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         padding: const EdgeInsets.all(20.0),
-//         decoration: const BoxDecoration(
-//           gradient: LinearGradient(
-//             colors: [mainclr, mainclr],
-//             begin: Alignment.topCenter,
-//             end: Alignment.bottomCenter,
-//           ),
-//         ),
-//         child: Center(
-//           child: SingleChildScrollView(
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 const CircleAvatar(
-//                   radius: 50,
-//                   backgroundColor: Colors.white,
-//                   child: Icon(Icons.restaurant, size: 40, color: mainclr),
-//                 ),
-//                 const SizedBox(height: 20),
-//                 const Text(
-//                   "Welcome Back",
-//                   style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 28,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 5),
-//                 const Text(
-//                   "Login to your account",
-//                   style: TextStyle(
-//                     color: Colors.white70,
-//                     fontSize: 16,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 30),
-//                 TextField(
-//                   controller: _emailController,
-//                   style: const TextStyle(color: Colors.white),
-//                   decoration: InputDecoration(
-//                     prefixIcon: const Icon(Icons.person, color: Colors.white),
-//                     hintText: 'User Name',
-//                     hintStyle: const TextStyle(color: Colors.white70),
-//                     filled: true,
-//                     fillColor: Colors.white.withOpacity(0.2),
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(10),
-//                       borderSide: BorderSide.none,
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(height: 15),
-//                 TextField(
-//                   controller: _passwordController,
-//                   obscureText: !_isPasswordVisible,
-//                   style: const TextStyle(color: Colors.white),
-//                   decoration: InputDecoration(
-//                     prefixIcon: const Icon(Icons.lock, color: Colors.white),
-//                     hintText: 'Password',
-//                     hintStyle: const TextStyle(color: Colors.white70),
-//                     filled: true,
-//                     fillColor: Colors.white.withOpacity(0.2),
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(10),
-//                       borderSide: BorderSide.none,
-//                     ),
-//                     suffixIcon: IconButton(
-//                       icon: Icon(
-//                         _isPasswordVisible
-//                             ? Icons.visibility
-//                             : Icons.visibility_off,
-//                         color: Colors.white,
-//                       ),
-//                       onPressed: () {
-//                         setState(() {
-//                           _isPasswordVisible = !_isPasswordVisible;
-//                         });
-//                       },
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(height: 15),
-//                 Align(
-//                   alignment: Alignment.centerRight,
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.end,
-//                     children: [
-//                       TextButton(
-//                         onPressed: () {},
-//                         child: Text(
-//                           "Settings",
-//                           style: TextStyle(color: Colors.white),
-//                         ),
-//                       ),
-//                       Icon(Icons.arrow_right_rounded, color: Colors.white),
-//                     ],
-//                   ),
-//                 ),
-//                 const SizedBox(height: 20),
-//                 SizedBox(
-//                   width: double.infinity,
-//                   height: 50,
-//                   child: ElevatedButton(
-//                     onPressed: () {},
-//                     style: ElevatedButton.styleFrom(
-//                       backgroundColor: Colors.white,
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(10),
-//                       ),
-//                     ),
-//                     child: const Text(
-//                       "LOGIN",
-//                       style: TextStyle(
-//                         color: mainclr,
-//                         fontSize: 18,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(height: 20),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     const Text(
-//                       "Need any help?",
-//                       style: TextStyle(color: Colors.white),
-//                     ),
-//                     TextButton(
-//                       onPressed: () {},
-//                       child: const Text(
-//                         "Support",
-//                         style: TextStyle(
-//                           color: Colors.white,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 void _showOptionsBottomSheet(BuildContext context) {
-  String selectedOption = 'Non-Veg Restaurant'; // Default selected option
+  String selectedOption = 'Non-Veg Restaurant';
 
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true, // Makes the bottom sheet take more space
-    shape: RoundedRectangleBorder(
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Container(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 16),
-
-                // Title
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'Select Restaurant Type',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16),
-                // Radio Button for Non-Veg Restaurant
+                const SizedBox(height: 16),
                 RadioListTile<String>(
                   controlAffinity: ListTileControlAffinity.trailing,
-                  title: const Text(
-                    'Non-Veg Restaurant',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  title: const Text('Non-Veg Restaurant',
+                      style: TextStyle(fontSize: 16)),
                   value: 'Non-Veg Restaurant',
                   groupValue: selectedOption,
                   onChanged: (value) {
-                    setState(() {
-                      selectedOption = value!;
-                    });
+                    setState(() => selectedOption = value!);
                   },
-                  activeColor: mainclr, // Custom color for selected radio
+                  activeColor: mainclr,
                 ),
-                Divider(),
-                // Radio Button for Veg Restaurant
+                const Divider(),
                 RadioListTile<String>(
                   controlAffinity: ListTileControlAffinity.trailing,
-                  title: Text(
-                    'Veg Restaurant',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  title: const Text('Veg Restaurant',
+                      style: TextStyle(fontSize: 16)),
                   value: 'Veg Restaurant',
                   groupValue: selectedOption,
                   onChanged: (value) {
-                    setState(() {
-                      selectedOption = value!;
-                    });
+                    setState(() => selectedOption = value!);
                   },
-                  activeColor: mainclr, // Custom color for selected radio
+                  activeColor: mainclr,
                 ),
-
-                SizedBox(height: 20),
-
-                // Full-Width Next Button
+                const SizedBox(height: 20),
                 BlocConsumer<DemoBloc, DemoState>(
                   listener: (context, state) {
                     if (state.loged) {
@@ -775,18 +324,28 @@ void _showOptionsBottomSheet(BuildContext context) {
                     }
                   },
                   builder: (context, state) {
-                    return state.isLoading
-                        ? LinearProgressIndicator(
-                            color: mainclr,
-                          )
-                        : MainButton(
-                            label: 'Next',
-                            onpress: () {
-                              BlocProvider.of<DemoBloc>(context).add(
-                                  DemoEvent.demodatabase(type: selectedOption));
-                            });
+                    return SizedBox(
+                      width: double.infinity,
+                      child: state.isLoading
+                          ? LinearProgressIndicator(color: mainclr)
+                          : ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: mainclr,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () {
+                                BlocProvider.of<DemoBloc>(context).add(
+                                  DemoEvent.demodatabase(type: selectedOption),
+                                );
+                              },
+                              child: const Text('Next',
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                    );
                   },
-                )
+                ),
               ],
             ),
           );

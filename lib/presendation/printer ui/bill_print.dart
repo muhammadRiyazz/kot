@@ -6,6 +6,7 @@ import 'package:flutter_esc_pos_utils/flutter_esc_pos_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/bill_design_mng.dart';
 
 Future<List<int>> billPrintData({
   required List<kotItem> items,
@@ -27,14 +28,27 @@ Future<List<int>> billPrintData({
   final generator = Generator(PaperSize.mm80, profile);
   List<int> bytes = [];
 
-  // Add the restaurant logo
+
+if (addLogo!=null) {
+  if (addLogo==true) {
+      // Add the restaurant logo
   final logoImage = await _getNetworkImage();
   if (logoImage != null) {
     bytes += generator.image(logoImage);
     bytes += generator.feed(1); // Add some space after the logo
+  } else {
+    log('logoImage --- is null ----');
   }
 
-// Header with increased font size
+
+  }
+}
+
+
+
+if (addName!=null) {
+  if (addName==true) {
+ // Header with increased font size
   bytes += generator.text(
     infoCustomer!.cmpname,
     styles: const PosStyles(
@@ -44,6 +58,12 @@ Future<List<int>> billPrintData({
       width: PosTextSize.size2, // Increase font width
     ),
   );
+
+
+
+  }
+}
+
 
   bytes += generator.text(
     infoCustomer!.cmpadd,
@@ -316,15 +336,19 @@ Future<List<int>> billPrintData({
 }
 
 Future<img.Image?> _getNetworkImage() async {
-  try {
-    final response =
-        await http.get(Uri.parse('http://$ipid/${infoCustomer!.cmpadd}.png'));
-    if (response.statusCode == 200) {
-      // Decode the image
-      final image = img.decodeImage(response.bodyBytes);
+  final imageUrl = 'http://$ipid/${infoCustomer!.cmpname}.png';
+  log('Fetching image from: $imageUrl');
 
-      // Resize the image to fit the printer's width (e.g., 300 pixels wide)
+  try {
+    final response = await http.get(Uri.parse(imageUrl));
+    if (response.statusCode == 200) {
+      final image = img.decodeImage(response.bodyBytes);
+      if (image == null) {
+        log('Failed to decode image');
+      }
       return image != null ? img.copyResize(image, width: 300) : null;
+    } else {
+      log('Failed to load image. Status code: ${response.statusCode}');
     }
   } catch (e) {
     log('Error loading image: $e');

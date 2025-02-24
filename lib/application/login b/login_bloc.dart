@@ -78,7 +78,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             emit(state.copyWith(
                 isLoading: false,
                 uservalid: false,
-                errorMsg: 'Please Check Your Paynebt Status'));
+                errorMsg: 'Please Check Your Payment Status'));
           }
         } else {
           log('Server Not Connected');
