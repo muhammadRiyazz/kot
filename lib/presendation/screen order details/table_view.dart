@@ -156,32 +156,32 @@ class TableViewForTableChange extends StatelessWidget {
                       mainAxisSpacing: 5,
                       childAspectRatio: 1,
                     ),
-                    itemCount: state.tables.length,
+                    itemCount: state.tablesforchange.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
                           BlocProvider.of<TablesBloc>(context).add(
                               TablesEvent.select(
-                                  tablename: state.tables[index].tableName));
+                                  tablename: state.tablesforchange[index].tableName));
                         },
                         child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               border: state.selectedtable != null &&
                                       state.selectedtable ==
-                                          state.tables[index].tableName
+                                          state.tablesforchange[index].tableName
                                   ? Border.all(width: 2, color: mainclr)
                                   : null,
-                              color: table == state.tables[index].tableName
+                              color: table == state.tablesforchange[index].tableName
                                   ? mainclr
                                   : boxbgwhite),
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Center(
                                 child: Text(
-                              state.tables[index].tableName,
+                              state.tablesforchange[index].tableName,
                               style: TextStyle(
-                                  color: table == state.tables[index].tableName
+                                  color: table == state.tablesforchange[index].tableName
                                       ? const Color.fromARGB(255, 255, 255, 255)
                                       : mainclr,
                                   fontSize: 16,

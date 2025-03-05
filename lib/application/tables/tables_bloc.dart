@@ -97,7 +97,7 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
 
       try {
         // Filter and sort tables for the selected floor
-        List<TableModel> filteredTables = _tableModels
+        List<TableModel> filteredTables = state.tablesforchange
             .where((table) => table.floorName == event.floor)
             .toList();
 
@@ -111,10 +111,23 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
           }
         });
 
-        emit(state.copyWith(isLoading: false, tables: filteredTables));
+        emit(state.copyWith(isLoading: false, tablesforchange: filteredTables));
       } catch (e) {
         log("Error selecting floor: $e");
         emit(state.copyWith(isLoading: false));
+      }
+    });
+
+    on<ShowchangeTable>((event, emit) async {
+      try {
+        // Filter and sort tables for the selected floor
+        List<TableModel> tables = _tableModels
+            .where((table) => table.tableType == event.tableType)
+            .toList();
+
+        emit(state.copyWith(isLoading: false, tablesforchange: tables));
+      } catch (e) {
+        log("Error selecting floor: $e");
       }
     });
 

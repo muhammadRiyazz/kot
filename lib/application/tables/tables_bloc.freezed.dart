@@ -20,6 +20,7 @@ mixin _$TablesEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String tablename) select,
     required TResult Function() taledata,
+    required TResult Function(String tableType) showchangeTable,
     required TResult Function(String floor) chooseFloor,
     required TResult Function(String tablename, String orderNo) change,
   }) =>
@@ -28,6 +29,7 @@ mixin _$TablesEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String tablename)? select,
     TResult? Function()? taledata,
+    TResult? Function(String tableType)? showchangeTable,
     TResult? Function(String floor)? chooseFloor,
     TResult? Function(String tablename, String orderNo)? change,
   }) =>
@@ -36,6 +38,7 @@ mixin _$TablesEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String tablename)? select,
     TResult Function()? taledata,
+    TResult Function(String tableType)? showchangeTable,
     TResult Function(String floor)? chooseFloor,
     TResult Function(String tablename, String orderNo)? change,
     required TResult orElse(),
@@ -45,6 +48,7 @@ mixin _$TablesEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(Select value) select,
     required TResult Function(TableData value) taledata,
+    required TResult Function(ShowchangeTable value) showchangeTable,
     required TResult Function(ChooseFloor value) chooseFloor,
     required TResult Function(Change value) change,
   }) =>
@@ -53,6 +57,7 @@ mixin _$TablesEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Select value)? select,
     TResult? Function(TableData value)? taledata,
+    TResult? Function(ShowchangeTable value)? showchangeTable,
     TResult? Function(ChooseFloor value)? chooseFloor,
     TResult? Function(Change value)? change,
   }) =>
@@ -61,6 +66,7 @@ mixin _$TablesEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Select value)? select,
     TResult Function(TableData value)? taledata,
+    TResult Function(ShowchangeTable value)? showchangeTable,
     TResult Function(ChooseFloor value)? chooseFloor,
     TResult Function(Change value)? change,
     required TResult orElse(),
@@ -160,6 +166,7 @@ class _$SelectImpl implements Select {
   TResult when<TResult extends Object?>({
     required TResult Function(String tablename) select,
     required TResult Function() taledata,
+    required TResult Function(String tableType) showchangeTable,
     required TResult Function(String floor) chooseFloor,
     required TResult Function(String tablename, String orderNo) change,
   }) {
@@ -171,6 +178,7 @@ class _$SelectImpl implements Select {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String tablename)? select,
     TResult? Function()? taledata,
+    TResult? Function(String tableType)? showchangeTable,
     TResult? Function(String floor)? chooseFloor,
     TResult? Function(String tablename, String orderNo)? change,
   }) {
@@ -182,6 +190,7 @@ class _$SelectImpl implements Select {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String tablename)? select,
     TResult Function()? taledata,
+    TResult Function(String tableType)? showchangeTable,
     TResult Function(String floor)? chooseFloor,
     TResult Function(String tablename, String orderNo)? change,
     required TResult orElse(),
@@ -197,6 +206,7 @@ class _$SelectImpl implements Select {
   TResult map<TResult extends Object?>({
     required TResult Function(Select value) select,
     required TResult Function(TableData value) taledata,
+    required TResult Function(ShowchangeTable value) showchangeTable,
     required TResult Function(ChooseFloor value) chooseFloor,
     required TResult Function(Change value) change,
   }) {
@@ -208,6 +218,7 @@ class _$SelectImpl implements Select {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Select value)? select,
     TResult? Function(TableData value)? taledata,
+    TResult? Function(ShowchangeTable value)? showchangeTable,
     TResult? Function(ChooseFloor value)? chooseFloor,
     TResult? Function(Change value)? change,
   }) {
@@ -219,6 +230,7 @@ class _$SelectImpl implements Select {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Select value)? select,
     TResult Function(TableData value)? taledata,
+    TResult Function(ShowchangeTable value)? showchangeTable,
     TResult Function(ChooseFloor value)? chooseFloor,
     TResult Function(Change value)? change,
     required TResult orElse(),
@@ -285,6 +297,7 @@ class _$TableDataImpl implements TableData {
   TResult when<TResult extends Object?>({
     required TResult Function(String tablename) select,
     required TResult Function() taledata,
+    required TResult Function(String tableType) showchangeTable,
     required TResult Function(String floor) chooseFloor,
     required TResult Function(String tablename, String orderNo) change,
   }) {
@@ -296,6 +309,7 @@ class _$TableDataImpl implements TableData {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String tablename)? select,
     TResult? Function()? taledata,
+    TResult? Function(String tableType)? showchangeTable,
     TResult? Function(String floor)? chooseFloor,
     TResult? Function(String tablename, String orderNo)? change,
   }) {
@@ -307,6 +321,7 @@ class _$TableDataImpl implements TableData {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String tablename)? select,
     TResult Function()? taledata,
+    TResult Function(String tableType)? showchangeTable,
     TResult Function(String floor)? chooseFloor,
     TResult Function(String tablename, String orderNo)? change,
     required TResult orElse(),
@@ -322,6 +337,7 @@ class _$TableDataImpl implements TableData {
   TResult map<TResult extends Object?>({
     required TResult Function(Select value) select,
     required TResult Function(TableData value) taledata,
+    required TResult Function(ShowchangeTable value) showchangeTable,
     required TResult Function(ChooseFloor value) chooseFloor,
     required TResult Function(Change value) change,
   }) {
@@ -333,6 +349,7 @@ class _$TableDataImpl implements TableData {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Select value)? select,
     TResult? Function(TableData value)? taledata,
+    TResult? Function(ShowchangeTable value)? showchangeTable,
     TResult? Function(ChooseFloor value)? chooseFloor,
     TResult? Function(Change value)? change,
   }) {
@@ -344,6 +361,7 @@ class _$TableDataImpl implements TableData {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Select value)? select,
     TResult Function(TableData value)? taledata,
+    TResult Function(ShowchangeTable value)? showchangeTable,
     TResult Function(ChooseFloor value)? chooseFloor,
     TResult Function(Change value)? change,
     required TResult orElse(),
@@ -357,6 +375,167 @@ class _$TableDataImpl implements TableData {
 
 abstract class TableData implements TablesEvent {
   const factory TableData() = _$TableDataImpl;
+}
+
+/// @nodoc
+abstract class _$$ShowchangeTableImplCopyWith<$Res> {
+  factory _$$ShowchangeTableImplCopyWith(_$ShowchangeTableImpl value,
+          $Res Function(_$ShowchangeTableImpl) then) =
+      __$$ShowchangeTableImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String tableType});
+}
+
+/// @nodoc
+class __$$ShowchangeTableImplCopyWithImpl<$Res>
+    extends _$TablesEventCopyWithImpl<$Res, _$ShowchangeTableImpl>
+    implements _$$ShowchangeTableImplCopyWith<$Res> {
+  __$$ShowchangeTableImplCopyWithImpl(
+      _$ShowchangeTableImpl _value, $Res Function(_$ShowchangeTableImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TablesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tableType = null,
+  }) {
+    return _then(_$ShowchangeTableImpl(
+      tableType: null == tableType
+          ? _value.tableType
+          : tableType // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ShowchangeTableImpl implements ShowchangeTable {
+  const _$ShowchangeTableImpl({required this.tableType});
+
+  @override
+  final String tableType;
+
+  @override
+  String toString() {
+    return 'TablesEvent.showchangeTable(tableType: $tableType)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ShowchangeTableImpl &&
+            (identical(other.tableType, tableType) ||
+                other.tableType == tableType));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, tableType);
+
+  /// Create a copy of TablesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ShowchangeTableImplCopyWith<_$ShowchangeTableImpl> get copyWith =>
+      __$$ShowchangeTableImplCopyWithImpl<_$ShowchangeTableImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String tablename) select,
+    required TResult Function() taledata,
+    required TResult Function(String tableType) showchangeTable,
+    required TResult Function(String floor) chooseFloor,
+    required TResult Function(String tablename, String orderNo) change,
+  }) {
+    return showchangeTable(tableType);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String tablename)? select,
+    TResult? Function()? taledata,
+    TResult? Function(String tableType)? showchangeTable,
+    TResult? Function(String floor)? chooseFloor,
+    TResult? Function(String tablename, String orderNo)? change,
+  }) {
+    return showchangeTable?.call(tableType);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String tablename)? select,
+    TResult Function()? taledata,
+    TResult Function(String tableType)? showchangeTable,
+    TResult Function(String floor)? chooseFloor,
+    TResult Function(String tablename, String orderNo)? change,
+    required TResult orElse(),
+  }) {
+    if (showchangeTable != null) {
+      return showchangeTable(tableType);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(Select value) select,
+    required TResult Function(TableData value) taledata,
+    required TResult Function(ShowchangeTable value) showchangeTable,
+    required TResult Function(ChooseFloor value) chooseFloor,
+    required TResult Function(Change value) change,
+  }) {
+    return showchangeTable(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Select value)? select,
+    TResult? Function(TableData value)? taledata,
+    TResult? Function(ShowchangeTable value)? showchangeTable,
+    TResult? Function(ChooseFloor value)? chooseFloor,
+    TResult? Function(Change value)? change,
+  }) {
+    return showchangeTable?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(Select value)? select,
+    TResult Function(TableData value)? taledata,
+    TResult Function(ShowchangeTable value)? showchangeTable,
+    TResult Function(ChooseFloor value)? chooseFloor,
+    TResult Function(Change value)? change,
+    required TResult orElse(),
+  }) {
+    if (showchangeTable != null) {
+      return showchangeTable(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ShowchangeTable implements TablesEvent {
+  const factory ShowchangeTable({required final String tableType}) =
+      _$ShowchangeTableImpl;
+
+  String get tableType;
+
+  /// Create a copy of TablesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ShowchangeTableImplCopyWith<_$ShowchangeTableImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -429,6 +608,7 @@ class _$ChooseFloorImpl implements ChooseFloor {
   TResult when<TResult extends Object?>({
     required TResult Function(String tablename) select,
     required TResult Function() taledata,
+    required TResult Function(String tableType) showchangeTable,
     required TResult Function(String floor) chooseFloor,
     required TResult Function(String tablename, String orderNo) change,
   }) {
@@ -440,6 +620,7 @@ class _$ChooseFloorImpl implements ChooseFloor {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String tablename)? select,
     TResult? Function()? taledata,
+    TResult? Function(String tableType)? showchangeTable,
     TResult? Function(String floor)? chooseFloor,
     TResult? Function(String tablename, String orderNo)? change,
   }) {
@@ -451,6 +632,7 @@ class _$ChooseFloorImpl implements ChooseFloor {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String tablename)? select,
     TResult Function()? taledata,
+    TResult Function(String tableType)? showchangeTable,
     TResult Function(String floor)? chooseFloor,
     TResult Function(String tablename, String orderNo)? change,
     required TResult orElse(),
@@ -466,6 +648,7 @@ class _$ChooseFloorImpl implements ChooseFloor {
   TResult map<TResult extends Object?>({
     required TResult Function(Select value) select,
     required TResult Function(TableData value) taledata,
+    required TResult Function(ShowchangeTable value) showchangeTable,
     required TResult Function(ChooseFloor value) chooseFloor,
     required TResult Function(Change value) change,
   }) {
@@ -477,6 +660,7 @@ class _$ChooseFloorImpl implements ChooseFloor {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Select value)? select,
     TResult? Function(TableData value)? taledata,
+    TResult? Function(ShowchangeTable value)? showchangeTable,
     TResult? Function(ChooseFloor value)? chooseFloor,
     TResult? Function(Change value)? change,
   }) {
@@ -488,6 +672,7 @@ class _$ChooseFloorImpl implements ChooseFloor {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Select value)? select,
     TResult Function(TableData value)? taledata,
+    TResult Function(ShowchangeTable value)? showchangeTable,
     TResult Function(ChooseFloor value)? chooseFloor,
     TResult Function(Change value)? change,
     required TResult orElse(),
@@ -590,6 +775,7 @@ class _$ChangeImpl implements Change {
   TResult when<TResult extends Object?>({
     required TResult Function(String tablename) select,
     required TResult Function() taledata,
+    required TResult Function(String tableType) showchangeTable,
     required TResult Function(String floor) chooseFloor,
     required TResult Function(String tablename, String orderNo) change,
   }) {
@@ -601,6 +787,7 @@ class _$ChangeImpl implements Change {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String tablename)? select,
     TResult? Function()? taledata,
+    TResult? Function(String tableType)? showchangeTable,
     TResult? Function(String floor)? chooseFloor,
     TResult? Function(String tablename, String orderNo)? change,
   }) {
@@ -612,6 +799,7 @@ class _$ChangeImpl implements Change {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String tablename)? select,
     TResult Function()? taledata,
+    TResult Function(String tableType)? showchangeTable,
     TResult Function(String floor)? chooseFloor,
     TResult Function(String tablename, String orderNo)? change,
     required TResult orElse(),
@@ -627,6 +815,7 @@ class _$ChangeImpl implements Change {
   TResult map<TResult extends Object?>({
     required TResult Function(Select value) select,
     required TResult Function(TableData value) taledata,
+    required TResult Function(ShowchangeTable value) showchangeTable,
     required TResult Function(ChooseFloor value) chooseFloor,
     required TResult Function(Change value) change,
   }) {
@@ -638,6 +827,7 @@ class _$ChangeImpl implements Change {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Select value)? select,
     TResult? Function(TableData value)? taledata,
+    TResult? Function(ShowchangeTable value)? showchangeTable,
     TResult? Function(ChooseFloor value)? chooseFloor,
     TResult? Function(Change value)? change,
   }) {
@@ -649,6 +839,7 @@ class _$ChangeImpl implements Change {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Select value)? select,
     TResult Function(TableData value)? taledata,
+    TResult Function(ShowchangeTable value)? showchangeTable,
     TResult Function(ChooseFloor value)? chooseFloor,
     TResult Function(Change value)? change,
     required TResult orElse(),
@@ -684,6 +875,7 @@ mixin _$TablesState {
   String? get selectedFloor => throw _privateConstructorUsedError;
   List<TableInfo> get tablesinfolist => throw _privateConstructorUsedError;
   List<TableModel> get tables => throw _privateConstructorUsedError;
+  List<TableModel> get tablesforchange => throw _privateConstructorUsedError;
 
   /// Create a copy of TablesState
   /// with the given fields replaced by the non-null parameter values.
@@ -705,7 +897,8 @@ abstract class $TablesStateCopyWith<$Res> {
       List<String> floors,
       String? selectedFloor,
       List<TableInfo> tablesinfolist,
-      List<TableModel> tables});
+      List<TableModel> tables,
+      List<TableModel> tablesforchange});
 }
 
 /// @nodoc
@@ -730,6 +923,7 @@ class _$TablesStateCopyWithImpl<$Res, $Val extends TablesState>
     Object? selectedFloor = freezed,
     Object? tablesinfolist = null,
     Object? tables = null,
+    Object? tablesforchange = null,
   }) {
     return _then(_value.copyWith(
       selectedtable: freezed == selectedtable
@@ -760,6 +954,10 @@ class _$TablesStateCopyWithImpl<$Res, $Val extends TablesState>
           ? _value.tables
           : tables // ignore: cast_nullable_to_non_nullable
               as List<TableModel>,
+      tablesforchange: null == tablesforchange
+          ? _value.tablesforchange
+          : tablesforchange // ignore: cast_nullable_to_non_nullable
+              as List<TableModel>,
     ) as $Val);
   }
 }
@@ -779,7 +977,8 @@ abstract class _$$TablesStateImplCopyWith<$Res>
       List<String> floors,
       String? selectedFloor,
       List<TableInfo> tablesinfolist,
-      List<TableModel> tables});
+      List<TableModel> tables,
+      List<TableModel> tablesforchange});
 }
 
 /// @nodoc
@@ -802,6 +1001,7 @@ class __$$TablesStateImplCopyWithImpl<$Res>
     Object? selectedFloor = freezed,
     Object? tablesinfolist = null,
     Object? tables = null,
+    Object? tablesforchange = null,
   }) {
     return _then(_$TablesStateImpl(
       selectedtable: freezed == selectedtable
@@ -832,6 +1032,10 @@ class __$$TablesStateImplCopyWithImpl<$Res>
           ? _value._tables
           : tables // ignore: cast_nullable_to_non_nullable
               as List<TableModel>,
+      tablesforchange: null == tablesforchange
+          ? _value._tablesforchange
+          : tablesforchange // ignore: cast_nullable_to_non_nullable
+              as List<TableModel>,
     ));
   }
 }
@@ -846,10 +1050,12 @@ class _$TablesStateImpl implements _TablesState {
       required final List<String> floors,
       this.selectedFloor,
       required final List<TableInfo> tablesinfolist,
-      required final List<TableModel> tables})
+      required final List<TableModel> tables,
+      required final List<TableModel> tablesforchange})
       : _floors = floors,
         _tablesinfolist = tablesinfolist,
-        _tables = tables;
+        _tables = tables,
+        _tablesforchange = tablesforchange;
 
   @override
   final String? selectedtable;
@@ -883,9 +1089,17 @@ class _$TablesStateImpl implements _TablesState {
     return EqualUnmodifiableListView(_tables);
   }
 
+  final List<TableModel> _tablesforchange;
+  @override
+  List<TableModel> get tablesforchange {
+    if (_tablesforchange is EqualUnmodifiableListView) return _tablesforchange;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tablesforchange);
+  }
+
   @override
   String toString() {
-    return 'TablesState(selectedtable: $selectedtable, isLoading: $isLoading, changed: $changed, floors: $floors, selectedFloor: $selectedFloor, tablesinfolist: $tablesinfolist, tables: $tables)';
+    return 'TablesState(selectedtable: $selectedtable, isLoading: $isLoading, changed: $changed, floors: $floors, selectedFloor: $selectedFloor, tablesinfolist: $tablesinfolist, tables: $tables, tablesforchange: $tablesforchange)';
   }
 
   @override
@@ -903,7 +1117,9 @@ class _$TablesStateImpl implements _TablesState {
                 other.selectedFloor == selectedFloor) &&
             const DeepCollectionEquality()
                 .equals(other._tablesinfolist, _tablesinfolist) &&
-            const DeepCollectionEquality().equals(other._tables, _tables));
+            const DeepCollectionEquality().equals(other._tables, _tables) &&
+            const DeepCollectionEquality()
+                .equals(other._tablesforchange, _tablesforchange));
   }
 
   @override
@@ -915,7 +1131,8 @@ class _$TablesStateImpl implements _TablesState {
       const DeepCollectionEquality().hash(_floors),
       selectedFloor,
       const DeepCollectionEquality().hash(_tablesinfolist),
-      const DeepCollectionEquality().hash(_tables));
+      const DeepCollectionEquality().hash(_tables),
+      const DeepCollectionEquality().hash(_tablesforchange));
 
   /// Create a copy of TablesState
   /// with the given fields replaced by the non-null parameter values.
@@ -934,7 +1151,8 @@ abstract class _TablesState implements TablesState {
       required final List<String> floors,
       final String? selectedFloor,
       required final List<TableInfo> tablesinfolist,
-      required final List<TableModel> tables}) = _$TablesStateImpl;
+      required final List<TableModel> tables,
+      required final List<TableModel> tablesforchange}) = _$TablesStateImpl;
 
   @override
   String? get selectedtable;
@@ -950,6 +1168,8 @@ abstract class _TablesState implements TablesState {
   List<TableInfo> get tablesinfolist;
   @override
   List<TableModel> get tables;
+  @override
+  List<TableModel> get tablesforchange;
 
   /// Create a copy of TablesState
   /// with the given fields replaced by the non-null parameter values.

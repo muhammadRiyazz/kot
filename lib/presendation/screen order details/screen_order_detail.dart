@@ -9,6 +9,7 @@ import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
+import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
@@ -225,6 +226,12 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                       ),
                                       trailing: TextButton(
                                           onPressed: () {
+                                            BlocProvider.of<TablesBloc>(context)
+                                                .add(
+                                                    TablesEvent.showchangeTable(
+                                                        tableType: widget
+                                                            .table.acOrNonAc));
+
                                             showModalBottomSheet(
                                               isScrollControlled:
                                                   true, // Allows the modal to take more height
@@ -735,80 +742,200 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                                             .min,
                                                                     children: [
                                                                       IconButton(
-                                                                          icon:
-                                                                              Container(
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              color: Colors.red,
-                                                                              borderRadius: BorderRadius.circular(10),
-                                                                            ),
-                                                                            child:
-                                                                                const Padding(
-                                                                              padding: EdgeInsets.all(5),
-                                                                              child: Icon(Icons.remove, color: Colors.white, size: 17),
-                                                                            ),
+                                                                        icon:
+                                                                            Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.red,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
                                                                           ),
-                                                                          // Add this at the top of your widget class
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              5),
+                                                                          child: const Icon(
+                                                                              Icons.remove,
+                                                                              color: Colors.white,
+                                                                              size: 17),
+                                                                        ),
+                                                                        onPressed:
+                                                                            () {
+                                                                          final item =
+                                                                              state.orderitems[index];
+                                                                          final bool
+                                                                              isRemovable =
+                                                                              item.qty == 1 && item.quantity == 0;
+                                                                          final bool
+                                                                              isOnlyOneLeft =
+                                                                              item.quantity < 0 && (item.qty - item.quantity.abs()) == 1;
 
-                                                                          onPressed:
-                                                                              () {
-                                                                            int value =
-                                                                                0;
-                                                                            if (state.orderitems[index].quantity <
-                                                                                0) {
-                                                                              value = state.orderitems[index].qty - state.orderitems[index].quantity.abs();
-                                                                            }
+                                                                          void
+                                                                              showDeleteWarning() {
+                                                                            if (_isSnackBarVisible)
+                                                                              return;
+                                                                            _isSnackBarVisible =
+                                                                                true;
+                                                                            ScaffoldMessenger.of(context)
+                                                                                .showSnackBar(
+                                                                                  SnackBar(
+                                                                                    content: const Text(
+                                                                                      "⚠️ To delete an item from the order, please long-press the tile, select the item, and then delete it",
+                                                                                      style: TextStyle(color: Colors.white, fontSize: 12),
+                                                                                    ),
+                                                                                    backgroundColor: mainclr,
+                                                                                    behavior: SnackBarBehavior.floating,
+                                                                                    margin: const EdgeInsets.all(12),
+                                                                                    duration: const Duration(seconds: 4),
+                                                                                    action: SnackBarAction(
+                                                                                      label: '✖',
+                                                                                      textColor: Colors.white,
+                                                                                      onPressed: () {
+                                                                                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                                                                        _isSnackBarVisible = false;
+                                                                                      },
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                                .closed
+                                                                                .then((_) => _isSnackBarVisible = false);
+                                                                          }
 
-                                                                            if (value !=
-                                                                                1) {
-                                                                              if (state.orderitems[index].quantity > 0) {
-                                                                                log('calling ---');
-                                                                                BlocProvider.of<StockBloc>(context).add(StockEvent.add(item: state.orderitems[index], isIncrement: false, productid: state.orderitems[index].itemCode, qty: 1));
+                                                                          if (isRemovable ||
+                                                                              isOnlyOneLeft) {
+                                                                            showDeleteWarning();
+                                                                            return;
+                                                                          }
 
-                                                                                // Your code here
-                                                                              }
+                                                                          if (item.quantity >
+                                                                              0) {
+                                                                            BlocProvider.of<StockBloc>(context).add(
+                                                                              StockEvent.add(item: item, isIncrement: false, productid: item.itemCode, qty: 1),
+                                                                            );
+                                                                          }
 
-                                                                              BlocProvider.of<OrderDetailsBloc>(context).add(OrderDetailsEvent.cancelQty(kotno: state.orderitems[index].kotno, currentItemid: state.orderitems[index].itemCode));
-                                                                            } else {
-                                                                              if (!_isSnackBarVisible) {
-                                                                                // Check if a SnackBar is already visible
-                                                                                _isSnackBarVisible = true;
+                                                                          BlocProvider.of<OrderDetailsBloc>(context)
+                                                                              .add(
+                                                                            OrderDetailsEvent.cancelQty(
+                                                                                kotno: item.kotno,
+                                                                                currentItemid: item.itemCode),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                      // IconButton(
 
-                                                                                ScaffoldMessenger.of(context)
-                                                                                    .showSnackBar(
-                                                                                      SnackBar(
-                                                                                        content: const Text(
-                                                                                          "⚠️ To delete an item from the order, please long-press the tile, select the item, and then delete it",
-                                                                                          style: TextStyle(
-                                                                                            color: Colors.white,
-                                                                                            fontSize: 12,
-                                                                                          ),
-                                                                                        ),
-                                                                                        backgroundColor: mainclr,
-                                                                                        behavior: SnackBarBehavior.floating,
-                                                                                        margin: const EdgeInsets.all(12),
-                                                                                        duration: const Duration(seconds: 4),
-                                                                                        action: SnackBarAction(
-                                                                                          label: '✖', // Close icon as a label
-                                                                                          textColor: Colors.white, // Color of the icon
-                                                                                          onPressed: () {
-                                                                                            // Dismiss the SnackBar and reset the flag
-                                                                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                                                                            _isSnackBarVisible = false;
-                                                                                          },
-                                                                                        ),
-                                                                                      ),
-                                                                                    )
-                                                                                    .closed
-                                                                                    .then((_) {
-                                                                                  // Reset the flag when the SnackBar is dismissed
-                                                                                  _isSnackBarVisible = false;
-                                                                                });
+                                                                      //     icon:
+                                                                      //         Container(
+                                                                      //       decoration:
+                                                                      //           BoxDecoration(
+                                                                      //         color: Colors.red,
+                                                                      //         borderRadius: BorderRadius.circular(10),
+                                                                      //       ),
+                                                                      //       child:
+                                                                      //           const Padding(
+                                                                      //         padding: EdgeInsets.all(5),
+                                                                      //         child: Icon(Icons.remove, color: Colors.white, size: 17),
+                                                                      //       ),
+                                                                      //     ),
+                                                                      //     // Add this at the top of your widget class
 
-                                                                                log('------');
-                                                                              }
-                                                                            }
-                                                                          }),
+                                                                      //     onPressed:
+                                                                      //         () {
+                                                                      //       if (state.orderitems[index].qty == 1 &&
+                                                                      //           state.orderitems[index].quantity == 0) {
+                                                                      //         if (!_isSnackBarVisible) {
+                                                                      //           // Check if a SnackBar is already visible
+                                                                      //           _isSnackBarVisible = true;
+
+                                                                      //           ScaffoldMessenger.of(context)
+                                                                      //               .showSnackBar(
+                                                                      //                 SnackBar(
+                                                                      //                   content: const Text(
+                                                                      //                     "⚠️ To delete an item from the order, please long-press the tile, select the item, and then delete it",
+                                                                      //                     style: TextStyle(
+                                                                      //                       color: Colors.white,
+                                                                      //                       fontSize: 12,
+                                                                      //                     ),
+                                                                      //                   ),
+                                                                      //                   backgroundColor: mainclr,
+                                                                      //                   behavior: SnackBarBehavior.floating,
+                                                                      //                   margin: const EdgeInsets.all(12),
+                                                                      //                   duration: const Duration(seconds: 4),
+                                                                      //                   action: SnackBarAction(
+                                                                      //                     label: '✖', // Close icon as a label
+                                                                      //                     textColor: Colors.white, // Color of the icon
+                                                                      //                     onPressed: () {
+                                                                      //                       // Dismiss the SnackBar and reset the flag
+                                                                      //                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                                                      //                       _isSnackBarVisible = false;
+                                                                      //                     },
+                                                                      //                   ),
+                                                                      //                 ),
+                                                                      //               )
+                                                                      //               .closed
+                                                                      //               .then((_) {
+                                                                      //             // Reset the flag when the SnackBar is dismissed
+                                                                      //             _isSnackBarVisible = false;
+                                                                      //           });
+
+                                                                      //           log('------');
+                                                                      //         }
+                                                                      //       } else {
+                                                                      //         int value = 0;
+                                                                      //         if (state.orderitems[index].quantity < 0) {
+                                                                      //           value = state.orderitems[index].qty - state.orderitems[index].quantity.abs();
+                                                                      //         }
+
+                                                                      //         if (value != 1) {
+                                                                      //           if (state.orderitems[index].quantity > 0) {
+                                                                      //             log('calling ---');
+                                                                      //             BlocProvider.of<StockBloc>(context).add(StockEvent.add(item: state.orderitems[index], isIncrement: false, productid: state.orderitems[index].itemCode, qty: 1));
+
+                                                                      //             // Your code here
+                                                                      //           }
+
+                                                                      //           BlocProvider.of<OrderDetailsBloc>(context).add(OrderDetailsEvent.cancelQty(kotno: state.orderitems[index].kotno, currentItemid: state.orderitems[index].itemCode));
+                                                                      //         } else {
+                                                                      //           if (!_isSnackBarVisible) {
+                                                                      //             // Check if a SnackBar is already visible
+                                                                      //             _isSnackBarVisible = true;
+
+                                                                      //             ScaffoldMessenger.of(context)
+                                                                      //                 .showSnackBar(
+                                                                      //                   SnackBar(
+                                                                      //                     content: const Text(
+                                                                      //                       "⚠️ To delete an item from the order, please long-press the tile, select the item, and then delete it",
+                                                                      //                       style: TextStyle(
+                                                                      //                         color: Colors.white,
+                                                                      //                         fontSize: 12,
+                                                                      //                       ),
+                                                                      //                     ),
+                                                                      //                     backgroundColor: mainclr,
+                                                                      //                     behavior: SnackBarBehavior.floating,
+                                                                      //                     margin: const EdgeInsets.all(12),
+                                                                      //                     duration: const Duration(seconds: 4),
+                                                                      //                     action: SnackBarAction(
+                                                                      //                       label: '✖', // Close icon as a label
+                                                                      //                       textColor: Colors.white, // Color of the icon
+                                                                      //                       onPressed: () {
+                                                                      //                         // Dismiss the SnackBar and reset the flag
+                                                                      //                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                                                      //                         _isSnackBarVisible = false;
+                                                                      //                       },
+                                                                      //                     ),
+                                                                      //                   ),
+                                                                      //                 )
+                                                                      //                 .closed
+                                                                      //                 .then((_) {
+                                                                      //               // Reset the flag when the SnackBar is dismissed
+                                                                      //               _isSnackBarVisible = false;
+                                                                      //             });
+
+                                                                      //             log('------');
+                                                                      //           }
+                                                                      //         }
+                                                                      //       }
+                                                                      //     }),
                                                                       Text(
                                                                         item.quantity ==
                                                                                 0
