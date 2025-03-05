@@ -184,15 +184,13 @@ class KotSubmitPrintBloc
                 totalAmountBeforeDisc +=
                     element.unitTaxableAmountBeforeDiscount * qty;
                 totalTaxableAmount += element.unitTaxableAmount * qty;
-                totalAmount +=
-                inc!?element.basicRate * qty:
-                
-                
-                 element.basicRate * qty +
-                    ((element.unitTaxableAmount * qty) *
-                            (element.gstPer / 100) +
-                        (element.unitTaxableAmount * qty) *
-                            (element.cessPer / 100));
+                totalAmount += inc!
+                    ? element.basicRate * qty
+                    : element.basicRate * qty +
+                        ((element.unitTaxableAmount * qty) *
+                                (element.gstPer / 100) +
+                            (element.unitTaxableAmount * qty) *
+                                (element.cessPer / 100));
                 totalTaxAmount +=
                     (element.unitTaxableAmount * qty) * (element.gstPer / 100);
                 totalCessAmount +=
@@ -501,6 +499,190 @@ WHERE
         emit(state.copyWith(isLoading: false));
       }
     });
+    on<CancelKOT>((event, emit) async {
+      log('CancelKOT-------------------');
+      emit(state.copyWith(
+          isLoading: true, stockout: false, printerstatus: 0, submitstatus: 0));
+
+      try {
+        List<kotItem> cancelkotitems = event.cancelkotitems;
+        List<kotItem> currentkotitems = event.currentitems;
+        List<kotItem> newlist = [];
+
+        // Initialize and establish the MSSQL connection
+        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+        MssqlConnection connection = await connectionManager.getConnection();
+        var formattedDate = getDateTime();
+        var entrydata = entyDateTime();
+
+        if (currentkotitems.length == cancelkotitems.length) {
+          String deleteQueary = '''
+           DELETE FROM  [dbo].[OrderMainDetails]
+            WHERE OrderNumber = '${event.currentorderid}';
+           ''';
+
+          log(deleteQueary);
+          final resultitemUpdateQuery =
+              await connection.writeData(deleteQueary);
+          log(resultitemUpdateQuery.toString());
+        } else {
+          // Add items from cancelkotitems that are not in currentkotitems
+          newlist = currentkotitems.where((currentItem) {
+            return !cancelkotitems.any((cancelItem) =>
+                currentItem.itemCode == cancelItem.itemCode &&
+                currentItem.kotno == cancelItem.kotno); // Match criteria
+          }).toList();
+          log(' cancelkotitems.length  ${cancelkotitems.length.toString()}');
+          log('currentkotitems.length---${currentkotitems.length.toString()}');
+          log("newlist.length----${newlist.length.toString()}");
+
+          // Add data to OrderMainDetails
+          double totalAmountBeforeDisc = 0.0;
+          double discount = 0.0;
+          double totalTaxableAmount = 0.0;
+          double totalTaxAmount = 0.0;
+          double totalCessAmount = 0.0;
+          double totalAmount = 0.0;
+
+          for (var element in newlist) {
+            int qty = element.qty;
+            log('${element.itemName}  -----   ${element.kotno}    ---${element.qty} ');
+            totalAmountBeforeDisc +=
+                element.unitTaxableAmountBeforeDiscount * qty;
+            totalTaxableAmount += element.unitTaxableAmount * qty;
+            totalAmount += element.basicRate * qty;
+            totalTaxAmount =
+                (element.unitTaxableAmount * qty) * (element.gstPer / 100);
+            totalCessAmount =
+                (element.unitTaxableAmount * qty) * (element.cessPer / 100);
+          }
+
+          String updateQuery = '''
+  UPDATE  [dbo].[OrderMainDetails]
+  SET
+    EntryDate = '$entrydata',
+    CustomerId = '${event.selectedcustomer.cusid}',
+    CustomerName = '${event.selectedcustomer.bussinessname}',
+    TableName = '${event.table.tableName}',
+    FloorNumber = '${event.table.floor}',
+    TotalAmountBeforeDisc = $totalAmountBeforeDisc,
+    Discount = $discount,
+    TotalTaxableAmount = $totalTaxableAmount,
+    TotalTaxAmount = $totalTaxAmount,
+    TotalCessAmount = $totalCessAmount,
+    TotalAmount = $totalAmount,
+    StartTime = '$formattedDate',
+    EndTime = '$formattedDate',
+    ActiveInnactive = 'Active',
+    DineInOrOther = 'Dining',
+    CreditOrPaid = 'Credit',
+    BillNumber ='${event.billNumber}',
+    UserID ='${event.userId}'
+  
+
+
+
+  WHERE
+    OrderNumber = '${event.currentorderid}';
+''';
+
+          log(updateQuery);
+
+          final resultIfUpdate = await connection.writeData(updateQuery);
+          log(resultIfUpdate);
+        }
+
+        for (var element in cancelkotitems) {
+          String itemUpdateQuery = '''
+      DELETE FROM  [dbo].[OrderItemDetailsDetails]
+      WHERE KOTNumber = '${element.kotno}' AND ItemCode = '${element.itemCode}';
+    ''';
+
+          log(itemUpdateQuery);
+          final resultitemUpdateQuery =
+              await connection.writeData(itemUpdateQuery);
+          log(resultitemUpdateQuery.toString());
+        }
+        emit(state.copyWith(
+          isLoading: false,
+          submitstatus: 1,
+        ));
+
+        if (event.cancelKotPrint) {
+          log('print section ----------');
+          Map<String, List<kotItem>> groupedItems = {};
+          for (var item in cancelkotitems) {
+            if (!groupedItems.containsKey(item.kitchenName)) {
+              groupedItems[item.kitchenName] = [];
+            }
+            groupedItems[item.kitchenName]!.add(item);
+          }
+
+          List<PrinterConfig?>? printers = event.printers;
+
+          int printingStatus = 0;
+
+          for (var kitchen in groupedItems.keys) {
+            PrinterConfig? printer;
+
+            log('Kitchen: $kitchen');
+
+            // Find the printer for the kitchen
+            for (var element in printers!) {
+              if (element!.kitchenName == kitchen) {
+                printer = element;
+              }
+            }
+
+            // Print the ticket and await the result
+            final List<int> test = await kotPrintData(
+              parcel: false,
+              dlt: true,
+              note: '',
+              items: groupedItems[kitchen]!,
+              kotNo: '--',
+              orderNo: event.currentorderid,
+              tableNo: event.table.tableName,
+              user: 'user',
+            );
+
+            printingStatus = await NetworkPrinter().printTicket(
+              test,
+              printer!.printerName,
+            );
+
+            log('Printer response---$printingStatus');
+          }
+
+          if (printingStatus == 1) {
+            log('Printer status: 2---------');
+            emit(state.copyWith(
+              isLoading: false,
+              printerstatus: 2,
+              submitstatus: 0,
+            ));
+          } else {
+            log('Printer status: 1---------');
+            emit(state.copyWith(
+              isLoading: false,
+              printerstatus: 1,
+              submitstatus: 0,
+            ));
+          }
+        } else {
+          log('Printer status: 1---------');
+          emit(state.copyWith(
+            isLoading: false,
+            printerstatus: 1,
+            submitstatus: 0,
+          ));
+        }
+      } catch (e) {
+        log(e.toString());
+        emit(state.copyWith(isLoading: false, stockout: false));
+      }
+    });
+
     on<rePrint>((event, emit) async {
       emit(state.copyWith(printerstatus: 0));
 
