@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/bill_design_mng.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/taxtype.dart';
 
 Future<List<int>> billPrintData({
   required List<kotItem> items,
@@ -18,6 +19,7 @@ Future<List<int>> billPrintData({
   required double tax,
   required double cess,
   required String mergedorNot,
+  required String cutumer,
   String? mergedOrders,
   String? mergedTables,
 }) async {
@@ -28,42 +30,41 @@ Future<List<int>> billPrintData({
   final generator = Generator(PaperSize.mm80, profile);
   List<int> bytes = [];
 
-
-if (addLogo!=null) {
-  if (addLogo==true) {
+  if (addLogo != null) {
+    if (addLogo == true) {
       // Add the restaurant logo
-  final logoImage = await _getNetworkImage();
-  if (logoImage != null) {
-    bytes += generator.image(logoImage);
-    bytes += generator.feed(1); // Add some space after the logo
-  } else {
-    log('logoImage --- is null ----');
+      final logoImage = await _getNetworkImage();
+      if (logoImage != null) {
+        // Resize the image to the full width of the paper
+        const paperWidth = 48 *
+            12; // 48mm paper width, 8 dots per mm (common for 80mm printers)
+        final resizedLogoImage = img.copyResize(
+          logoImage,
+          width: paperWidth,
+        );
+
+        // Add the resized image to the print bytes
+        bytes += generator.image(resizedLogoImage);
+        bytes += generator.feed(1); // Add some space after the logo
+      } else {
+        log('logoImage --- is null ----');
+      }
+    }
   }
-
-
+  if (addName != null) {
+    if (addName == true) {
+      // Header with increased font size
+      bytes += generator.text(
+        infoCustomer!.cmpname,
+        styles: const PosStyles(
+          align: PosAlign.center,
+          bold: true,
+          height: PosTextSize.size2, // Increase font height
+          width: PosTextSize.size2, // Increase font width
+        ),
+      );
+    }
   }
-}
-
-
-
-if (addName!=null) {
-  if (addName==true) {
- // Header with increased font size
-  bytes += generator.text(
-    infoCustomer!.cmpname,
-    styles: const PosStyles(
-      align: PosAlign.center,
-      bold: true,
-      height: PosTextSize.size2, // Increase font height
-      width: PosTextSize.size2, // Increase font width
-    ),
-  );
-
-
-
-  }
-}
-
 
   bytes += generator.text(
     infoCustomer!.cmpadd,
@@ -103,51 +104,74 @@ if (addName!=null) {
   // Invoice Details
   bytes += generator.row([
     PosColumn(
-      text: 'Invoice No',
-      width: 6,
+      text: 'Invoice To :',
+      width: 4,
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
-      text: invoiceNo,
-      width: 6,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
+      text: cutumer,
+      width: 8,
+      styles: const PosStyles(
+        align: PosAlign.left,
+      ),
     ),
   ]);
 
   bytes += generator.row([
     PosColumn(
-      text: 'Order No',
+      text: 'Invoice No :',
+      width: 4,
+      styles: const PosStyles(bold: true),
+    ),
+    PosColumn(
+      text: invoiceNo,
+      width: 8,
+      styles: const PosStyles(
+        align: PosAlign.left,
+      ),
+    ),
+  ]);
+
+  bytes += generator.row([
+    PosColumn(
+      text: 'Order No :',
       width: 4,
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
       text: mergedorNot == 'Merged' ? '$orderNo,$mergedOrders' : orderNo,
       width: 8,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
+      styles: const PosStyles(
+        align: PosAlign.left,
+      ),
     ),
   ]);
   bytes += generator.row([
     PosColumn(
-      text: 'Table',
+      text: 'Table :',
       width: 4,
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
       text: mergedorNot == 'Merged' ? '$tableNo,$mergedTables' : tableNo,
       width: 8,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
+      styles: const PosStyles(
+        align: PosAlign.left,
+      ),
     ),
   ]);
   bytes += generator.row([
     PosColumn(
-      text: 'Waiter',
-      width: 6,
+      text: 'Waiter :',
+      width: 4,
       styles: const PosStyles(bold: true),
     ),
     PosColumn(
       text: usernameA ?? '--',
-      width: 6,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
+      width: 8,
+      styles: const PosStyles(
+        align: PosAlign.left,
+      ),
     ),
   ]);
   bytes += generator.hr(len: 48);
@@ -202,77 +226,87 @@ if (addName!=null) {
       ),
     ]);
   }
-  bytes += generator.hr(len: 48);
-  bytes += generator.feed(1);
+  infoCustomer!.gSTScheme == 'unregistered' ||
+          infoCustomer!.gSTScheme == 'GSTComposition'
+      ? null
+      : bytes += generator.hr(len: 48);
+  infoCustomer!.gSTScheme == 'unregistered' ? null : bytes += generator.feed(1);
 
-  tax < 1
+  infoCustomer!.gSTScheme == 'unregistered' ||
+          infoCustomer!.gSTScheme == 'GSTComposition'
       ? null
-      : bytes += generator.row([
-          PosColumn(
-            text: 'Taxable Amount',
-            width: 8,
-            styles: const PosStyles(align: PosAlign.left, bold: true),
-          ),
-          PosColumn(
-            text: taxable.toStringAsFixed(2),
-            width: 4,
-            styles: const PosStyles(align: PosAlign.right, bold: true),
-          ),
-        ]);
-  bytes += generator.row([
-    PosColumn(
-      text: 'Discount',
-      width: 8,
-      styles: const PosStyles(align: PosAlign.left, bold: true),
-    ),
-    PosColumn(
-      text: '0.00',
-      width: 4,
-      styles: const PosStyles(align: PosAlign.right, bold: true),
-    ),
-  ]);
-  tax < 1
+      : tax < 1
+          ? null
+          : bytes += generator.row([
+              PosColumn(
+                text: 'Taxable Amount : ${taxable.toStringAsFixed(2)}',
+                width: 12,
+                styles: PosStyles(
+                  // height: PosTextSize.size2,
+                  // width: PosTextSize.size1,
+                  bold: true,
+                  align: inc! ? PosAlign.left : PosAlign.right,
+                ),
+              ),
+            ]);
+
+  //       ]);
+  infoCustomer!.gSTScheme == 'unregistered' ||
+          infoCustomer!.gSTScheme == 'GSTComposition'
       ? null
-      : bytes += generator.row([
-          PosColumn(
-            text: 'CGST',
-            width: 8,
-            styles: const PosStyles(align: PosAlign.left, bold: true),
-          ),
-          PosColumn(
-            text: cGst.toStringAsFixed(2),
-            width: 4,
-            styles: const PosStyles(align: PosAlign.right, bold: true),
-          ),
-        ]);
-  tax < 1
+      : tax < 1
+          ? null
+          : bytes += generator.row([
+              PosColumn(
+                text: 'CGST : ${cGst.toStringAsFixed(2)}',
+                width: 12,
+                styles: PosStyles(
+                  bold: true,
+
+                  align: inc! ? PosAlign.left : PosAlign.right,
+                  // bold: true
+                ),
+              ),
+            ]);
+  infoCustomer!.gSTScheme == 'unregistered' ||
+          infoCustomer!.gSTScheme == 'GSTComposition'
       ? null
-      : bytes += generator.row([
-          PosColumn(
-            text: 'SGST',
-            width: 8,
-            styles: const PosStyles(align: PosAlign.left, bold: true),
-          ),
-          PosColumn(
-            text: sGst.toStringAsFixed(2),
-            width: 4,
-            styles: const PosStyles(align: PosAlign.right, bold: true),
-          ),
-        ]);
-  tax < 1
+      : tax < 1
+          ? null
+          : bytes += generator.row([
+              PosColumn(
+                text: 'SGST : ${sGst.toStringAsFixed(2)}',
+                width: 12,
+                styles: PosStyles(
+                  bold: true,
+
+                  align: inc! ? PosAlign.left : PosAlign.right,
+                  // bold: true
+                ),
+              ),
+            ]);
+  infoCustomer!.gSTScheme == 'unregistered' ||
+          infoCustomer!.gSTScheme == 'GSTComposition'
       ? null
-      : bytes += generator.row([
-          PosColumn(
-            text: 'Cess',
-            width: 8,
-            styles: const PosStyles(align: PosAlign.left, bold: true),
-          ),
-          PosColumn(
-            text: cess.toStringAsFixed(2),
-            width: 4,
-            styles: const PosStyles(align: PosAlign.right, bold: true),
-          ),
-        ]);
+      : tax < 1
+          ? null
+          : bytes += generator.row([
+              PosColumn(
+                text: 'Cess : ${cess.toStringAsFixed(2)}',
+                width: 12,
+                styles: PosStyles(
+                  bold: true,
+
+                  align: inc! ? PosAlign.left : PosAlign.right,
+                  // bold: true
+                ),
+              ),
+              // PosColumn(
+              //   text: cess.toStringAsFixed(2),
+              //   width: 4,
+              //   styles: const PosStyles(align: PosAlign.right, bold: true),
+              // ),
+            ]);
   bytes += generator.hr(len: 48);
 
   bytes += generator.row([
@@ -297,28 +331,21 @@ if (addName!=null) {
       ),
     ),
   ]);
-  // final sanitizedInvoiceNo = invoiceNo.replaceAll(
-  //     RegExp(r'[^A-Za-z0-9]'), ''); // Removes unsupported characters
 
-// Convert sanitized invoiceNo to ASCII codes
-  // final invoiceNoList = sanitizedInvoiceNo.codeUnits;
-
-// bytes += generator.barcode(
-//   Barcode.code128(invoiceNoList), // Convert to ASCII values
-//   width: BarcodeWidth.medium, // Adjust width as needed
-//   height: 50, // Adjust height as needed
-//   align: PosAlign.center, // Center the barcode
-// );
-
-// Optional: Add some text below the barcode
-  // bytes += generator.text(
-  //   'Invoice No: $invoiceNo',
-  //   styles: const PosStyles(align: PosAlign.center, bold: true),
-  // );
   bytes += generator.hr(len: 48);
 
-  // Footer
+  // // Add Barcode
+  // bytes += generator.barcode(
+  //   Barcode.code128(generator.text(invoiceNo)),
+  //   width: 2, // Barcode width
+  //   height: 100, // Barcode height
 
+  //   align: PosAlign.center, // Barcode alignment
+  // );
+
+  // bytes += generator.feed(1); // Add some space after the barcode
+
+  // Footer
   bytes += generator.text(
     infoCustomer!.billFooterText,
     styles: const PosStyles(align: PosAlign.center),

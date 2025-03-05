@@ -103,7 +103,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       String? userid = prefs.getString('userID');
       bool? billEditt = prefs.getBool('billEdit'); // Save login status
       bool? addbillp = prefs.getBool('addbill'); // Save login status
+      String? demoty = prefs.getString('demo');
+      String? demouser = prefs.getString('username');
 
+      demoStatus = prefs.getBool('demostatus');
+      demousername = demouser;
+      demoutype = demoty;
       // Clear login status
       usernameA = userid;
 
@@ -114,12 +119,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 }
 
-checkDateValidity(String result) {
+bool checkDateValidity(String result) {
   var decodedJson = jsonDecode(result);
   String data = decodedJson[0]['invtmplt'];
   bool valid = false;
-  // Define the format of the date from the database (in your case: "dd/MM/yyyy hh:mm:ss a")
-  DateFormat format = DateFormat("dd/MM/yyyy hh:mm:ss a");
+
+  // Define the format of the date from the database (assuming "dd/MM/yyyy hh:mm:ss a")
+  DateFormat format = DateFormat("dd/MM/yyyy");
 
   try {
     // Parse the date from the database
@@ -128,16 +134,20 @@ checkDateValidity(String result) {
     // Get the current date
     DateTime currentDate = DateTime.now();
 
-    // Compare the dates
-    if (dbDate.isAfter(currentDate)) {
+    // Extract only the date (year, month, and day)
+    DateTime dbOnlyDate = DateTime(dbDate.year, dbDate.month, dbDate.day);
+    DateTime currentOnlyDate =
+        DateTime(currentDate.year, currentDate.month, currentDate.day);
+
+    // Compare only the dates (ignoring time)
+    if (dbOnlyDate.isAfter(currentOnlyDate)) {
       valid = true;
       log("The date from the database is after the current date.");
-    } else if (dbDate.isBefore(currentDate)) {
+    } else if (dbOnlyDate.isBefore(currentOnlyDate)) {
       valid = false;
       log("The date from the database is before the current date.");
     } else {
       valid = true;
-
       log("The date from the database is the same as the current date.");
     }
   } catch (e) {
@@ -145,4 +155,5 @@ checkDateValidity(String result) {
   }
 
   return valid;
+  // return true;
 }

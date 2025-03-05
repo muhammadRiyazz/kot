@@ -13,5 +13,6 @@ class PrintingEvent with _$PrintingEvent {
     required double sGst,
     required String orderID,
     required String tableName,
+    required String customer,
   }) = PrintBill;
 }

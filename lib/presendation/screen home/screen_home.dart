@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.dart';
@@ -5,6 +7,7 @@ import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/taxtype.dart';
 import 'package:restaurant_kot/presendation/screen%20home/Drawr.dart';
 import 'package:restaurant_kot/presendation/screen%20home/finished_orders.dart';
 import 'package:restaurant_kot/presendation/screen%20home/tables_part.dart';
@@ -67,14 +70,19 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            
-            actions: const [
-              Padding(
-                padding: EdgeInsets.only(right: 16, top: 10, bottom: 10),
-                child: Icon(
-                  Icons.restaurant_menu,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  size: 25,
+
+            actions: [
+              InkWell(
+                onTap: () {
+                  log(inc.toString());
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 16, top: 10, bottom: 10),
+                  child: Icon(
+                    Icons.restaurant_menu,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    size: 25,
+                  ),
                 ),
               ),
             ],

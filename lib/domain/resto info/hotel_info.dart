@@ -8,8 +8,10 @@ class Settings {
   final String companyContactNo;
   final String billFooterText;
   final String kotFooterText;
+  final String gSTScheme;
 
   Settings({
+    required this.gSTScheme,
     required this.cmpgstno,
     required this.taxtype,
     required this.cmpname,
@@ -22,6 +24,7 @@ class Settings {
   // Factory constructor to create a Settings object from JSON
   factory Settings.fromJson(Map<String, dynamic> json) {
     return Settings(
+      gSTScheme: json['GSTScheme']??'',
       cmpgstno: json['cmpgstno']??'',
       taxtype: json['taxtype'] ?? '',
       cmpname: json['cmpname'] ?? '',
@@ -35,7 +38,8 @@ class Settings {
   // Method to convert a Settings object to JSON
   Map<String, dynamic> toJson() {
     return {
-      'taxtype': taxtype,
+            'taxtype': taxtype,
+      'GSTScheme': gSTScheme,
       'cmpname': cmpname,
       'cmpadd': cmpadd,
       'CompanyContactNo': companyContactNo,

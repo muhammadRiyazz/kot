@@ -12,6 +12,7 @@ import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/get_time.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/taxtype.dart';
 import 'package:restaurant_kot/infrastructure/stock/price_calculation.dart';
 import 'package:restaurant_kot/presendation/printer%20ui/kot_print.dart';
 part 'kot_submit_print_event.dart';
@@ -88,18 +89,18 @@ class KotSubmitPrintBloc
 
         List<kotItem> outofStock = [];
         if (stockmngGoods != null && stockmngService != null) {
-        if (stockmngGoods! || stockmngService!) {
-          log('Stock management enabled. Checking stock...');
-          for (var product in kotitems) {
-            log('Checking stock for product: ${product.itemCode}');
-            try {
-              if ((stockmngGoods! && product.serOrGoods == 'GOODS') ||
-                  (stockmngService! && product.serOrGoods == 'SER') ||
-                  (stockmngGoods! && stockmngService!)) {
-                String productId = product.itemCode;
-                int qty = product.quantity;
+          if (stockmngGoods! || stockmngService!) {
+            log('Stock management enabled. Checking stock...');
+            for (var product in kotitems) {
+              log('Checking stock for product: ${product.itemCode}');
+              try {
+                if ((stockmngGoods! && product.serOrGoods == 'GOODS') ||
+                    (stockmngService! && product.serOrGoods == 'SER') ||
+                    (stockmngGoods! && stockmngService!)) {
+                  String productId = product.itemCode;
+                  int qty = product.quantity;
 
-                String query = '''
+                  String query = '''
             SELECT [Id],
                    [codeorSKU],
                    [pdtname],
@@ -108,22 +109,22 @@ class KotSubmitPrintBloc
             WHERE [codeorSKU] = '$productId' AND [totalstock] < $qty
             ''';
 
-                var result = await connection.getData(query);
-                log('Stock check result: $result');
+                  var result = await connection.getData(query);
+                  log('Stock check result: $result');
 
-                if (result != '[]') {
-                  List<dynamic> jsonList = json.decode(result);
-                  int totalstock = (jsonList[0]['totalstock'] as num).toInt();
-                  outofStock.add(product.copyWith(stock: totalstock));
+                  if (result != '[]') {
+                    List<dynamic> jsonList = json.decode(result);
+                    int totalstock = (jsonList[0]['totalstock'] as num).toInt();
+                    outofStock.add(product.copyWith(stock: totalstock));
+                  }
+                } else {
+                  log('Stock management not applicable for this product.');
                 }
-              } else {
-                log('Stock management not applicable for this product.');
+              } catch (e) {
+                log('Error checking stock for product ${product.itemCode}: $e');
+                rethrow;
               }
-            } catch (e) {
-              log('Error checking stock for product ${product.itemCode}: $e');
-              rethrow;
             }
-          }
           }
         }
 
@@ -183,7 +184,15 @@ class KotSubmitPrintBloc
                 totalAmountBeforeDisc +=
                     element.unitTaxableAmountBeforeDiscount * qty;
                 totalTaxableAmount += element.unitTaxableAmount * qty;
-                totalAmount += element.basicRate * qty;
+                totalAmount +=
+                inc!?element.basicRate * qty:
+                
+                
+                 element.basicRate * qty +
+                    ((element.unitTaxableAmount * qty) *
+                            (element.gstPer / 100) +
+                        (element.unitTaxableAmount * qty) *
+                            (element.cessPer / 100));
                 totalTaxAmount +=
                     (element.unitTaxableAmount * qty) * (element.gstPer / 100);
                 totalCessAmount +=
@@ -279,7 +288,11 @@ class KotSubmitPrintBloc
                       totalTaxableAmount * (element.gstPer / 100);
                   final double totalCessAmount =
                       totalTaxableAmount * (element.cessPer / 100);
-                  final double totalAmount = qty * element.basicRate;
+                  final double totalAmount = inc!
+                      ? qty * element.basicRate
+                      : (qty * element.basicRate) +
+                          totalCessAmount +
+                          totalTaxAmount;
 
                   String itemInsertQuery = '''
 INSERT INTO [dbo].[OrderItemDetailsDetails] (
@@ -318,8 +331,11 @@ INSERT INTO [dbo].[OrderItemDetailsDetails] (
                       totalTaxableAmount * (element.gstPer / 100);
                   final double totalCessAmount =
                       totalTaxableAmount * (element.cessPer / 100);
-                  final double totalAmount = qty * element.basicRate;
-
+                  final double totalAmount = inc!
+                      ? qty * element.basicRate
+                      : (qty * element.basicRate) +
+                          totalCessAmount +
+                          totalTaxAmount;
                   String itemUpdateQuery = '''
 UPDATE [dbo].[OrderItemDetailsDetails]
 SET 
@@ -714,4 +730,3 @@ Future<String> _fetchOrderId(MssqlConnection connection) async {
   List<dynamic> jsonList = json.decode(result);
   return jsonList[0]['OrderNumber'];
 }
-

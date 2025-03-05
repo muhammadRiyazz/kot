@@ -9,6 +9,7 @@ import 'package:restaurant_kot/core/printer/network_printer.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/taxtype.dart';
 import 'package:restaurant_kot/infrastructure/next%20id/appentydata.dart';
 import 'package:restaurant_kot/infrastructure/next%20id/pay_id_next.dart';
 import 'package:restaurant_kot/presendation/printer%20ui/bill_print.dart';
@@ -77,7 +78,15 @@ class BillSubmitPrintBloc
 
       for (var element in updatedbillItems) {
         subTotal += element.unitTaxableAmount * element.qty;
-        totalAmt += element.basicRate * element.qty;
+        totalAmt += inc!
+            ? element.basicRate * element.qty
+            : (element.basicRate * element.qty) +
+                ((element.unitTaxableAmount * element.gstPer) /
+                    100 *
+                    element.qty) +
+                ((element.unitTaxableAmount * element.cessPer) /
+                    100 *
+                    element.qty);
         tax += (element.unitTaxableAmount * element.gstPer) / 100 * element.qty;
         cess +=
             (element.unitTaxableAmount * element.cessPer) / 100 * element.qty;
@@ -182,7 +191,17 @@ class BillSubmitPrintBloc
             final venCGSTamt = element.gstAmt / 2;
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
-
+            final double totalTaxableAmount =
+                element.qty * element.unitTaxableAmount;
+            final double totalTaxAmount =
+                totalTaxableAmount * (element.gstPer / 100);
+            final double totalCessAmount =
+                totalTaxableAmount * (element.cessPer / 100);
+            final totalamount = inc!
+                ? element.qty * element.basicRate
+                : (element.qty * element.basicRate) +
+                    totalCessAmount +
+                    totalTaxAmount;
             String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
@@ -204,7 +223,7 @@ class BillSubmitPrintBloc
             ${element.unitTaxableAmount * element.qty}, 0.00, 0.00,
             ${element.unitTaxableAmount * element.qty}, 0.00,
             0.00,  ${element.unitTaxableAmount * element.qty},
-             ${element.gstPer}, ${element.gstAmt},  ${element.basicRate * element.qty},
+             ${element.gstPer}, ${element.gstAmt},  $totalamount,
             ${element.gstPer}, ${element.gstAmt}, $venCGST,
             $venCGSTamt, $venSGST, $venSGSTamt ,
             ${element.cessPer}, ${element.cessAmt},
@@ -253,6 +272,7 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
+              cutumer: customer.bussinessname,
               mergedorNot: event.mergedorNot,
               mergedOrders: event.mergedOrders,
               mergedTables: event.mergedTables,
@@ -393,7 +413,17 @@ class BillSubmitPrintBloc
             final venCGSTamt = element.gstAmt / 2;
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
-
+            final double totalTaxableAmount =
+                element.qty * element.unitTaxableAmount;
+            final double totalTaxAmount =
+                totalTaxableAmount * (element.gstPer / 100);
+            final double totalCessAmount =
+                totalTaxableAmount * (element.cessPer / 100);
+            final totalamount = inc!
+                ? element.qty * element.basicRate
+                : (element.qty * element.basicRate) +
+                    totalCessAmount +
+                    totalTaxAmount;
             String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
@@ -415,7 +445,7 @@ class BillSubmitPrintBloc
             ${element.unitTaxableAmount * element.qty}, 0.00, 0.00,
             ${element.unitTaxableAmount * element.qty}, 0.00,
             0.00,  ${element.unitTaxableAmount * element.qty},
-             ${element.gstPer}, ${element.gstAmt},  ${element.basicRate * element.qty},
+             ${element.gstPer}, ${element.gstAmt},  $totalamount,
             ${element.gstPer}, ${element.gstAmt}, $venCGST,
             $venCGSTamt , $venSGST, $venSGSTamt,
             ${element.cessPer}, ${element.cessAmt},
@@ -462,6 +492,7 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
+              cutumer: customer.bussinessname,
               mergedorNot: event.mergedorNot,
               mergedOrders: event.mergedOrders,
               mergedTables: event.mergedTables,
@@ -597,7 +628,17 @@ class BillSubmitPrintBloc
             final venCGSTamt = element.gstAmt / 2;
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
-
+            final double totalTaxableAmount =
+                element.qty * element.unitTaxableAmount;
+            final double totalTaxAmount =
+                totalTaxableAmount * (element.gstPer / 100);
+            final double totalCessAmount =
+                totalTaxableAmount * (element.cessPer / 100);
+            final totalamount = inc!
+                ? element.qty * element.basicRate
+                : (element.qty * element.basicRate) +
+                    totalCessAmount +
+                    totalTaxAmount;
             String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
@@ -619,7 +660,7 @@ class BillSubmitPrintBloc
             ${element.unitTaxableAmount * element.qty}, 0.00, 0.00,
             ${element.unitTaxableAmount * element.qty}, 0.00,
             0.00,  ${element.unitTaxableAmount * element.qty},
-             ${element.gstPer}, ${element.gstAmt},  ${element.basicRate * element.qty},
+             ${element.gstPer}, ${element.gstAmt},  $totalamount,
             ${element.gstPer}, ${element.gstAmt}, $venCGST,
             $venCGSTamt, $venSGST, $venSGSTamt ,
             ${element.cessPer}, ${element.cessAmt},
@@ -652,6 +693,7 @@ class BillSubmitPrintBloc
             PrinterConfig printer = event.printer!;
             int printingStatus = 0;
             final List<int> test = await billPrintData(
+              cutumer: customer.bussinessname,
               mergedorNot: event.mergedorNot,
               mergedOrders: event.mergedOrders,
               mergedTables: event.mergedTables,
@@ -768,7 +810,17 @@ class BillSubmitPrintBloc
             final venCGSTamt = element.gstAmt / 2;
             final venSGST = element.gstPer / 2;
             final venSGSTamt = element.gstAmt / 2;
-
+            final double totalTaxableAmount =
+                element.qty * element.unitTaxableAmount;
+            final double totalTaxAmount =
+                totalTaxableAmount * (element.gstPer / 100);
+            final double totalCessAmount =
+                totalTaxableAmount * (element.cessPer / 100);
+            final totalamount = inc!
+                ? element.qty * element.basicRate
+                : (element.qty * element.basicRate) +
+                    totalCessAmount +
+                    totalTaxAmount;
             String query3 = """INSERT INTO  [dbo].[invoicedetail] (
             invoiceno, invdate,  terms, ordereference, cusid, invoiceto,
             invaddress, shipto, shipaddr, gstno, email, smsno, CustomerTYPE, pdtcode,
@@ -790,7 +842,7 @@ class BillSubmitPrintBloc
             ${element.unitTaxableAmount * element.qty}, 0.00, 0.00,
             ${element.unitTaxableAmount * element.qty}, 0.00,
             0.00,  ${element.unitTaxableAmount * element.qty},
-             ${element.gstPer}, ${element.gstAmt},  ${element.basicRate * element.qty},
+             ${element.gstPer}, ${element.gstAmt},  $totalamount,
             ${element.gstPer}, ${element.gstAmt}, $venCGST,
             $venCGSTamt , $venSGST, $venSGSTamt,
             ${element.cessPer}, ${element.cessAmt},
@@ -835,6 +887,7 @@ class BillSubmitPrintBloc
             int printingStatus = 0;
 
             final List<int> test = await billPrintData(
+              cutumer: customer.bussinessname,
               mergedorNot: event.mergedorNot, mergedOrders: event.mergedOrders,
               mergedTables: event.mergedTables,
 
@@ -899,6 +952,7 @@ class BillSubmitPrintBloc
         int printingStatus = 0;
 
         final List<int> test = await billPrintData(
+          cutumer: state.selectedCustomer!.bussinessname,
           mergedorNot: event.mergedorNot,
           mergedOrders: event.mergedOrders,
           mergedTables: event.mergedTables,

@@ -16,44 +16,49 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$DemoEvent {
-  String get type => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String type) demodatabase,
+    required TResult Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)
+        demodatabase,
+    required TResult Function() fetchDemo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String type)? demodatabase,
+    TResult? Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)?
+        demodatabase,
+    TResult? Function()? fetchDemo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String type)? demodatabase,
+    TResult Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)?
+        demodatabase,
+    TResult Function()? fetchDemo,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Demodatabase value) demodatabase,
+    required TResult Function(FetchDemo value) fetchDemo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Demodatabase value)? demodatabase,
+    TResult? Function(FetchDemo value)? fetchDemo,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Demodatabase value)? demodatabase,
+    TResult Function(FetchDemo value)? fetchDemo,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  /// Create a copy of DemoEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $DemoEventCopyWith<DemoEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -61,8 +66,6 @@ mixin _$DemoEvent {
 abstract class $DemoEventCopyWith<$Res> {
   factory $DemoEventCopyWith(DemoEvent value, $Res Function(DemoEvent) then) =
       _$DemoEventCopyWithImpl<$Res, DemoEvent>;
-  @useResult
-  $Res call({String type});
 }
 
 /// @nodoc
@@ -77,29 +80,21 @@ class _$DemoEventCopyWithImpl<$Res, $Val extends DemoEvent>
 
   /// Create a copy of DemoEvent
   /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-  }) {
-    return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$DemodatabaseImplCopyWith<$Res>
-    implements $DemoEventCopyWith<$Res> {
+abstract class _$$DemodatabaseImplCopyWith<$Res> {
   factory _$$DemodatabaseImplCopyWith(
           _$DemodatabaseImpl value, $Res Function(_$DemodatabaseImpl) then) =
       __$$DemodatabaseImplCopyWithImpl<$Res>;
-  @override
   @useResult
-  $Res call({String type});
+  $Res call(
+      {String? type,
+      String? name,
+      String? address,
+      String? phoneNo,
+      String? state,
+      bool exist});
 }
 
 /// @nodoc
@@ -115,13 +110,38 @@ class __$$DemodatabaseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
+    Object? type = freezed,
+    Object? name = freezed,
+    Object? address = freezed,
+    Object? phoneNo = freezed,
+    Object? state = freezed,
+    Object? exist = null,
   }) {
     return _then(_$DemodatabaseImpl(
-      type: null == type
+      type: freezed == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phoneNo: freezed == phoneNo
+          ? _value.phoneNo
+          : phoneNo // ignore: cast_nullable_to_non_nullable
+              as String?,
+      state: freezed == state
+          ? _value.state
+          : state // ignore: cast_nullable_to_non_nullable
+              as String?,
+      exist: null == exist
+          ? _value.exist
+          : exist // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -129,14 +149,30 @@ class __$$DemodatabaseImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DemodatabaseImpl implements Demodatabase {
-  const _$DemodatabaseImpl({required this.type});
+  const _$DemodatabaseImpl(
+      {this.type,
+      this.name,
+      this.address,
+      this.phoneNo,
+      this.state,
+      required this.exist});
 
   @override
-  final String type;
+  final String? type;
+  @override
+  final String? name;
+  @override
+  final String? address;
+  @override
+  final String? phoneNo;
+  @override
+  final String? state;
+  @override
+  final bool exist;
 
   @override
   String toString() {
-    return 'DemoEvent.demodatabase(type: $type)';
+    return 'DemoEvent.demodatabase(type: $type, name: $name, address: $address, phoneNo: $phoneNo, state: $state, exist: $exist)';
   }
 
   @override
@@ -144,11 +180,17 @@ class _$DemodatabaseImpl implements Demodatabase {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DemodatabaseImpl &&
-            (identical(other.type, type) || other.type == type));
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.phoneNo, phoneNo) || other.phoneNo == phoneNo) &&
+            (identical(other.state, state) || other.state == state) &&
+            (identical(other.exist, exist) || other.exist == exist));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, type);
+  int get hashCode =>
+      Object.hash(runtimeType, type, name, address, phoneNo, state, exist);
 
   /// Create a copy of DemoEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -161,27 +203,36 @@ class _$DemodatabaseImpl implements Demodatabase {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String type) demodatabase,
+    required TResult Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)
+        demodatabase,
+    required TResult Function() fetchDemo,
   }) {
-    return demodatabase(type);
+    return demodatabase(type, name, address, phoneNo, state, exist);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String type)? demodatabase,
+    TResult? Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)?
+        demodatabase,
+    TResult? Function()? fetchDemo,
   }) {
-    return demodatabase?.call(type);
+    return demodatabase?.call(type, name, address, phoneNo, state, exist);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String type)? demodatabase,
+    TResult Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)?
+        demodatabase,
+    TResult Function()? fetchDemo,
     required TResult orElse(),
   }) {
     if (demodatabase != null) {
-      return demodatabase(type);
+      return demodatabase(type, name, address, phoneNo, state, exist);
     }
     return orElse();
   }
@@ -190,6 +241,7 @@ class _$DemodatabaseImpl implements Demodatabase {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Demodatabase value) demodatabase,
+    required TResult Function(FetchDemo value) fetchDemo,
   }) {
     return demodatabase(this);
   }
@@ -198,6 +250,7 @@ class _$DemodatabaseImpl implements Demodatabase {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Demodatabase value)? demodatabase,
+    TResult? Function(FetchDemo value)? fetchDemo,
   }) {
     return demodatabase?.call(this);
   }
@@ -206,6 +259,7 @@ class _$DemodatabaseImpl implements Demodatabase {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Demodatabase value)? demodatabase,
+    TResult Function(FetchDemo value)? fetchDemo,
     required TResult orElse(),
   }) {
     if (demodatabase != null) {
@@ -216,17 +270,137 @@ class _$DemodatabaseImpl implements Demodatabase {
 }
 
 abstract class Demodatabase implements DemoEvent {
-  const factory Demodatabase({required final String type}) = _$DemodatabaseImpl;
+  const factory Demodatabase(
+      {final String? type,
+      final String? name,
+      final String? address,
+      final String? phoneNo,
+      final String? state,
+      required final bool exist}) = _$DemodatabaseImpl;
 
-  @override
-  String get type;
+  String? get type;
+  String? get name;
+  String? get address;
+  String? get phoneNo;
+  String? get state;
+  bool get exist;
 
   /// Create a copy of DemoEvent
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DemodatabaseImplCopyWith<_$DemodatabaseImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FetchDemoImplCopyWith<$Res> {
+  factory _$$FetchDemoImplCopyWith(
+          _$FetchDemoImpl value, $Res Function(_$FetchDemoImpl) then) =
+      __$$FetchDemoImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$FetchDemoImplCopyWithImpl<$Res>
+    extends _$DemoEventCopyWithImpl<$Res, _$FetchDemoImpl>
+    implements _$$FetchDemoImplCopyWith<$Res> {
+  __$$FetchDemoImplCopyWithImpl(
+      _$FetchDemoImpl _value, $Res Function(_$FetchDemoImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of DemoEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$FetchDemoImpl implements FetchDemo {
+  const _$FetchDemoImpl();
+
+  @override
+  String toString() {
+    return 'DemoEvent.fetchDemo()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$FetchDemoImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)
+        demodatabase,
+    required TResult Function() fetchDemo,
+  }) {
+    return fetchDemo();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)?
+        demodatabase,
+    TResult? Function()? fetchDemo,
+  }) {
+    return fetchDemo?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? type, String? name, String? address,
+            String? phoneNo, String? state, bool exist)?
+        demodatabase,
+    TResult Function()? fetchDemo,
+    required TResult orElse(),
+  }) {
+    if (fetchDemo != null) {
+      return fetchDemo();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(Demodatabase value) demodatabase,
+    required TResult Function(FetchDemo value) fetchDemo,
+  }) {
+    return fetchDemo(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Demodatabase value)? demodatabase,
+    TResult? Function(FetchDemo value)? fetchDemo,
+  }) {
+    return fetchDemo?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(Demodatabase value)? demodatabase,
+    TResult Function(FetchDemo value)? fetchDemo,
+    required TResult orElse(),
+  }) {
+    if (fetchDemo != null) {
+      return fetchDemo(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FetchDemo implements DemoEvent {
+  const factory FetchDemo() = _$FetchDemoImpl;
 }
 
 /// @nodoc

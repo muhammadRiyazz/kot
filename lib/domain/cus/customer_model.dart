@@ -41,6 +41,7 @@ Settings? infoCustomer;
 String? usernameA;
 bool? billEdit;
 bool? addBill;
-
 String? ipid;
-
+String? demousername;
+bool? demoStatus;
+String? demoutype;

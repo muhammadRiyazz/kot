@@ -25,7 +25,7 @@ class InitalDataBloc extends Bloc<InitalDataEvent, InitalDataState> {
         MssqlConnection connection = await connectionManager.getConnection();
 
         String query1 =
-            "SELECT taxtype,cmpname,cmpadd,taxtype,cmpgstno,CompanyContactNo,BillFooterText,KOTFooterText FROM dbo.Settings";
+            "SELECT taxtype,cmpname,cmpadd,taxtype,cmpgstno,CompanyContactNo,BillFooterText,KOTFooterText,GSTScheme FROM dbo.Settings";
         String? result1 = await connection.getData(query1);
         log(' ------------------$result1');
         // var decodedJson = jsonDecode(result1);
@@ -37,10 +37,11 @@ class InitalDataBloc extends Bloc<InitalDataEvent, InitalDataState> {
         }).toList();
 
         String data = settingsList[0].taxtype;
-        if (data == 'SaleExclusive') {
-          TaxtypeMng().addTaxtype(value: false);
-        } else {
+
+        if (data.trim() == 'SaleInclusive') {
           TaxtypeMng().addTaxtype(value: true);
+        } else {
+          TaxtypeMng().addTaxtype(value: false);
         }
         infoCustomer = settingsList[0];
         emit(state.copyWith(settingsData: settingsList[0], isloading: false));

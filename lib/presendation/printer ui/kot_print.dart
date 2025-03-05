@@ -25,87 +25,191 @@ Future<List<int>> kotPrintData(
             : 'KOT',
     styles: const PosStyles(
       align: PosAlign.center,
-      width: PosTextSize.size2,
-      height: PosTextSize.size2,
+      width: PosTextSize.size4,
+      height: PosTextSize.size3,
       bold: true,
     ),
   );
   bytes += generator.text(
-    '- D I N I N G -',
+    'Dining ',
     styles: const PosStyles(
       align: PosAlign.center,
       bold: true,
+      height: PosTextSize.size1,
+      width: PosTextSize.size2,
     ),
   );
+  bytes += generator.feed(1);
 
-  bytes += generator.hr(len: 48); // Full width horizontal rule
+  // bytes += generator.hr(len: 48); // Full width horizontal rule
 
-  // Date and Time
-  bytes += generator.row([
-    PosColumn(
-      text: DateFormat('dd/MM/yyyy').format(DateTime.now()),
-      width: 6,
-      styles: const PosStyles(bold: true),
-    ),
-    PosColumn(
-      text: DateFormat('hh:mm a').format(DateTime.now()),
-      width: 6,
-      styles: const PosStyles(bold: true, align: PosAlign.right),
-    ),
-  ]);
-  bytes += generator.hr(len: 48);
+  // // Date and Time
+  // bytes += generator.row([
+  //   PosColumn(
+  //     text: DateFormat('dd/MM/yyyy').format(DateTime.now()),
+  //     width: 6,
+  //     styles: const PosStyles(bold: true),
+  //   ),
+  //   PosColumn(
+  //     text: DateFormat('hh:mm a').format(DateTime.now()),
+  //     width: 6,
+  //     styles: const PosStyles(bold: true, align: PosAlign.right),
+  //   ),
+  // ]);
+  // bytes += generator.hr(len: 48);
 
   // Order Info
+  // bytes += generator.row([
+  //   PosColumn(
+  //     text: 'Order No',
+  //     width: 6,
+  //     styles: const PosStyles(bold: true),
+  //   ),
+  //   PosColumn(
+  //     text: orderNo,
+  //     width: 6,
+  //     styles: const PosStyles(bold: true, align: PosAlign.right),
+  //   ),
+  // ]);
+  // kotNo == '--'
+  //     ? null
+  //     : bytes += generator.row([
+  //   PosColumn(
+  //     text: 'KOT',
+  //     width: 6,
+  //     styles: const PosStyles(bold: true),
+  //   ),
+  //   PosColumn(
+  //     text: kotNo == '--' ? 'Cancel KOT' : kotNo,
+  //     width: 6,
+  //     styles: const PosStyles(bold: true, align: PosAlign.right),
+  //   ),
+  // ]);
   bytes += generator.row([
     PosColumn(
-      text: 'Order No',
-      width: 6,
-      styles: const PosStyles(bold: true),
+      text: 'Order No : ',
+      width: 3,
+      styles: const PosStyles(bold: true, align: PosAlign.left),
     ),
     PosColumn(
       text: orderNo,
-      width: 6,
+      width: 4,
+      styles: const PosStyles(align: PosAlign.left),
+    ),
+    PosColumn(
+      text: 'Date : ',
+      width: 2,
       styles: const PosStyles(bold: true, align: PosAlign.right),
     ),
+    PosColumn(
+      text: DateFormat('dd/MM/yyyy').format(DateTime.now()),
+      width: 3,
+      styles: const PosStyles(align: PosAlign.right),
+    ),
   ]);
-  kotNo == '--'
-      ? null
-      : bytes += generator.row([
-          PosColumn(
-            text: 'KOT',
-            width: 6,
-            styles: const PosStyles(bold: true),
-          ),
-          PosColumn(
-            text: kotNo == '--' ? 'Cancel KOT' : kotNo,
-            width: 6,
-            styles: const PosStyles(bold: true, align: PosAlign.right),
-          ),
-        ]);
+
   bytes += generator.row([
     PosColumn(
-      text: 'Waiter',
-      width: 6,
-      styles: const PosStyles(bold: true),
+      text: 'KOT : ',
+      width: 3,
+      styles: const PosStyles(bold: true, align: PosAlign.left),
     ),
     PosColumn(
-      text: usernameA ?? '',
-      width: 6,
+      text: kotNo == '--' ? 'Cancel KOT' : kotNo,
+      width: 4,
+      styles: const PosStyles(align: PosAlign.left),
+    ),
+    PosColumn(
+      text: 'Time : ',
+      width: 2,
       styles: const PosStyles(bold: true, align: PosAlign.right),
     ),
-  ]);
-  bytes += generator.row([
     PosColumn(
-      text: 'Table',
-      width: 6,
-      styles: const PosStyles(bold: true),
-    ),
-    PosColumn(
-      text: tableNo,
-      width: 6,
-      styles: const PosStyles(bold: true, align: PosAlign.right),
+      text: DateFormat('hh:mm a').format(DateTime.now()),
+      width: 3,
+      styles: const PosStyles(align: PosAlign.right),
     ),
   ]);
+  // bytes += generator.row([
+  //   PosColumn(
+  //     text: 'Waiter : ',
+  //     width: 2,
+  //     styles: const PosStyles(bold: true, align: PosAlign.left),
+  //   ),
+  //   PosColumn(
+  //     text: usernameA ?? '',
+  //     width: 10,
+  //     styles: const PosStyles(align: PosAlign.left),
+  //   ),
+  // ]);
+  bytes += generator.hr(len: 48, ch: "_");
+  bytes += generator.feed(1);
+
+  bytes += generator.text(
+    'Table : $tableNo ',
+    styles: const PosStyles(
+      align: PosAlign.left,
+      bold: true,
+    ),
+  );
+  bytes += generator.text(
+    'Waiter : ${usernameA ?? ''}',
+    styles: const PosStyles(
+      align: PosAlign.left,
+      bold: true,
+    ),
+  );
+  // bytes += generator.row([
+  //   PosColumn(
+  //     text: 'Table : ',
+  //     width: 2,
+  //     styles: const PosStyles(bold: true, align: PosAlign.left),
+  //   ),
+  //   PosColumn(
+  //     text: tableNo,
+  //     width: 10,
+  //     styles: const PosStyles(align: PosAlign.left),
+  //   ),
+  // ]);
+  // bytes += generator.row([
+  //   PosColumn(
+  //     text: 'Waiter : ',
+  //     width: 3,
+  //     styles: const PosStyles(bold: true, align: PosAlign.left),
+  //   ),
+  //   PosColumn(
+  //     text: usernameA ?? '',
+  //     width: 9,
+  //     styles: const PosStyles(align: PosAlign.left),
+  //   ),
+  // ]);
+  // bytes += generator.row([
+  //   PosColumn(
+  //     text: 'Waiter : ${usernameA ?? ''}',
+  //     width: 6,
+  //     styles: const PosStyles(bold: true),
+  //   ),
+  // PosColumn(
+  //   text: usernameA ?? '',
+  //   width: 6,
+  //   styles: const PosStyles(bold: true, align: PosAlign.right),
+  // ),
+  // ]);
+  // bytes += generator.row([
+  //   PosColumn(
+  //     text: 'Table : $tableNo',
+  //     width: 6,
+  //     styles: const PosStyles(bold: true),
+  //   ),
+  // PosColumn(
+  //   text: tableNo,
+  //   width: 6,
+  //   styles: const PosStyles(bold: true, align: PosAlign.right),
+  // ),
+  // ]);
+  // bytes += generator.feed(1);
+
+  ////////////////////////
   bytes += generator.hr(len: 48);
 
   // Item Header
@@ -131,7 +235,12 @@ Future<List<int>> kotPrintData(
         text:
             kotNo == '--' ? '${item.itemName} - ${item.kotno}' : item.itemName,
         width: 8,
-        styles: const PosStyles(align: PosAlign.left),
+        styles: const PosStyles(
+            // fontType: PosFontType.fontB,
+            bold: true,
+            height: PosTextSize.size1,
+            width: PosTextSize.size2,
+            align: PosAlign.left),
       ),
       PosColumn(
         text: dlt
@@ -140,7 +249,12 @@ Future<List<int>> kotPrintData(
                 ? item.qty.toString()
                 : item.quantity.abs().toString(),
         width: 4,
-        styles: const PosStyles(align: PosAlign.right),
+        styles: const PosStyles(
+          align: PosAlign.right,
+          bold: true,
+          height: PosTextSize.size1,
+          width: PosTextSize.size2,
+        ),
       ),
     ]);
   }

@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/tables/table_model.dart';
 import 'package:restaurant_kot/infrastructure/tables/table_configration.dart';
@@ -59,7 +60,7 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
             .toList();
 
         // Fetching order data for a specific date
-     String ordersQuery = """
+        String ordersQuery = """
     SELECT Id, OrderNumber, EntryDate, CustomerId, CustomerName, TableName, FloorNumber, Discount, TotalAmount, StartTime, ActiveInnactive, DineInOrOther, CreditOrPaid, BillNumber, UserID
     FROM dbo.OrderMainDetails
     WHERE CAST(EntryDate AS DATE) = '$currentDate' 
@@ -68,6 +69,10 @@ class TablesBloc extends Bloc<TablesEvent, TablesState> {
       AND DineInOrOther = 'Dining'
       AND (MergedorNot = 'Merged' OR MergedorNot = '')
 """;
+
+        if (demoStatus == true) {
+          ordersQuery += " AND UserID = '$usernameA'";
+        }
 
         List<dynamic> orders = await _fetchData(ordersQuery);
 

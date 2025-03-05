@@ -4,11 +4,14 @@ import 'package:restaurant_kot/application/demo/demo_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/bill_design_mng.dart';
+import 'package:restaurant_kot/presendation/add%20demo/add_demo.dart';
 import 'package:restaurant_kot/presendation/screen%20login/passcose/passcode.dart';
 import 'package:restaurant_kot/presendation/screen%20splash/screen_splash.dart';
 import 'package:restaurant_kot/presendation/screen%20support/screen_support.dart';
 import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -19,6 +22,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hi = MediaQuery.of(context).size.height;
+
     final screenWidth = MediaQuery.of(context).size.width;
     final double padding = (screenWidth < 600)
         ? 20.0
@@ -30,230 +35,336 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: padding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Image.asset(
-                    'assets/img/loginpage/login.jpg',
-                    fit: BoxFit.contain,
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: padding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+
+                  //top potion
+                  SizedBox(
+                    height: 40,
+                    // color: Colors.amberAccent,
+                    child: Image.asset(
+                      'assets/img/logo/splashlogo.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Welcome Back',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: mainclr,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
+                  SizedBox(
+                    height: hi * 0.08,
+                  ),
+                  //center potion
 
-                        // Username Field
-                        TextFormField(
-                          controller: _usernameController,
-                          decoration: InputDecoration(
-                            labelText: 'Username',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade300),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade300),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: mainclr),
-                            ),
-                            prefixIcon: Icon(Icons.person, color: mainclr),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your username';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Password Field
-                        TextFormField(
-                          controller: _passwordController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade300),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade300),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(color: mainclr),
-                            ),
-                            prefixIcon: Icon(Icons.lock, color: mainclr),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Login Button
-                        BlocConsumer<LoginBloc, LoginState>(
-                          listener: (context, state) {
-                            if (state.loged) {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SplashScreen()),
-                                (route) => false,
-                              );
-                              BlocProvider.of<InitalDataBloc>(context)
-                                  .add(const InitalDataEvent.addinitaldatas());
-                              BillDesignMng().changebilldesignLogo(value: true);
-                              BillDesignMng()
-                                  .changesbilldesignName(value: true);
-                            }
-                            if (state.errorMsg != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.red.shade700,
-                                  content: Text(
-                                    'Oops! ${state.errorMsg}',
-                                    style: const TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          builder: (context, state) {
-                            return state.isLoading
-                                ? const Loading()
-                                : SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          BlocProvider.of<LoginBloc>(context)
-                                              .add(
-                                            LoginEvent.login(
-                                              pass: _passwordController.text
-                                                  .trim(),
-                                              username: _usernameController.text
-                                                  .trim(),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: mainclr,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 15),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                      child: const Text(
-                                        'Login',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                          },
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Settings Button
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PasscodePage()),
-                            );
-                          },
-                          child: Text(
-                            'Settings',
-                            style: TextStyle(
-                              color: mainclr,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: SizedBox(
+                              height: 160,
+                              child: Image.asset(
+                                'assets/img/loginpage/LogoBg.png',
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
-                        ),
-                        const Divider(),
+                          // Username Field
+                          TextFormField(
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                              labelText: 'Username',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: mainclr),
+                              ),
+                              prefixIcon: Icon(Icons.person, color: mainclr),
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your username';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
 
-                        // Support and Demo Buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton.icon(
-                              onPressed: () {
-                                Navigator.push(
+                          // Password Field
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade300),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: mainclr),
+                              ),
+                              prefixIcon: Icon(Icons.lock, color: mainclr),
+                              filled: true,
+                              fillColor: Colors.white,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Login Button
+                          BlocConsumer<LoginBloc, LoginState>(
+                            listener: (context, state) {
+                              if (state.loged) {
+                                Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SupportPage()),
+                                      builder: (context) =>
+                                          const SplashScreen()),
+                                  (route) => false,
                                 );
-                              },
-                              icon: const Icon(Icons.support_agent_outlined,
-                                  size: 20, color: mainclr),
-                              label: const Text(
-                                'Support',
-                                style: TextStyle(fontSize: 16, color: mainclr),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                _showOptionsBottomSheet(context);
+                                BlocProvider.of<InitalDataBloc>(context).add(
+                                    const InitalDataEvent.addinitaldatas());
+                                BillDesignMng()
+                                    .changebilldesignLogo(value: true);
+                                BillDesignMng()
+                                    .changesbilldesignName(value: true);
+                              }
+                              if (state.errorMsg != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.red.shade700,
+                                    content: Text(
+                                      'Oops! ${state.errorMsg}',
+                                      style: const TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            builder: (context, state) {
+                              return state.isLoading
+                                  ? const Loading()
+                                  : SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            BlocProvider.of<LoginBloc>(context)
+                                                .add(
+                                              LoginEvent.login(
+                                                pass: _passwordController.text
+                                                    .trim(),
+                                                username: _usernameController
+                                                    .text
+                                                    .trim(),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: mainclr,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Login',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                            },
+                          ),
+                          FutureBuilder<SharedPreferences>(
+                            future: SharedPreferences.getInstance(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const SizedBox();
+                              }
+                              final conne =
+                                  snapshot.data?.getBool('conne') ?? false;
+                              return conne
+                                  ? const SizedBox()
+                                  : Align(
+                                      alignment: Alignment.topLeft,
+                                      child: BlocConsumer<DemoBloc, DemoState>(
+                                        listener: (context, state) {
+                                          if (state.loged) {
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const SplashScreen()),
+                                              (route) => false,
+                                            );
+                                          }
+                                        },
+                                        builder: (context, state) {
+                                          return state.isLoading
+                                              ? const Padding(
+                                                  padding:
+                                                      EdgeInsets.only(top: 10),
+                                                  child: SizedBox(
+                                                      child:
+                                                          LinearProgressIndicator(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10)),
+                                                    color: mainclr,
+                                                  )),
+                                                )
+                                              : TextButton(
+                                                  onPressed: () {
+                                                    if (demoutype == null) {
+                                                      _showOptionsBottomSheet(
+                                                          context);
+                                                    } else {
+                                                      BlocProvider.of<DemoBloc>(
+                                                              context)
+                                                          .add(
+                                                        DemoEvent.demodatabase(
+                                                          exist: true,
+                                                          type: demoutype,
+                                                          phoneNo: demousername,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  child: RichText(
+                                                    text: const TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text:
+                                                              'Click here for ',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            color: mainclr,
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text: 'Demo',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            color: Colors
+                                                                .blueAccent,
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                        },
+                                      ),
+                                    );
+                            },
+                          ),
 
-                                // Implement demo functionality
-                              },
-                              child: Text(
-                                'Demo',
-                                style: TextStyle(fontSize: 16, color: mainclr),
-                              ),
+                          // : const SizedBox(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: hi * 0.1,
+                  ),
+                  //bottom potion
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SupportPage()),
+                          );
+                        },
+                        icon: const Icon(Icons.support_agent_outlined,
+                            size: 20, color: mainclr),
+                        label: const Text(
+                          'Support',
+                          style: TextStyle(fontSize: 16, color: mainclr),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PasscodePage()),
+                          );
+                          // Implement demo functionality
+                        },
+                        child: const Row(
+                          children: [
+                            Text(
+                              'Settings',
+                              style: TextStyle(fontSize: 16, color: mainclr),
+                            ),
+                            SizedBox(
+                              width: 7,
+                            ),
+                            Icon(
+                              Icons.settings,
+                              size: 18,
+                              color: mainclr,
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -312,39 +423,27 @@ void _showOptionsBottomSheet(BuildContext context) {
                   activeColor: mainclr,
                 ),
                 const SizedBox(height: 20),
-                BlocConsumer<DemoBloc, DemoState>(
-                  listener: (context, state) {
-                    if (state.loged) {
-                      Navigator.pushAndRemoveUntil(
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: mainclr,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SplashScreen()),
-                        (route) => false,
+                            builder: (context) => DemoRegisterPage(
+                                  type: selectedOption,
+                                )),
                       );
-                    }
-                  },
-                  builder: (context, state) {
-                    return SizedBox(
-                      width: double.infinity,
-                      child: state.isLoading
-                          ? LinearProgressIndicator(color: mainclr)
-                          : ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: mainclr,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              onPressed: () {
-                                BlocProvider.of<DemoBloc>(context).add(
-                                  DemoEvent.demodatabase(type: selectedOption),
-                                );
-                              },
-                              child: const Text('Next',
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                    );
-                  },
+                    },
+                    child: const Text('Next',
+                        style: TextStyle(color: Colors.white)),
+                  ),
                 ),
               ],
             ),

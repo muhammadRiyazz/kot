@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/finished%20order/finishad_order_bloc.dart';
@@ -462,6 +461,9 @@ class FinishedOrderDetail extends StatelessWidget {
                                                                         .state
                                                                         .billPrinterInfo;
                                                                 BlocProvider.of<PrintingBloc>(context).add(PrintBill(
+                                                                    customer:
+                                                                        invoice
+                                                                            .cusname!,
                                                                     mergedOrNot:
                                                                         invoice.mergedOrNot ??
                                                                             '',
@@ -644,8 +646,9 @@ class FinishedOrderDetail extends StatelessWidget {
 List<kotItem> convert({required List<InvoiceItem> invList}) {
   List<kotItem> printItems = [];
   for (var element in invList) {
-    printItems.add(kotItem(updated: false,
-      productImg: '',
+    printItems.add(kotItem(
+        updated: false,
+        productImg: '',
         parcelOrnot: element.parcelOrNot ?? '',
         gstAmt: element.gstAmount!,
         cessAmt: element.cessAmount!,

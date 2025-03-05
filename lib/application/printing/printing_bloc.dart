@@ -40,7 +40,7 @@ class PrintingBloc extends Bloc<PrintingEvent, PrintingState> {
           log(ordersresult);
           List<dynamic> jsonResponse = jsonDecode(ordersresult);
 
-          test = await billPrintData(
+          test = await billPrintData(cutumer: event.customer,
             mergedorNot: 'Merged',
             mergedOrders: jsonResponse[0]['MergedOrders'],
             mergedTables: jsonResponse[0]['MergedTables'],
@@ -56,7 +56,7 @@ class PrintingBloc extends Bloc<PrintingEvent, PrintingState> {
         } else {
           log(' not Merged -----------------------------------');
 
-          test = await billPrintData(
+          test = await billPrintData(cutumer: event.customer,
             mergedorNot: '',
             orderNo: event.orderID,
             tax: event.cGst,

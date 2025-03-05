@@ -216,9 +216,36 @@ class ScreenOrdersList extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        title: Text(
-                                          order.orderNumber,
-                                          style: TextStyle(fontSize: textSize),
+                                        title: Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: order.orderNumber
+                                                    .substring(0,
+                                                        3), // First 3 letters
+                                                style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255,
+                                                      184,
+                                                      12,
+                                                      0), // Change this to your desired color
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: order.orderNumber
+                                                    .substring(
+                                                        3), // Remaining part
+                                                style: const TextStyle(
+                                                  color: Colors
+                                                      .black, // Change this to your desired color
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         subtitle: Text(
                                             'Amount: ₹${order.totalAmount}'),
