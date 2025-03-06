@@ -288,7 +288,7 @@ Future<List<int>> billPrintData({
   infoCustomer!.gSTScheme == 'unregistered' ||
           infoCustomer!.gSTScheme == 'GSTComposition'
       ? null
-      : tax < 1
+      : cess < 1
           ? null
           : bytes += generator.row([
               PosColumn(

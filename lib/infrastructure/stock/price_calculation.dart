@@ -296,6 +296,7 @@ double parceltaxableAmountcalculation(
 
 double calculationtaxableAmount({
   required Map<String, dynamic> element,
+required  double rateAcNonAc,
 }) {
   double taxableAmount = 0.0;
 
@@ -305,7 +306,8 @@ double calculationtaxableAmount({
 
     double cessPer = safeParseDouble(element['CessPercentage']);
     double totalTaxPer = gstPer + cessPer;
-    double rate = safeParseDouble(element['unitprice']);
+
+    double rate = rateAcNonAc;
     taxableAmount = rate / (1 + (totalTaxPer / 100));
     log('gstPer--- $gstPer');
     log('cessPer--- $cessPer');
@@ -321,7 +323,7 @@ double calculationtaxableAmount({
 
       double cessPer = safeParseDouble(element['CessPercentage']);
       double totalTaxPer = gstPer + cessPer;
-      double rate = safeParseDouble(element['unitprice']);
+      double rate =rateAcNonAc;
       taxableAmount = rate / (1 + (totalTaxPer / 100));
       log('gstPer--- $gstPer');
       log('cessPer--- $cessPer');
@@ -331,7 +333,7 @@ double calculationtaxableAmount({
       log(' rate---------------${rate.toString()}');
       log('taxableAmount ---------------${taxableAmount.toString()}');
     } else {
-      taxableAmount = safeParseDouble(element['unitprice']);
+      taxableAmount = rateAcNonAc;
     }
   }
   log('$taxableAmount    --------------------');

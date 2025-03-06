@@ -202,7 +202,7 @@ class Tablespart extends StatelessWidget {
                                           StockEvent.itemInitalFetch(
                                               acOrNonAc: state.tables[index]
                                                           .tableType ==
-                                                      ''
+                                                      'AC'
                                                   ? true
                                                   : false));
                                       if (state.tables[index].isEmpty) {

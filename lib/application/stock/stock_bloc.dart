@@ -22,10 +22,10 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         MssqlConnection connection = await connectionManager.getConnection();
 
         String stockQuery = """
-  SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
-  FROM  [dbo].[MainStock]
-  ;
-""";
+        SELECT [Id], [codeorSKU], [category], [pdtname], [HSNCode], [description], [puramnt], [puramntwithtax], [saleamnt], [saleamntwithtax], [profit], [pcs], [tax], [saletaxamnt], [stockcontrol], [totalstock], [lowstock], [warehouse], [vendername], [venderinvoice], [vendercontactname], [vendertax], [purtaxamnt], [venderimg], [vendertotalamnt], [vendertotaltaxamnt], [privatenote], [Date], [productimg], [status], [lossorgain], [vendorid], [hsncode1], [venIGST], [venIGSTamnt], [venCGST], [venCGSTamnt], [venSGST], [venSGSTamnt], [SERorGOODS], [itemMRP], [SaleincluORexclussive], [PurchaseincluORexclussive], [InitialCost], [AvgCost], [MessurmentsUnit], [SincluorExclu], [PincluorExclu], [BarcodeID], [SupplierName], [CessBasedonQntyorValue], [CessRate], [CatType], [CatBrand], [CatModelNo], [CatColor], [CatSize], [CatPartNumber], [CatSerialNumber], [AliasNameID], [InitialQuantity], [PCatType], [BrandType], [RePackingApplicable], [RepackingTo], [RepackingBalance], [BulkItemQty], [BalanceRepackingitemUnit], [RepackingitemUnit], [RepackingItemOf], [saleamntwithtax1AC], [PrinterName], [DininACrate], [DininNonACrate], [Deliveryrate], [pickuprate]
+       FROM  [dbo].[MainStock]
+       ;
+       """;
 
         String stockQueryResult = await connection.getData(stockQuery);
         List<dynamic> stockJsonResponse = jsonDecode(stockQueryResult);
@@ -156,6 +156,12 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
     on<ItemInitalFetch>((event, emit) async {
       log('ItemInitalFetch-------StockBloc');
+
+      if (event.acOrNonAc) {
+        log('-------AC table ----');
+      } else {
+        log('-------NonAC table ----');
+      }
       emit(state.copyWith(isLoading: true));
 
       try {
@@ -165,31 +171,34 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
         // Optimized SQL Query with JOIN to include productImg
         const String itemsQuery = """
-    WITH UniqueItems AS (
-        SELECT 
-            id, pdtcode, pdtname, HSNCode, discp, unitprice,
-            itemMRP, Amount, GrossValueAftrITMDisc, ItemBillDiscPER,
-            ItemBillDiscAmount, ItemTotalNETAmount, gst, gstamount,
-            Totalamount, venIGST, venIGSTamnt, venCGST, venCGSTamnt,
-            venSGST, venSGSTamnt, SerManDetails, CessPercentage,
-            CessAmount, ItemUnitSaleRate,
-            ROW_NUMBER() OVER(PARTITION BY pdtcode ORDER BY id DESC) AS row_num
-        FROM dbo.invoicedetail
-    )
+ WITH UniqueItems AS (
     SELECT 
-        ui.*, 
-        ms.PrinterName, 
-        ms.productImg 
-    FROM UniqueItems ui
-    LEFT JOIN dbo.MainStock ms 
-    ON ms.codeorSKU = ui.pdtcode
-    WHERE ui.row_num = 1
-    ORDER BY ui.id DESC;
+        id, pdtcode, pdtname, HSNCode, discp, 
+        itemMRP, Amount, GrossValueAftrITMDisc, ItemBillDiscPER,
+        ItemBillDiscAmount, ItemTotalNETAmount, gst, gstamount,
+        Totalamount, venIGST, venIGSTamnt, venCGST, venCGSTamnt,
+        venSGST, venSGSTamnt, SerManDetails, CessPercentage,
+        CessAmount, ItemUnitSaleRate,
+        ROW_NUMBER() OVER(PARTITION BY pdtcode ORDER BY id DESC) AS row_num
+    FROM dbo.invoicedetail
+)
+SELECT 
+    ui.*, 
+    ms.PrinterName, 
+    ms.productImg,
+    ms.DininACrate,  
+    ms.DininNonACrate 
+FROM UniqueItems ui
+LEFT JOIN dbo.MainStock ms 
+ON ms.codeorSKU = ui.pdtcode
+WHERE ui.row_num = 1
+ORDER BY ui.id DESC;
+
     """;
 
         // Execute query and get result
         String? itemQueryResult = await connection.getData(itemsQuery);
-
+        log(' ----------------- iiiii------${itemQueryResult}');
         // Parse JSON result if it exists
         List<Map<String, dynamic>> rows = [];
         try {
@@ -204,13 +213,16 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
         // Process each row and categorize items based on `pdtcode`
         for (var element in rows) {
-          double basicRate = calculateBasicRate(
-            element: element,
-            isAc: event.acOrNonAc,
-          );
+          double basicRate = safeParseDouble(event.acOrNonAc
+              ? element['DininACrate']
+              : element['DininNonACrate']);
+
+          // calculateBasicRate(
+          //   element: element,
+          //   isAc: event.acOrNonAc,
+          // );
           double taxableAmount = calculationtaxableAmount(
-            element: element,
-          );
+              element: element, rateAcNonAc: basicRate);
 
           // Create kotItem object and add it to the appropriate category list
           kotItem item = kotItem(
@@ -331,8 +343,9 @@ class StockBloc extends Bloc<StockEvent, StockState> {
     """;
 
         String stockQueryResult = await connection.getData(stockQuery);
+        log(stockQueryResult);
 
-        if (stockQueryResult == null || stockQueryResult.isEmpty) {
+        if (stockQueryResult.isEmpty) {
           log('Error: stockQueryResult is null or empty');
           emit(state.copyWith(isLoading: false));
           return;
@@ -375,10 +388,8 @@ class StockBloc extends Bloc<StockEvent, StockState> {
             basicRate: basicRate,
             unitTaxableAmountBeforeDiscount: taxableAmount,
             unitTaxableAmount: taxableAmount,
-            gstPer:
-                double.tryParse(element.vendorIGST?.toString() ?? '0.0') ?? 0.0,
-            cessPer:
-                double.tryParse(element.cessRate?.toString() ?? '0.0') ?? 0.0,
+            gstPer: double.tryParse(element.vendorIGST.toString()) ?? 0.0,
+            cessPer: double.tryParse(element.cessRate.toString()) ?? 0.0,
           ));
         }
 
