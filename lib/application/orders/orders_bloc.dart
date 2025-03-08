@@ -15,18 +15,16 @@ part 'orders_bloc.freezed.dart';
 
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   OrdersBloc() : super(OrdersState.initial()) {
-    on<AllOrders>((event, emit) async {
+      on<AllOrders>((event, emit) async {
       log('AllOrders --------------------------');
       emit(state.copyWith(
-          isLoading: true, mergeisLoading: false, mergeStatus: 0));
-
+      isLoading: true, mergeisLoading: false, mergeStatus: 0));
       try {
-        String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-        MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
-        MssqlConnection connection = await connectionManager.getConnection();
-
-        String ordersQuery = """
-    SELECT [Id], 
+      String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      MSSQLConnectionManager connectionManager = MSSQLConnectionManager();
+      MssqlConnection connection = await connectionManager.getConnection();
+      String ordersQuery = """
+           SELECT [Id], 
            [OrderNumber], 
            [EntryDate], 
            [CustomerId], 
@@ -49,10 +47,10 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
            [MergedorNot],
            [MergedOrders],
            [MergedTables]
-    FROM  [dbo].[OrderMainDetails]
-    WHERE CAST([EntryDate] AS DATE) = '$currentDate' 
-          AND [ActiveInnactive] = 'Active' AND (MergedorNot = 'Merged' OR MergedorNot = '') AND [CreditOrPaid] ='Credit' AND [UserID] = '$usernameA' AND [DineInOrOther] = 'Dining';
-""";
+           FROM   [dbo].[OrderMainDetails]
+           WHERE CAST([EntryDate] AS DATE) = '$currentDate' 
+           AND [ActiveInnactive] = 'Active' AND (MergedorNot = 'Merged' OR MergedorNot = '') AND [CreditOrPaid] ='Credit' AND [UserID] = '$usernameA' AND [DineInOrOther] = 'Dining';
+           """;
 
         // String ordersQuery =
         //     "SELECT [Id], [OrderNumber], [EntryDate], [UserName], [CustomerId], [CustomerName], "
@@ -72,7 +70,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
             jsonResponse.map((data) => Order.fromJson(data)).toList();
         // Emit state with tableModels data
 
-      
         emit(state.copyWith(isLoading: false, orders: orders));
       } catch (e) {
         emit(state.copyWith(isLoading: false));
@@ -310,10 +307,10 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
 
         log('MergeAndPrint completed successfully.');
         emit(state.copyWith(
-          mergeisLoading: false,
-          mergeStatus: 1,
-          isMultiSelectMode: false,isSelected: []
-        ));
+            mergeisLoading: false,
+            mergeStatus: 1,
+            isMultiSelectMode: false,
+            isSelected: []));
       } catch (e, stackTrace) {
         emit(state.copyWith(
           mergeisLoading: false,

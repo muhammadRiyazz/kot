@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/BillSubmitPrint/bill_submit_print_bloc.dart';
@@ -15,7 +14,6 @@ import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/orders/order_model.dart';
 import 'package:restaurant_kot/infrastructure/check%20printer%20congiration/check_printer_congiration.dart';
-import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/kot%20submision/kot_submision_success.dart';
 import 'package:restaurant_kot/presendation/screen%20bill%20preview/screen_bill.dart';
 import 'package:restaurant_kot/presendation/screen%20home/loadings.dart';
@@ -25,7 +23,6 @@ import 'package:restaurant_kot/presendation/screen%20product%20selection/selecte
 import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/img.dart';
 import 'package:restaurant_kot/presendation/settings/printer/kitchen_listing.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
-import 'package:shimmer/shimmer.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   const OrderDetailsPage({super.key, required this.order, required this.table});
@@ -580,6 +577,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                     decoration: BoxDecoration(
                                                       color: isSelected
                                                           ? Colors.blue
+                                                              // ignore: deprecated_member_use
                                                               .withOpacity(0.0)
                                                           : Colors.white,
                                                       borderRadius:
@@ -724,15 +722,35 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            Text(
-                                                              item.kotno,
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 13,
-                                                              ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  item.kotno,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        13,
+                                                                  ),
+                                                                ),
+                                                                item.parcelOrnot ==
+                                                                        'Parcel'
+                                                                    ? Text(
+                                                                        '  -  ${item.parcelOrnot}',
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          color:
+                                                                              Colors.green,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          fontSize:
+                                                                              12,
+                                                                        ),
+                                                                      )
+                                                                    : SizedBox(),
+                                                              ],
                                                             ),
                                                             selectedItems
                                                                     .isEmpty

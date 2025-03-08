@@ -30,47 +30,50 @@ class BillSubmitPrintBloc
       List<kotItem> billItems = event.items;
 
       for (var product in billItems) {
-        // Find if the product already exists in the updatedbillItems
-        var existingProductIndex = updatedbillItems.indexWhere(
-          (p) =>
-              p.itemCode ==
-              product.itemCode, // Compare by unique identifier (itemCode)
-        );
+        // Check if a similar non-parcel item exists
+        var nonParcelIndex = updatedbillItems.indexWhere((item) =>
+            item.itemCode == product.itemCode && item.parcelOrnot.isEmpty);
 
-        if (existingProductIndex != -1) {
-          // If the product exists, create a new updated item
-          var existingProduct = updatedbillItems[existingProductIndex];
-          var updatedProduct = kotItem(
-            updated: existingProduct.updated,
+        // Check if a similar parcel item exists
+        var parcelIndex = updatedbillItems.indexWhere((item) =>
+            item.itemCode == product.itemCode && item.parcelOrnot == 'Parcel');
 
-            productImg: existingProduct.productImg,
-            parcelOrnot: existingProduct.parcelOrnot,
-            cessAmt: existingProduct.cessAmt,
-            gstAmt: existingProduct.gstAmt,
-            kotno: existingProduct.kotno,
-            stock: existingProduct.stock,
-            qty: existingProduct.qty + product.qty, // Increase quantity
-            serOrGoods: existingProduct.serOrGoods,
-            kitchenName: existingProduct.kitchenName,
-            itemName: existingProduct.itemName,
-            itemCode: existingProduct.itemCode,
-            quantity: existingProduct.quantity,
-            basicRate: existingProduct.basicRate,
-            unitTaxableAmountBeforeDiscount:
-                existingProduct.unitTaxableAmountBeforeDiscount,
-            unitTaxableAmount: existingProduct.unitTaxableAmount,
-            gstPer: existingProduct.gstPer,
-            cessPer: existingProduct.cessPer,
-          );
-
-          // Replace the existing item with the updated one
-          updatedbillItems[existingProductIndex] = updatedProduct;
+        if (product.parcelOrnot == 'Parcel') {
+          if (parcelIndex != -1) {
+            // If a parcel item exists, update its quantity
+            updatedbillItems[parcelIndex] = updatedbillItems[parcelIndex]
+                .copyWith(qty: updatedbillItems[parcelIndex].qty + product.qty);
+          } else {
+            // If no parcel item exists, add it
+            updatedbillItems.add(product);
+          }
         } else {
-          // If the product does not exist, add it to the list
-          updatedbillItems.add(product);
+          if (nonParcelIndex != -1) {
+            // If a non-parcel item exists, update its quantity
+            updatedbillItems[nonParcelIndex] = updatedbillItems[nonParcelIndex]
+                .copyWith(
+                    qty: updatedbillItems[nonParcelIndex].qty + product.qty);
+          } else {
+            // If no non-parcel item exists, add it
+            updatedbillItems.add(product);
+          }
         }
       }
 
+      log('------------updatedbillItems ---------------');
+
+      for (var product in updatedbillItems) {
+        log(product.itemName);
+        log(product.kotno);
+        log(product.basicRate.toString());
+
+        log(product.unitTaxableAmount.toString());
+
+        log(product.parcelOrnot);
+        log(product.qty.toString());
+        log(product.quantity.toString());
+        log('------------------/n');
+      }
       double subTotal = 0.00;
       double totalAmt = 0.00;
       double tax = 0.00;
@@ -99,7 +102,7 @@ class BillSubmitPrintBloc
         subTotal: subTotal,
         printitems: updatedbillItems,
         totalAmt: totalAmt,
-        billitems: event.items,
+        billitems: updatedbillItems,
         orderid: event.currentorderid,
         selectedCustomer: event.selectedcustomer,
         table: event.table,

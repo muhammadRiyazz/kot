@@ -84,7 +84,58 @@ class KotSubmitPrintBloc
           kotitems = updatedutems;
         } else {
           log('Parcel mode disabled. Using original items.');
-          kotitems = event.kotitems;
+
+          if (event.currentorderid != null && event.currentitems != null) {
+            List<kotItem> updatedutems = [];
+
+            for (var element in event.kotitems) {
+              log('Processing item: ${element.itemCode}');
+              try {
+                String query = '''
+            SELECT 
+                   [DininACrate],
+                   [DininNonACrate]
+
+            FROM  [dbo].[MainStock]
+            WHERE [codeorSKU] = '${element.itemCode}' 
+            ''';
+
+                var result = await connection.getData(query);
+                log('Query result: $result');
+                List<dynamic> jsonList = json.decode(result);
+                double basicRate;
+                double taxableAmount;
+                if (element.updated) {
+                  basicRate = element.basicRate;
+                  taxableAmount = element.unitTaxableAmount;
+                } else {
+                  basicRate = safeParseDouble(event.table.acOrNonAc == 'AC'
+                      ? jsonList[0]['DininACrate']
+                      : jsonList[0]['DininNonACrate']);
+
+                  taxableAmount = parceltaxableAmountcalculation(
+                    item: element,
+                    pickuprate: event.table.acOrNonAc == 'AC'
+                        ? jsonList[0]['DininACrate']
+                        : jsonList[0]['DininNonACrate'],
+                  );
+                }
+
+                updatedutems.add(element.copyWith(
+                  basicRate: basicRate,
+                  unitTaxableAmountBeforeDiscount: taxableAmount,
+                  unitTaxableAmount: taxableAmount,
+                ));
+              } catch (e) {
+                log('Error processing item ${element.itemCode}: $e');
+                rethrow;
+              }
+            }
+
+            kotitems = updatedutems;
+          } else {
+            kotitems = event.kotitems;
+          }
         }
 
         List<kotItem> outofStock = [];
@@ -150,25 +201,33 @@ class KotSubmitPrintBloc
             if (event.currentorderid != null && event.currentitems != null) {
               log('Updating existing order items...');
               for (var product in event.currentitems!) {
-                try {
-                  if (product.quantity > 0) {
-                    kotitemslist.add(product.copyWith(
-                        quantity: product.qty + product.quantity));
-                  } else if (product.quantity < 0) {
-                    kotitemslist.add(product.copyWith(
-                        quantity: product.qty - product.quantity.abs()));
-                  } else {
-                    kotitemslist.add(product.copyWith(quantity: product.qty));
-                  }
-                } catch (e) {
-                  log('Error updating item ${product.itemCode}: $e');
-                  rethrow;
-                }
+                //   try {
+                //     if (product.quantity > 0) {
+                //       kotitemslist.add(product.copyWith(
+                //           quantity: product.qty + product.quantity));
+                //     } else if (product.quantity < 0) {
+                //       kotitemslist.add(product.copyWith(
+                //           quantity: product.qty - product.quantity.abs()));
+                //     } else {
+                kotitemslist.add(product.copyWith(quantity: product.qty));
+                //     }
+                //   } catch (e) {
+                //     log('Error updating item ${product.itemCode}: $e');
+                //     rethrow;
+                //   }
               }
-            }
 
-            kotitemslist.addAll(kotitems.where((item) =>
-                !kotitemslist.any((b) => b.itemCode == item.itemCode)));
+              // if (state.parcel) {
+              //   kotitemslist.addAll(event.currentitems!);
+              // }
+
+              // kotitemslist.addAll(event.currentitems!);
+              // kotitemslist.addAll(kotitems);
+            } else {
+              // kotitemslist.addAll(kotitems.where((item) =>
+              //     !kotitemslist.any((b) => b.itemCode == item.itemCode)));
+            }
+            kotitemslist.addAll(kotitems);
 
             double totalAmountBeforeDisc = 0.0;
             double discount = 0.0;
