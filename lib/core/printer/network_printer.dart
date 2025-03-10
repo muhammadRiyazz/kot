@@ -86,7 +86,9 @@ class NetworkPrinter {
     try {
       log('printing ip-------$ip');
       log('Attempting to connect to printer');
-      final printer = PrinterNetworkManager(ip,
+      final printer = PrinterNetworkManager(
+        
+        ip,
           timeout: const Duration(seconds: 5), port: 9100);
       PosPrintResult connect = await printer.connect();
 

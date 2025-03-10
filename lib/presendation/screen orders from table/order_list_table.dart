@@ -175,7 +175,12 @@ class ScreenOrdersList extends StatelessWidget {
                                             EdgeInsets.only(right: 12, left: 5),
                                         onTap: () {
                                           BlocProvider.of<StockBloc>(context)
-                                              .add(const ClearSelection());
+                                              .add(const StockEvent
+                                                  .clearSelection());
+                                          BlocProvider.of<OrderDetailsBloc>(
+                                                  context)
+                                              .add(const OrderDetailsEvent
+                                                  .clearItemSelection());
 
                                           BlocProvider.of<OrderDetailsBloc>(
                                                   context)
