@@ -1,5 +1,5 @@
 name: restaurant_kot
-description: "A new Flutter project."
+description: "for restaurant kot Mang"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
@@ -32,6 +32,8 @@ dependencies:
   screenshot: ^3.0.0
   barcode: ^2.0.0
   barcode_image: ^2.0.0
+  excel: ^2.0.1
+  url_launcher: ^6.3.1
 
 
 

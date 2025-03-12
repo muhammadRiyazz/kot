@@ -4,13 +4,13 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:restaurant_kot/application/support/support_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SupportPage extends StatelessWidget {
   const SupportPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Trigger the event to fetch data when the page loads
     BlocProvider.of<SupportBloc>(context).add(const SupportEvent.getinfoData());
 
     return Scaffold(
@@ -37,7 +37,7 @@ class SupportPage extends StatelessWidget {
           final supportInfo = state.supportInfo!;
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ListView(
               children: [
                 const SizedBox(height: 40),
@@ -103,12 +103,21 @@ class SupportPage extends StatelessWidget {
                   leading: const Icon(LucideIcons.phone, color: Colors.green),
                   title: const Text('Contact Us'),
                   subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Phone: ${supportInfo.phoneNumber1}'),
-                      Text('Phone: ${supportInfo.phoneNumber2}'),
-                    ],
-                  ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(
+                        supportInfo.phoneNumbers.length,
+                        (index) {
+                          return InkWell(
+                            onTap: () {
+                              _makePhoneCall(supportInfo.phoneNumbers[index]);
+                            },
+                            child: Text(
+                              'Phone: ${supportInfo.phoneNumbers[index]}',
+                              style: const TextStyle(),
+                            ),
+                          );
+                        },
+                      )),
                 ),
                 const Divider(thickness: 1),
                 ListTile(
@@ -126,17 +135,17 @@ class SupportPage extends StatelessWidget {
                 ),
                 const Divider(thickness: 1),
                 ListTile(
+                  onTap: () {
+                    final Uri url = Uri.parse(supportInfo.websiteUrl);
+
+                    _launchUrl(url);
+                  },
                   leading: const Icon(Icons.link, color: Colors.blue),
                   title: const Text('Website'),
-                  subtitle: Text(supportInfo.websiteUrl),
-                  // onTap: () async {
-                  // final Uri url = Uri.parse(supportInfo.websiteUrl);
-                  // if (await canLaunchUrl(url)) {
-                  //   await launchUrl(url);
-                  // } else {
-                  //   throw 'Could not launch $url';
-                  // }
-                  // },
+                  subtitle: Text(
+                    supportInfo.websiteUrl,
+                    style: const TextStyle(),
+                  ),
                 ),
               ],
             ),
@@ -151,7 +160,7 @@ class SupportPage extends StatelessWidget {
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
           children: [
             const SizedBox(height: 40),
@@ -215,92 +224,24 @@ class SupportPage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: Container(
-                width: 24,
-                height: 24,
-                color: Colors.white,
-              ),
-              title: Container(
-                width: 100,
-                height: 16,
-                color: Colors.white,
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 150,
-                    height: 14,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 4),
-                  Container(
-                    width: 150,
-                    height: 14,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: Container(
-                width: 24,
-                height: 24,
-                color: Colors.white,
-              ),
-              title: Container(
-                width: 100,
-                height: 16,
-                color: Colors.white,
-              ),
-              subtitle: Container(
-                width: 150,
-                height: 14,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: Container(
-                width: 24,
-                height: 24,
-                color: Colors.white,
-              ),
-              title: Container(
-                width: 100,
-                height: 16,
-                color: Colors.white,
-              ),
-              subtitle: Container(
-                width: 150,
-                height: 14,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: Container(
-                width: 24,
-                height: 24,
-                color: Colors.white,
-              ),
-              title: Container(
-                width: 100,
-                height: 16,
-                color: Colors.white,
-              ),
-              subtitle: Container(
-                width: 150,
-                height: 14,
-                color: Colors.white,
-              ),
-            ),
           ],
         ),
       ),
     );
+  }
+}
+
+Future<void> _makePhoneCall(String phoneNumber) async {
+  final Uri launchUri = Uri(
+    
+    scheme: 'tel',
+    path: phoneNumber,
+  );
+  await launchUrl(launchUri);
+}
+
+Future<void> _launchUrl(Uri url) async {
+  if (!await launchUrl(url)) {
+    throw Exception('Could not launch $url');
   }
 }

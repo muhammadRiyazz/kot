@@ -229,6 +229,30 @@ class KotSubmitPrintBloc
             }
             kotitemslist.addAll(kotitems);
 
+            log('start     0 0 0 0  0 --------------');
+
+            for (var element in kotitemslist) {
+              log(element.itemName);
+              log('${element.qty}  --  ${element.quantity}');
+            }
+            if (event.kotretunitems.isNotEmpty) {
+              for (var product in event.kotretunitems) {
+                for (var item in kotitemslist) {
+                  if (item.itemCode == product.itemCode &&
+                      item.parcelOrnot == product.parcelOrnot) {
+                    log(product.quantity.toString());
+
+                    log('calculating --------------');
+                    item.quantity -=
+                        product.quantity.abs(); // Update quantity directly
+                  }
+                }
+              }
+            }
+            for (var element in kotitemslist) {
+              log(element.itemName);
+              log('${element.qty}  --  ${element.quantity}');
+            }
             double totalAmountBeforeDisc = 0.0;
             double discount = 0.0;
             double totalTaxableAmount = 0.0;
@@ -419,7 +443,7 @@ SET
     TotalAmount = $totalAmount ,
     DineInOrOther = 'Dining',
     Delivery = '-',
-    ParcelOrNot = '${state.parcel ? 'Parcel' : ''}',
+    ParcelOrNot = '${element.parcelOrnot}',
     BillNumber = '',
     KitchenName = '${element.kitchenName}',
     UserID = '${event.userId}'

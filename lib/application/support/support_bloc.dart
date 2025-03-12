@@ -1,8 +1,8 @@
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
+import 'package:excel/excel.dart';
 
 part 'support_event.dart';
 part 'support_state.dart';
@@ -11,84 +11,85 @@ part 'support_bloc.freezed.dart';
 class SupportBloc extends Bloc<SupportEvent, SupportState> {
   SupportBloc() : super(SupportState.initial()) {
     on<GetinfoData>((event, emit) async {
-  emit(state.copyWith(isLoading: true));
+      emit(state.copyWith(isLoading: true));
 
-  try {
-    final response = await http.get(Uri.parse('https://www.ballast.in/Restaurant/Support.txt'));
+      try {
+        final response = await http
+            .get(Uri.parse('https://www.ballast.in/Restaurant/Company.xlsx'));
 
-    if (response.statusCode == 200) {
-      final responseBody = response.body;
-      log(responseBody);
+        if (response.statusCode == 200) {
+          final bytes = response.bodyBytes;
+          final excel = Excel.decodeBytes(bytes);
 
-      // Split the response body by newlines and remove empty lines
-      final lines = responseBody.split('\n').where((line) => line.trim().isNotEmpty).toList();
+          // Get the first sheet
+          final sheet = excel.tables[excel.tables.keys.first];
 
-      // Ensure there are enough lines in the response
-      if (lines.length >= 6) {
-        final description = lines[0].trim();
-        final websiteUrl = lines[1].trim();
-        final phoneNumbers = lines[2].trim().split(',');
-        final email = lines[3].trim();
-        final workingHours = lines[4].trim();
-        final companyName = lines[5].trim();
+          if (sheet == null || sheet.rows.length < 2) {
+            log('Excel sheet is empty or lacks data rows');
+            emit(state.copyWith(isLoading: false));
+            return;
+          }
 
-        final phoneNumber1 = phoneNumbers.isNotEmpty ? phoneNumbers[0].trim() : '';
-        final phoneNumber2 = phoneNumbers.length > 1 ? phoneNumbers[1].trim() : '';
+          // Extract values from the second row (skip headers)
+          final row = sheet.rows[1];
 
-        final supportInfo = SupportInfo(
-          description: description,
-          websiteUrl: websiteUrl,
-          phoneNumber1: phoneNumber1,
-          phoneNumber2: phoneNumber2,
-          email: email,
-          workingHours: workingHours,
-          companyName: companyName,
-        );
+          final companyName = row[0]?.value.toString() ?? '';
+          final description = row[1]?.value.toString() ?? '';
+          final websiteUrl = row[2]?.value.toString() ?? '';
+          final email = row[3]?.value.toString() ?? '';
+          final contactData = row[4]?.value.toString() ?? '';
+          final workingHours = row[5]?.value.toString() ?? '';
 
-        // Log the parsed data
-        log('Description: ${supportInfo.description}');
-        log('Website URL: ${supportInfo.websiteUrl}');
-        log('Phone Number 1: ${supportInfo.phoneNumber1}');
-        log('Phone Number 2: ${supportInfo.phoneNumber2}');
-        log('Email: ${supportInfo.email}');
-        log('Working Hours: ${supportInfo.workingHours}');
-        log('Company Name: ${supportInfo.companyName}');
+          // Dynamically extract all phone numbers
+          List<String> phoneNumbers = contactData
+              .split(RegExp(r'[\n,;]')) // Splitting on newlines, commas, or semicolons
+              .map((e) => e.trim())
+              .where((e) => e.isNotEmpty) // Remove empty values
+              .toList();
 
-        // Emit the new state with the parsed data
-        emit(state.copyWith(isLoading: false, supportInfo: supportInfo));
-      } else {
-        log('Response body does not have enough lines');
+          final supportInfo = SupportInfo(
+            companyName: companyName,
+            description: description,
+            websiteUrl: websiteUrl,
+            phoneNumbers: phoneNumbers, // Store all phone numbers dynamically
+            email: email,
+            workingHours: workingHours,
+          );
+
+          log('Company Name: ${supportInfo.companyName}');
+          log('Description: ${supportInfo.description}');
+          log('Website URL: ${supportInfo.websiteUrl}');
+          log('Phone Numbers: ${supportInfo.phoneNumbers.join(", ")}');
+          log('Email: ${supportInfo.email}');
+          log('Working Hours: ${supportInfo.workingHours}');
+
+          emit(state.copyWith(isLoading: false, supportInfo: supportInfo));
+        } else {
+          log('Failed to load data');
+          emit(state.copyWith(isLoading: false));
+        }
+      } catch (e) {
+        log('Error fetching: $e');
         emit(state.copyWith(isLoading: false));
       }
-    } else {
-      log('Failed to load data');
-      emit(state.copyWith(isLoading: false));
-    }
-  } catch (e) {
-    log('Error fetching: $e');
-    emit(state.copyWith(isLoading: false));
-  }
-});
-
+    });
   }
 }
 
 class SupportInfo {
+  final String companyName;
   final String description;
   final String websiteUrl;
-  final String phoneNumber1;
-  final String phoneNumber2;
+  final List<String> phoneNumbers; // Dynamic list of phone numbers
   final String email;
   final String workingHours;
-  final String companyName;
 
   SupportInfo({
+    required this.companyName,
     required this.description,
     required this.websiteUrl,
-    required this.phoneNumber1,
-    required this.phoneNumber2,
+    required this.phoneNumbers,
     required this.email,
     required this.workingHours,
-    required this.companyName,
   });
 }

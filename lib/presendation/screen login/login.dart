@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/demo/demo_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:restaurant_kot/presendation/screen%20splash/screen_splash.dart';
 import 'package:restaurant_kot/presendation/screen%20support/screen_support.dart';
 import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -337,12 +340,13 @@ class LoginScreen extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
+                         
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => PasscodePage()),
                           );
-                          // Implement demo functionality
+                          // // Implement demo functionality
                         },
                         child: const Row(
                           children: [
@@ -453,3 +457,6 @@ void _showOptionsBottomSheet(BuildContext context) {
     },
   );
 }
+
+
+

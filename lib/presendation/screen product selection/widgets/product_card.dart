@@ -38,86 +38,7 @@ class ProductCard extends StatelessWidget {
                 color: Colors.white, borderRadius: BorderRadius.circular(10)),
             child: ListTile(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text(
-                        product.itemName,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      content: SizedBox(
-                        width: double
-                            .maxFinite, // Ensure the content can expand within the dialog
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 10),
-                              Text(
-                                'Item Code: ${product.itemCode}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'Quantity: ${product.quantity}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'Basic Rate: ₹ ${product.basicRate}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                'cessAmt: ${product.cessAmt}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'gstAmt: ${product.gstAmt}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'gstPer: ${product.gstPer}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'cessPer: ${product.cessPer}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'unitTaxableAmount: ${product.unitTaxableAmount}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'unitTaxableAmountBeforeDiscount: ${product.unitTaxableAmountBeforeDiscount}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'itemName: ${product.itemName}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              const SizedBox(height: 5),
-                            ],
-                          ),
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Close'),
-                        ),
-                      ],
-                    );
-                  },
-                );
+                showProductDetails(context, product);
               },
               contentPadding: const EdgeInsets.only(left: 8, top: 5, bottom: 5),
               leading: Container(
@@ -278,4 +199,70 @@ class ProductCard extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget _buildDetailRow(String label, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        const SizedBox(width: 4),
+        Text(
+          "$label: ",
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        ),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+        ),
+      ],
+    ),
+  );
+}
+
+void showProductDetails(BuildContext context, kotItem product) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    product.itemName,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: mainclr,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const Divider(),
+              const SizedBox(height: 8),
+              _buildDetailRow("Item Code", product.itemCode),
+              _buildDetailRow("kitchen Name", product.kitchenName),
+              _buildDetailRow("Cess Rate", "${product.cessPer}%"),
+              _buildDetailRow("GST Rate", "${product.gstPer}%"),
+              _buildDetailRow("Item Rate", "₹ ${product.basicRate}"),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
