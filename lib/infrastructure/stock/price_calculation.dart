@@ -97,7 +97,20 @@ double basicRateclc({
   if (element.serOrGoods == 'GOODS') {
     log('GOODS---');
     // For goods, directly use the sale amount with tax
-    basicRate = safeParseDouble(element.saleAmount);
+    if (inc!) {
+      basicRate = safeParseDouble(element.saleAmount);
+    } else {
+      basicRate = safeParseDouble(element.saleAmount);
+
+      // double gst = double.tryParse(element.vendorIGST.toString()) ?? 0.00;
+      // double cess = double.tryParse(element.cessRate.toString()) ?? 0.00;
+
+      // double taxp = gst + cess;
+
+      // double percentage = (taxp / 100) * safeParseDouble(element.saleAmount);
+
+      // basicRate = safeParseDouble(element.saleAmount) + percentage;
+    }
   } else {
     log(' non GOODS---');
 
@@ -151,17 +164,22 @@ double taxableAmountcalculation({
   double taxableAmount = 0.0;
 
   if (element.serOrGoods == 'GOODS') {
-    // For goods, directly use the sale amount with tax
-    double gstPer = safeParseDouble(element.tax);
-    double cessPer = safeParseDouble(element.cessRate);
-    log('gstPer--- $gstPer');
-    log('cessPer--- $cessPer');
+    if (inc!) {
+      double gstPer = safeParseDouble(element.tax);
+      double cessPer = safeParseDouble(element.cessRate);
+      log('gstPer--- $gstPer');
+      log('cessPer--- $cessPer');
 
-    double totalTaxPer = gstPer + cessPer;
-    log('totalTaxPer--- $totalTaxPer');
+      double totalTaxPer = gstPer + cessPer;
+      log('totalTaxPer--- $totalTaxPer');
 
-    double rate = safeParseDouble(element.saleAmount);
-    taxableAmount = rate / (1 + (totalTaxPer / 100));
+      double rate = safeParseDouble(element.saleAmount);
+      taxableAmount = rate / (1 + (totalTaxPer / 100));
+      log(' rate---------------${rate.toString()}');
+      log('taxableAmount ---------------${taxableAmount.toString()}');
+    } else {
+      taxableAmount = safeParseDouble(element.saleAmount);
+    }
   } else {
     // For services, check the tax type
     if (inc!) {
@@ -189,27 +207,23 @@ double taxableAmountcalculation({
   return taxableAmount;
 }
 
-
-
-double updatetaxableAmountcalculation({
-  required kotItem element,
- required double amt
-}) {
+double updatetaxableAmountcalculation(
+    {required kotItem element, required double amt}) {
   log('taxableAmountcalculation---');
   double taxableAmount = 0.0;
 
   // if (element.serOrGoods == 'GOODS') {
-    // For goods, directly use the sale amount with tax
-    double gstPer = safeParseDouble(element.gstPer);
-    double cessPer = safeParseDouble(element.cessPer);
-    log('gstPer--- $gstPer');
-    log('cessPer--- $cessPer');
+  // For goods, directly use the sale amount with tax
+  double gstPer = safeParseDouble(element.gstPer);
+  double cessPer = safeParseDouble(element.cessPer);
+  log('gstPer--- $gstPer');
+  log('cessPer--- $cessPer');
 
-    double totalTaxPer = gstPer + cessPer;
-    log('totalTaxPer--- $totalTaxPer');
+  double totalTaxPer = gstPer + cessPer;
+  log('totalTaxPer--- $totalTaxPer');
 
-    double rate = amt;
-    taxableAmount = rate / (1 + (totalTaxPer / 100));
+  double rate = amt;
+  taxableAmount = rate / (1 + (totalTaxPer / 100));
   // } else {
   //   // For services, check the tax type
   //   if (inc!) {
@@ -296,26 +310,34 @@ double parceltaxableAmountcalculation(
 
 double calculationtaxableAmount({
   required Map<String, dynamic> element,
-required  double rateAcNonAc,
+  required double rateAcNonAc,
 }) {
   double taxableAmount = 0.0;
 
   if (getCategory(element['pdtcode']) == 'GOODS') {
-    // For goods, directly use the sale amount with tax
-    double gstPer = safeParseDouble(element['venIGST']);
 
-    double cessPer = safeParseDouble(element['CessPercentage']);
-    double totalTaxPer = gstPer + cessPer;
 
-    double rate = rateAcNonAc;
-    taxableAmount = rate / (1 + (totalTaxPer / 100));
-    log('gstPer--- $gstPer');
-    log('cessPer--- $cessPer');
+ if (inc!) {
+      double gstPer = safeParseDouble(element['venIGST']);
 
-    log('totalTaxPer--- $totalTaxPer');
+      double cessPer = safeParseDouble(element['CessPercentage']);
+      double totalTaxPer = gstPer + cessPer;
+      double rate = rateAcNonAc;
+      taxableAmount = rate / (1 + (totalTaxPer / 100));
+      log('gstPer--- $gstPer');
+      log('cessPer--- $cessPer');
 
-    log(' rate---------------${rate.toString()}');
-    log('taxableAmount ---------------${taxableAmount.toString()}');
+      log('totalTaxPer--- $totalTaxPer');
+
+      log(' rate---------------${rate.toString()}');
+      log('taxableAmount ---------------${taxableAmount.toString()}');
+      
+    } else {
+    taxableAmount = rateAcNonAc;
+    }
+
+
+  
   } else {
     // For services, check the tax type
     if (inc == true) {
@@ -323,7 +345,7 @@ required  double rateAcNonAc,
 
       double cessPer = safeParseDouble(element['CessPercentage']);
       double totalTaxPer = gstPer + cessPer;
-      double rate =rateAcNonAc;
+      double rate = rateAcNonAc;
       taxableAmount = rate / (1 + (totalTaxPer / 100));
       log('gstPer--- $gstPer');
       log('cessPer--- $cessPer');

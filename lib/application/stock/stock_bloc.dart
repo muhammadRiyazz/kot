@@ -6,6 +6,7 @@ import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/core/conn.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/stock/stock_model.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/taxtype.dart';
 import 'package:restaurant_kot/infrastructure/stock/price_calculation.dart';
 part 'stock_event.dart';
 part 'stock_state.dart';
@@ -171,8 +172,8 @@ class StockBloc extends Bloc<StockEvent, StockState> {
 
         // Optimized SQL Query with JOIN to include productImg
         const String itemsQuery = """
- WITH UniqueItems AS (
-    SELECT 
+       WITH UniqueItems AS (
+       SELECT 
         id, pdtcode, pdtname, HSNCode, discp, 
         itemMRP, Amount, GrossValueAftrITMDisc, ItemBillDiscPER,
         ItemBillDiscAmount, ItemTotalNETAmount, gst, gstamount,
@@ -180,13 +181,14 @@ class StockBloc extends Bloc<StockEvent, StockState> {
         venSGST, venSGSTamnt, SerManDetails, CessPercentage,
         CessAmount, ItemUnitSaleRate,
         ROW_NUMBER() OVER(PARTITION BY pdtcode ORDER BY id DESC) AS row_num
-    FROM dbo.invoicedetail
+       FROM dbo.invoicedetail
 )
 SELECT 
     ui.*, 
     ms.PrinterName, 
     ms.productImg,
     ms.DininACrate,  
+    ms.saleamnt,
     ms.DininNonACrate 
 FROM UniqueItems ui
 LEFT JOIN dbo.MainStock ms 
@@ -198,7 +200,7 @@ ORDER BY ui.id DESC;
 
         // Execute query and get result
         String? itemQueryResult = await connection.getData(itemsQuery);
-        log(' ----------------- iiiii------${itemQueryResult}');
+        log(' ----------------- iiiii------$itemQueryResult');
         // Parse JSON result if it exists
         List<Map<String, dynamic>> rows = [];
         try {
@@ -213,9 +215,21 @@ ORDER BY ui.id DESC;
 
         // Process each row and categorize items based on `pdtcode`
         for (var element in rows) {
-          double basicRate = safeParseDouble(event.acOrNonAc
-              ? element['DininACrate']
-              : element['DininNonACrate']);
+          final goodsORser = getCategory(element['pdtcode'] ?? '');
+
+          double taxp = safeParseDouble(element['gst']) +
+              safeParseDouble(element['CessPercentage']);
+
+          double percentage =
+              (taxp / 100) * safeParseDouble(element['saleamnt']);
+
+          double basicRate = goodsORser == 'SER'
+              ? safeParseDouble(event.acOrNonAc
+                  ? element['DininACrate']
+                  : element['DininNonACrate'])
+              : inc == true
+                  ? safeParseDouble(element['saleamnt'])
+                  : safeParseDouble(element['saleamnt']);
 
           // calculateBasicRate(
           //   element: element,
@@ -340,7 +354,7 @@ ORDER BY ui.id DESC;
       SELECT * FROM [dbo].[MainStock]
       WHERE [SERorGOODS] = '${state.goodsOrSER == 'Goods' ? 'GOODS' : 'SER'}' 
       AND [category] = '${event.category}';
-    """;
+     """;
 
         String stockQueryResult = await connection.getData(stockQuery);
         log(stockQueryResult);

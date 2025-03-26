@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:mssql_connection/mssql_connection.dart';
 import 'package:restaurant_kot/application/BillSubmitPrint/bill_submit_print_bloc.dart';

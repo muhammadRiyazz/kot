@@ -109,16 +109,21 @@ class KotSubmitPrintBloc
                   basicRate = element.basicRate;
                   taxableAmount = element.unitTaxableAmount;
                 } else {
-                  basicRate = safeParseDouble(event.table.acOrNonAc == 'AC'
-                      ? jsonList[0]['DininACrate']
-                      : jsonList[0]['DininNonACrate']);
-
-                  taxableAmount = parceltaxableAmountcalculation(
-                    item: element,
-                    pickuprate: event.table.acOrNonAc == 'AC'
+                  if (getCategory(element.itemCode) == 'GOODS') {
+                    basicRate = element.basicRate;
+                    taxableAmount = element.unitTaxableAmount;
+                  } else {
+                    basicRate = safeParseDouble(event.table.acOrNonAc == 'AC'
                         ? jsonList[0]['DininACrate']
-                        : jsonList[0]['DininNonACrate'],
-                  );
+                        : jsonList[0]['DininNonACrate']);
+
+                    taxableAmount = parceltaxableAmountcalculation(
+                      item: element,
+                      pickuprate: event.table.acOrNonAc == 'AC'
+                          ? jsonList[0]['DininACrate']
+                          : jsonList[0]['DininNonACrate'],
+                    );
+                  }
                 }
 
                 updatedutems.add(element.copyWith(

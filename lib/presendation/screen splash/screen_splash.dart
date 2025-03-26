@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/demo/demo_bloc.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/sound_printer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:restaurant_kot/application/customerpart/customerpart_bloc.dart';
@@ -35,10 +36,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initializeApp() async {
-
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('login') ?? false;
-                demoStatus = prefs.getBool('demostatus')??false;
+    demoStatus = prefs.getBool('demostatus') ?? false;
 
     if (isLoggedIn) {
       _fetchInitialData();
@@ -49,9 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     if (demoStatus!) {
-
-          BlocProvider.of<DemoBloc>(context).add(const FetchDemo());
-
+      BlocProvider.of<DemoBloc>(context).add(const FetchDemo());
     }
   }
 
@@ -76,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
     BlocProvider.of<FinishadOrderBloc>(context)
         .add(const FinishadOrderEvent.fetchBills());
     BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
-
+    loadPreferences();
     StockMng().fetchstockmngGoods();
     StockMng().fetchstockmngService();
     BillDesignMng().fetchbilldesignLogo();

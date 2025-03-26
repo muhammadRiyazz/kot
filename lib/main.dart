@@ -11,6 +11,8 @@ import 'package:restaurant_kot/core/conn.dart';
 import 'presendation/screen splash/screen_splash.dart';
 
 void main() {
+    WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 

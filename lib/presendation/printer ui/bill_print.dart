@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/bill_design_mng.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/sound_printer.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/taxtype.dart';
 
 Future<List<int>> billPrintData({
@@ -29,7 +30,12 @@ Future<List<int>> billPrintData({
   final profile = await CapabilityProfile.load();
   final generator = Generator(PaperSize.mm80, profile);
   List<int> bytes = [];
-
+ if (isSoundEnabled! && soundOption != 'After Printing') {
+      bytes += generator.beep(
+        n: 4,
+        duration: PosBeepDuration.beep50ms,
+      );
+    }
   if (addLogo != null) {
     if (addLogo == true) {
       // Add the restaurant logo
@@ -321,7 +327,7 @@ Future<List<int>> billPrintData({
       ),
     ),
     PosColumn(
-      text: netAmount.toStringAsFixed(2),
+      text: netAmount.round().toString(),
       width: 4,
       styles: const PosStyles(
         bold: true,
@@ -358,7 +364,12 @@ Future<List<int>> billPrintData({
   // Feed and cut
   bytes += generator.feed(2);
   bytes += generator.cut();
-
+ if (isSoundEnabled! && soundOption == 'After Printing') {
+      bytes += generator.beep(
+        n: 4,
+        duration: PosBeepDuration.beep50ms,
+      );
+    }
   return bytes;
 }
 

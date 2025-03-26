@@ -5,12 +5,21 @@ import 'package:flutter_esc_pos_utils/flutter_esc_pos_utils.dart';
 import 'package:flutter_esc_pos_network/flutter_esc_pos_network.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/infrastructure/initalfetchdata/sound_printer.dart';
 
 class NetworkPrinter {
   Future<List<int>> testTicket() async {
     final profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
     List<int> bytes = [];
+
+    // Play sound before printing if enabled and not set to "After Printing"
+    if (isSoundEnabled! && soundOption != 'After Printing') {
+      bytes += generator.beep(
+        n: 4,
+        duration: PosBeepDuration.beep50ms,
+      );
+    }
 
     // Get the current date and time
     String currentDateTime =
@@ -52,6 +61,14 @@ class NetworkPrinter {
     bytes += generator.feed(2);
     bytes += generator.cut();
 
+    // **Beep sound after printing**
+    if (isSoundEnabled! && soundOption == 'After Printing') {
+      bytes += generator.beep(
+        n: 4,
+        duration: PosBeepDuration.beep50ms,
+      );
+    }
+
     return bytes;
   }
 
@@ -86,9 +103,7 @@ class NetworkPrinter {
     try {
       log('printing ip-------$ip');
       log('Attempting to connect to printer');
-      final printer = PrinterNetworkManager(
-        
-        ip,
+      final printer = PrinterNetworkManager(ip,
           timeout: const Duration(seconds: 5), port: 9100);
       PosPrintResult connect = await printer.connect();
 

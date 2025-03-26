@@ -788,17 +788,20 @@ class BillSubmitPrintBloc
           String payidno = await fetchAndInsertPayOrExpID(connection);
           log('queryPapayidnoyorEX ---------------$payidno');
 
-          String query4 = """
-          INSERT INTO  [dbo].[PayorEX] (
-         PayOrExpID, VendIDOreCusID, VendIDOreCusName, PayOrExpDate, CAT,
-        paidby,   paidamount, PayCrDr,
-    PayINVid, RootType, OrderNumber
-    ) VALUES (
-        '$payidno', '${customer.cusid}', '${customer.bussinessname}',
-        '$formattedDate', 'sale',  '${state.paytypeValue!}', ${state.totalAmt!}, 'Cr', '${event.invNo}', 'Sale', '${state.orderid!}'
-    )
+          String query4 = """ UPDATE [dbo].[PayorEX]
+    SET 
+        VendIDOreCusID = '${customer.cusid}', 
+        VendIDOreCusName = '${customer.bussinessname}', 
+        PayOrExpDate = '$formattedDate', 
+        CAT = 'sale', 
+        paidby = '${state.paytypeValue!}', 
+        paidamount = ${state.totalAmt!}, 
+        PayCrDr = 'Cr', 
+        PayINVid = '${event.invNo}', 
+        RootType = 'Sale', 
+        OrderNumber = '${state.orderid!}'
+    WHERE PayOrExpID = '$payidno'
 """;
-
           await connection.writeData(query4);
           log('PayorEX done');
           String deleteQueary = '''

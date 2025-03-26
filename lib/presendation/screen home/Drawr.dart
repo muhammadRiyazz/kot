@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
 import 'package:restaurant_kot/application/login%20b/login_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/presendation/settings/printer/printer_settings.dart';
 import 'package:restaurant_kot/presendation/settings/screen%20customers/customer_list.dart';
 import 'package:restaurant_kot/presendation/screen%20login/login.dart';
 import 'package:restaurant_kot/presendation/screen%20settings/settings_page.dart';
@@ -149,7 +150,8 @@ class _AppDrawerState extends State<AppDrawer> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => KitchensPage()),
+                    MaterialPageRoute(
+                        builder: (context) => PrinterSettingsList()),
                   );
                 },
               ),

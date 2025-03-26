@@ -3,16 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/KotSubmitPrint/kot_submit_print_bloc.dart';
-import 'package:restaurant_kot/application/order%20details/order_details_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
-import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
-import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/category_selection.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/selected_product.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/product_card.dart';
-import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/update.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProductChoosingPage extends StatelessWidget {

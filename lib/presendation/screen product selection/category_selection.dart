@@ -5,7 +5,6 @@ import 'package:restaurant_kot/infrastructure/img.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/screen_product_selection.dart';
 import 'package:restaurant_kot/presendation/screen%20product%20selection/widgets/img.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../consts/colors.dart';
 
 class CategoryBottomSheet extends StatelessWidget {
@@ -100,7 +99,7 @@ class CategoryBottomSheet extends StatelessWidget {
                                   maxLines:
                                       2, // Allow for up to 2 lines of text
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: mainclr,
                                   ),
                                 ),

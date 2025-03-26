@@ -1,10 +1,13 @@
-// server_connection_page.dart
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/server%20conn/server_conn_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/presendation/widgets/buttons.dart';
 import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class ServerConnectionPage extends StatefulWidget {
   const ServerConnectionPage({Key? key}) : super(key: key);
@@ -15,6 +18,8 @@ class ServerConnectionPage extends StatefulWidget {
 
 class _ServerConnectionPageState extends State<ServerConnectionPage> {
   final _serverFormKey = GlobalKey<FormState>();
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController? controller;
 
   // Controllers for text fields
   late final TextEditingController _ipController;
@@ -30,7 +35,7 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
     _databaseController = TextEditingController();
     _usernameController = TextEditingController();
     _passwordController = TextEditingController();
-    _portController = TextEditingController(); // Default SQL port
+    _portController = TextEditingController();
   }
 
   @override
@@ -40,6 +45,7 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
     _usernameController.dispose();
     _passwordController.dispose();
     _portController.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
@@ -56,15 +62,121 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
     }
   }
 
-  String? _validatePort(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter Port Number';
+  void _onQRCodeScanned(String qrData) {
+    try {
+      log(qrData);
+
+      // Parse the JSON data
+      final Map<String, dynamic> data = json.decode(qrData);
+
+      // Validate expected keys
+      if (data.containsKey("ip") &&
+          data.containsKey("port") &&
+          data.containsKey("database") &&
+          data.containsKey("username") &&
+          data.containsKey("password")) {
+        setState(() {
+          _ipController.text = data["ip"];
+          _portController.text = data["port"];
+          _databaseController.text = data["database"];
+          _usernameController.text = data["username"];
+          _passwordController.text = data["password"];
+        });
+
+        _submitServerForm(); // Submit the form automatically
+      } else {
+        showCustomSnackbar(
+          context,
+          'Invalid QR Code',
+          true,
+        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Invalid QR Code format')),
+        // );
+      }
+    } catch (e) {
+      log("QR Code Parsing Error: $e"); // Log error
+      showCustomSnackbar(
+        context,
+        'Invalid QR Code',
+        true,
+      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('Error processing QR Code')),
+      // );
     }
-    final port = int.tryParse(value);
-    if (port == null || port < 1 || port > 65535) {
-      return 'Enter a valid port number (1-65535)';
-    }
-    return null;
+  }
+
+  void _openQRScanner() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Scaffold(
+                backgroundColor: Colors.black,
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  title: Text('Scan QR Code',
+                      style: TextStyle(color: Colors.white)),
+                  centerTitle: true,
+                ),
+                body: Stack(
+                  children: [
+                    QRView(
+                      key: qrKey,
+                      overlay: QrScannerOverlayShape(
+                        borderColor: Colors.blueAccent,
+                        borderRadius: 10,
+                        borderLength: 30,
+                        borderWidth: 10,
+                        cutOutSize: MediaQuery.of(context).size.width * 0.7,
+                      ),
+                      onQRViewCreated: (QRViewController controller) {
+                        this.controller = controller;
+                        controller.scannedDataStream.listen((scanData) {
+                          _onQRCodeScanned(scanData.code!);
+                          controller
+                              .stopCamera(); // Stop scanning after getting the data
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                    Positioned(
+                      bottom: 50,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Align the QR code within the frame",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          SizedBox(height: 15),
+                          ElevatedButton.icon(
+                            onPressed: () => Navigator.pop(context),
+                            icon: Icon(Icons.close, color: Colors.white),
+                            label: Text("Cancel"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+    );
   }
 
   @override
@@ -77,199 +189,217 @@ class _ServerConnectionPageState extends State<ServerConnectionPage> {
         title: const Center(
           child: Text(
             'Server Connection',
-            style: TextStyle(
-                fontSize: 16, color: Color.fromARGB(255, 255, 255, 255)),
+            style: TextStyle(fontSize: 16, color: Colors.white),
           ),
         ),
         actions: const [SizedBox(width: 60)],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Form(
-          key: _serverFormKey,
-          child: ListView(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: boxbgwhite,
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color.fromARGB(255, 184, 184, 184)
-                          .withOpacity(0.3),
-                      blurRadius: 15,
-                      spreadRadius: 5,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 18),
-                child: Column(
+        child: Column(
+          children: [
+            Expanded(
+              child: Form(
+                key: _serverFormKey,
+                child: ListView(
                   children: [
-                    // IP Address
+                    SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: boxbgwhite,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            blurRadius: 15,
+                            spreadRadius: 5,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 18),
+                      child: Column(
+                        children: [
+                          _buildTextField(
+                              controller: _ipController,
+                              labelText: 'IP Address'),
+                          SizedBox(height: 10),
+                          _buildTextField(
+                              controller: _databaseController,
+                              labelText: 'Database Name'),
+                          SizedBox(height: 10),
+                          _buildTextField(
+                              controller: _usernameController,
+                              labelText: 'Username'),
+                          SizedBox(height: 10),
+                          _buildTextField(
+                              controller: _passwordController,
+                              labelText: 'Password',
+                              obscureText: true),
+                          SizedBox(height: 10),
+                          _buildTextField(
+                              controller: _portController,
+                              labelText: 'Port Number',
+                              keyboardType: TextInputType.number),
+                          SizedBox(height: 20),
+                          BlocConsumer<ServerConnBloc, ServerConnState>(
+                            listener: (context, state) {
+                              if (state.conn) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
 
-                    _buildTextField(
-                      controller: _ipController,
-                      labelText: 'IP Address',
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter IP Address';
-                        }
-                        // Basic IP address validation
-                        final ipRegex = RegExp(
-                            r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$');
-                        if (!ipRegex.hasMatch(value.trim())) {
-                          return 'Enter a valid IP address';
-                        }
-                        return null;
-                      },
+                                showCustomSnackbar(
+                                    context,
+                                    'Appication connected successfully!',
+                                    false);
+                              }
+                              if (state.connErrorMsg != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(state.connErrorMsg!)),
+                                );
+                              }
+                            },
+                            builder: (context, state) {
+                              if (state.isLoading) {
+                                return Loading();
+                              }
+                              return MainButton(
+                                  onpress: _submitServerForm, label: 'Confirm');
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 10),
-
-                    // Database Name
-                    _buildTextField(
-                      controller: _databaseController,
-                      labelText: 'Database Name',
-                      keyboardType: TextInputType.text,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter Database Name';
-                        }
-                        return null;
-                      },
+                    SizedBox(
+                      height: 20,
                     ),
-                    const SizedBox(height: 10),
-
-                    // Username
-                    _buildTextField(
-                      controller: _usernameController,
-                      labelText: 'Username',
-                      keyboardType: TextInputType.text,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter Username';
-                        }
-                        return null;
-                      },
+                    const Row(
+                      children: [
+                        Expanded(child: Divider()),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('or'),
+                        ),
+                        Expanded(child: Divider()),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-
-                    // Password
-                    _buildTextField(
-                      controller: _passwordController,
-                      labelText: 'Password',
-                      obscureText: true,
-                      keyboardType: TextInputType.visiblePassword,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter Password';
-                        }
-                        return null;
-                      },
+                    SizedBox(
+                      height: 20,
                     ),
-                    const SizedBox(height: 10),
-
-                    // Port Number
-                    _buildTextField(
-                      controller: _portController,
-                      labelText: 'Port Number',
-                      keyboardType: TextInputType.number,
-                      validator: _validatePort,
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Confirm Button with BlocConsumer
-                    BlocConsumer<ServerConnBloc, ServerConnState>(
-                      listener: (context, state) {
-                        if (state.conn) {
-                          // Navigate to desired page after successful connection
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-
-                          // Optionally, show a success message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              content: Text(
-                                'Server connected successfully!',
-                                style: const TextStyle(fontSize: 15),
-                              ),
-                              backgroundColor: mainclr,
-                            ),
-                          );
-                        }
-
-                        if (state.connErrorMsg != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: mainclr,
-                              content: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                      'Sorry!',
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    Text(
-                                      state.connErrorMsg!,
-                                      style: const TextStyle(fontSize: 15),
-                                    ),
-                                  ],
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: _openQRScanner,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: mainclr,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 4),
                                 ),
-                              ),
+                              ],
                             ),
-                          );
-                        }
-                      },
-                      builder: (context, state) {
-                        if (state.isLoading) {
-                          return const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Loading(),
-                          );
-                        }
+                            padding: EdgeInsets.all(15),
+                            child: const Icon(
+                              Icons.qr_code_scanner,
+                              color: Colors.white,
+                              size: 32,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        const Text(
+                          'Scan & Connect Application',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    )
 
-                        return MainButton(
-                          onpress: _submitServerForm,
-                          label: 'Confirm',
-                        );
-                      },
-                    ),
+                    // ElevatedButton.icon(
+                    //   onPressed: _openQRScanner,
+                    //   icon: Icon(Icons.qr_code_scanner,
+                    //       color: Colors.white, size: 28),
+                    //   label: Text(
+                    //     'Scan & Connect',
+                    //     style: TextStyle(
+                    //         fontSize: 16,
+                    //         fontWeight: FontWeight.bold,
+                    //         color: Colors.white),
+                    //   ),
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: mainclr,
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(12),
+                    //     ),
+                    //     padding:
+                    //         EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
 
-  // Helper method to build text fields
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    bool obscureText = false,
-    TextInputType keyboardType = TextInputType.text,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(labelText: labelText),
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      validator: validator,
-    );
-  }
+Widget _buildTextField({
+  required TextEditingController controller,
+  required String labelText,
+  bool obscureText = false,
+  TextInputType keyboardType = TextInputType.text,
+}) {
+  return TextFormField(
+    controller: controller,
+    decoration: InputDecoration(labelText: labelText),
+    obscureText: obscureText,
+    keyboardType: keyboardType,
+  );
+}
+
+void showCustomSnackbar(BuildContext context, String message, bool isError) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Row(
+        children: [
+          Icon(
+            isError ? Icons.error_outline : Icons.check_circle_outline,
+            color: Colors.white,
+          ),
+          SizedBox(width: 10), // Spacing between icon and text
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: isError
+          ? Colors.redAccent
+          : Colors.green, // Error = red, Success = green
+      behavior: SnackBarBehavior.floating, // Floating style
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10), // Rounded corners
+      ),
+      elevation: 6, // Adds shadow effect
+      duration: Duration(seconds: 3), // Auto-dismiss after 3 seconds
+    ),
+  );
 }

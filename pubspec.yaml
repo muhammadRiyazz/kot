@@ -34,6 +34,7 @@ dependencies:
   barcode_image: ^2.0.0
   excel: ^2.0.1
   url_launcher: ^6.3.1
+  qr_code_scanner_plus: ^2.0.10+1
 
 
 
