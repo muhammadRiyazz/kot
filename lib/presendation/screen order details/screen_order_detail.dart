@@ -517,7 +517,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                           mainAxisSpacing: isMobile
                                               ? 2
                                               : (isTablet ? 10 : 10),
-                                          childAspectRatio: isMobile ? 2.5 : 3,
+                                          childAspectRatio:
+                                              isMobile ? 2.5 : 2.2,
                                         ),
                                         itemCount: state.orderitems.length,
                                         itemBuilder: (context, index) {

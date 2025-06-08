@@ -78,7 +78,7 @@ class OrderPage extends StatelessWidget {
     double childAspectRatio;
     switch (crossAxisCount) {
       case 1:
-        childAspectRatio = 2.7;
+        childAspectRatio = 3;
         break;
       case 2:
         childAspectRatio = 2.5;

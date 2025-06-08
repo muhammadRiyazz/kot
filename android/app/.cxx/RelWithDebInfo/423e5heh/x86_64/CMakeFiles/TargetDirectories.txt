@@ -1,0 +1,2 @@
+/Users/tictech/Desktop/Freelance Apps/k_o_t/android/app/.cxx/RelWithDebInfo/423e5heh/x86_64/CMakeFiles/edit_cache.dir
+/Users/tictech/Desktop/Freelance Apps/k_o_t/android/app/.cxx/RelWithDebInfo/423e5heh/x86_64/CMakeFiles/rebuild_cache.dir

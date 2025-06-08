@@ -62,7 +62,7 @@ class Tablespart extends StatelessWidget {
             (screenHeight / 1.8)) // Adjust for mobile (taller layout)
         : screenWidth >= 650 && screenWidth < 900
             ? (screenWidth /
-                (screenHeight / .6)) // Adjust for tablet (more balanced)
+                (screenHeight / 1.4)) // Adjust for tablet (more balanced)
             : screenWidth >= 900 && screenWidth < 1110
                 ? (screenWidth /
                     (screenHeight / 1.4)) // Adjust for large tablet (wider)
