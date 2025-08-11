@@ -7,6 +7,7 @@ import 'package:restaurant_kot/application/printer%20setup/printer_setup_bloc.da
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/application/tables/tables_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/printer/priter_config.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
@@ -188,8 +189,62 @@ class OrderPage extends StatelessWidget {
                                                 BorderRadius.circular(10),
                                           ),
                                           child: InkWell(
-                                            onTap: () =>
-                                                _onTap(index, state, context),
+                                            onTap: () {
+                                              log('button click');
+                                              log(state
+                                                  .orders[index].billNumber);
+                                              log(state
+                                                  .orders[index].creditOrPaid);
+                                              log(addBill.toString());
+                                              if (state.orders[index]
+                                                          .billNumber !=
+                                                      '' &&
+                                                  state.orders[index]
+                                                          .creditOrPaid ==
+                                                      'Credit' &&
+                                                  billEdit == false) {
+                                                log('not permision ----');
+
+                                                 ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        "Sorry",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "You have no permission to process",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  backgroundColor: mainclr,
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  margin: EdgeInsets.all(12),
+                                                  duration:
+                                                      Duration(seconds: 4),
+                                                ),
+                                              );
+                                              } else {
+                                                _onTap(index, state, context);
+                                              }
+                                            },
                                             onLongPress: () {
                                               if (state.orders[index]
                                                           .billNumber !=
@@ -198,6 +253,8 @@ class OrderPage extends StatelessWidget {
                                                           .creditOrPaid ==
                                                       'Credit') {
                                                 log('not select');
+
+
                                               } else {
                                                 BlocProvider.of<OrdersBloc>(
                                                         context)

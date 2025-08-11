@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_kot/application/initalData/inital_data_bloc.dart';
@@ -5,6 +7,7 @@ import 'package:restaurant_kot/application/order%20details/order_details_bloc.da
 import 'package:restaurant_kot/application/orders/orders_bloc.dart';
 import 'package:restaurant_kot/application/stock/stock_bloc.dart';
 import 'package:restaurant_kot/consts/colors.dart';
+import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/domain/item/kot_item_model.dart';
 import 'package:restaurant_kot/domain/tables/table_model.dart';
 import 'package:restaurant_kot/infrastructure/dateOrtime/time_format_change.dart';
@@ -171,37 +174,86 @@ class ScreenOrdersList extends StatelessWidget {
                                     elevation: 2,
                                     child: Center(
                                       child: ListTile(
-                                        contentPadding:
-                                            EdgeInsets.only(right: 12, left: 5),
+                                        contentPadding: const EdgeInsets.only(
+                                            right: 12, left: 5),
                                         onTap: () {
-                                          BlocProvider.of<StockBloc>(context)
-                                              .add(const StockEvent
-                                                  .clearSelection());
-                                          BlocProvider.of<OrderDetailsBloc>(
-                                                  context)
-                                              .add(const OrderDetailsEvent
-                                                  .clearItemSelection());
-
-                                          BlocProvider.of<OrderDetailsBloc>(
-                                                  context)
-                                              .add(OrderDetailsEvent.orderItems(
-                                                  orderNo: order.orderNumber));
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return OrderDetailsPage(
-                                                table: TableInfo(
-                                                  acOrNonAc: table.tableType,
-                                                  floor: table.floorName,
-                                                  tableName: table.tableName,
+                                          log('button click');
+                                          log(state.orders[index].billNumber);
+                                          log(state.orders[index].creditOrPaid);
+                                          log(addBill.toString());
+                                          if (order.billNumber != '' &&
+                                              order.creditOrPaid == 'Credit' &&
+                                              billEdit == false) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      "Sorry",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "You have no permission to process",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                order: order,
-                                              );
-                                            },
-                                          ));
-                                          BlocProvider.of<StockBloc>(context)
-                                              .add(const StockEvent.typeChange(
-                                                  type: 'Service'));
+                                                backgroundColor: mainclr,
+                                                behavior:
+                                                    SnackBarBehavior.floating,
+                                                margin: EdgeInsets.all(12),
+                                                duration: Duration(seconds: 4),
+                                              ),
+                                            );
+                                          } else {
+                                            BlocProvider.of<StockBloc>(context)
+                                                .add(const StockEvent
+                                                    .clearSelection());
+                                            BlocProvider.of<OrderDetailsBloc>(
+                                                    context)
+                                                .add(const OrderDetailsEvent
+                                                    .clearItemSelection());
+                                            BlocProvider.of<OrderDetailsBloc>(
+                                                    context)
+                                                .add(
+                                              OrderDetailsEvent.orderItems(
+                                                  orderNo: order.orderNumber),
+                                            );
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OrderDetailsPage(
+                                                  table: TableInfo(
+                                                    acOrNonAc: table.tableType,
+                                                    floor: table.floorName,
+                                                    tableName: table.tableName,
+                                                  ),
+                                                  order: order,
+                                                ),
+                                              ),
+                                            );
+
+                                            BlocProvider.of<StockBloc>(context)
+                                                .add(
+                                              const StockEvent.typeChange(
+                                                  type: 'Service'),
+                                            );
+                                          }
                                         },
                                         leading: Padding(
                                           padding:
@@ -210,7 +262,11 @@ class ScreenOrdersList extends StatelessWidget {
                                             padding:
                                                 EdgeInsets.all(leadingPadding),
                                             decoration: BoxDecoration(
-                                              color: mainclr,
+                                              color: order.billNumber != '' &&
+                                                      order.creditOrPaid ==
+                                                          'Credit'
+                                                  ? Colors.red
+                                                  : mainclr,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
@@ -226,25 +282,19 @@ class ScreenOrdersList extends StatelessWidget {
                                             children: [
                                               TextSpan(
                                                 text: order.orderNumber
-                                                    .substring(0,
-                                                        3), // First 3 letters
+                                                    .substring(0, 3),
                                                 style: const TextStyle(
                                                   color: Color.fromARGB(
-                                                      255,
-                                                      184,
-                                                      12,
-                                                      0), // Change this to your desired color
+                                                      255, 184, 12, 0),
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
                                               TextSpan(
                                                 text: order.orderNumber
-                                                    .substring(
-                                                        3), // Remaining part
+                                                    .substring(3),
                                                 style: const TextStyle(
-                                                  color: Colors
-                                                      .black, // Change this to your desired color
+                                                  color: Colors.black,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -256,7 +306,7 @@ class ScreenOrdersList extends StatelessWidget {
                                             'Amount: ₹${order.totalAmount}'),
                                         trailing: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
                                           children: [
@@ -266,13 +316,23 @@ class ScreenOrdersList extends StatelessWidget {
                                                 const Icon(
                                                   Icons.timer_sharp,
                                                   color: Colors.grey,
-                                                  size: 18,
+                                                  size: 15,
                                                 ),
                                                 const SizedBox(width: 6),
                                                 Text(time(DateTime.parse(
                                                     order.startTime))),
                                               ],
                                             ),
+                                            if (order.billNumber != '' &&
+                                                order.creditOrPaid == 'Credit')
+                                              const Text(
+                                                '  (UnPaid)',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
                                           ],
                                         ),
                                       ),

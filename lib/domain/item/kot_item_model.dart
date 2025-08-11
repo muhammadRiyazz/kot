@@ -2,12 +2,12 @@ class kotItem {
   final String serOrGoods;
   String kitchenName;
   final String itemName;
-    final String parcelOrnot;
+  final String parcelOrnot;
   String productImg;
-
+  String? note; // Quantity for the item
 
   final String itemCode;
-    bool updated; // Quantity for the item
+  bool updated; // Quantity for the item
 
   int quantity; // Quantity for the item
   int qty; // Quantity for the item
@@ -20,14 +20,15 @@ class kotItem {
   final double gstPer; // GST percentage
   final double cessPer; // Cess percentage
 
-   final double cessAmt;
+  final double cessAmt;
   final double gstAmt;
 
   kotItem({
+    this.note,
     required this.updated,
     required this.productImg,
-   required this.gstAmt,
-   required this.cessAmt,
+    required this.gstAmt,
+    required this.cessAmt,
     required this.kotno,
     required this.stock,
     required this.qty,
@@ -41,15 +42,13 @@ class kotItem {
     required this.unitTaxableAmount,
     required this.gstPer,
     required this.cessPer,
-        required this.parcelOrnot,
-
+    required this.parcelOrnot,
   });
 
   // CopyWith method to create a modified copy of kotItem
   kotItem copyWith({
     bool? updated,
-        String? kotno,
-
+    String? kotno,
     String? parcelOrnot,
     String? serOrGoods,
     String? kitchenName,
@@ -67,9 +66,9 @@ class kotItem {
     double? cessPer,
   }) {
     return kotItem(
-      updated: updated??this.updated,
+      updated: updated ?? this.updated,
       productImg: productImg,
-      parcelOrnot:parcelOrnot ?? this.parcelOrnot ,
+      parcelOrnot: parcelOrnot ?? this.parcelOrnot,
       cessAmt: cessAmt ?? this.cessAmt,
       gstAmt: gstAmt ?? this.gstAmt,
       kotno: kotno ?? this.kotno,

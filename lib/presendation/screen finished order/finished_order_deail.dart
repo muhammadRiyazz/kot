@@ -494,7 +494,7 @@ class FinishedOrderDetail extends StatelessWidget {
                                                               });
                                                     },
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 12,
                                                   ),
                                                   billEdit!

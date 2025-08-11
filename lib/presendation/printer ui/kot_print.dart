@@ -16,12 +16,12 @@ Future<List<int>> kotPrintData(
   final profile = await CapabilityProfile.load();
   final generator = Generator(PaperSize.mm80, profile);
   List<int> bytes = [];
- if (isSoundEnabled! && soundOption != 'After Printing') {
-      bytes += generator.beep(
-        n: 4,
-        duration: PosBeepDuration.beep50ms,
-      );
-    }
+  if (isSoundEnabled! && soundOption != 'After Printing') {
+    bytes += generator.beep(
+      n: 4,
+      duration: PosBeepDuration.beep50ms,
+    );
+  }
   // Header
   bytes += generator.text(
     parcel
@@ -46,7 +46,6 @@ Future<List<int>> kotPrintData(
     ),
   );
   bytes += generator.feed(1);
-
 
   bytes += generator.row([
     PosColumn(
@@ -111,7 +110,7 @@ Future<List<int>> kotPrintData(
       bold: true,
     ),
   );
- 
+
   bytes += generator.hr(len: 48);
 
   // Item Header
@@ -169,7 +168,7 @@ Future<List<int>> kotPrintData(
           note,
           styles: const PosStyles(
             align: PosAlign.center,
-            bold: false,
+            bold: true,
           ),
         );
 
@@ -187,11 +186,11 @@ Future<List<int>> kotPrintData(
   // Feed and cut
   bytes += generator.feed(2);
   bytes += generator.cut();
- if (isSoundEnabled! && soundOption == 'After Printing') {
-      bytes += generator.beep(
-        n: 4,
-        duration: PosBeepDuration.beep50ms,
-      );
-    }
+  if (isSoundEnabled! && soundOption == 'After Printing') {
+    bytes += generator.beep(
+      n: 4,
+      duration: PosBeepDuration.beep50ms,
+    );
+  }
   return bytes;
 }

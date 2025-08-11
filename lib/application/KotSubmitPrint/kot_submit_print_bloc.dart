@@ -15,6 +15,7 @@ import 'package:restaurant_kot/infrastructure/initalfetchdata/stock_mng.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/taxtype.dart';
 import 'package:restaurant_kot/infrastructure/stock/price_calculation.dart';
 import 'package:restaurant_kot/presendation/printer%20ui/kot_print.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'kot_submit_print_event.dart';
 part 'kot_submit_print_state.dart';
 part 'kot_submit_print_bloc.freezed.dart';
@@ -383,18 +384,18 @@ class KotSubmitPrintBloc
                   String itemInsertQuery = '''
 INSERT INTO [dbo].[OrderItemDetailsDetails] (
     OrderNumber, KOTNumber, EntryDate, StartTime, EndTime, CustomerId, CustomerName,
-    TableName, FloorNumber, Description, ItemCode, ItemName, Quantity, BasicRate,
+    TableName, FloorNumber, ItemCode, ItemName, Quantity, BasicRate,
     UnitTaxableAmountBeforeDiscount, Discount, DiscountPer, UnitTaxableAmount,
     TotalTaxableAmount, GSTPer, CessPer, TotalTaxAmount, TotalCessAmount, TotalAmount,
-    DineInOrOther, Delivery, ParcelOrNot, BillNumber, KitchenName, UserID, MergedOldOrderNumber,
+    DineInOrOther, Delivery, ParcelOrNot, BillNumber, KitchenName, UserID, MergedOldOrderNumber,KOTNote,
     MergedOldTableNumber
 ) VALUES (
     '$orderId', '$kotId', '$entrydata', '$formattedDate', '$formattedDate', '${event.selectedcustomer.cusid}',
     '${event.selectedcustomer.bussinessname}', '${event.table.tableName}', '${event.table.floor}',
-    '${event.note ?? ""}', '${element.itemCode}', '${element.itemName}', ${element.quantity}, ${element.basicRate},
+    '${element.itemCode}', '${element.itemName}', ${element.quantity}, ${element.basicRate},
     ${element.unitTaxableAmountBeforeDiscount}, 0.0, 0.0, ${element.unitTaxableAmount}, $totalTaxableAmount,
     ${element.gstPer}, ${element.cessPer}, $totalTaxAmount, $totalCessAmount, $totalAmount,
-    'Dining', '-', ${state.parcel ? "'Parcel'" : "''"}, '', '${element.kitchenName}', '${event.userId}', '-', '-'
+    'Dining', '-', ${state.parcel ? "'Parcel'" : "''"}, '', '${element.kitchenName}', '${event.userId}', '-','${event.note ?? '-'}' ,'-'
 )
 ''';
 
@@ -433,7 +434,6 @@ SET
     CustomerName = '${event.selectedcustomer.bussinessname}',
     TableName = '${event.table.tableName}',
     FloorNumber = '${event.table.floor}',
-    Description = '${event.note ?? ""}',
     Quantity = $qty,
     BasicRate = ${element.basicRate},
     UnitTaxableAmountBeforeDiscount = ${element.unitTaxableAmountBeforeDiscount},
@@ -472,88 +472,154 @@ WHERE
               kotNo: kotId,
               ordno: orderId,
             ));
-
             log('Print section ----------');
+            final prefs = await SharedPreferences.getInstance();
+            bool allkitchenprint = prefs.getBool('allkitchenprint') ?? false;
+            log('allkitchenprint. ---- $allkitchenprint');
+
             List<PrinterConfig?>? printers = event.printers;
             int printingStatus = 0;
 
+            // ---------------------- KOT PRINT ----------------------
             if (event.kotPrint) {
               log('Printing KOT...');
-              Map<String, List<kotItem>> groupedItems = {};
-              for (var item in kotitems) {
-                if (!groupedItems.containsKey(item.kitchenName)) {
-                  groupedItems[item.kitchenName] = [];
-                }
-                groupedItems[item.kitchenName]!.add(item);
-              }
 
-              for (var kitchen in groupedItems.keys) {
-                PrinterConfig? printer;
+              // Skip KOT printing if allkitchenprint is true but no kotitems
+              if (allkitchenprint && kotitems.isEmpty) {
+                log('No KOT items to print for all kitchen. Skipping...');
+              } else {
+                Map<String, List<kotItem>> groupedItems = {};
 
-                for (var element in printers!) {
-                  if (element!.kitchenName == kitchen) {
-                    printer = element;
+                if (allkitchenprint) {
+                  // Group all items under each kitchen printer except 'Bill'
+                  for (var printer in printers!) {
+                    if (printer == null ||
+                        printer.kitchenName.trim().toLowerCase() == 'bill')
+                      continue;
+
+                    // Only add if kotitems are available
+                    if (kotitems.isNotEmpty) {
+                      groupedItems[printer.kitchenName] = kotitems;
+                    }
+                  }
+                } else {
+                  // Group items by their kitchen name
+                  for (var item in kotitems) {
+                    if (!groupedItems.containsKey(item.kitchenName)) {
+                      groupedItems[item.kitchenName] = [];
+                    }
+                    groupedItems[item.kitchenName]!.add(item);
                   }
                 }
 
-                final List<int> test = await kotPrintData(
-                  parcel: state.parcel,
-                  dlt: false,
-                  note: event.note ?? '',
-                  items: groupedItems[kitchen]!,
-                  kotNo: kotId,
-                  orderNo: orderId,
-                  tableNo: event.table.tableName,
-                  user: 'user',
-                );
+                // Debug log for grouped items
+                groupedItems.forEach((kitchen, items) {
+                  log('Kitchen: $kitchen');
+                  for (var item in items) {
+                    log('  - Item: ${item.itemName}, Qty: ${item.quantity}');
+                  }
+                });
 
-                printingStatus = await NetworkPrinter().printTicket(
-                  test,
-                  printer!.printerName,
-                );
+                for (var kitchen in groupedItems.keys) {
+                  PrinterConfig? printer;
 
-                log('Printer response---$printingStatus');
+                  for (var element in printers!) {
+                    if (element != null && element.kitchenName == kitchen) {
+                      printer = element;
+                      break;
+                    }
+                  }
+
+                  final List<int> test = await kotPrintData(
+                    parcel: state.parcel,
+                    dlt: false,
+                    note: event.note ?? '',
+                    items: groupedItems[kitchen]!,
+                    kotNo: kotId,
+                    orderNo: orderId,
+                    tableNo: event.table.tableName,
+                    user: 'user',
+                  );
+
+                  if (printer != null) {
+                    printingStatus = await NetworkPrinter().printTicket(
+                      test,
+                      printer.printerName,
+                    );
+                    log('Printer response---$printingStatus');
+                  } else {
+                    log('No printer found for kitchen: $kitchen');
+                  }
+                }
               }
             }
 
+// ---------------------- CANCEL KOT PRINT ----------------------
             if (event.cancelKotPrint) {
               log('Printing canceled KOT...');
-              Map<String, List<kotItem>> groupedcancelItems = {};
-              for (var item in event.kotretunitems) {
-                if (!groupedcancelItems.containsKey(item.kitchenName)) {
-                  groupedcancelItems[item.kitchenName] = [];
-                }
-                groupedcancelItems[item.kitchenName]!.add(item);
-              }
-              for (var kitchen in groupedcancelItems.keys) {
-                PrinterConfig? printer;
 
-                for (var element in printers!) {
-                  if (element!.kitchenName == kitchen) {
-                    printer = element;
+              // Skip cancel KOT printing if allkitchenprint is true but no items
+              if (allkitchenprint && event.kotretunitems.isEmpty) {
+                log('No cancel items to print for all kitchen. Skipping...');
+              } else {
+                Map<String, List<kotItem>> groupedcancelItems = {};
+
+                if (allkitchenprint) {
+                  for (var printer in printers!) {
+                    if (printer == null ||
+                        printer.kitchenName.trim().toLowerCase() == 'bill')
+                      continue;
+
+                    // Only add if there are actual cancel items
+                    if (event.kotretunitems.isNotEmpty) {
+                      groupedcancelItems[printer.kitchenName] =
+                          event.kotretunitems;
+                    }
+                  }
+                } else {
+                  for (var item in event.kotretunitems) {
+                    if (!groupedcancelItems.containsKey(item.kitchenName)) {
+                      groupedcancelItems[item.kitchenName] = [];
+                    }
+                    groupedcancelItems[item.kitchenName]!.add(item);
                   }
                 }
 
-                final List<int> test = await kotPrintData(
-                  parcel: state.parcel,
-                  dlt: false,
-                  note: event.note ?? '',
-                  items: groupedcancelItems[kitchen]!,
-                  kotNo: '--',
-                  orderNo: orderId,
-                  tableNo: event.table.tableName,
-                  user: 'user',
-                );
+                for (var kitchen in groupedcancelItems.keys) {
+                  PrinterConfig? printer;
 
-                printingStatus = await NetworkPrinter().printTicket(
-                  test,
-                  printer!.printerName,
-                );
+                  for (var element in printers!) {
+                    if (element != null && element.kitchenName == kitchen) {
+                      printer = element;
+                      break;
+                    }
+                  }
 
-                log('Printer response---$printingStatus');
+                  final List<int> test = await kotPrintData(
+                    parcel: state.parcel,
+                    dlt: false,
+                    note: event.note ?? '',
+                    items: groupedcancelItems[kitchen]!,
+                    kotNo: '--',
+                    orderNo: orderId,
+                    tableNo: event.table.tableName,
+                    user: 'user',
+                  );
+
+                  if (printer != null) {
+                    printingStatus = await NetworkPrinter().printTicket(
+                      test,
+                      printer.printerName,
+                    );
+                    log('Printer response---$printingStatus');
+                  } else {
+                    log('No printer found for kitchen: $kitchen');
+                  }
+                }
               }
             }
 
+// ---------------------- UPDATE PRINTER STATUS ----------------------
             if (event.cancelKotPrint || event.kotPrint) {
               if (printingStatus == 1) {
                 log('Printer status: 2---------');
@@ -577,6 +643,83 @@ WHERE
                 submitstatus: 0,
               ));
             }
+
+            // if (event.kotPrint) {
+            //   log('Printing KOT...');
+            //   Map<String, List<kotItem>> groupedItems = {};
+            //   for (var item in kotitems) {
+            //     if (!groupedItems.containsKey(item.kitchenName)) {
+            //       groupedItems[item.kitchenName] = [];
+            //     }
+            //     groupedItems[item.kitchenName]!.add(item);
+            //   }
+
+            //   for (var kitchen in groupedItems.keys) {
+            //     PrinterConfig? printer;
+
+            //     for (var element in printers!) {
+            //       if (element!.kitchenName == kitchen) {
+            //         printer = element;
+            //       }
+            //     }
+
+            //     final List<int> test = await kotPrintData(
+            //       parcel: state.parcel,
+            //       dlt: false,
+            //       note: event.note ?? '',
+            //       items: groupedItems[kitchen]!,
+            //       kotNo: kotId,
+            //       orderNo: orderId,
+            //       tableNo: event.table.tableName,
+            //       user: 'user',
+            //     );
+
+            //     printingStatus = await NetworkPrinter().printTicket(
+            //       test,
+            //       printer!.printerName,
+            //     );
+
+            //     log('Printer response---$printingStatus');
+            //   }
+            // }
+
+            // if (event.cancelKotPrint) {
+            //   log('Printing canceled KOT...');
+            //   Map<String, List<kotItem>> groupedcancelItems = {};
+            //   for (var item in event.kotretunitems) {
+            //     if (!groupedcancelItems.containsKey(item.kitchenName)) {
+            //       groupedcancelItems[item.kitchenName] = [];
+            //     }
+            //     groupedcancelItems[item.kitchenName]!.add(item);
+            //   }
+            //   for (var kitchen in groupedcancelItems.keys) {
+            //     PrinterConfig? printer;
+
+            //     for (var element in printers!) {
+            //       if (element!.kitchenName == kitchen) {
+            //         printer = element;
+            //       }
+            //     }
+
+            //     final List<int> test = await kotPrintData(
+            //       parcel: state.parcel,
+            //       dlt: false,
+            //       note: event.note ?? '',
+            //       items: groupedcancelItems[kitchen]!,
+            //       kotNo: '--',
+            //       orderNo: orderId,
+            //       tableNo: event.table.tableName,
+            //       user: 'user',
+            //     );
+
+            //     printingStatus = await NetworkPrinter().printTicket(
+            //       test,
+            //       printer!.printerName,
+            //     );
+
+            //     log('Printer response---$printingStatus');
+            //   }
+            // }
           } catch (e) {
             log('Error in order processing: $e');
             rethrow;

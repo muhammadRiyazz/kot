@@ -247,8 +247,8 @@ class BillSubmitPrintBloc
                       """;
 
             await connection.writeData(query3);
-
-            String updateQuery = '''
+          }
+          String updateQuery = '''
          UPDATE  [dbo].[OrderMainDetails]
         SET
             CreditOrPaid = 'Credit',
@@ -257,9 +257,18 @@ class BillSubmitPrintBloc
            OrderNumber = '${state.orderid}';
             ''';
 
-            log(updateQuery);
-            await connection.writeData(updateQuery);
-          }
+          log(updateQuery);
+          await connection.writeData(updateQuery);
+
+          String updateOrderItemDetailsDetails = '''
+  UPDATE  [dbo].[OrderItemDetailsDetails]
+  SET
+    BillNumber = '$invno'
+  WHERE
+    OrderNumber = '${state.orderid}';
+''';
+          await connection.writeData(updateOrderItemDetailsDetails);
+
           log('emit calling');
           emit(state.copyWith(
             loading: false,
@@ -479,6 +488,15 @@ class BillSubmitPrintBloc
     OrderNumber = '${state.orderid}';
 ''';
           await connection.writeData(updateQuery);
+
+          String updateOrderItemDetailsDetails = '''
+  UPDATE  [dbo].[OrderItemDetailsDetails]
+  SET
+    BillNumber = '$invno'
+  WHERE
+    OrderNumber = '${state.orderid}';
+''';
+          await connection.writeData(updateOrderItemDetailsDetails);
           log('emit calling--');
           emit(state.copyWith(
             loading: false,

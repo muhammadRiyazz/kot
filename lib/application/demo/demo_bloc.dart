@@ -122,8 +122,8 @@ INSERT INTO [dbo].[login] (
                 'userID', jsonResponse[0]['username']); // Save login status
             usernameA = jsonResponse[0]['username'];
             String roles = jsonResponse[0]['role'].toString();
-            String targetRole = "B1";
-            String billRole = "X1";
+            String targetRole = "X1";
+            String billRole = "B1";
 
             // Save login status
             // Check if the target role is included in the roles string
@@ -178,9 +178,6 @@ INSERT INTO [dbo].[login] (
 
       String? demoty = prefs.getString('demo');
       String? demouser = prefs.getString('username');
-             
-
-
 
       demoStatus = prefs.getBool('demostatus');
 

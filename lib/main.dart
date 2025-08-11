@@ -139,7 +139,9 @@ class _MyAppState extends State<MyApp> {
         minTextAdapt: true,
         builder: (context, child) {
           return MultiBlocProvider(
+
             providers: blocProviders(),
+            
             child: MaterialApp(
               scaffoldMessengerKey:
                   _scaffoldMessengerKey, // Attach the scaffoldMessengerKey here

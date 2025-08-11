@@ -51,8 +51,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
                   'userID', jsonResponse[0]['username']); // Save login status
               usernameA = jsonResponse[0]['username'];
               String roles = jsonResponse[0]['role'].toString();
-              String targetRole = "B1";
-              String billRole = "X1";
+              String targetRole = "X1";
+              String billRole = "B1";
 
               // Check if the target role is included in the roles string
               bool billEditt = roles.split(',').contains(targetRole);
