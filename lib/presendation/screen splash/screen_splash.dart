@@ -29,6 +29,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  double _progressValue = 0.0;
+  bool _isLoadingComplete = false;
+  bool? demoStatus;
+
   @override
   void initState() {
     super.initState();
@@ -41,10 +45,10 @@ class _SplashScreenState extends State<SplashScreen> {
     demoStatus = prefs.getBool('demostatus') ?? false;
 
     if (isLoggedIn) {
-      _fetchInitialData();
-      await Future.delayed(const Duration(seconds: 8));
+      await _fetchInitialData();
       _navigateToHome();
     } else {
+      await Future.delayed(const Duration(seconds: 2));
       _navigateToLogin();
     }
 
@@ -53,38 +57,108 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  void _fetchInitialData() {
+  Future<void> _fetchInitialData() async {
     final context = this.context;
+    final totalSteps = 15; // Total number of fetch operations
+    int completedSteps = 0;
 
-    BlocProvider.of<StockBloc>(context).add(const StockEvent.fetchAllItems());
-    BlocProvider.of<LoginBloc>(context).add(const FetchLogin());
-    BlocProvider.of<InitalDataBloc>(context)
-        .add(const InitalDataEvent.fetchAppEnty());
-    BlocProvider.of<InitalDataBloc>(context).add(const FetchPaymentType());
-    BlocProvider.of<InitalDataBloc>(context)
-        .add(const InitalDataEvent.addinitaldatas());
-    BlocProvider.of<PrinterSetupBloc>(context)
-        .add(const PrinterSetupEvent.fetchKitchens());
-    BlocProvider.of<PrinterSetupBloc>(context)
-        .add(const PrinterSetupEvent.fetchPrinter());
-    BlocProvider.of<CustomerpartBloc>(context)
-        .add(const CustomerpartEvent.cfetchlist());
-    BlocProvider.of<StockBloc>(context).add(const StockEvent.categoryFetch());
-    BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
-    BlocProvider.of<FinishadOrderBloc>(context)
-        .add(const FinishadOrderEvent.fetchBills());
-    BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
-    loadPreferences();
-    StockMng().fetchstockmngGoods();
-    StockMng().fetchstockmngService();
-    BillDesignMng().fetchbilldesignLogo();
-    BillDesignMng().fetchbilldesignName();
+    void updateProgress() {
+      completedSteps++;
+      setState(() {
+        _progressValue = completedSteps / totalSteps;
+      });
+    }
+
+    // Create a list of all the fetch operations
+    final fetchOperations = [
+      () async {
+        BlocProvider.of<StockBloc>(context)
+            .add(const StockEvent.fetchAllItems());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<LoginBloc>(context).add(const FetchLogin());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<InitalDataBloc>(context)
+            .add(const InitalDataEvent.fetchAppEnty());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<InitalDataBloc>(context).add(const FetchPaymentType());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<InitalDataBloc>(context)
+            .add(const InitalDataEvent.addinitaldatas());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<PrinterSetupBloc>(context)
+            .add(const PrinterSetupEvent.fetchKitchens());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<PrinterSetupBloc>(context)
+            .add(const PrinterSetupEvent.fetchPrinter());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<CustomerpartBloc>(context)
+            .add(const CustomerpartEvent.cfetchlist());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<StockBloc>(context)
+            .add(const StockEvent.categoryFetch());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<TablesBloc>(context).add(const TablesEvent.taledata());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<FinishadOrderBloc>(context)
+            .add(const FinishadOrderEvent.fetchBills());
+        updateProgress();
+      },
+      () async {
+        BlocProvider.of<OrdersBloc>(context).add(const AllOrders());
+        updateProgress();
+      },
+      () async {
+        await loadPreferences();
+        updateProgress();
+      },
+      () async {
+        await StockMng().fetchstockmngGoods();
+        await StockMng().fetchstockmngService();
+        updateProgress();
+      },
+      () async {
+        await BillDesignMng().fetchbilldesignLogo();
+        await BillDesignMng().fetchbilldesignName();
+        updateProgress();
+      },
+    ];
+
+    // Execute all fetch operations sequentially
+    for (final operation in fetchOperations) {
+      await operation();
+    }
+
+    setState(() {
+      _isLoadingComplete = true;
+    });
   }
 
   void _navigateToHome() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const HomeScreen(from: 0)),
-    );
+    if (_isLoadingComplete) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen(from: 0)),
+      );
+    }
   }
 
   void _navigateToLogin() {
@@ -118,7 +192,8 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(height: screenHeight * 0.15),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.15),
-              child: const LinearProgressIndicator(
+              child: LinearProgressIndicator(
+                value: _progressValue,
                 backgroundColor: Colors.black12,
                 color: mainclr,
               ),
@@ -140,6 +215,15 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontSize: screenWidth * 0.03,
               ),
             ),
+            SizedBox(height: screenHeight * 0.02),
+            if (!_isLoadingComplete)
+              Text(
+                'Loading... ${(_progressValue * 100).toStringAsFixed(0)}%',
+                style: TextStyle(
+                  color: mainclr,
+                  fontSize: screenWidth * 0.03,
+                ),
+              ),
           ],
         ),
       ),

@@ -6,14 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:restaurant_kot/application/providers/providers.dart';
-import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/core/conn.dart';
 import 'presendation/screen splash/screen_splash.dart';
 
 void main() {
     WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(const MyApp());
+    runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {

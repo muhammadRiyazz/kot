@@ -9,7 +9,7 @@ import 'package:restaurant_kot/consts/colors.dart';
 import 'package:restaurant_kot/domain/cus/customer_model.dart';
 import 'package:restaurant_kot/infrastructure/initalfetchdata/bill_design_mng.dart';
 import 'package:restaurant_kot/presendation/add%20demo/add_demo.dart';
-import 'package:restaurant_kot/presendation/screen%20login/passcose/passcode.dart';
+import 'package:restaurant_kot/presendation/main%20settings/passcose/passcode.dart';
 import 'package:restaurant_kot/presendation/screen%20splash/screen_splash.dart';
 import 'package:restaurant_kot/presendation/screen%20support/screen_support.dart';
 import 'package:restaurant_kot/presendation/widgets/loading_bar.dart';
@@ -340,7 +340,6 @@ class LoginScreen extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                         
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -457,6 +456,3 @@ void _showOptionsBottomSheet(BuildContext context) {
     },
   );
 }
-
-
-

@@ -105,7 +105,7 @@ class _PrinterSettingsListState extends State<PrinterSettingsList> {
                   Divider(height: 1, color: Colors.grey.shade300),
                   Column(
                     children: [
-                      ListTile(
+                      const ListTile(
                         title: Text(
                           'KOT Printing Mode',
                           style: TextStyle(
